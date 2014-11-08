@@ -1,0 +1,115 @@
+<div class="container" ng-controller="TrainerProfileController">
+    <div class="trainer-profile clearfix">
+        <div class="trainer-card clearfix">
+            <div class="favorite">
+                <i class="fa fa-star-o"></i>
+            </div>
+            <div class="picture">
+                <div class="image-container">
+                    <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" ></div>
+                </div>
+            </div>
+            <div class="information">
+                <div class="name item">
+                    <h1>{{trainer.name.first}} {{trainer.name.last}}</h1>
+                </div>
+                <div class="location item">
+                    <h2>{{trainer.location.city}}<span ng-if="trainer.location.state">, {{trainer.location.state}}</span></h2>
+                </div>
+                <div class="rating item">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="actions">
+                    <div class="btn btn-book">
+                        Book Now!
+                    </div>
+                    <div class="btn btn-contact">
+                        Contact
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="trainer-certifications">
+            <div class="title">
+                Certifications
+            </div>
+            <div class="certification-list">
+                <div class="certification">
+                    HIIT instructor
+                </div>
+                <div class="certification">
+                    Class A Personal Trainer
+                </div>
+                <div class="certification">
+                    Les Mills Body Pump
+                </div>
+                <div class="certification">
+                    CrossFit Level A
+                </div>
+            </div>
+        </section>
+        <section class="trainer-reviews">
+            <div class="title">
+                Reviews
+            </div>
+            <div class="review clearfix">
+                <div class="picture">
+                    <div class="image-container">
+                        <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" ></div>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="review-text">
+                    I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt
+                    like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!
+                </div>
+            </div>
+            <div class="review clearfix">
+                <div class="picture">
+                    <div class="image-container">
+                        <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" ></div>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="review-text">
+                    I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt
+                    like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!
+                </div>
+            </div>
+            <div class="review clearfix">
+                <div class="picture">
+                    <div class="image-container">
+                        <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" ></div>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="review-text">
+                    I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt
+                    like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

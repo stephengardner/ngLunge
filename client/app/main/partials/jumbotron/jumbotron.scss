@@ -1,0 +1,19 @@
+.jumbo-main {
+    background:black;
+	text-align:center;
+    @include respond-to(xs){
+        min-height:300px!important;
+    }
+  .callout {
+	  padding:.2em 0em;
+	  background: rgba(255,255,255,.8);
+  }
+}
+
+.bg-full {
+  min-height:500px;
+  background:url('/assets/images/man-back.png');
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center;
+}

@@ -1,0 +1,31 @@
+<div class="navbar-new" ng-controller="NavbarNewController" ng-class="{'scrolled' : scrolled}">
+    <div class="container">
+        <div class="brand">
+            <a ui-sref="main.home">
+                <i class="fa fa-google-wallet"></i> Lunge
+            </a>
+        </div>
+        <div class="buttons" ng-class="{'scrolled' : scrolled}">
+            <!--
+            <div class="btn btn-transparent">
+                Trainers
+            </div>
+            -->
+            <a ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.login" class="btn btn-login">
+                Log in
+            </a>
+            <div ng-show="!isLoggedIn()"ui-sref-active="active" ui-sref="main.signup"  class="btn btn-signup">
+                Sign up
+            </div>
+            <a ui-sref="main.dashboard" ng-show="isLoggedIn()" class="btn btn-username">
+                {{getCurrentUser().name}}
+            </a>
+        </div>
+        <!--
+        <div class="welcome">
+            welcome:
+            {{getCurrentUser().name}}
+        </div>
+        -->
+    </div>
+</div>

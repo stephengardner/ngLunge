@@ -1,0 +1,55 @@
+.navbar-new {
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	padding:.5em 0em;
+	z-index:2;
+	a {
+		text-decoration:none;
+		color:inherit;
+	}
+	.brand {
+		float:left;
+		font-size:2.2em;
+	}
+	.buttons {
+		float:right;
+		@extend .hidden-xxs;
+		&.scrolled {
+			.btn-transparent {
+				color:#333;
+				border-color:#333;
+			}
+		}
+		[class*='btn-'] {
+			&.active {
+				border-color:rgb(5, 10, 37);
+				background:$body-bg;
+				color: $text-color;
+			}
+			margin-top:.25em;
+			border-width:.25em;
+			font-size:1.2em;
+			font-weight:bold;
+			background:transparent;
+			@include respond-to(xs){
+				font-size:1.1em;
+			}
+			@include respond-to(xxs){
+				font-size:1em;
+			}
+		}
+	}
+	&:not(.scrolled) {
+		background:transparent;
+		color:white;
+	}
+	&.scrolled {
+		background:white;
+		color:#333;
+		[class*='btn-'] {
+			color:#333;
+		}
+	}
+}

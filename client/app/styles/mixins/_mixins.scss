@@ -1,0 +1,48 @@
+@mixin respond-to($media) {
+	@if $media == "xxs" {
+		@media only screen and (max-width: $screen-xxs-max) { @content; }
+	}
+	@if $media == "xs" {
+		@media only screen /*and (min-width: $screen-xs-min)*/ and (max-width: $screen-xs-max) { @content; }
+	}
+	@else if $media == "sm" {
+		@media only screen /*and (min-width: $screen-sm-min)*/ and (max-width: $screen-sm-max) { @content; }
+	}
+	@else if $media == "md" {
+		@media only screen /*and (min-width: $screen-md-min)*/ and (max-width: $screen-md-max) { @content; }
+	}
+}
+
+.hidden-xxs {
+	@include respond-to(xxs) {
+		display:none;
+	}
+}
+
+@mixin collapse($media) {
+	@include respond-to($media) {
+		width:100%;
+		float:none;
+		display:block;
+	}
+}
+
+
+// Generate the extra extra small columns
+@mixin make-xxs-column($columns, $gutter: $grid-gutter-width) {
+	position: relative;
+	float: left;
+	width: percentage(($columns / $grid-columns));
+	min-height: 1px;
+	padding-left:  ($gutter / 2);
+	padding-right: ($gutter / 2);
+}
+@mixin make-xxs-column-offset($columns) {
+	margin-left: percentage(($columns / $grid-columns));
+}
+@mixin make-xxs-column-push($columns) {
+	left: percentage(($columns / $grid-columns));
+}
+@mixin make-xxs-column-pull($columns) {
+	right: percentage(($columns / $grid-columns));
+}
