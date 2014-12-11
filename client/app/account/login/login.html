@@ -1,23 +1,79 @@
 <div class="container">
-    <div class="log-in" ng-controller="LoginController">
-        <h1>Log in using one of the services below</h1>
-        <div class="social-logins">
-            <div class="social-login">
-                <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
-                    <i class="fa fa-facebook"></i> Log in with Facebook
-                </a>
-            </div>
-            <div class="social-login">
-                <a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">
-                    <i class="fa fa-google-plus"></i> Log in with Google+
-                </a>
-            </div>
-            <div class="social-login">
-                <a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">
-                    <i class="fa fa-twitter"></i> Log in with Twitter
-                </a>
-            </div>
-        </div>
+    <div class="log-in-tabs">
+        <tabset>
+            <tab heading="User">
+                <div class="log-in" ng-controller="LoginController">
+                    <h1>Log in using one of the services below</h1>
+                    <div class="social-logins">
+                        <div class="social-login">
+                            <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
+                                <i class="fa fa-facebook"></i> Log in with Facebook
+                            </a>
+                        </div>
+                        <div class="social-login">
+                            <a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">
+                                <i class="fa fa-google-plus"></i> Log in with Google+
+                            </a>
+                        </div>
+                        <div class="social-login last">
+                            <a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">
+                                <i class="fa fa-twitter"></i> Log in with Twitter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="Trainer">
+                <div class="log-in" ng-controller="LoginController">
+                    <form name="form" class="form-horizontal" role="form" ng-submit="login(form)">
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
+                            </div>
+                        </div>
+                        <div ng-if="errors.password || errors.hashedPassword" class="form-group has-error">
+                            <div class="help-block"  ng-repeat="error in errors">
+                                {{error}}
+                            </div>
+                        </div>
+                        <div class="form-group last">
+                            <div class="col-xs-12 col-sm-10 col-sm-push-2">
+                                <input class="form-control input-lg" type="submit" value="{{!sending ? 'Log in' : 'Logging in...'}}" ng-disabled="submitting">
+                            </div>
+                        </div>
+                    </form>
+
+
+
+
+                    <!--
+                    <form class="form sm" ng-submit="submitPassword(form)" name="form" ng-keydown="resetErrors()" novalidate>
+                        <div class="form-group">
+                            <input name="email" type="password" class="input-lg form-control" placeholder="Email" ng-model="password" required/>
+                        </div>
+                        <div class="form-group">
+                            <input name="password2" type="password" class="input-lg form-control" placeholder="Re-type password" ng-model="password2" required/>
+                        </div>
+                        <div ng-if="errors.password || errors.hashedPassword" class="form-group has-error">
+                            <div class="help-block"  ng-repeat="error in errors">
+                                {{error}}
+                            </div>
+                        </div>
+                        <div class="form-group last">
+                            <input class="form-control input-lg" type="submit" value="{{!sending ? 'Log in' : 'Logging in...'}}" ng-disabled="submitting">
+                        </div>
+                    </form>
+                    -->
+                </div>
+            </tab>
+        </tabset>
     </div>
 </div>
     <!--

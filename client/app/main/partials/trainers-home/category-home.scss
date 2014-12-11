@@ -86,59 +86,60 @@
 	}
 	//.page {
 	//	white-space:nowrap;
-		.trainer-card {
-			@extend .col-sm-3;
-			text-align:center;
-			//@include custom-col(".col-xs-4", 0);
-			//transition:  1s;
-			overflow:hidden;
-			float:none!important;
-			display: inline-block;
-			&.ng-enter {
-				padding:0px!important;
-				width:0%!important;
-			}
-			@include respond-to(xs){
-				float:left;
-				width:33.33%;
-				padding-left:0px!important;
-				padding-right:0px!important;
-				~ .trainer-card {
-					//margin-left:2%;
-				}
-				/*
-				~ .trainer-card ~ .trainer-card ~ .trainer-card {
-					display:none;
-				}
-				*/
-			}
-			.trainer {
-				padding:1em;
-				//border:1px solid #eee;
-				@include respond-to(xxs) {
-					padding:.25em;
-				}
-				.picture {
-					img {
-						width:100%;
-					}
-				}
-				.details {
-					@include respond-to(xs) {
-						font-size:.8em;
-					}
-					.location {
-						white-space:nowrap;
-						overflow:hidden;
-						text-overflow:ellipsis;
-					}
-					margin-top:.5em;
-				}
-			}
-		}
+
 	//}
 
 	.trainers {
 		padding:1em 0em;
+	}
+}
+.trainer-card.lg {
+	@extend .col-sm-3;
+	text-align:center;
+	//@include custom-col(".col-xs-4", 0);
+	//transition:  1s;
+	overflow:hidden;
+	float:none!important;
+	display: inline-block;
+	&.ng-enter {
+		padding:0px!important;
+		width:0%!important;
+	}
+	@include respond-to(xs){
+		float:left;
+		width:33.33%;
+		padding-left:0px!important;
+		padding-right:0px!important;
+		~ .trainer-card {
+			//margin-left:2%;
+		}
+		/*
+		~ .trainer-card ~ .trainer-card ~ .trainer-card {
+			display:none;
+		}
+		*/
+	}
+	.trainer {
+		padding:1em;
+		//border:1px solid #eee;
+		@include respond-to(xxs) {
+			padding:.25em;
+		}
+		.picture {
+			img {
+				width:100%;
+			}
+		}
+		.details {
+			@include respond-to(xs) {
+				font-size:.8em;
+			}
+			.location {
+				white-space:nowrap;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+			margin-top:.5em;
+		}
 	}
 }

@@ -29,19 +29,40 @@ $btnGithubBackgroundHighlight:      #ccc;
 	@include button-variant($btnTextAlt, $btnGithubBackground, $btnGithubBackgroundHighlight);
 }
 
+$log-in-bg : lighten($body-bg, 5%);
+.log-in-tabs {
+	text-align:center;
+	max-width:500px;
+	margin:0 auto;
+	margin-top:3em;
+	.nav-tabs {
+		border-bottom:none; // want to create a rounded corner on the content inside the tabs so removing this straight edge
+	}
+	li.active a, li a:hover, li.active a:hover{
+		background: $log-in-bg;
+	}
+	.log-in {
+		border:1px solid;
+		margin-top:0em;
+		border-top-left-radius:0px;
+	}
+}
 .log-in, .sign-up {
 	text-align:center;
 	max-width:500px;
 	margin:0 auto;
 	margin-top:3em;
-	background: lighten($body-bg, 5%);
+	background: $log-in-bg;
 	border-radius:10px;
 	padding:2em;
+	form {
+		text-align:left;
+	}
 	h1 {
 		font-size:1.8em;
 	}
 	.social-logins {
-		padding:2em 0em;
+		padding-top:2em;
 		.social-login {
 			display:block;
 			a {

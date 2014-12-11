@@ -20,3 +20,55 @@ angular.module('ngLungeFullStack2App')
       }
 	  });
   });
+
+angular.module('ngLungeFullStack2App')
+	.factory('Trainer', function ($resource) {
+		return $resource('/api/trainers/:id/:controller', {
+				id: '@_id'
+			},
+			{
+				update : {
+					method : 'PUT'
+				},
+				changePassword: {
+					method: 'PUT',
+					params: {
+						controller:'password'
+					}
+				},
+				/*
+				addCertification : {
+					method : 'PUT',
+					params : {
+						controller : 'certification'
+					}
+				},
+				*/
+				modifyCertification : {
+					method : 'PUT',
+					params : {
+						controller : 'certification'
+					}
+				},
+				/*
+				removeCertification : {
+					method : 'DELETE',
+					params : {
+						controller : 'certification'
+					}
+				},
+				*/
+				get: {
+					method: 'GET',
+					params: {
+						id:'me'
+					}
+				},
+				changeProfilePicture : {
+					method : 'PUT',
+					params : {
+						controller : 'profilePicture'
+					}
+				}
+			});
+	});

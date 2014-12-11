@@ -22,6 +22,7 @@ exports.index = function(req, res) {
 
 // Get a single thing
 exports.show = function(req, res) {
+	console.log("SESSION:", req.session);
   Thing.findById(req.params.id, function (err, thing) {
     if(err) { return handleError(res, err); }
     if(!thing) { return res.send(404); }

@@ -34,6 +34,7 @@ UserSchema
     this._password = password;
     this.salt = this.makeSalt();
     this.hashedPassword = this.encryptPassword(password);
+		this
   })
   .get(function() {
     return this._password;

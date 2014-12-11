@@ -6,7 +6,14 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
   'ngSanitize',
   'btford.socket-io',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+		'ui.utils',
+		'xeditable',
+		'geolocation',
+		'google-maps'.ns(),
+		'ngAnimate',
+		'angularFileUpload',
+		'duScroll'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -14,9 +21,11 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
+	$httpProvider.defaults.headers.delete = { "Content-Type": "application/json;charset=utf-8" };
   })
 
   .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
+		console.log("cookiestore:", $cookieStore.get("token"));
     return {
       // Add authorization token to headers
       request: function (config) {
@@ -29,26 +38,60 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 
       // Intercept 401s and redirect you to login
       responseError: function(response) {
-        if(response.status === 401) {
-          $location.path('/login');
-          // remove any stale tokens
-          $cookieStore.remove('token');
-          return $q.reject(response);
-        }
+	      if(response.status === 401) {
+		      $location.path('/login');
+		      // remove any stale tokens
+		      $cookieStore.remove('token');
+		      $cookieStore.remove('type');
+		      return $q.reject(response);
+	      }
         else {
           return $q.reject(response);
         }
       }
     };
-  })
+  }).config(['GoogleMapApiProvider'.ns(), function (GoogleMapApi) {
+		GoogleMapApi.configure({
+			//    key: 'your api key',
+			v: '3.17',
+			libraries: 'weather,geometry,visualization'
+		});
+	}])
 
-  .run(function ($rootScope, $location, Auth) {
+  .run(function ($rootScope, $location, Auth, editableOptions) {
+		// works, will login or logout the user if their token changes
+		$rootScope.$watch(function(){
+			return Auth.getToken();
+		}, function(){
+			console.log("TOKEN CHANGED!");
+			Auth.asyncLoginByToken();
+		})
+		$rootScope.previousState;
+		$rootScope.currentState;
+		$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+			$rootScope.previousState = from.name;
+			$rootScope.currentState = to.name;
+			console.log('Previous state:'+$rootScope.previousState)
+			console.log('Current state:'+$rootScope.currentState)
+		});
+		editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+		$rootScope.logout = function() {
+			console.log("rootscope logout");
+			Auth.logout();
+			$location.path('/login');
+		};
     // Redirect to login if route requires auth and you're not logged in
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			Auth.isLoggedInAsync(function(loggedIn) {
+				console.log("app.js rootScope stateChangeStart.  loggedIn = ", loggedIn);
+				if(loggedIn) {
+					console.log("*************** stateChangeStart and we noticed we are LOGGED IN, we could broadcast a login message here ********************");
+					//$rootScope.$broadcast("login");
+				}
 				if (next.authenticate && !loggedIn) {
 					$location.path('/login');
 				}
 			});
+
 		});
   });

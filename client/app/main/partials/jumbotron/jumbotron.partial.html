@@ -1,4 +1,7 @@
 <div class="jumbo-main bg-full">
+    <div class="location" ng-if="cityState" ng-class="{'scale-in' : cityState}" >
+        <i class="fa fa-crosshairs"></i> {{cityState}}
+    </div>
     <!--
     <div class="callout">
         <h1>Personal Trainers. Where, and When You Need Them!</h1>

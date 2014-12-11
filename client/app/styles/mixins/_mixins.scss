@@ -13,6 +13,17 @@
 	}
 }
 
+@mixin col-padding($media, $padding) {
+	@include respond-to($media) {
+		padding-left: $padding!important;
+		padding-right: $padding!important;
+	}
+}
+
+@mixin responsive-padding() {
+	@include col-padding(xxs, .25em);
+}
+
 .hidden-xxs {
 	@include respond-to(xxs) {
 		display:none;

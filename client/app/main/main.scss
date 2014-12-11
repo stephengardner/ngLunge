@@ -8,6 +8,19 @@
 	}
 }
 
+.editable-text input {
+	font-size: 1.5rem;
+}
+.editable-click, a.editable-click {
+	text-decoration:none;
+	color:inherit;
+	border-bottom:0px;
+	&:hover {
+		color:lighten($body-bg, 50%);
+		cursor:pointer;
+	}
+}
+
 #banner {
     border-bottom: none;
     margin-top: -20px;

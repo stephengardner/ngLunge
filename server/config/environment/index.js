@@ -57,11 +57,27 @@ var all = {
     clientID:     process.env.GOOGLE_ID || 'id',
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
-  }
-};
+  },
+	SUPERUSERS : {
+		ADMINS : [
+			'augdog911@gmail.com'
+		]
+	},
+	AWS : {
+		AWS_ACCESS_KEY_ID  : "AKIAJQWJ2WDXW6HQSHZA",
+		AWS_SECRET_ACCESS_KEY : "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",
+		S3_BUCKET : "lungeapp"
+	},
 
+	aws : {
+		AWS_ACCESS_KEY_ID  : "AKIAJQWJ2WDXW6HQSHZA",
+		AWS_SECRET_ACCESS_KEY : "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",
+		S3_BUCKET : "lungeapp"
+	}
+};
 // Export the config object based on the NODE_ENV
 // ==============================================
 module.exports = _.merge(
   all,
+	//AWS,
   require('./' + process.env.NODE_ENV + '.js') || {});

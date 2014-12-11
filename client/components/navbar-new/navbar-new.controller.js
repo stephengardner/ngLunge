@@ -1,6 +1,9 @@
-lungeApp.controller("NavbarNewController", ['$rootScope', '$location', '$window', '$scope', '$location', 'Auth', function($rootScope, $location, $window, $scope, $location, Auth){
+lungeApp.controller("NavbarNewController", ['socket', '$state', '$rootScope', '$location', '$window', '$scope', '$location', 'Auth', function(socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
 	$scope.getCurrentUser = Auth.getCurrentUser;
-
+	$scope.isAdminPage = function(){
+		return $location.path().indexOf('admin') == 1;
+	};
+	console.log($location.path().indexOf("admin"));//.includes('admin'));
 	// check scrolled and do scope apply on home page scrolling
 	angular.element($window).bind("scroll", function() {
 		if($location.path() == "/"){
@@ -37,10 +40,24 @@ lungeApp.controller("NavbarNewController", ['$rootScope', '$location', '$window'
 	$scope.isLoggedIn = Auth.isLoggedIn;
 	$scope.isAdmin = Auth.isAdmin;
 	$scope.getCurrentUser = Auth.getCurrentUser;
+	$scope.getCurrentType = Auth.getCurrentType;
+
+	// when a login event is fired from a sibling controller, app.js broadcasts this in a route change
+	// since the navbar will not catch a route change because it typically doesn't repaint, we catch this event here
+	$scope.$on("login", function(){
+		console.log("CAUGHT LOGIN");
+		$scope.isLoggedIn = Auth.isLoggedIn;
+		console.log("Navbar login is now: ", Auth.isLoggedIn);
+		$scope.isLoggedIn = Auth.isLoggedIn;
+	})
 
 	$scope.logout = function() {
 		Auth.logout();
 		$location.path('/login');
 	};
+
+	socket.syncLogin('trainer', function(event, newTrainer) {
+		console.log("LOGIN EVENT, NEW TRAINER: ", newTrainer);
+	});
 
 }]);

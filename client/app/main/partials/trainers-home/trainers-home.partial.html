@@ -20,17 +20,17 @@
                     </div>
                 </div>
                 <div class="trainers-in-home clearfix" ng-style="{'margin-left' : -((page - 1) * 100) + '%'}">
-                    <div class="trainer-card" ng-repeat="trainer in trainers | filter:{'type':  'in-home'}:true" ui-sref="main.trainer({id : trainer.id})">
+                    <div class="trainer-card lg" ng-repeat="trainer in trainers | filter:{'type':  'in-home'}:true" ui-sref="profilePage({urlName : trainer.urlName})">
                         <div class="trainer">
                             <div class="picture">
-                                <img ng-src="{{trainer.profile_picture.url}}"/>
+                                <img ng-src="{{trainer.profile_picture.thumbnail.url}}"/>
                             </div>
                             <div class="details">
                                 <div class="name">
                                     {{trainer.name.first}} {{trainer.name.last}}
                                 </div>
                                 <div class="location">
-                                    <i class="fa fa-map-marker"></i> {{trainer.location.city}}, {{trainer.location.state}}
+                                    <i class="fa fa-map-marker"></i> {{trainer.location.cityState}}
                                 </div>
                                 <div class="rating">
                                     Avg Rating: 5 stars
