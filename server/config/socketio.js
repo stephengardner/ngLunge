@@ -6,12 +6,15 @@
 
 var config = require('./environment');
 var cookieParser = require('cookie-parser');
+var Trainer = require("../api/trainer/trainer.model");
+var app = require('../app');
 //var passportSocketIo = require('passport.socketio');
 
 // When the user disconnects.. perform this
 function onDisconnect(socket) {
 	console.log("Socket DISconnected with decoded token: ", socket.decoded_token);
 	console.info('SocketIO: [%s] DISCONNECTED', socket.address);
+	console.log("This socket is in rooms : ", socket.rooms);
 }
 
 // When the user connects.. perform this
@@ -27,7 +30,28 @@ function onConnect(socket) {
 	require('../api/trainer/trainer.socket').register(socket);
 }
 
-module.exports = function (socketio, sessionStore) {
+function onAuthenticateAsync(socket, data) {
+	console.log("---\n---\nnew socket attempting to authenticate\n---\n---\n---");
+	if(data.token) {
+		jwt.verify(data.token, config.secrets.session, function(err, decoded) {
+			if(err) throw err;
+			if(decoded) {
+
+				console.log("**\nSocket Authenticated\n**")
+				console.log(decoded);
+				socket.decoded_token = decoded;
+				console.log("APP IS:",app);
+				app.sockets[decoded._id] = socket;
+
+			}
+		});
+	}
+	else {
+		console.log("-\nNo socket token sent\n-");
+	}
+}
+var jwt = require('jsonwebtoken');
+module.exports = function (io, server) {
 	// socket.io (v1.x.x) is powered by debug.
 	// In order to see all the debug output, set DEBUG (in server/config/local.env.js) to including the desired scope.
 	//
@@ -38,37 +62,35 @@ module.exports = function (socketio, sessionStore) {
 	// 1. You will need to send the token in `client/components/socket/socket.service.js`
 	//
 	// 2. Require authentication here:
+	app.io = io;
 	var socketioJwt = require('socketio-jwt');
-	socketio.use(require('socketio-jwt').authorize({
+	io.use(socketioJwt.authorize({
 		secret: config.secrets.session,
 		handshake: true,
 		required : false
 	}));
-	/*
-	socketio.set('authorization', socketioJwt.authorize({
-		secret: config.secrets.session,
-		handshake: true,
-		required : false,
-		success : function(data, accept){
-			console.log("AUTHORIZEDDDD");
-		}, fail : function(error, data, accept){
-			console.log("SOMETHING ELSE?");
-		}
-		})
-	);
-	*/
-
-
-	socketio
-		.on('connection', function(socket){
-			console.log("CONNECTED!");
-			console.log("ARE WE AUTHORIZED? ", socket.decoded_token);
-			socket.on('doit', function(){
-				console.log("FUICK");
+	var defaultNamespace = io.of('/');
+	defaultNamespace.on('connection', function(socket){
+			console.log("*********************************on(connection)*******************************************")
+			onConnect(socket);
+			socket.on('disconnect', function(data){
+				onDisconnect(socket);
+			});
+			socket.on("custom-authenticate", function(data) {
+				setTimeout(function(){
+					onAuthenticateAsync(socket, data);
+				},1000);
+			});
+			socket.on('joinRoom', function(room) {
+				// testing to make sure the socket isn't joinign the same room multiple times? jesus idk what's going on
+				socket.leave(room);
+				console.log("A socket is joining:", room);
+				socket.join(room);
 			});
 		}).on('authenticated', function(socket) {
+			console.log("---\n---\n---\nSocket Authenticated\n---\n---\n---");
 			//this socket is authenticated, we are good to handle more events from it.
-			console.log('hello! ' + socket.decoded_token.name);
+			//console.log('-----------------\nhello! ' + socket.decoded_token + '\n-----------------\n');
 		});
 
 

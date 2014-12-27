@@ -1,0 +1,52 @@
+#trainer-register {
+	.error {
+		@extend .col-xxs-12;
+		padding:15px;
+		background:white;
+		border-radius:10px;
+		color:#fc0054;
+		text-align:center;
+		border:2px solid;
+	}
+	.trainer-registration {
+		.form-container {
+			margin-top:1em;
+		}
+	}
+	.profile-picture-container {
+		overflow:hidden;
+	}
+	.picture-upload {
+		.profile-picture-container {
+			border-left:2px solid lighten($body-bg, 15%);
+			margin-bottom:1em;
+			background:lighten($body-bg, 5%);
+		}
+		@extend .col-xs-4;
+		.picture {
+
+		}
+	}
+	.registration {
+		position:relative;
+		@extend .col-xs-8;
+		[class^='col-sm'] {
+			padding-left: 5px;
+			padding-right: 5px;
+			padding-bottom: 18px;
+		}
+		.col-sm-6 {
+			padding-left: 5px;
+			padding-right: 5px;
+			padding-bottom: 18px;
+		}
+		.col-sm-12 {
+			padding-left: 5px;
+			padding-right: 5px;
+			padding-bottom: 18px;
+		}
+		.row {
+			padding: 0 10px 0 10px;
+		}
+	}
+}

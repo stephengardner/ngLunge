@@ -1,0 +1,95 @@
+<div class="trainer-registration">
+    <div class="row form-container"  ng-controller="UploadController">
+    <div class="picture-upload" >
+        <!-- profile picture -->
+        <div class="profile-picture-container">
+            <div class="profile-picture">
+                <div class="registration-specific-image-label" ng-show="profile.picture.url">
+                    Preview
+                </div>
+                <div class="registration-specific-image-placeholder"  ng-show="imgSelection && profile.picture.url">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- buttons -->
+        <div class="btn btn-primary" ng-click="saveCrop()" ng-show="profile.picture.url && cropping">Crop and Save</div>
+        <div class="btn btn-default">Upload avatar</div>
+        <div>
+            <input type="text" ng-model="myModelObj">
+            <input type="file" ng-file-select="onFileSelect($files)">
+            <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*">
+            <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
+            <div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function"
+                 ng-show="dropSupported">drop files here</div>
+            <div ng-file-drop-available="dropSupported=true"
+                 ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
+            <button ng-click="upload.abort()">Cancel Upload</button>
+        </div>
+    </div>
+    <div class="form-group registration">
+        <!-- img area selector -->
+        <!--
+        <div class="profile-picture-loaded"  ng-show="profile.picture.url">
+            <div class="picture" bg-image="{{profile.picture.url}}" bg-image-loaded="attachImgAreaSelect()" ng-show="profile.picture.url">
+
+            </div>
+        </div>
+        -->
+        <div class="image-area-select-wrapper" ng-show="profile.picture.url" >
+            <img id="imgLoaded" ng-src="{{profile.picture.url}}" ng-show="profile.picture.url"  my-style="max-width : {{maxWidth}}; max-height : {{maxHeight}}"/>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="first-name">First Name</label>
+                <input id="first-name" class="ember-view ember-text-field form-control" placeholder="First Name" type="text" required="">
+            </div>
+
+            <div class="col-sm-6">
+                <label for="last-name">Last Name</label>
+                <input id="last-name" class="ember-view ember-text-field form-control" placeholder="Last Name" type="text" required="">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="address-1">Address</label>
+                <input id="address-1" class="ember-view ember-text-field form-control" placeholder="Address Line 1" type="text">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <input id="address-2" class="ember-view ember-text-field form-control" placeholder="Address Line 2" type="text">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="city" class="ember-view ember-text-field form-control" placeholder="City" type="text">
+            </div>
+
+            <div class="col-sm-6">
+                <input id="region" class="ember-view ember-text-field form-control" placeholder="State/Province" type="text">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-5">
+                <input id="billing-postal-code" class="ember-view ember-text-field form-control" placeholder="ZIP/Postal Code" type="text">
+            </div>
+
+            <div class="col-sm-7">
+
+
+                <select id="ember1659" class="ember-view ember-select form-control country-select">
+                    <option disabled="disabled" selected="selected">United States</option>
+                </select>
+            </div>
+        </div>
+
+        <textarea id="billing-additional" class="ember-view ember-text-area form-control" placeholder="Additional Information (company name, tax ID, etc.)"></textarea>
+    </div>
+</div>
+</div>

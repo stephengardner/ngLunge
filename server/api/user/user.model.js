@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
-var authTypes = ['github', 'twitter', 'facebook', 'google'],
+var authTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'],
 autoIncrement = require('mongoose-auto-increment');
 
 var UserSchema = new Schema({
@@ -21,6 +21,7 @@ var UserSchema = new Schema({
   facebook: {},
   twitter: {},
   google: {},
+	linkedin : {},
   github: {}
 });
 
@@ -69,7 +70,7 @@ UserSchema
   .path('email')
   .validate(function(email) {
     if (authTypes.indexOf(this.provider) !== -1) return true;
-    return email.length;
+    return email && email.length;
   }, 'Email cannot be blank');
 
 // Validate empty password
@@ -81,6 +82,11 @@ UserSchema
   }, 'Password cannot be blank');
 
 // Validate email is not taken
+// not used right now since passport authentication can have
+// one email assigned to multiple providers.
+// for example, facebook and linkedin could use the same email
+// in the future, perhaps auto-combine these into one user!
+/* DO NOT DELETE, see ABOVE before deleting!
 UserSchema
   .path('email')
   .validate(function(value, respond) {
@@ -94,7 +100,7 @@ UserSchema
       respond(true);
     });
 }, 'The specified email address is already in use.');
-
+*/
 var validatePresenceOf = function(value) {
   return value && value.length;
 };

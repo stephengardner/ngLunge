@@ -1,0 +1,95 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'c:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'awesomeSessionStore',
+1 verbose cli   '--save' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 warn package.json crypto@0.0.3 crypto is also the name of a node core module.
+5 warn package.json fs@0.0.2 fs is also the name of a node core module.
+6 warn package.json fs@0.0.2 No description
+7 warn package.json fs@0.0.2 No repository field.
+8 warn package.json fs@0.0.2 No README data
+9 warn package.json path@0.4.9 path is also the name of a node core module.
+10 warn package.json path@0.4.9 No README data
+11 verbose readDependencies using package.json deps
+12 verbose cache add [ 'awesomeSessionStore', null ]
+13 verbose cache add name=undefined spec="awesomeSessionStore" args=["awesomeSessionStore",null]
+14 verbose parsed url { protocol: null,
+14 verbose parsed url   slashes: null,
+14 verbose parsed url   auth: null,
+14 verbose parsed url   host: null,
+14 verbose parsed url   port: null,
+14 verbose parsed url   hostname: null,
+14 verbose parsed url   hash: null,
+14 verbose parsed url   search: null,
+14 verbose parsed url   query: null,
+14 verbose parsed url   pathname: 'awesomeSessionStore',
+14 verbose parsed url   path: 'awesomeSessionStore',
+14 verbose parsed url   href: 'awesomeSessionStore' }
+15 silly lockFile 75a5ac0b-awesomeSessionStore awesomeSessionStore
+16 verbose lock awesomeSessionStore C:\Users\user\AppData\Roaming\npm-cache\75a5ac0b-awesomeSessionStore.lock
+17 silly lockFile 75a5ac0b-awesomeSessionStore awesomeSessionStore
+18 silly lockFile 75a5ac0b-awesomeSessionStore awesomeSessionStore
+19 verbose addNamed [ 'awesomeSessionStore', '' ]
+20 verbose addNamed [ null, '*' ]
+21 silly lockFile ffa7ea32-awesomeSessionStore awesomeSessionStore@
+22 verbose lock awesomeSessionStore@ C:\Users\user\AppData\Roaming\npm-cache\ffa7ea32-awesomeSessionStore.lock
+23 silly addNameRange { name: 'awesomeSessionStore', range: '*', hasData: false }
+24 verbose request where is /awesomeSessionStore
+25 verbose request registry https://registry.npmjs.org/
+26 verbose request id 1655499d65b8b30d
+27 verbose url raw /awesomeSessionStore
+28 verbose url resolving [ 'https://registry.npmjs.org/', './awesomeSessionStore' ]
+29 verbose url resolved https://registry.npmjs.org/awesomeSessionStore
+30 verbose request where is https://registry.npmjs.org/awesomeSessionStore
+31 info trying registry request attempt 1 at 20:58:42
+32 http GET https://registry.npmjs.org/awesomeSessionStore
+33 http 404 https://registry.npmjs.org/awesomeSessionStore
+34 verbose headers { date: 'Wed, 10 Dec 2014 01:58:47 GMT',
+34 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+34 verbose headers   'content-type': 'application/json',
+34 verbose headers   'cache-control': 'max-age=0',
+34 verbose headers   'content-length': '52',
+34 verbose headers   'accept-ranges': 'bytes',
+34 verbose headers   via: '1.1 varnish',
+34 verbose headers   age: '0',
+34 verbose headers   'x-served-by': 'cache-iad2125-IAD',
+34 verbose headers   'x-cache': 'MISS',
+34 verbose headers   'x-cache-hits': '0',
+34 verbose headers   'x-timer': 'S1418176727.580677,VS0,VE84',
+34 verbose headers   'keep-alive': 'timeout=10, max=50',
+34 verbose headers   connection: 'Keep-Alive' }
+35 silly registry.get cb [ 404,
+35 silly registry.get   { date: 'Wed, 10 Dec 2014 01:58:47 GMT',
+35 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+35 silly registry.get     'content-type': 'application/json',
+35 silly registry.get     'cache-control': 'max-age=0',
+35 silly registry.get     'content-length': '52',
+35 silly registry.get     'accept-ranges': 'bytes',
+35 silly registry.get     via: '1.1 varnish',
+35 silly registry.get     age: '0',
+35 silly registry.get     'x-served-by': 'cache-iad2125-IAD',
+35 silly registry.get     'x-cache': 'MISS',
+35 silly registry.get     'x-cache-hits': '0',
+35 silly registry.get     'x-timer': 'S1418176727.580677,VS0,VE84',
+35 silly registry.get     'keep-alive': 'timeout=10, max=50',
+35 silly registry.get     connection: 'Keep-Alive' } ]
+36 silly lockFile ffa7ea32-awesomeSessionStore awesomeSessionStore@
+37 silly lockFile ffa7ea32-awesomeSessionStore awesomeSessionStore@
+38 error 404 404 Not Found: awesomeSessionStore
+38 error 404
+38 error 404 'awesomeSessionStore' is not in the npm registry.
+38 error 404 You should bug the author to publish it
+38 error 404 It was specified as a dependency of 'ng-lunge-full-stack2'
+38 error 404
+38 error 404 Note that you can also install from a
+38 error 404 tarball, folder, or http url, or git url.
+39 error System Windows_NT 6.1.7601
+40 error command "c:\\Program Files\\nodejs\\node.exe" "c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "awesomeSessionStore" "--save"
+41 error cwd c:\xampp\htdocs\public_html\ngLungeFullStack2
+42 error node -v v0.10.32
+43 error npm -v 1.4.28
+44 error code E404
+45 verbose exit [ 1, true ]

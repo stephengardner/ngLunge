@@ -12,6 +12,7 @@ var TrainerSchema = new Schema(
 		id : { type : Number },
 		email : { type : String, unique : true },
 		name : { first : {type : String, required : false}, last : {type : String, required : false} },
+		socket : { type : Object },
 		location: {
 			google : {
 				placesAPI : {
@@ -46,6 +47,12 @@ var TrainerSchema = new Schema(
 				home : Array
 			}
 		},
+
+		facebook: {},
+		linkedin : {},
+		twitter: {},
+		google: {},
+		github: {},
 		certs : {
 		},
 		certifications : [{ type : Schema.Types.ObjectId, ref : 'CertificationType' }]//,
@@ -301,6 +308,7 @@ TrainerSchema
 		if(!(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(value))) {
 			return this.invalidate('zipcode', 'Please enter a valid zipcode');
 		}
+		return true;
 	}, 'Invalid zipcode');
 
 // Validate email is not taken
@@ -309,8 +317,10 @@ TrainerSchema
 	.validate(function(value) {
 		console.log("Attempting to validate state:", value);
 		if(value && (value != "MD" && value != "DC" && value != "VA")){
+			console.log("INVALID USER STATE (not dc,md,va)");
 			return this.invalidate('state', 'Lunge is not active in that state');
 		}
+		return true;
 	}, 'Invalid state');
 
 // Validate email is not taken

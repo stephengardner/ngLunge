@@ -13,7 +13,28 @@ angular.module('ngLungeFullStack2App')
 			 * @param  {Function} callback - optional
 			 * @return {Promise}
 			 */
-
+			setSocket : function(socket) {
+				console.log("Set socket to:",socket);
+				this.socket = socket;
+			},
+			setSocketFactory : function(socketFactory) {
+				this.socketFactory = socketFactory;
+			},
+			syncAfterLogin : function () {
+				/*
+				for some reason this socket event is being triggered a LOT!!!!!!!!!!!!!!!!!!!!!!
+				also makes it so the profile page name isn't updated on whichever page loaded second i believe....
+				wierd.....
+				*/
+				if(Auth.socketFactory && Auth.isLoggedIn() ) {
+					console.log("\n-\n-\n-\n-", currentUser);
+					//Auth.socketFactory.unsyncUpdates('trainer');
+					Auth.socketFactory.sync.user('trainer', currentUser, function(event, user){
+						console.log("Setting...", user);
+						Auth.setCurrentUser(user);
+					});
+				}
+			},
 			login: function(lunger, callback) {
 				var cb = callback || angular.noop;
 				var deferred = $q.defer();
@@ -27,8 +48,14 @@ angular.module('ngLungeFullStack2App')
 						//Auth.logout();
 						//return;
 						console.log("logged in, this should have a token and type: ", data);
+
+						// put the token and user type in our cookie store.  Authenticate the user on every ping request
 						$cookieStore.put('token', data.token);
 						$cookieStore.put('type', data.type);
+						// authenticate the socket.  We could potentially wait and authenticate the socket whenever it
+						// next sendsa socket event.  But we're going to authenticate it anyways.  There is an almost
+						// infinitely small difference here...
+						Auth.socket.emit('custom-authenticate', {token : Auth.getToken()});
 						currentType = data.type;
 						Auth.type = data.type;
 						console.log("client side auth service checking the return json 'type' param og the login() response and then GETting whichever it should be");
@@ -38,7 +65,6 @@ angular.module('ngLungeFullStack2App')
 						else {
 							currentUser = Trainer.get();
 						}
-
 						deferred.resolve(data);
 						return cb();
 					}).
@@ -61,6 +87,7 @@ angular.module('ngLungeFullStack2App')
 						console.log("Auth service register submitPassword callback, setting cookieStore token = :", response.token);
 						$cookieStore.put('token', response.token);
 						$cookieStore.put('type', 'trainer');
+
 						currentUser = Trainer.get(function(response){
 							console.log("Auth server currentUser = Trainer.get success response: ", response);
 							deferred.resolve(response);
@@ -204,9 +231,10 @@ angular.module('ngLungeFullStack2App')
 			 * @return {Object} user
 			 */
 			updateProfile : function(dataObject, callback) {
+				alert("Calling Auth service updateProfile()");
 				var cb = callback || angular.noop,
 					Model = this.type == "trainer" ? Trainer : User;
-
+				console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
 				return Trainer.update({ id: currentUser._id }, dataObject, function(user) {
 					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
 					currentUser = user;
@@ -280,16 +308,27 @@ angular.module('ngLungeFullStack2App')
 
 			asyncLoginByToken : function() {
 				// the token has been set, so simply just shout out to the API to get the user!
-				var type = $cookieStore.get('type');
-				currentType = type;
+				var type;
+				try {
+					if($cookieStore.get("type")) {
+						var type = $cookieStore.get('type');
+						currentType = type;
+					}
+				}
+				catch(err) {
+					console.log("Cookiestore error: ", err);
+				}
 				if(type == "trainer")
 					currentUser = Trainer.get(function(response, headers){
 						console.log("Auth service auto logged in with response: ", response);
+						//Auth.syncAfterLogin();
 					}, function(err){
 						console.log("Auth service auto login ERRRO: ", err);
 					});
 				else
-					currentUser = User.get(function(response, headers){});
+					currentUser = User.get(function(response, headers){
+						//Auth.syncAfterLogin();
+					});
 			}
 		};
 		if($cookieStore.get('token')) {

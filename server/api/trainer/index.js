@@ -22,7 +22,3 @@ router.post('/', controller.create);
 router.get('/send_email/:email', controller.sendEmail);
 
 module.exports = router;
-
-function postUpdate() {
-
-}

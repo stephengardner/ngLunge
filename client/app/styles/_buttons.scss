@@ -16,3 +16,7 @@
 .btn-contact {
 	@include button-variant(white, transparent, #323C4D);
 }
+
+.btn-custom-small {
+	padding:1px 7px;
+}

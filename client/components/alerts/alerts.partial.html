@@ -1,0 +1,12 @@
+<div ng-if="1" class="alerts" ng-repeat="alert in trainer.alerts.profile.home">
+    <div ng-if="alert.template" ng-show="!alert.closed">
+        <div compile="alert.template"></div>
+    </div>
+    <div ng-if="!alert.template" ng-show="!alert.closed">
+        <div class="alert profile" ng-class="alert.type" >
+            <div class="close" ng-click="closeMessage($index)"><i class="fa fa-times"></i></div>
+            <h1>{{alert.title}}</h1>
+            <div class="welcome-sub">{{alert.sub}}</div>
+        </div>
+    </div>
+</div>

@@ -51,21 +51,30 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
       }
     };
   }).config(['GoogleMapApiProvider'.ns(), function (GoogleMapApi) {
+		/*
 		GoogleMapApi.configure({
 			//    key: 'your api key',
 			v: '3.17',
 			libraries: 'weather,geometry,visualization'
 		});
+		*/
 	}])
 
   .run(function ($rootScope, $location, Auth, editableOptions) {
-		// works, will login or logout the user if their token changes
+		// works, will login or logout the user if their token changes, this is not for sockets, socket auth
+		// is handled within auth.
 		$rootScope.$watch(function(){
 			return Auth.getToken();
-		}, function(){
-			console.log("TOKEN CHANGED!");
-			Auth.asyncLoginByToken();
-		})
+		}, function(token){
+			if(token) {
+				console.log("logging in");
+				Auth.asyncLoginByToken();
+			}
+			else {
+				console.log("logging out");
+				// unnnecessary... Auth.logout();
+			}
+		});
 		$rootScope.previousState;
 		$rootScope.currentState;
 		$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {

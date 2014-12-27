@@ -1,0 +1,76 @@
+var AWS = require('aws-sdk'),
+	crypto = require('crypto'),
+	config = require('../../config/environment'),
+	createS3Policy,
+	getExpiryTime;
+
+// helper function to get some date in the future for when we want the s3 policy to expire
+getExpiryTime = function () {
+	var _date = new Date();
+	return '' + (_date.getFullYear()) + '-' + (_date.getMonth() + 1) + '-' +
+		(_date.getDate() + 1) + 'T' + (_date.getHours() + 3) + ':' + '00:00.000Z';
+};
+
+createS3Policy = function(contentType, callback) {
+	var date = new Date();
+	var bucketName = 'golunge';
+	// general policy we're going to return to the user.
+	// specifies how long whoever receives this policy can interact with the amazon bucket,
+	// also specifies what the subsequent file upload must be like after requesting this policy
+	var s3Policy = {
+		"expiration": "2020-01-01T00:00:00Z",
+		"conditions": [
+			{"bucket": bucketName},
+			["starts-with", "$key", ""],
+			{"acl": "public-read"},
+			["starts-with", "$Content-Type", ""],
+			["starts-with", "$filename", ""],
+			["content-length-range", 0, 524288000]
+		]
+	}
+	// stringify and encode the policy
+	var stringPolicy = JSON.stringify(s3Policy);
+	var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+	// sign the base64 encoded policy
+	var signature = crypto.createHmac('sha1', config.aws.AWS_SECRET_ACCESS_KEY)
+		.update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+
+	// we are using this server side construction of a new file name.
+	// since anyone can upload profile pictures (before they are registered), they don't necessarily
+	// have any info associated with them.  As such, we check if the file they WANTED to send to s3 was valid,
+	// and if so, construct a new filename with that same extension and mimeType.
+	var lungeMimeTypesAllowed = {
+		'image/jpeg' : '.jpg',
+		'image/png' : '.png'
+	}
+	var newFileNameExtension = lungeMimeTypesAllowed[contentType];
+	if(!newFileNameExtension) {
+		//alert("Please select a .jpg or a .png image file as your profile picture");
+		return false;
+	}
+
+	// get a unique random filename for a profile picture which will be uploaded after receiving this policy doc
+	// then, send everything back
+	crypto.randomBytes(12, function(ex, buf) {
+		var newFileToken = buf.toString('hex');
+		// build the results object
+		var s3Credentials = {
+			s3Policy: base64Policy,
+			s3Signature: signature,
+			AWSAccessKeyId: config.aws.AWS_ACCESS_KEY_ID,
+			newFileName : newFileToken + "." + newFileNameExtension
+		};
+		// send it back
+		callback(s3Credentials);
+	});
+};
+
+exports.getS3Policy = function(req, res) {
+	createS3Policy(req.query.mimeType, function (creds, err) {
+		if (!err) {
+			return res.send(200, creds);
+		} else {
+			return res.send(500, err);
+		}
+	});
+};

@@ -154,8 +154,6 @@ exports.update = function(req, res, next) {
 		var updated = _.merge(trainer, req.body);
 		updated.save(function (err) {
 			if (err) { return handleError(res, err); }
-			console.log("THE APP Is:", app);
-			app.e.emit("updated", trainer);
 			return res.json(200, trainer);
 		});
 	});
@@ -272,8 +270,6 @@ exports.destroy = function(req, res) {
  * Get my info
  */
 exports.me = function(req, res, next) {
-	console.log("------------------");
-	console.log(req.session);
 	var userId = req.user._id;
 	Trainer.findOne(
 		{_id: userId}, '-salt -hashedPassword')

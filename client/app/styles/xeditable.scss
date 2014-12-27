@@ -1,0 +1,21 @@
+.trainer-profile {
+	.editable-empty {
+		color:inherit;
+		font-style:inherit;
+	}
+}
+
+.editable-error {
+	// give it the alert error background and text color, but make padding and margins different
+	@extend .alert;
+	@extend .error;
+	padding: .5em;
+	margin-bottom: 1em;
+	border-radius: 6px;
+}
+
+.editable-full {
+	~ .editable-wrap {
+		display:block;
+	}
+}

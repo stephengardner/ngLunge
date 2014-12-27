@@ -1,5 +1,6 @@
 lungeApp.controller("NavbarNewController", ['socket', '$state', '$rootScope', '$location', '$window', '$scope', '$location', 'Auth', function(socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
 	$scope.getCurrentUser = Auth.getCurrentUser;
+
 	$scope.isAdminPage = function(){
 		return $location.path().indexOf('admin') == 1;
 	};
@@ -56,8 +57,14 @@ lungeApp.controller("NavbarNewController", ['socket', '$state', '$rootScope', '$
 		$location.path('/login');
 	};
 
+	$scope.$on("$destroy", function(){
+		alert("destroying the navbar scope");
+		socket.unsync.user("trainer", Auth.getCurrentUser());
+	});
+	/*
 	socket.syncLogin('trainer', function(event, newTrainer) {
 		console.log("LOGIN EVENT, NEW TRAINER: ", newTrainer);
 	});
+	*/
 
 }]);

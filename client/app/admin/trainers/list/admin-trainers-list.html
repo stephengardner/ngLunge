@@ -1,0 +1,53 @@
+<div class="container" id="trainers-admin">
+    <div class="actions">
+        <div class="btn btn-default">
+            <i class="fa fa-plus"></i> Add Trainer
+        </div>
+    </div>
+    <div class="trainer-card wide" ng-repeat="trainer in trainers">
+        <div class="trainer clearfix">
+            <div class="profile-picture-container">
+                <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" >
+                </div>
+            </div>
+            <div class="information">
+                <div class="name">
+                    <a href="#" editable-text="trainer.name.full" onbeforesave="updateTrainer($index, $data, trainer)" e-style="width : {{width}}" ng-click="getSize($event)">
+                        {{ (trainer.name.full || 'empty') }}
+                    </a>
+                </div>
+                <div class="location">
+                    <a href="#" editable-text="trainer.location.city" onbeforesave="updateTrainer($index, $data, trainer)" e-style="width : {{width}}" ng-click="getSize($event)">
+                        {{ (trainer.location.city || 'empty') }}
+                    </a>
+                    <a href="#" editable-text="trainer.location.state" onbeforesave="updateTrainer($index, $data, trainer)" e-style="width : {{width}}" ng-click="getSize($event)">
+                        {{ (trainer.location.state || 'empty') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="trainer-card wide" ng-repeat="trainer in trainers">
+        <div class="trainer clearfix">
+            <div class="profile-picture-container">
+                <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" >
+                </div>
+            </div>
+            <div class="information">
+                <div class="name">
+                    <a href="#" editable-text="trainer.name.full" onbeforesave="updateTrainer($index, $data, trainer)" e-style="width : {{width}}" ng-click="getSize($event)">
+                        {{ (trainer.name.full || 'empty') }}
+                    </a>
+                </div>
+                <div class="location">
+                    <a href="#" editable-text="trainer.location.city" onbeforesave="updateTrainer($index, $data, trainer)" e-style="width : {{width}}" ng-click="getSize($event)">
+                        {{ (trainer.location.city || 'empty') }}
+                    </a>
+                    <a href="#" editable-text="trainer.location.state" onbeforesave="updateTrainer($index, $data, trainer)" e-style="width : {{width}}" ng-click="getSize($event)">
+                        {{ (trainer.location.state || 'empty') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

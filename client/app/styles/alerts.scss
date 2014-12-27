@@ -1,0 +1,35 @@
+.alert {
+	&.info {
+		background: #8ACBE8;
+		color:#34537B;
+	}
+	&.error {
+		color: #811D1D;
+		background: rgb(221, 123, 123);
+	}
+	a[editable-text] {
+		color:inherit;
+		text-decoration:none;
+		&:hover {
+			color:lighten($body-bg, 5%);
+		}
+	}
+	.description {
+		.warning {
+			background:rgb(228, 189, 189);
+			margin:1rem 0rem;
+			padding:.75em;
+			border-radius:10px;
+		}
+		.url {
+			line-height:1;
+			font-size:1.2em;
+			color:#333;
+			margin-bottom:.5rem;
+		}
+		margin-top:1rem;
+		.buttons {
+			margin-top:1rem;
+		}
+	}
+}

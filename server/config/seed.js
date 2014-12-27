@@ -19,6 +19,7 @@ Registration.find({}).remove(function(){
 	});
 });
 
+
 Trainer.find({}).remove(function() {
 	Trainer.create({
 		name : {first : "Augie", last : "Gardner"},
@@ -66,6 +67,7 @@ Trainer.find({}).remove(function() {
 		password : "test12"
 	})
 });
+
 /*
 setTimeout(function(){
 	Trainer.create({

@@ -14,8 +14,8 @@ var config = require('./config/environment'),
 	busboy = require('connect-busboy'),
 	fs = require('fs'),
 	connect = require('connect'),
-	//session = require('express-session'),
-	//MongoStore = require('connect-mongo')(session),
+	session = require('express-session'),
+	MongoStore = require('connect-mongo')(session),
 	cookieParser = require('cookie-parser'),
 	events = require('events'),
 	passport = require("passport");
@@ -28,25 +28,27 @@ var server = require('http').createServer(app);
 // Connect to database
 var connection = mongoose.connect(config.mongo.uri, config.mongo.options);
 autoIncrement.initialize(connection);
-/*
+
 var MStore = new MongoStore({
 	url: config.mongo.uri
 });
-*/
+
 
 app.use(cookieParser());
 
  // set up sessions
-/*
+
  app.use(session({
- key: 'connect.sid',
- secret : config.secrets.session,
- store : MStore
+	 key: 'connect.sid',
+	 secret : config.secrets.session,
+	 resave : true,
+	 saveUninitialized : true,
+	 store : MStore
  }))
-*/
+
 // initialize passport and set sessions
-//app.use(passport.initialize());
-//app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // body parsing middleware
 app.use(bodyParser.json({uploadDir:'./uploads'}));
@@ -65,6 +67,10 @@ var socketio = require('socket.io')(server, {
 	, path: '/socket.io-client'
 });
 
+app.socketio = socketio;
+//app.io = socketio;
+app.sockets = {};
+var socketioJwt = require('socketio-jwt');
 // create a MongoStore for session storage
 
 // Start server
@@ -82,7 +88,7 @@ app.e = new MyEmitter;
 // Expose app
 exports = module.exports = app;
 
+require('./config/socketio')(socketio, server);
 // Configurations
-require('./config/socketio')(socketio);
 require('./config/express')(app);
 require('./routes')(app);
