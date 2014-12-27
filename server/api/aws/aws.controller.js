@@ -13,11 +13,12 @@ var AWS = require('aws-sdk');
 var Knox = require('knox');
 //AWS.config.loadFromPath('./config.json');
 var s3 = new AWS.S3();
+var config = require('../../config/environment');
 
 var client = Knox.createClient({
-	key: 'AKIAJQWJ2WDXW6HQSHZA'
-	, secret: '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'
-	, bucket: 'lungeapp'
+	key: config.AWS.AWS_ACCESS_KEY_ID,
+	secret: config.AWS.AWS_SECRET_ACCESS_KEY,
+	bucket: config.AWS.S3_BUCKET
 });
 var s3UploadService = function(req, res) {
 	/* works for multer

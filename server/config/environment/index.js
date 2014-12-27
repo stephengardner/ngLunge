@@ -70,17 +70,6 @@ var all = {
 		ADMINS : [
 			'augdog911@gmail.com'
 		]
-	},
-	AWS : {
-		AWS_ACCESS_KEY_ID  : "AKIAJQWJ2WDXW6HQSHZA",
-		AWS_SECRET_ACCESS_KEY : "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",
-		S3_BUCKET : "lungeapp"
-	},
-
-	aws : {
-		AWS_ACCESS_KEY_ID  : "AKIAJQWJ2WDXW6HQSHZA",
-		AWS_SECRET_ACCESS_KEY : "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",
-		S3_BUCKET : "lungeapp"
 	}
 };
 // Export the config object based on the NODE_ENV
