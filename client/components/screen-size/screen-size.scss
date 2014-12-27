@@ -1,0 +1,6 @@
+#screen-size {
+	display:none;
+	@respond-to(xs){
+		display:block;
+	}
+}

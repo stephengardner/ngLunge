@@ -1,0 +1,26 @@
+<div class="navbar-new" ng-controller="NavbarNewController" ng-class="{'scrolled' : scrolled}">
+    <div class="container">
+        <div class="brand">
+            <a ui-sref="main.home">
+                <i class="fa fa-google-wallet"></i> Lunge
+            </a>
+        </div>
+        <div class="buttons" ng-class="{'scrolled' : scrolled}">
+            <a ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.login" class="btn btn-login">
+                Log in
+            </a>
+            <div ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.signup"  class="btn btn-signup">
+                Sign up
+            </div>
+            <a ui-sref="main.admin" ng-show="isAdmin()" ui-sref-active="active" ng-class="{active: isAdminPage()}" class="btn btn-info">
+                Admin
+            </a>
+            <a ng-if="getCurrentType() == 'user'" ui-sref="main.dashboard" ng-show="isLoggedIn()" class="btn btn-username">
+                {{getCurrentUser().name.full ? getCurrentUser().name.full : getCurrentUser().name}}
+            </a>
+            <a ng-if="getCurrentType() == 'trainer'" ui-sref="profilePage({urlName : getCurrentUser().urlName})" ng-show="isLoggedIn()" ui-sref-active="active" class="btn btn-username">
+                {{getCurrentUser().name.full ? getCurrentUser().name.full : getCurrentUser().name}}
+            </a>
+        </div>
+    </div>
+</div>

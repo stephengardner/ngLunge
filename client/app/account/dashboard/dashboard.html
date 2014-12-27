@@ -1,0 +1,13 @@
+<div class="container" id="dashboard">
+    <div class="profile-picture-container">
+        <div class="profile-picture" ng-style="{'background-image' : 'url({{user.facebook.picture.data.url}})'}" ng-if="user.facebook">
+        </div>
+    </div>
+    <div class="name">
+        <h1>{{user.name}}</h1>
+    </div>
+    <div class="logout" ng-click="logout()">
+        {{user}}
+        <i class="fa fa-power-off"></i> Logout
+    </div>
+</div>

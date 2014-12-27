@@ -1,0 +1,86 @@
+<div class="certifications container" class="container">
+    <header>
+        <h1>Certifications</h1>
+        <div class="buttons">
+            <div class="btn" ng-class="{'btn-primary' : !newCert.visible, 'btn-danger' : newCert.visible}" ng-click="newCert.toggleVisible()">
+                <i class="fa" ng-class="{'fa-plus' : !newCert.visible, 'fa-minus' : newCert.visible}"></i> {{!newCert.visible ? 'Add certification' : 'Cancel'}}
+            </div>
+        </div>
+    </header>
+    <div class="add-certification">
+        <form class="form form-horizontal" ng-show="newCert.visible" ng-submit="createCert(newCert)">
+            <h3>Add a new certification</h3>
+            <div class="form-group">
+                <label  class="col-sm-2 control-label" for="certificationName">
+                    Name
+                </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="certificationName" placeholder="Name" ng-model="newCert.data.name">
+                </div>
+            </div>
+        </form>
+    </div>
+    <section class="certs">
+        <div class="cert" ng-repeat="cert in certifications | orderBy:'name'">
+            <div class="name">
+                <h2>
+                    {{cert.name}}
+                    <!-- delete Cert -->
+                    <i class="fa fa-times-circle delete" ng-click="deleteCert(cert)"></i>
+                </h2>
+            </div>
+            <ul class="types">
+                <li class="type" ng-repeat="type in cert.types" ng-class="{'first': $first, 'last': $last}">
+                    {{type.name}}
+                    <!-- delete Cert Type -->
+                    <i ng-click="deleteCertType(cert, type, $index)" class="fa fa-times delete"></i>
+                </li>
+                <!-- form to add new Cert Type -->
+                <form ng-keyup="$event.keyCode == 13 && certAddType(cert);" ng-submit="certAddType(cert);" class="form-horizontal" ng-show="addingTo[$index]">
+                    <h3>Add a new sub-type to: <strong>{{cert.name}}</strong></h3>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label" for="name{{$index}}">
+                            Name
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name{{$index}}" placeholder="Name" ng-model="newCertType.data.name">
+                        </div>
+                    </div>
+                    <div class="more-info" ng-show="newCertType.showMoreInfo">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="description{{$index}}">
+                                Description
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea id="description{{$index}}" class="form-control" type="text" ng-model="newCertType.description" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label" for="accreditation{{$index}}">
+                                Accreditation
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="accreditation{{$index}}" placeholder="Accreditation">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- buttons to Close Cert Type form -->
+                    <div class="buttons">
+                        <span class="btn btn-danger" ng-click="toggleNewSubType(cert, $index)"><i class="fa fa-minus"></i> Cancel</span>
+                    <span class="more-button btn btn-info" ng-click="newCertType.toggleMoreInfo()">
+                        <i class="fa" ng-class="{'fa-plus' : !newCertType.showMoreInfo, 'fa-minus' : newCertType.showMoreInfo}"></i> {{!newCertType.showMoreInfo ? 'more info' : 'less info'}}
+                    </span>
+                    </div>
+                </form>
+                <!-- button to Open Cert Type form -->
+                <div class="buttons">
+                    <div class="btn btn-transparent" ng-show="!addingTo[$index]" ng-click="toggleNewSubType(cert, $index)">
+                        <i class="fa fa-plus"></i>
+                        Add sub-type
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </section>
+
+</div>

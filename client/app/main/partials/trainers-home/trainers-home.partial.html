@@ -1,0 +1,50 @@
+<section id="category-home" ng-controller="TrainerHomeController">
+    <div class="container title">
+        <h1><i class="fa fa-map-marker"></i> Trainers Near You</h1>
+    </div>
+    <div class="container">
+        <tabset>
+            <tab heading="In-home trainers">
+                <div class="nav prev" ng-show="page > 1 && pagination.active" ng-click="pageIncrement(-1)">
+                    <div class="table-centered">
+                        <div class="table-centered-cell">
+                            <i class="fa fa-chevron-left"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav next" ng-show="pagination.active && !pagination.finished" ng-click="pageIncrement(1)">
+                    <div class="table-centered">
+                        <div class="table-centered-cell">
+                            <i class="fa fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="trainers-in-home clearfix" ng-style="{'margin-left' : -((page - 1) * 100) + '%'}">
+                    <div class="trainer-card lg" ng-repeat="trainer in trainers | filter:{'type':  'in-home'}:true" ui-sref="profilePage({urlName : trainer.urlName})">
+                        <div class="trainer">
+                            <div class="picture">
+                                <img ng-src="{{trainer.profile_picture.thumbnail.url}}"/>
+                            </div>
+                            <div class="details">
+                                <div class="name">
+                                    {{trainer.name.first}} {{trainer.name.last}}
+                                </div>
+                                <div class="location">
+                                    <i class="fa fa-map-marker"></i> {{trainer.location.cityState}}
+                                </div>
+                                <div class="rating">
+                                    Avg Rating: 5 stars
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="Gym-affiliated trainers">
+                <div class="trainers-in-gym">
+                    world
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</section>

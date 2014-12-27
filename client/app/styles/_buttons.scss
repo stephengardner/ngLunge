@@ -1,0 +1,22 @@
+.btn-transparent {
+	@include button-variant(#fff, transparent, #fff);
+}
+.btn-login {
+	//@extend .btn-primary;
+	//border-color:white;
+	@include button-variant(#fff, transparent, #fff);
+}
+.btn-signup {
+	@include button-variant(#fff, transparent, #323C4D);
+}
+.btn-book {
+	@include button-variant(white, #FC3E3E, #323C4D);
+	border-width:.25em;
+}
+.btn-contact {
+	@include button-variant(white, transparent, #323C4D);
+}
+
+.btn-custom-small {
+	padding:1px 7px;
+}

@@ -1,0 +1,145 @@
+// registration box modeled after heroku's registration box, which actually uses complete bootstrap framework
+.registration-box {
+	max-width:700px;
+	margin:0 auto;
+	&.invalid {
+		h1 {
+			text-align:center;
+		}
+	}
+	.has-error {
+		overflow:hidden;
+		.help-block {
+			padding: 1em;
+			text-align: center;
+			border: 1px solid;
+			border-radius: 8px;
+			background: #EF8B8A;
+			position:relative;
+			color:#9D2927;
+		}
+	}
+	hr {
+		height: 2px;
+		border: none;
+		background-color: none;
+		background-image: -webkit-linear-gradient(left,rgba(136,136,144,0) 0,#f3f3f8 5%,#f3f3f8 95%,rgba(136,136,144,0) 100%);
+		background-image: -moz-linear-gradient(left,rgba(136,136,144,0) 0,#f3f3f8 5%,#f3f3f8 95%,rgba(136,136,144,0) 100%);
+		background-image: -ms-linear-gradient(left,rgba(136,136,144,0) 0,#f3f3f8 5%,#f3f3f8 95%,rgba(136,136,144,0) 100%);
+		background-image: linear-gradient(to right,rgba(136,136,144,0) 0,#f3f3f8 5%,#f3f3f8 95%,rgba(136,136,144,0) 100%);
+		display: block;
+		margin-top: 3.4rem;
+		margin-left: -20px;
+		margin-right: -20px;
+		opacity: .6;
+		border-top: 1px solid #e5e5e7;
+		margin-bottom:20px;
+	}
+	header {
+		margin-top:6em;
+		text-align:center;
+		h1 {
+			font-size:1.9em;
+		}
+	}
+	h3 {
+		font-size:1.4em;
+		text-align:center;
+	}
+	.benefits {
+		@extend .col-sm-6;
+		@extend .col-xs-12;
+		h2 {
+			font-size:1.3em;
+			margin-top:20px;
+			margin-bottom:10px;
+		}
+		p {
+			margin-bottom:2em;
+		}
+	}
+	.form {
+		&.md {
+			@extend .col-sm-6;
+			@extend .col-xs-12;
+		}
+		&.lg {
+			@extend .col-sm-12;
+		}
+		&.sm {
+			margin: 0 auto;
+			max-width:350px;
+		}
+		.form-group {
+			margin-top:1.6em;
+			margin-bottom:1.9em;
+			&.last {
+				margin-bottom:0em;
+			}
+		}
+	}
+
+}
+.profile-picture-container {
+	.profile-picture {
+		width:100%;
+		padding: 0px;
+		padding-bottom: 100%;
+		position:relative;
+		text-align:center;
+		.registration-specific-image-label {
+			position:absolute;
+			left:0;
+			right:0;
+			top:50%;
+			height:1.5em;
+			margin-top:-.75em;
+			font-size:1.4em;
+		}
+		.registration-specific-image-placeholder {
+			position:absolute;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			background-size: contain!important;
+			background-position: center!important;
+			background-repeat: no-repeat!important;
+		}
+	}
+}
+.trainer-reviews {
+	.review {
+		.profile-picture-container {
+			@extend .col-xs-2;
+			@extend .col-xxs-4;
+			border-left:2px solid lighten($body-bg, 15%);
+		}
+	}
+}
+.profile-picture-loaded {
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	background:rgba(0,0,0,.6);
+	z-index:1;
+	/*
+	-webkit-transition: opacity .5s;
+	&.ng-enter {
+		opacity:0;
+	}
+	&.ng-enter-active {
+		opacity: 1;
+	}
+	*/
+	.picture {
+		width:100%;
+		height:100%;
+		position:relative;
+		background-size: contain!important;
+		background-position: top center!important;
+		background-repeat: no-repeat!important;
+	}
+}

@@ -1,0 +1,37 @@
+<div id="certifications" class="container trainers">
+    <h1>Certifications</h1>
+    {{trainer.certs}}
+    <form class="search-form form-inline" role="form">
+        <div class="form-group">
+            <div class="input-group">
+                <label class="sr-only" for="search">Search</label>
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" id="search" placeholder="Search certifications">
+            </div>
+        </div>
+    </form>
+    <section class="filter">
+        <h2>Filter certifications by:</h2>
+    </section>
+    <div ng-class="{active : userHasCert(cert)}" class="cert" ng-repeat="cert in certs | orderBy:cert.name" ng-click="toggleCert(cert)">
+        <div ng-if="userHasCert(cert)" class="pull-right">
+            Added: {{userHasCert(cert)}}
+        </div>
+        <div class="name">
+            <h2>{{cert.name}}</h2>
+        </div>
+        <ul class="types" ng-show="cert.selected" stop-event>
+            <li class="type" ng-repeat="type in cert.types">
+                <div class="actions">
+                    <div class="btn btn-transparent" ng-show="!userHasCertType(cert, type)" ng-click="addCertType(type)">
+                        Add
+                    </div>
+                    <div class="btn btn-transparent" ng-show="userHasCertType(cert, type)" ng-click="removeCertType(type)" >
+                        Remove
+                    </div>
+                </div>
+                {{type.name}}
+            </li>
+        </ul>
+    </div>
+</div>

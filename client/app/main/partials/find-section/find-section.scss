@@ -1,0 +1,18 @@
+#find {
+	background:#333;
+	color:white;
+	.bubble {
+		text-align: center;
+		@extend .col-sm-4;
+		.icon {
+			display:inline-block;
+			padding: 5em;
+			text-align: center;
+			background: #4974ff;
+			border-radius: 10px;
+			i {
+				font-size:4em;
+			}
+		}
+	}
+}

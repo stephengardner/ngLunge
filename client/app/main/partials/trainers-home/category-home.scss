@@ -1,0 +1,145 @@
+
+#category-home {
+	background: #323C4D;
+	color: #FFFDFD;
+	.tab-content {
+		overflow:hidden;
+	}
+	.trainers-in-home {
+		position: relative;
+		transition: all 1s;
+		width: 100%;
+		white-space: nowrap;
+		@include respond-to(lg){
+			.trainer-card:nth-of-type(4n+1){
+				margin-left:0%!important;
+			}
+		}
+		@include respond-to(xs){
+			.trainer-card:nth-of-type(3n+1){
+				margin-left:0%!important;
+			}
+		}
+		.page {
+			display:inline-block;
+			width: 100%;
+		}
+	}
+	.tab-pane {
+		background: $lunge-nav-background;
+		color:white;
+		position:relative;
+		border: 1px solid #ddd;
+		border-top: none;
+		//padding:1em 0em;
+		overflow: hidden; // so that trainers don't overflow outside the tab pane border
+		.trainer-card {
+			&:hover {
+				background: darken($lunge-nav-background, 5%);
+			}
+		}
+		.nav {
+			position: absolute;
+			z-index:1;
+			&.next {
+				right: 0em;
+			}
+			&.prev {
+				left:0em;
+			}
+			font-size: 2em;
+			padding: .2em;
+			background: rgba(0,0,0,.02);
+			cursor:pointer;
+			top: 0;
+			bottom: 0;
+			color:lighten($lunge-nav-background, 25%);
+			text-shadow:0px 0px 10px;
+			&:hover {
+				color:lighten($lunge-nav-background, 100%);
+			}
+			.table-centered {
+				height:100%;
+				display:table;
+				.table-centered-cell {
+					display:table-cell;
+					vertical-align:middle;
+				}
+				i {
+					display: block;
+				}
+			}
+		}
+	}
+	.tabs {
+		margin-top:1em;
+	}
+	h1 {
+		@include respond-to(xxs) {
+			font-size:1.5em;
+		}
+	}
+	.nav-tabs {
+		@include respond-to(xxs){
+			font-size:.8em;
+		}
+	}
+	//.page {
+	//	white-space:nowrap;
+
+	//}
+
+	.trainers {
+		padding:1em 0em;
+	}
+}
+.trainer-card.lg {
+	@extend .col-sm-3;
+	text-align:center;
+	//@include custom-col(".col-xs-4", 0);
+	//transition:  1s;
+	overflow:hidden;
+	float:none!important;
+	display: inline-block;
+	&.ng-enter {
+		padding:0px!important;
+		width:0%!important;
+	}
+	@include respond-to(xs){
+		float:left;
+		width:33.33%;
+		padding-left:0px!important;
+		padding-right:0px!important;
+		~ .trainer-card {
+			//margin-left:2%;
+		}
+		/*
+		~ .trainer-card ~ .trainer-card ~ .trainer-card {
+			display:none;
+		}
+		*/
+	}
+	.trainer {
+		padding:1em;
+		//border:1px solid #eee;
+		@include respond-to(xxs) {
+			padding:.25em;
+		}
+		.picture {
+			img {
+				width:100%;
+			}
+		}
+		.details {
+			@include respond-to(xs) {
+				font-size:.8em;
+			}
+			.location {
+				white-space:nowrap;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+			margin-top:.5em;
+		}
+	}
+}
