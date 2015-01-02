@@ -9,13 +9,14 @@ var fs = require('fs');
 var config = require('./config/environment');
 var Knox = require('knox');
 var AWS = require('aws-sdk');
-AWS.config.region = 'us-west-2';
+console.log("THE CONFIG IS:::::::::::::::::::::::", config);
+AWS.config.region = 'sa-east-1';
 //console.log("AWS: ", AWS.config);
 var knoxConfig = {
 	key : config.AWS.AWS_ACCESS_KEY_ID,
 	secret : config.AWS.AWS_SECRET_ACCESS_KEY,
 	bucket : "golunge",
-	region : "us-west-2"
+	region : "sa-east-1"
 };
 Knox.aws = Knox.createClient(knoxConfig);
 var crypto = require("crypto");

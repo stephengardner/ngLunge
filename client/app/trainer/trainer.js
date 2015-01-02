@@ -16,6 +16,7 @@ angular.module('ngLungeFullStack2App')
 			}).
 			state('main.trainer.certifications', {
 				url: '/certifications',
+				authenticate: true,
 				views : {
 					'@main' : {
 						controller : "CertificationsController",

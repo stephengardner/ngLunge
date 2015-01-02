@@ -16,7 +16,7 @@ exports.register = function(socket) {
 		console.log("U.P.D.A.T.E.D.");
 		//console.info(trainer.name + " has emitted an update event");
 	});
-
+	/*
 	trainer.schema.post('save', function (doc) {
 		console.log("Emmitting: trainer" + doc._id + ":updated" + " which means a specific trainer was updated now!");
 		// emit to all sockets that are on in the room for this trainer, currently they enter the room when they're on the profile page
@@ -25,6 +25,7 @@ exports.register = function(socket) {
 		//console.info('notifying [%s] of Save event', socket.address);
 		//onSave(socket, doc);
 	});
+	*/
 	trainer.schema.post('remove', function (doc) {
 		console.info('notifying [%s] of Remove event', socket.address);
 		onRemove(socket, doc);

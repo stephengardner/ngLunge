@@ -117,24 +117,34 @@ var sendToS3 = function(filePath, buf, req){
 	var newS3FileName = userEmail + "_" + crypto.randomBytes(10).toString('hex');
 	console.log("Streaming to: ", "/profile-pictures/trainers/" + newS3FileName + path.extname(filePath));
 	client.putBuffer( buf, "/profile-pictures/trainers/" + newS3FileName + path.extname(filePath), headers, function(err, response){
+		console.log("Response in client.putBuffer is: ", response);
 		if (!response || err) {
-			console.log("streaming image left no response...");
-			console.log("RESPONSE:", response);
-			console.error('error streaming image!', err);
+			if(response) {
+				console.log("STATUS CODE: ", response.statusCode);
+				console.log("PATH: ", response.path);
+				console.log("ErrorCode: ", response.errorCode);
+			}
+			else {
+				console.log("streaming image left no response...");
+			}
+			console.error('error streaming image:', err);
+			//console.error('---- error streaming image!', err.code);
 			deferred.reject(err);
 			//return next(err);
 		}
 		else if (response.statusCode !== 200) {
-			console.log("RESPONSE:", response);
 			console.error(response.statusCode, 'error streaming image!', err);
 			//return next(err);
 		}
-		if(response) {
+		else if(response) {
+			console.log('Your file was uploaded');
 			console.log("Amazon's response was: ", response.path);
 			console.log('Amazon response statusCode: ', response.statusCode);
+			deferred.resolve({ url : "http://lungeapp.s3.amazonaws.com/profile-pictures/trainers/" + newS3FileName + path.extname(filePath)});
 		}
-		console.log('Your file was uploaded');
-		deferred.resolve({ url : "http://lungeapp.s3.amazonaws.com/profile-pictures/trainers/" + newS3FileName + path.extname(filePath)});
+		else {
+			deferred.reject(false);
+		}
 
 		//res.send({ url : "http://lungeapp.s3.amazonaws.com/profile-pictures/trainers/" + newS3FileName + path.extname(filePath)});
 	});
@@ -142,7 +152,7 @@ var sendToS3 = function(filePath, buf, req){
 }
 var cropImage = function(req, res) {
 	var deferred = $q.defer();
-	console.log("the request body is:", req.body);
+	//console.log("the request body is:", req.body);
 	var userFilePath = req.body.filepath;
 	var userCoords = req.body.coords;
 	console.log("user cords:", userCoords);

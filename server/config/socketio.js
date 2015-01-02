@@ -8,6 +8,15 @@ var config = require('./environment');
 var cookieParser = require('cookie-parser');
 var Trainer = require("../api/trainer/trainer.model");
 var app = require('../app');
+Trainer.schema.post('save', function (doc) {
+	app.io.sockets.in('trainer:' + doc._id).emit("ok");
+	console.log("Emmitting: trainer:" + doc._id + ":updated" + " which means a specific trainer was updated now!");
+	// emit to all sockets that are on in the room for this trainer, currently they enter the room when they're on the profile page
+	app.io.sockets.in('trainer:' + doc._id).emit("trainer:" + doc._id + ":updated", doc);
+
+	//console.info('notifying [%s] of Save event', socket.address);
+	//onSave(socket, doc);
+});
 //var passportSocketIo = require('passport.socketio');
 
 // When the user disconnects.. perform this
@@ -82,8 +91,6 @@ module.exports = function (io, server) {
 				},1000);
 			});
 			socket.on('joinRoom', function(room) {
-				// testing to make sure the socket isn't joinign the same room multiple times? jesus idk what's going on
-				socket.leave(room);
 				console.log("A socket is joining:", room);
 				socket.join(room);
 			});

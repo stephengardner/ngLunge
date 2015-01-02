@@ -32,7 +32,8 @@ router
 router
 	.get('/callback-trainer-sync', passport.authenticate('facebook', {
 		failureRedirect: '/signup',
-		session: false
+		session: false,
+	callbackURL: config.facebook.callbackTrainerURL
 	}), function(req, res, next) {
 		if(req.session.trainer) {
 			var trainer = req.session.trainer;

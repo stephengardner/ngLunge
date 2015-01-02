@@ -145,6 +145,8 @@ function isTrainerMe() {
 				optionalVerifyJwt(req, res, next); // THIS is where req.user gets added!
 			}
 			catch(err) {
+				console.log("Request is: ", req);
+				console.log("config.secrets is: ", config.secrets);
 				console.log("The err:",err);
 				console.log("WWWW");
 			}

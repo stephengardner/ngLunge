@@ -27,7 +27,7 @@ angular.module('ngLungeFullStack2App')
 					socket.on(modelName + ":" + modelObj._id + ":updated" , function(msg){
 						alert("socket.service.sinc.user: FUCKING UPDATED");
 						cb(event, msg);
-					})
+					});
 				},
 				profilePage : function(modelName, modelObj, cb) {
 					cb = cb || angular.noop;

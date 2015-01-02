@@ -66,6 +66,13 @@ var all = {
 		callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback',
 		callbackTrainerURL:  (process.env.DOMAIN || '') + '/auth/google/callback-trainer-sync'
 	},
+
+	AWS : {
+		AWS_ACCESS_KEY_ID  : process.env.AWS_ACCESS_KEY_ID || 'no-id',
+		AWS_SECRET_ACCESS_KEY : process.env.AWS_SECRET_ACCESS_KEY || 'no-id',
+		S3_BUCKET : process.env.S3_BUCKET || 'no-bucket'
+	},
+
 	SUPERUSERS : {
 		ADMINS : [
 			'augdog911@gmail.com'
