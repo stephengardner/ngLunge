@@ -1,5 +1,3 @@
-'use strict';
-
 var lungeApp = angular.module('ngLungeFullStack2App', [
   'ngCookies',
   'ngResource',
@@ -75,8 +73,6 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 				// unnnecessary... Auth.logout();
 			}
 		});
-		$rootScope.previousState;
-		$rootScope.currentState;
 		$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
 			$rootScope.previousState = from.name;
 			$rootScope.currentState = to.name;

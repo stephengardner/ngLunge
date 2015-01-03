@@ -1,19 +1,21 @@
 <div id="certifications" class="container trainers">
     <h1>Certifications</h1>
-    {{trainer.certs}}
     <form class="search-form form-inline" role="form">
         <div class="form-group">
             <div class="input-group">
                 <label class="sr-only" for="search">Search</label>
                 <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                <input type="text" class="form-control" id="search" placeholder="Search certifications">
+                <input ng-model="searchQuery" type="text" class="form-control" id="search" placeholder="Search certifications">
             </div>
         </div>
     </form>
     <section class="filter">
-        <h2>Filter certifications by:</h2>
+        <div class="btn btn-default" ng-class="{active : buttonAddedType == 'all' || !buttonAddedType }" ng-click="buttonAddedType='all'">All</div>
+        <div class="btn btn-default" ng-class="{active : buttonAddedType == 'added'}" ng-click="buttonAddedType='added'">Added</div>
+        <div class="btn btn-default" ng-class="{active : buttonAddedType == 'not-added'}" ng-click="buttonAddedType='not-added'">Not Added</div>
     </section>
-    <div ng-class="{active : userHasCert(cert)}" class="cert" ng-repeat="cert in certs | orderBy:cert.name" ng-click="toggleCert(cert)">
+    <div ng-class="{active : userHasCert(cert)}" class="cert" ng-repeat="cert in certs | CertificationQuery:searchQuery | CertificationAddedFilter:trainer:buttonAddedType  | orderBy:cert.name" ng-click="toggleCert(cert)">
+
         <div ng-if="userHasCert(cert)" class="pull-right">
             Added: {{userHasCert(cert)}}
         </div>

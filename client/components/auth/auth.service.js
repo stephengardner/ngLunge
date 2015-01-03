@@ -231,7 +231,6 @@ angular.module('ngLungeFullStack2App')
 			 * @return {Object} user
 			 */
 			updateProfile : function(dataObject, callback) {
-				alert("Calling Auth service updateProfile()");
 				var cb = callback || angular.noop,
 					Model = this.type == "trainer" ? Trainer : User;
 				console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);

@@ -1,0 +1,36 @@
+.alert-message {
+	// positioning at the bottom of the nav bar
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	color:white;
+	.message {
+		transition : all .4s;
+		text-align:center;
+		&.success {
+			background:green;
+		}
+		padding:1em;
+		&.ng-hide-remove {
+			opacity: 0;
+			max-height:0px;
+			padding:0em;
+		}
+		&.ng-hide-remove-active {
+			opacity: 1;
+			max-height:100px;
+			padding:1em;
+		}
+		&.ng-hide-add {
+			opacity: 1;
+			max-height:100px;
+			padding:1em;
+		}
+		&.ng-hide-add-active {
+			opacity:0;
+			max-height:0px;
+			padding:0em;
+		}
+	}
+}

@@ -2,15 +2,6 @@
 
 angular.module('ngLungeFullStack2App')
   .controller('MainCtrl', ['Auth', 'geolocation', '$scope', '$http', 'socket', 'GoogleMapApi'.ns(), 'Geocoder', function(Auth, geolocation, $scope, $http, socket, GoogleMapApi, Geocoder) {
-
-		/*$http.get('/api/trainers/me').success(function(response){
-			console.log("respopnse", response);
-		}).error(function(err){
-			console.log("Err", err);
-		})
-		*/
-		/*
-		*/
 		$scope.awesomeThings = [];
 		GoogleMapApi.then(function(maps) {
 			var geocoder = new maps.Geocoder();

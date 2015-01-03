@@ -38,7 +38,7 @@ var TrainerSchema = new Schema(
 		},
 		urlNameChanged : { type : Boolean, required : false },
 		urlName : {type : String, default : "error" },
-		me : Boolean,
+		//me : Boolean,
 		hashedPassword : String,
 		verified: { type : Boolean, default : false },
 		provider : { type : String },

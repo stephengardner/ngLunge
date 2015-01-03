@@ -19,12 +19,16 @@
     <!-- build:css({.tmp,client}) app/app.css -->
     <link rel="stylesheet" href="app/app.css">
     <!-- injector:css -->
+        <!--
     <link rel="stylesheet" href="components/jquery.imgareaselect-0.9.10/css/imgareaselect-animated.css">
     <link rel="stylesheet" href="components/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css">
     <link rel="stylesheet" href="components/jquery.imgareaselect-0.9.10/css/imgareaselect-deprecated.css">
+    -->
     <!-- endinjector -->
     <!-- endbuild -->
+        <!--
         <link rel="stylesheet" type="text/css" href="components/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css" />
+        -->
     </head>
     <body ng-app="ngLungeFullStack2App">
     <!--[if lt IE 7]>
@@ -85,6 +89,7 @@
     <script src="app/main/partials/jumbotron/jumbotron.controller.js"></script>
     <script src="app/main/partials/trainers-home/trainer-home.controller.js"></script>
     <script src="app/trainer/account/certifications/certifications.controller.js"></script>
+    <script src="app/trainer/account/certifications/filter/certification.filter.js"></script>
     <script src="app/trainer/public/profile/components/certifications/profile-certifications.controller.js"></script>
     <script src="app/trainer/public/profile/components/certifications/profile-certifications.directive.js"></script>
     <script src="app/trainer/public/profile/components/convenient-url/convenient-url.controller.js"></script>
@@ -100,17 +105,22 @@
     <script src="app/trainer/register/steps/password/trainer-register-password.controller.js"></script>
     <script src="app/trainer/register/trainer-register.controller.js"></script>
     <script src="app/trainer/trainer.js"></script>
+    <script src="components/alert-message/alert-message.controller.js"></script>
+    <script src="components/alert-message/alert-message.directive.js"></script>
+    <script src="components/alert-message/alert-message.service.js"></script>
+    <script src="components/alerts/alerts.controller.js"></script>
     <script src="components/alerts/alerts.directive.js"></script>
     <script src="components/auth/auth.service.js"></script>
     <script src="components/auth/registration.service.js"></script>
     <script src="components/auth/user.service.js"></script>
     <script src="components/aws-sdk-custom/aws-sdk.js"></script>
     <script src="components/certification/certification.service.js"></script>
+    <script src="components/directives/compile.directive.js"></script>
+    <script src="components/directives/e-autosize.directive.js"></script>
+    <script src="components/directives/img-on-load.directive.js"></script>
+    <script src="components/directives/my-href.directive.js"></script>
+    <script src="components/directives/stop-event.directive.js"></script>
     <script src="components/geocoder/geocoder.factory.js"></script>
-    <script src="components/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.js"></script>
-    <script src="components/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.min.js"></script>
-    <script src="components/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.pack.js"></script>
-    <script src="components/jquery.imgareaselect-0.9.10/scripts/jquery.min.js"></script>
     <script src="components/modal/modal.service.js"></script>
     <script src="components/mongoose-error/mongoose-error.directive.js"></script>
     <script src="components/navbar-new/navbar-new.controller.js"></script>
@@ -123,15 +133,11 @@
     <script src="components/upload/upload.controller.js"></script>
     <!-- endinjector -->
     <!-- endbuild -->
-    <script src="directives/img-on-load.directive.js"></script>
-    <script src="directives/compile.directive.js"></script>
-    <script src="directives/stop-event.directive.js"></script>
-    <script src="directives/my-href.directive.js"></script>
 
     <!--
     <script src="bower_components/geocomplete/jquery.geocomplete.js"></script>
-    -->
     <script type="text/javascript" src="components/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.js"></script>
+    -->
 
     </body>
     </html>

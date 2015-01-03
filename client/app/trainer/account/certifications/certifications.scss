@@ -7,45 +7,56 @@
 
 .profile-page-cert {
 	ul {
+		margin-bottom:0px;
 		-webkit-margin-before: 0em;
 		-webkit-padding-start: 0;
 		list-style-type: none;
-		text-align: left;
+		//text-align: left;
 		font-size: .85em;
 		li {
 			padding-top:.5rem;
+			padding-bottom:.5rem;
 		}
 	}
 	cursor:pointer;
-	width:25%;
+	width:100%;
 	@include respond-to(xxs) {
-		width:50%;
+		//width:50%;
+	}
+	padding:1em;
+	&:hover {
+		&:not(.active) {//
+				background: darken($body-bg, 7%);
+			//}
+		}
+	}
+	&.active {
+		.name {
+			.count-bubble {
+				display:none;
+			}
+		}
 	}
 	.parent-cert {
+		//padding:1em;
 		&:hover {
-			&:not(.active) {
-				background: darken($body-bg, 7%);
-			}
-		}
-		&.active {
-			.name {
-				.count-bubble {
-					display:none;
-				}
-			}
 		}
 		.name {
+			font-weight:bold;
 			position:relative;
+			display:inline-block;
 			.count-bubble {
+				background: darken($body-bg, 15%);
 				font-size: .8em;
 				padding: .1rem .4rem;
 				position: absolute;
-				background: darken($body-bg, 15%);
 				border-radius: 5px;
-				top: -.5rem;
-				right: -1.6rem;
+				right: -1.25em;
+				top: -.8em;
 			}
 		}
+	}
+	.child-cert {
 	}
 }
 #certifications, .certifications {

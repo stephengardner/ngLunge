@@ -1,10 +1,11 @@
 lungeApp.controller("CertificationsController", function(socket, Auth, Certification, $http, $scope){
+	$scope.searchQuery;
 	Auth.isLoggedInAsync(function(){
 		$scope.trainer = Auth.getCurrentUser();
 		socket.sync.user('trainer', $scope.trainer,  function(event, newTrainer){
-			console.log("in sync.user callback, syncing trainer:", newTrainer);
 			$scope.trainer = newTrainer;
 		});
+
 		$scope.certs = Certification.query({}, function(result){
 			console.log("Certs:",result);
 			$scope.certs = result;
@@ -51,7 +52,6 @@ lungeApp.controller("CertificationsController", function(socket, Auth, Certifica
 			return false;
 		}
 		$scope.userHasCert = function(cert) {
-			var cert_found = false;
 			if(!$scope.trainer.certs || !$scope.trainer.certs[cert.name]) {
 				console.log("User has no certs");
 				return false;
@@ -59,22 +59,9 @@ lungeApp.controller("CertificationsController", function(socket, Auth, Certifica
 			console.log("Does user have cert: ", cert, "?", $scope.trainer.certs[cert.name]);
 			return $scope.trainer.certs[cert.name].length;
 		};
-
-		/*
-		 watcch is also optional, but syncing via sockets does the job and might actually be less expensive
-		 $scope.$watch(function(){ return Auth.getCurrentUser();}, function(something){
-		 console.log("SOMETHING WAS:", something);
-		 $scope.trainer = Auth.getCurrentUser();
-		 });
-		 */
-		socket.syncCurrentUser('trainer', function(event, newTrainer){
-			$scope.trainer = newTrainer;
+		$scope.$on('$destroy', function () {
+			socket.unsyncUpdates('trainer');
+			socket.unsync.user('trainer', $scope.trainer);
 		});
-	});
-
-
-
-	$scope.$on('$destroy', function () {
-		socket.unsyncUpdates('trainer');
 	});
 });

@@ -25,7 +25,6 @@ angular.module('ngLungeFullStack2App')
 					socket.emit("joinRoom", modelName + ":" + modelObj._id);
 					var event = "updated";
 					socket.on(modelName + ":" + modelObj._id + ":updated" , function(msg){
-						alert("socket.service.sinc.user: FUCKING UPDATED");
 						cb(event, msg);
 					});
 				},

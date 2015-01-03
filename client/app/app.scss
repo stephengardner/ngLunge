@@ -19,8 +19,8 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
     background: #ccc;
     color: #000;
     padding: 0.2em 0;
-}
-
+} 
+ 
 // Component styles are injected through grunt
 // injector
 @import 'account/account.scss';
@@ -41,11 +41,13 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'styles/mixins/_mixins.scss';
 @import 'styles/xeditable.scss';
 @import 'trainer/account/certifications/certifications.scss';
+@import 'trainer/public/profile/components/certifications/profile-certifications.scss';
 @import 'trainer/public/profile/components/trainer-basic-info/trainer-basic-info.scss';
 @import 'trainer/public/profile/profile-picture.scss';
 @import 'trainer/public/profile/profile.scss';
 @import 'trainer/register/register.scss';
 @import 'trainer/trainer.scss';
+@import 'alert-message/alert-message.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';

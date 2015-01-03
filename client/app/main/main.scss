@@ -2,9 +2,27 @@
     margin: 20px 0;
 }
 
+.ready {
+	.fa-spinner {
+		display:none;
+	}
+}
+
+.ajax {
+	.fa-spinner {
+		display:inline-block;
+	}
+}
+
+.container {
+	&.push-down {
+		padding-top:20px;
+	}
+}
+
 .main-view {
 	&.spaced {
-		margin-top: 80px;
+		margin-top: 60px;
 	}
 }
 

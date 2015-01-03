@@ -57,7 +57,7 @@ exports.sendEmail = function(req, res) {
 
 // Get a single thing
 exports.show = function(req, res) {
-	console.log("Trainer.controller.show(), urlName: ", req.params.urlName);
+	console.log("Trainer.controller.show(), urlName: ", req.params.urlName, " req.user: ", req.user);
 	if(req.params.urlName) {
 		Trainer.findOne({ 'urlName' : req.params.urlName}, '-salt -hashedPassword')
 			// populate the certifications which are really the certification-types, subclasses of a parent certification
@@ -70,7 +70,10 @@ exports.show = function(req, res) {
 				CertificationType.populate(trainer.certifications, {path : 'certification', model : 'Certification'}, function(err, certs) {
 					if(err) { return handleError(res, err); }
 					if(req.user && req.user._id == trainer._id) {
-						trainer.me = true;
+						// removed this because it's not right to have this property on the db trainer object. set it client side
+						//
+						//console.log("Setting trainer.me = true for trainer._id: ", trainer._id);
+						//trainer.me = true;
 					}
 					return res.json(trainer);
 				});
@@ -88,7 +91,10 @@ exports.show = function(req, res) {
 				CertificationType.populate(trainer.certifications, {path : 'certification', model : 'Certification'}, function(err, certs) {
 					if(err) { return handleError(res, err); }
 					if(req.user && req.user._id == trainer._id) {
-						trainer.me = true;
+						// removed this because it's not right to have this property on the db trainer object. set it client side
+						//
+						//console.log("Setting trainer.me = true for trainer._id: ", trainer._id);
+						//trainer.me = true;
 					}
 					return res.json(trainer);
 				});

@@ -15,6 +15,9 @@ lungeApp.factory("ProfilePicture", function(Auth, $timeout, $http, $q, $upload){
 
 		},
 		attachPreview : function(attachTo, selection) {
+			if(!this.image) {
+				return;
+			}
 			var selection = selection ? selection : ProfilePicture.selection;
 			console.log("--------------- preview -----------------");
 			var coords;
@@ -150,7 +153,6 @@ lungeApp.factory("ProfilePicture", function(Auth, $timeout, $http, $q, $upload){
 				var img = new Image();
 				img.src = response.data.url;
 				ProfilePicture.url = response.data.url;
-				alert(response.data.url);
 				img.onload = function() {
 					//ProfilePicture.url = response.data.url;
 					deferred.resolve();

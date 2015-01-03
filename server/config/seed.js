@@ -20,7 +20,6 @@ Registration.find({}).remove(function(){
 });
 
 
-/*
 Trainer.find({}).remove(function() {
 	Trainer.create({
 		name : {first : "Augie", last : "Gardner"},

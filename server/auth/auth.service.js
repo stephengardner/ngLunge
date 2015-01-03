@@ -154,6 +154,7 @@ function isTrainerMe() {
 		// Attach user to request
 		.use(function(req, res, next) {
 			console.log(">> isTrainerMe inside use2()");
+			console.log("Req.user is: ", req.user);
 			if(req.user) {
 				console.log (">> req.user is: ", req.user);
 				Trainer.findById(req.user._id, function (err, trainer) {
