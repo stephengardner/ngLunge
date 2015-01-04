@@ -15,7 +15,7 @@
 	}
 	.buttons {
 		float:right;
-		@extend .hidden-xxs;
+		//@extend .hidden-xxs;
 		&.scrolled {
 			.btn-transparent {
 				color:#333;

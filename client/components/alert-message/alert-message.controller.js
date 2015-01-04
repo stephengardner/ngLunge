@@ -1,5 +1,4 @@
 lungeApp.controller("AlertMessageController", function($scope, AlertMessage) {
-	AlertMessage.success("FUCK");
 	$scope.getMessage = function(){
 		return AlertMessage.message;
 	};

@@ -58,7 +58,6 @@ var validationError = function(res, err) {
 
 exports.create = function(req, res) {
 	req.body = req.body && req.body.email ? req.body : { email : ""};
-	console.lo
 	console.log("Attempting to create registration from: ", req.body);
 	var newRegistration = new Registration(req.body),
 		authenticationHash = crypto.randomBytes(10).toString('hex');
@@ -75,15 +74,15 @@ var sendEmail = function(registrationDocument) {
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
-			user: 'augdog911@gmail.com',
-			pass: 'Augie!123'
+			user: config.MAIL.user,
+			pass: config.MAIL.pass
 		}
 	});
 	transporter.sendMail({
 		from: 'augdog911@gmail.com',
 		to: 'augdog911@gmail.com',
 		subject: 'Lunge Automatic Email Validation',
-		text: 'Thanks for registering with Lunge.  To activate your account please click on this link: http://localhost:9000/trainer/register/password/' + registrationDocument.authenticationHash
+		text: 'Thanks for registering with Lunge.  To activate your account please click on this link:' + config.DOMAIN + '/trainer/register/password/' + registrationDocument.authenticationHash
 	});
 };
 

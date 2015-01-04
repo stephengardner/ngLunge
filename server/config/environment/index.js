@@ -15,6 +15,8 @@ function requiredProcessEnv(name) {
 var all = {
 	env: process.env.NODE_ENV,
 
+	DOMAIN : process.env.DOMAIN,
+
 	// Root path of server
 	root: path.normalize(__dirname + '/../../..'),
 
@@ -71,6 +73,11 @@ var all = {
 		AWS_ACCESS_KEY_ID  : process.env.AWS_ACCESS_KEY_ID || 'no-id',
 		AWS_SECRET_ACCESS_KEY : process.env.AWS_SECRET_ACCESS_KEY || 'no-id',
 		S3_BUCKET : process.env.S3_BUCKET || 'no-bucket'
+	},
+
+	MAIL : {
+		user : process.env.GMAIL_SEND_USER || "none",
+		pass : process.env.GMAIL_SEND_PASS || "none"
 	},
 
 	SUPERUSERS : {

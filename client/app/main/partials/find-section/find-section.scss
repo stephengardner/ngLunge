@@ -3,14 +3,22 @@
 	color:white;
 	.bubble {
 		text-align: center;
-		@extend .col-sm-4;
+		@extend .col-xs-4;
+		@include respond-to(xxs) {
+			~ .bubble {
+				margin-top:2em;
+			}
+		}
 		.icon {
 			display:inline-block;
-			padding: 5em;
+			//padding: 5em;
+			width:12em;
+			height:12em;
 			text-align: center;
 			background: #4974ff;
 			border-radius: 10px;
 			i {
+				padding-top:1em;
 				font-size:4em;
 			}
 		}
