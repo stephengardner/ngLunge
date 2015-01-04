@@ -1,0 +1,127 @@
+
+<form class="form sm" ng-submit="updateBasicInfo(form)" name="form" ng-keydown="resetErrors()" novalidate>
+    <div class="information">
+        <div ng-if="isMe()" class="edit-button" ng-click="basicInfo.toggle()" ng-show="!basicInfo.visible">
+            <div class="btn btn-transparent">Edit Info</div>
+        </div>
+        <div class="name item">
+            <h1 ng-show="!basicInfo.visible">
+                {{trainer.name.full}}
+            </h1>
+            <div ng-show="basicInfo.visible">
+                <div class="form-label">
+                    Name
+                </div>
+                <input ng-keypress="removeMongooseError(form, 'name')" ui-validate='{invisible : "validator.name($value, true)", custom : "validator.name($value)", mongoose : "watchMongoose(\"name\")"}' type="text" name="name" ng-model="trainerEditing.name.full" class="form-control"/>
+                <div class="form-error" ng-show="form.name.$error.custom && form.name.$pristine"><span>This name is not valid!</span></div>
+                <div class="form-error" ng-show="form.name.$error.mongoose"><span>{{errors.name}}</span></div>
+            </div>
+        </div>
+        <div class="location item" ng-show="basicInfo.visible">
+            <div ng-show="basicInfo.visible  && !manualLocation.isActive()" class="form-label">
+                Location
+            </div>
+            <div ng-show="!basicInfo.visible">
+                <div  e-name="city" e-placeholder="City">
+                    {{user.location.city}}
+                </div>
+                <span e-name="state" e-ng-options="state.value as state.text for state in states">
+                    {{user.location.state}}
+                </span>
+            </div>
+            <div ng-show="basicInfo.visible && !manualLocation.isActive()">
+                <input name="location" ng-keypress="removeMongooseError(form, 'location')" ui-validate='{mongoose : "watchMongoose(\"location\")"}' ng-model="trainerEditing.location.for_google_search" class="form-control" id="trainer-location" type="text"/>
+                <div class="form-error" ng-show="(form.location.$error.mongoose) && submitted && form.location.$pristine"><span>Please enter a more precise location</span></div>
+                <em>Enter the location of your main gym or office.  Only the city/state will be visible to other members.</em>
+                <a href="#" ng-click="manualLocation.toggle()" class="cant-find-address">Can't find your location?</a>
+            </div>
+            <div ng-if="basicInfo.visible && manualLocation.isActive()">
+                <div class="form-label">
+                    <div class="pull-right">
+                        * = required
+                    </div>
+                    Address
+                    <div class="aside">
+                        Only your city and state will be viewable to the public.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" ng-value="trainer.location.address1" placeholder="Street address 1"/>
+                </div>
+                <div class="form-group">
+                    <input name="address_line_2" class="form-control" type="text" ng-value="trainer.location.address2" placeholder="Street address 2"/>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <input name="city" ng-keypress="removeMongooseError(form, 'city')" ui-validate='{invisible : "validator.city($value, true)", custom : "validator.city($value)", mongoose : "watchMongoose(\"city\")"}' ng-model="trainerEditing.location.city" class="form-control" type="text" placeholder="City" required/>
+                            <div ng-show="form.city.$error.custom && form.city.$pristine"><span>Invalid City</span></div>
+                            <span class="required">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input name="state" class="form-control" type="text" ng-keypress="removeMongooseError(form, 'state')"  ui-validate='{invisible : "validator.state($value, true)", custom : "validator.state($value)"}' ng-model="trainerEditing.location.state" placeholder="State" required/>
+                            <div class="form-error" ng-show="form.state.$error.custom && form.state.$pristine"><span>Lunge does not operate here</span></div>
+                            <div class="form-error" ng-show="form.state.$error.mongoose"><span>{{errors.state}}</span></div>
+                            <span class="required">*</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <input name="zipcode" ng-keypress="removeMongooseError(form, 'zipcode')" ui-validate='{invisible : "validator.zipcode($value, true)", custom : "validator.zipcode($value)"}' class="form-control" ng-model="trainerEditing.location.zipcode"  class="form-control" type="text" placeholder="Zipcode" required/>
+                            <div class="form-error" ng-show="form.zipcode.$error.custom && form.zipcode.$pristine"><span>Invalid Zipcode</span></div>
+                            <div class="form-error" ng-show="form.zipcode.$error.mongoose"><span>{{errors.zipcode}}</span></div>
+                            <span class="required">*</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" ng-click="manualLocation.toggle()" class="address-type-toggle"><i class="fa fa-chevron-left"></i> Back to location search</a>
+            </div>
+        </div>
+        <div class="location item" ng-show="!basicInfo.visible">
+            <h2>{{trainer.location.cityState}}</h2>
+        </div>
+        <div class="item" ng-show="!basicInfo.visible">
+            <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star-half"></i>
+            </div>
+            <div class="actions">
+                <div class="btn btn-book">
+                    Book Now!
+                </div>
+                <div class="btn btn-contact">
+                    Contact
+                </div>
+            </div>
+        </div>
+        <div class="bio item">
+            <div ng-show="basicInfo.visible" class="form-label">
+                Bio
+            </div>
+            <div ng-show="!basicInfo.visible">
+                {{trainer.bio ? trainer.bio : 'No bio yet' }}
+            </div>
+            <div ng-show="basicInfo.visible">
+                <textarea name="bio" ng-keypress="removeMongooseError('bio')" ui-validate='{invisible : "validator.bio($value, true)", custom : "validator.bio($value)", mongoose : "watchMongoose(\"bio\")"}' class="form-control" ng-model="trainerEditing.bio" placeholder="Enter your bio (400 characters max)"></textarea>
+                <div class="form-error" ng-show="form.bio.$error.invisible && submitted"><span>Bio must be less than 300 characters</span></div>
+                <span class="form-error" ng-show="form.bio.$error.mongoose">{{errors.bio}}</span>
+            </div>
+        </div>
+        <div class="link-social item">
+
+            <span trainer-synced-provider provider="facebook"></span>
+            <span trainer-synced-provider provider="linkedin"></span>
+            <span trainer-synced-provider provider="twitter"></span>
+            <span trainer-synced-provider provider="google"></span>
+        </div>
+        <div class="buttons item" ng-show="basicInfo.visible">
+            <button type="submit" class="btn btn-primary" ng-disabled="isAjax()" ng-class="{ready : !isAjax(), ajax : isAjax()}"><i class="fa fa-spin fa-spinner"></i> {{isAjax() ? 'Saving' : 'Save' }}</button>
+            <div class="btn btn-danger" ng-click="basicInfo.toggle(); cancelProviderChanges()">Cancel</div>
+        </div>
+    </div>
+</form>

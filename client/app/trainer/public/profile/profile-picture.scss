@@ -1,0 +1,74 @@
+.registration-specific-image-placeholder {
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background-size: contain!important;
+	background-position: center!important;
+	background-repeat: no-repeat!important;
+}
+.profile-picture {
+	overflow:hidden;
+}
+.image-area-select-wrapper {
+	.buttons {
+		padding-top:1rem;
+		padding-bottom: 1rem;
+	}
+}
+
+.capitalize {
+	text-transform: capitalize;
+}
+.trainer-card-wrapper {
+	position:relative;
+	.overlay {
+		position: absolute;
+		left: -1em;
+		right: -1em;
+		top: -1em;
+		bottom: 0;
+		background: rgba(0,0,0,.6);
+		z-index: 3;
+		border-radius: 10px;
+		i {
+			display:block;
+			font-size:4rem;
+		}
+		.table-contents {
+			color:#eee;
+		}
+	}
+}
+.table-wrapper {
+	display: table;
+	height: 100%;
+	width: 100%;
+	.table-cell {
+		display:table-cell;
+		vertical-align: middle;
+	}
+	.table-contents{
+
+	}
+}
+.image-area-select-wrapper {
+	margin:0 auto;
+	text-align:center;
+	-webkit-transition:opacity 1s;
+	&.ng-hide-remove {
+		opacity:0;
+	}
+	&.ng-hide-remove-active {
+		opacity:1;
+	}
+	&.ng-hide-add {
+		-webkit-transition:opacity 0s;
+		opacity:0;
+	}
+	img {
+		margin: 0 auto;
+		display:block;
+	}
+}

@@ -1,0 +1,255 @@
+
+$profile-page-max-width: 750px;
+// alert at the top of the profile
+.alert {
+	padding:1em 1.5em;
+	border-radius:8px;
+	border:1px solid;
+	color: #347b4b;
+	margin:0 auto;
+	position:relative;
+	.close {
+		margin-top: -.3em;
+		margin-right: -.3em;
+	}
+	&.profile {
+		max-width: $profile-page-max-width;
+	}
+	&.success {
+		background-color:#8AE8B1;
+	}
+	text-align:center;
+	h1 {
+		font-size:1.8em;
+	}
+	.welcome-sub {
+		font-size:1.1em;
+	}
+}
+
+.profile-picture-container:hover {
+	.upload-button {
+		background: rgba(0,0,0, .4);
+		p {
+			visibility: visible;
+		}
+		i {
+			-webkit-transform: scale(.6);
+			opacity:1;
+		}
+	}
+}
+.trainer-card {
+	&.wide {
+		.profile-picture-container {
+			@extend .col-xs-4;
+			@extend .col-xxs-12;
+			padding: 0px;
+			border-left:2px solid lighten($body-bg, 15%);
+		}
+	}
+}
+
+.profile-picture-container {
+	.profile-picture {
+		background-size:contain;
+		background-repeat:no-repeat;
+		background-position:center;
+	}
+	input[type="file"] {
+		visibility:none;
+		position: absolute;
+		left:-1000px;
+		cursor:pointer;
+		&:hover {
+			~ .upload-button {
+				text-decoration:none;
+				color:white;
+				p {
+					visibility:visible;
+				}
+				background:rgba(0,0,0,.9);
+				i {
+					-webkit-transform: scale(.6);
+					opacity:1;
+				}
+			}
+		}
+	}
+	.upload-button {
+		display:block;
+		padding:1.25em 0em;
+		-webkit-transition: all .4s;
+		text-decoration:none;
+		color:white;
+		position:absolute;
+		bottom:0;
+		left:0;
+		right:0;
+		cursor:pointer;
+		p {
+			visibility:hidden;
+			margin:0;
+			font-weight:bold;
+			padding-left:1em;
+		}
+		i {
+			-webkit-transition: all .4s;
+			font-size:3rem;
+			position:absolute;
+			left:.5em;
+			opacity:.7;
+			line-height:.7
+		}
+		&:hover {
+			text-decoration:none;
+			color:white;
+			p {
+				visibility:visible;
+			}
+			background:rgba(0,0,0,.9);
+			i {
+				-webkit-transform: scale(.6);
+				opacity:1;
+			}
+		}
+	}
+}
+.trainer-profile {
+	form {
+		&.contact-form {
+			textarea {
+				background: $body-bg;
+				border:1px solid #ccc;
+				color:white;
+			}
+		}
+		.required {
+			position: absolute;
+			right: .4em;
+			top: 0em;
+		}
+	}
+	.edit-button {
+		float:right;/*
+		position: absolute;
+		right: 0em;
+		*/
+	}
+	.row-centered {
+	text-align:center;
+}
+	.col-centered {
+		display:inline-block;
+		float:none;
+		/* reset the text-align */
+		text-align:left;
+		/* inline-block space fix */
+		margin-right:-4px;
+	}
+	text-align:center;
+	max-width:$profile-page-max-width;
+	margin:0 auto;
+	margin-top:0em;
+	//background: lighten($body-bg, 5%);
+	border-radius:10px;
+	//padding:1em;
+	position:relative;
+	@include respond-to(xxs) {
+		padding:1em 5px;
+	}
+	.trainer-card {
+		.favorite {
+			position:absolute;
+			top:1em;
+			right:1em;
+			i {
+				font-size:1.5em;
+			}
+		}
+		padding-bottom:1em;
+	}
+	h1 {
+		font-size:1.8em;
+	}
+	.bio {
+		.text {
+			font-size:.9em;
+		}
+	}
+	.information {
+		@extend .col-xs-8;
+		@extend .col-xxs-12;
+		text-align:left;
+		@include respond-to(xxs) {
+			padding-top:1em;
+		}
+		h2 {
+			font-size:1.3em;
+		}
+		.item {
+			~ .item {
+				margin-top:1em;
+			}
+		}
+		.actions {
+			margin-top:1.5em;
+		}
+	}
+	section {
+		text-align: left;
+		border: 1px solid;
+		padding: 0em;
+		border-radius: 8px;
+		overflow: hidden;
+		margin: 1em 0em;
+		.edit {
+			color: black;
+			padding: .2em .5em;
+			border: 1px solid;
+			margin-top: -1px;
+			margin-right: -1px;
+			border-bottom-left-radius: 5px;
+		}
+		.title {
+			padding: .5em;
+			background: white;
+			color: black;
+			line-height:1;
+			margin-bottom:0em;
+			font-size:1.3em;
+		}
+	}
+	.certification-list {
+		@include clearfix();
+		text-align:center;
+		.certification {
+			font-weight:bold;
+			@extend .col-xs-3;
+			@extend .col-xxs-4;
+		}
+	}
+	.trainer-reviews {
+		.review {
+			.picture {
+				@extend .col-xs-2;
+				@extend .col-xxs-4;
+			}
+			.review-stars {
+				@extend .col-xs-10;
+				@extend .col-xxs-8;
+			}
+			.review-text {
+				font-size:.9em;
+				@extend .col-xs-10;
+				@extend .col-xxs-8;
+			}
+			padding-top:1em;
+			padding-bottom:1em;
+			~ .review {
+				border-top:1px solid lighten($body-bg, 15%);
+				padding-top:1em;
+			}
+		}
+	}
+}

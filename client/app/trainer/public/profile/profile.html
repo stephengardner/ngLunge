@@ -1,0 +1,118 @@
+<div class="container push-down">
+    <!-- alerts, show all alerts active for profile page -->
+    <div alerts ng-if="isMe()"></div>
+    <!-- profile container -->
+    <div class="trainer-profile clearfix" ng-if="trainer">
+        <div profile-picture class="trainer-card-wrapper">
+            <div class="trainer-card wide clearfix">
+                <div class="profile-picture-container">
+                    <!-- profile picture -->
+                    <div id="profile-picture" class="profile-picture" bg-image="{{trainer.profile_picture.thumbnail.url}}" ng-style="{'background-image' : 'url({{trainer.profile_picture.thumbnail.url}})'}" ng-if="trainer.profile_picture" >
+                        <div class="registration-specific-image-placeholder"  bg-image="{{ProfilePicture.url}}" ng-show="ProfilePicture.attached && ProfilePicture.scaled && imgSelection && ProfilePicture.url">
+                        </div>
+                    </div>
+                    <input type="file" id="upload_input" name="upload" style="" ng-file-select="onFileSelect($files)"/>
+                    <!-- profile picture update button -->
+                    <a ng-if="isMe()" class="upload-button" ng-click="selectFile()">
+                        <i class="fa fa-camera"></i>
+                        <p>Update Profile Picture</p>
+                    </a>
+                </div>
+                <div trainer-basic-info trainer="trainer"></div>
+                <!-- favorite star -->
+                <div class="favorite" ng-if="!isMe()">
+                    <i class="fa fa-star-o"></i>
+                </div>
+            </div>
+            <!-- overlay for profile picture updating -->
+            <div class="overlay" ng-show="ProfilePicture.status == 'loading' || ProfilePicture.status == 'cropping'">
+                <div class="table-wrapper">
+                    <div class="table-cell">
+                        <div class="table-contents capitalize">
+                            <i class="fa fa-spinner fa-spin"></i>
+                            {{ProfilePicture.status}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="image-area-select-wrapper" ng-show="ProfilePicture.attached && ProfilePicture.url" >
+                <img id="imgLoaded" ng-src="{{ProfilePicture.url}}" ng-show="ProfilePicture.attached && ProfilePicture.url"/>
+                <div class="buttons">
+                    <div class="btn btn-info" ng-click="saveCrop()">Crop & Save</div>
+                    <div class="btn btn-default" ng-click="ProfilePicture.removeImage();">Cancel</div>
+                </div>
+            </div>
+        </div>
+        <section class="contact">
+            <div class="title">
+                Contact
+            </div>
+            <form class="form contact-form">
+                <textarea class="form-control" rows="3" ng-attr-placeholder="Send a message to {{trainer.name.first}}" ng-model="trainerContactMessage"></textarea>
+                <div class="btn btn-default btn-block" ng-if="trainerContactMessage"><i class="fa fa-send"></i> Send</div>
+            </form>
+        </section>
+        <section profile-certifications>
+        </section>
+        <section class="trainer-reviews">
+            <div class="title">
+                Reviews
+            </div>
+            <div class="review clearfix">
+                <div class="profile-picture-container">
+                    <div class="profile-picture" bg-image="{{trainer.profile_picture.thumbnail.url}}" ng-if="trainer.profile_picture" >
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="review-text">
+                    I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt
+                    like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!
+                </div>
+            </div>
+
+            <div class="review clearfix">
+                <div class="profile-picture-container">
+                    <div class="profile-picture" bg-image="{{trainer.profile_picture.thumbnail.url}}" ng-if="trainer.profile_picture" >
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="review-text">
+                    I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt
+                    like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!
+                </div>
+            </div>
+            <div class="review clearfix">
+                <div class="profile-picture-container">
+                    <div class="profile-picture" bg-image="{{trainer.profile_picture.thumbnail.url}}" ng-if="trainer.profile_picture" >
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half"></i>
+                </div>
+                <div class="review-text">
+                    I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt
+                    like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="404 text-center" ng-if="noTrainer">
+        <h1>Sorry, but the page you are looking for does not exist.  <a ui-sref="{{previousState ? previousState : 'main.home'}}">go {{previousState ? 'back' : 'home'}}</a></h1>
+    </div>
+</div>
