@@ -1,4 +1,4 @@
-lungeApp.controller("TrainerRegisterPasswordController", function(Auth, $cookieStore, $state, Trainer, Registration, $stateParams, resolvedRegistrationResource, $scope, $http){
+lungeApp.controller("TrainerRegisterPasswordController", function($location, Auth, $cookieStore, $state, Trainer, Registration, $stateParams, resolvedRegistrationResource, $scope, $http){
 	console.log("RESOURCE: ", resolvedRegistrationResource);
 	$scope.resolvedRegistrationResource = resolvedRegistrationResource;
 	$scope.password = "";
@@ -26,7 +26,7 @@ lungeApp.controller("TrainerRegisterPasswordController", function(Auth, $cookieS
 				$scope.sending = true;
 				Auth.register(resolvedRegistrationResource, $scope.password.password1, $scope.password.password2).then(function(response){
 					$scope.sending = false;
-					$state.go("main.trainer.public-profile", {id : response.id});
+					$location.url("/" + response.urlName);//.go("main.profilePage", {urlName : response.urlName});
 				}).catch(function(err) {
 					err = err.data;
 					$scope.sending = false;

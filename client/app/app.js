@@ -8,7 +8,7 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 		'ui.utils',
 		'xeditable',
 		'geolocation',
-		'google-maps'.ns(),
+		'uiGmapgoogle-maps',
 		'ngAnimate',
 		'angularFileUpload',
 		'duScroll'
@@ -48,7 +48,7 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
         }
       }
     };
-  }).config(['GoogleMapApiProvider'.ns(), function (GoogleMapApi) {
+  }).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 		/*
 		GoogleMapApi.configure({
 			//    key: 'your api key',

@@ -11,6 +11,13 @@
 		&.success {
 			background:green;
 		}
+		&.error {
+			background:firebrick;
+		}
+		&.info {
+			background: #8ACBE8;
+			color: #34537B;
+		}
 		padding:1em;
 		&.ng-hide-remove {
 			opacity: 0;

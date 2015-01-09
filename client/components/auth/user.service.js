@@ -69,6 +69,12 @@ angular.module('ngLungeFullStack2App')
 					params : {
 						controller : 'profilePicture'
 					}
+				},
+				changeEmail : {
+					method : 'PUT',
+					params : {
+						controller : 'changeEmail'
+					}
 				}
 			});
 	});

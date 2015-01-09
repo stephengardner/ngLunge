@@ -1,4 +1,4 @@
-lungeApp.controller("TrainerProfileController", function($timeout, $state, $location, $q, $document, $window, ProfilePicture, Auth, $scope, $http, $stateParams, socket){
+lungeApp.controller("TrainerProfileController", function(AlertMessage, $timeout, $state, $location, $q, $document, $window, ProfilePicture, Auth, $scope, $http, $stateParams, socket){
 	Auth.isLoggedInAsync(function(){
 		socket.socket.emit('authenticate', {token : Auth.getToken()});
 		$scope.$window = $window;
@@ -86,7 +86,7 @@ lungeApp.controller("TrainerProfileController", function($timeout, $state, $loca
 			return $scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id;
 		};
 		$scope.$on('$destroy', function () {
-			$scope.unsync.user("trainer", $scope.trainer);
+			socket.unsync.user("trainer", $scope.trainer);
 			socket.unsyncUpdates('trainer');
 		});
 	});

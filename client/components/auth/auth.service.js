@@ -172,6 +172,19 @@ angular.module('ngLungeFullStack2App')
 				}).$promise;
 			},
 
+			changeEmail : function(email, callback) {
+				var cb = callback || angular.noop,
+					Model = currentType == "trainer" ? Trainer : User;
+
+				return Model.changeEmail({ id: currentUser._id }, {
+					email: email
+				}, function(user) {
+					return cb(user);
+				}, function(err) {
+					return cb(err);
+				}).$promise;
+			},
+
 			addCertification: function(certificationStringOrArray, callback) {
 				var cb = callback || angular.noop,
 					Model = currentType == "trainer" ? Trainer : User;

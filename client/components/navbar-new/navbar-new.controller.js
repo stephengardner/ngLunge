@@ -1,4 +1,5 @@
-lungeApp.controller("NavbarNewController", ['socket', '$state', '$rootScope', '$location', '$window', '$scope', '$location', 'Auth', function(socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
+lungeApp.controller("NavbarNewController", ['MenuService', 'socket', '$state', '$rootScope', '$location', '$window', '$scope',
+	'$location', 'Auth', function(MenuService, socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
 	$scope.getCurrentUser = Auth.getCurrentUser;
 
 	$scope.isAdminPage = function(){

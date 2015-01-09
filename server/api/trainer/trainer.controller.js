@@ -55,6 +55,23 @@ exports.sendEmail = function(req, res) {
 	})
 };
 
+exports.changeEmail = function(req, res) {
+	if(req.body && req.body.email) {
+		console.log("Attempting to change a trainers email to: " + req.body.email);
+	}
+	Trainer.findById(req.params.id, '-salt -hashedPassword', function(err, trainer){
+		if(err) { return handleError(res, err); }
+		if(!trainer) { return res.send(404); }
+		if(req.user && req.user._id == trainer._id) {
+			trainer.email = req.body.email;
+			trainer.save(function(err, trainer){
+				return res.json(trainer);
+			});
+		}
+		else {}
+	});
+};
+
 // Get a single thing
 exports.show = function(req, res) {
 	console.log("Trainer.controller.show(), urlName: ", req.params.urlName, " req.user: ", req.user);

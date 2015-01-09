@@ -63,14 +63,31 @@ exports.create = function(req, res) {
 		authenticationHash = crypto.randomBytes(10).toString('hex');
 	newRegistration.authenticationHash = authenticationHash;
 	newRegistration.verified = false;
-	newRegistration.save(function(err, registration){
-		if (err) return validationError(res, err);
-		sendEmail(registration);
-		res.json({ registration : registration});
-	});
+	try {
+		newRegistration.save(function(err, registration){
+			if (err) {
+				console.log("there was an erro sending the email: ", err);
+			}
+			sendEmail(registration, function(err, response){
+				if(err) {
+					// TODO this is not a proper error, we should send err 500 or something standard.
+					// I'm using this because it shows up in the validation errors underneath the form I coded.
+					// but we can also use the AlertMessage at the top, or a standard error below too.
+					return res.json(422, {errors : {email : { message : "The server could not send your email at this time.  Please try agian later"}}});
+					//return validationError(res, err);
+				}
+				else {
+					res.json({ registration : registration});
+				}
+			});
+		});
+	}
+	catch(err) {
+		return handleError(res, err);
+	}
 };
 
-var sendEmail = function(registrationDocument) {
+var sendEmail = function(registrationDocument, callback) {
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
@@ -83,6 +100,8 @@ var sendEmail = function(registrationDocument) {
 		to: 'augdog911@gmail.com',
 		subject: 'Lunge Automatic Email Validation',
 		text: 'Thanks for registering with Lunge.  To activate your account please click on this link:' + config.DOMAIN + '/trainer/register/password/' + registrationDocument.authenticationHash
+	}, function(err, response) {
+		callback(err, response);
 	});
 };
 

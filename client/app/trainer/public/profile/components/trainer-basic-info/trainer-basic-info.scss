@@ -1,4 +1,5 @@
 .trainer-synced-account {
+	cursor:pointer;
 	~ .trainer-synced-account {
 		margin-left:.5em;
 	}
@@ -19,6 +20,12 @@
 	}
 	.google-plus {
 		padding: 2px 4px;
+	}
+	span {
+		&:hover {
+			color:white;
+			border-color:transparent;
+		}
 	}
 	a {
 		vertical-align: middle;

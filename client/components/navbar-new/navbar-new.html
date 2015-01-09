@@ -21,6 +21,9 @@
             <a ng-if="getCurrentType() == 'trainer'" ui-sref="profilePage({urlName : getCurrentUser().urlName})" ng-show="isLoggedIn()" ui-sref-active="active" class="btn btn-username">
                 {{getCurrentUser().name.full ? getCurrentUser().name.full : getCurrentUser().name}}
             </a>
+            <span ng-click="toggle()" ng-show="isLoggedIn()" ng-controller="MenuButtonController" class="menu-button">
+                <i class="fa fa-bars"></i>
+            </span>
         </div>
     </div>
 </div>

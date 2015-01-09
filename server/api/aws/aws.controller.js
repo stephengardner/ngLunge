@@ -20,6 +20,9 @@ var client = Knox.createClient({
 	secret: config.AWS.AWS_SECRET_ACCESS_KEY,
 	bucket: config.AWS.S3_BUCKET
 });
+var validationError = function(res, err) {
+	return res.json(422, err);
+};
 var s3UploadService = function(req, res) {
 	/* works for multer
 	 var file = req.files.file;
@@ -136,7 +139,7 @@ var sendToS3 = function(filePath, buf, req){
 			console.error(response.statusCode, 'error streaming image!', err);
 			//return next(err);
 		}
-		else if(response) {
+		else if(response && response.path) {
 			console.log('Your file was uploaded');
 			console.log("Amazon's response was: ", response.path);
 			console.log('Amazon response statusCode: ', response.statusCode);
@@ -170,9 +173,12 @@ var cropImage = function(req, res) {
 
 			stdout.on('end', function(data) {
 				sendToS3(filePath, buf, req).then(function(res){
+					console.log("Lunge: Image upload succeeded");
 					deferred.resolve(res);
 				}, function(err){
+					console.log("Lunge: Image upload failed");
 					console.log("cropImage SendtoS3 err on resolve: ", err);
+					return validationError(res, err);
 				});
 			});
 		});

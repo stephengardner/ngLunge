@@ -175,15 +175,16 @@ lungeApp.factory("ProfilePicture", function(Auth, $timeout, $http, $q, $upload){
 				console.log("CHANGED");
 				ProfilePicture.status = "cropped";
 				console.log("Changed profile picture:",response);
-				if(response) {
+				if(response && response.status != 422) {
 					deferred.resolve(response);
 					ProfilePicture.removeImage();
 				}
 				else {
+					console.log("Updating profile picture returned a status of 422 and response of: ", response);
 					deferred.reject(response);
 				}
 			}, function(err){
-				deferred.reject(response);
+				deferred.reject(err);
 				ProfilePicture.status = "err";
 				console.log("err profile picture:",err);
 			});

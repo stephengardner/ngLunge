@@ -1,4 +1,4 @@
-lungeApp.controller("CertificationsController", function(socket, Auth, Certification, $http, $scope){
+lungeApp.controller("CertificationsController", function(AlertMessage, socket, Auth, Certification, $http, $scope){
 	$scope.searchQuery;
 	Auth.isLoggedInAsync(function(){
 		$scope.trainer = Auth.getCurrentUser();
@@ -23,13 +23,16 @@ lungeApp.controller("CertificationsController", function(socket, Auth, Certifica
 			Auth.modifyCertification({type : "ADD", certification : cert_type._id}).then(function(response){
 				console.log("updated...",response);
 				$scope.trainer = response;
+				AlertMessage.success("Added 1 " + cert_type.name + " to your profile", {duration : 4000});
 			}).catch(function(err){
+				AlertMessage.error("Failed adding certificate due to error: " + err, {closeButton : true});
 				console.log("ERROR ADDING CERT:" , err);
 			});
 		};
 		$scope.removeCertType = function(cert_type) {
 			Auth.modifyCertification({type : "DELETE", certification : cert_type._id}).then(function(response){
 				console.log("updated...",response);
+				AlertMessage.success("Removed 1 " + cert_type.name + " from your profile", {duration : 4000});
 				$scope.trainer = response;
 			});
 		};

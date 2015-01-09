@@ -16,5 +16,11 @@ angular.module('ngLungeFullStack2App')
 				templateUrl: 'app/account/dashboard/dashboard.html',
 				controller: 'DashboardController',
 				authenticate: true
+			})
+			.state('main.account', {
+				url : '/account',
+				templateUrl : 'app/account/account.partial.html',
+				controller : 'AccountController',
+				authenticate : true
 			});
   });

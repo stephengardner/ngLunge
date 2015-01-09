@@ -1,4 +1,4 @@
-lungeApp.controller("TrainerSyncedProviderController", function($window, $scope){
+lungeApp.controller("TrainerSyncedProviderController", function(AlertMessage, $location, InfoOverlay, $window, $scope){
 	$scope.isProviderActive = function(provider) {
 		if(provider == "linkedin")
 			return $scope.trainerEditing[provider] && $scope.trainerEditing[provider].publicProfileUrl
@@ -31,9 +31,9 @@ lungeApp.controller("TrainerSyncedProviderController", function($window, $scope)
 	$scope.unlink = function(provider) {
 		$scope.trainerEditing[provider] = null;
 	}
-
 	// link trainer social profiles
 	$scope.loginOauth = function(provider) {
+		AlertMessage.info("Contacting " + $scope.getProviderString(provider));
 		$window.location.href = '/auth/' + provider + "/trainer-sync";
 	};
 

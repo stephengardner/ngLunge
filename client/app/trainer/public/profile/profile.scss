@@ -115,7 +115,7 @@ $profile-page-max-width: 750px;
 		}
 	}
 }
-.trainer-profile {
+.trainer-profile, .profile-style {
 	form {
 		&.contact-form {
 			textarea {
@@ -212,12 +212,15 @@ $profile-page-max-width: 750px;
 			border-bottom-left-radius: 5px;
 		}
 		.title {
-			padding: .5em;
+			padding: .7rem;
 			background: white;
 			color: black;
 			line-height:1;
 			margin-bottom:0em;
 			font-size:1.3em;
+		}
+		.content {
+			padding: .7rem;
 		}
 	}
 	.certification-list {

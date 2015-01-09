@@ -1,4 +1,4 @@
-lungeApp.controller("TrainerRegisterEmailController", function($state, Auth, Registration, $scope, $http){
+lungeApp.controller("TrainerRegisterEmailController", function(AlertMessage, $state, Auth, Registration, $scope, $http){
 	$scope.user = {};
 	$scope.message = false;
 	$scope.errors = {};

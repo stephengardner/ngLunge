@@ -1,6 +1,6 @@
 <span class="trainer-synced-account">
     <span ng-if="!isMe()" ng-class="providerClass" >
-        <span ng-if="!isProviderActive(provider);" class="deactive"><!--
+        <span ng-attr-title="{{trainer.name.first}} has not linked their {{getProviderString(provider)}} account yet" ng-if="!isProviderActive(provider);" class="deactive"><!--
             --><i class="fa" ng-class="'fa-{{providerClass}}'"></i><!--
         --></span>
         <a ng-if="isProviderActive(provider);" ng-attr-title="{{trainer.name.first}}'s {{getProviderString(provider)}} profile" my-href="getProviderLink(provider)" target="_blank" ng-class="providerClass"><!--
@@ -8,7 +8,8 @@
         --></a>
     </span>
     <span ng-if="isMe()">
-        <span ng-if="!isProviderActive(provider);" ng-click="!isProviderEditing(provider) && loginOauth(provider)" class="linkedin">
+        <span ng-attr-title="
+            Link your {{getProviderString(provider)}} account to your profile" ng-if="!isProviderActive(provider);" ng-click="!isProviderEditing(provider) && loginOauth(provider)" class="linkedin">
             <i class="fa" ng-class="'fa-{{providerClass}}'"></i><!--
         --></span>
         <a ng-if="isProviderActive(provider);" ng-attr-title="{{trainer.name.first}}'s {{getProviderString(provider)}} profile" my-href="getProviderLink(provider)" target="_blank" ng-class="providerClass">

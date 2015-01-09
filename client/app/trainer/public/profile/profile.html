@@ -25,12 +25,12 @@
                 </div>
             </div>
             <!-- overlay for profile picture updating -->
-            <div class="overlay" ng-show="ProfilePicture.status == 'loading' || ProfilePicture.status == 'cropping'">
+            <div class="overlay" ng-controller="InfoOverlayController" ng-show="isActive()">
                 <div class="table-wrapper">
                     <div class="table-cell">
                         <div class="table-contents capitalize">
                             <i class="fa fa-spinner fa-spin"></i>
-                            {{ProfilePicture.status}}
+                            {{getMessage()}}
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-lungeApp.controller("ProfilePictureController", function(ProfilePicture, $scope, $timeout, $document, $window){
+lungeApp.controller("ProfilePictureController", function(AlertMessage, ProfilePicture, $scope, $timeout, $document, $window){
 	$scope.ProfilePicture = ProfilePicture;
 	$scope.saveCrop = function(){
 		ProfilePicture.saveCrop().then(function(response){
@@ -8,6 +8,9 @@ lungeApp.controller("ProfilePictureController", function(ProfilePicture, $scope,
 				$document.scrollToElement(someElement, 80, 600);
 				$scope.$apply();
 			}, 100);
+		}, function(){
+			AlertMessage.error("Image upload failed.  There may be a problem with your image or internet connection.",
+				{closeButton : true})
 		});
 	};
 

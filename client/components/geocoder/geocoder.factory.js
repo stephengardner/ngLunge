@@ -1,4 +1,4 @@
-lungeApp.factory("Geocoder", ['$q', 'GoogleMapApi'.ns(), function($q, GoogleMapApi){
+lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMapApi){
 	// the "type" field in "address_components" that represents what this "address_component" holds.
 	// the "type" field is an array and may have more than one item.  This is a tested but not guaranteed check.
 	var ADDRESS_TYPES = {

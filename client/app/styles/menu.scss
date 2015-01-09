@@ -1,0 +1,50 @@
+.menu-button {
+	font-size:2em;
+	@extend .visible-xs;
+	display:inline-block!important;
+	vertical-align:middle;
+	padding:.15em .4em;
+}
+
+.menu-item {
+	padding:1em;
+	color:inherit!important;
+	font-weight:bold;
+	display:block;
+	text-align:right;
+	i {
+		float:left;
+	}
+	text-decoration:none!important;
+	&:hover {
+		background:darken($body-bg, 15%);
+	}
+}
+
+.menu-active {
+	left:-70%!important;
+}
+.menu-cover {
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	width:100%;
+	background:$body-bg;
+	&.menu-active {
+		left:-70%;
+	}
+}
+.menu {
+	background: darken($body-bg, 5%);
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:30%;
+}
+.main-view {
+	position:absolute;
+	left:0;
+	width: 100%;
+}

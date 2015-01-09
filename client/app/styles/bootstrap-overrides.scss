@@ -1,0 +1,6 @@
+// override for borders on navigation tabs.
+// navigation tabs would show a small line beneath them without this
+// bootstrap default is -1px
+.nav-tabs > li {
+  margin-bottom:-2px;
+}

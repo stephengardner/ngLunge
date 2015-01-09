@@ -1,0 +1,10 @@
+<div ng-controller="MenuController">
+    <div class="menu spaced">
+        <a ng-repeat="item in menuItems" ng-click="hide()" class="menu-item" ui-sref="{{item.sref}}">
+            <i class="fa" ng-class="item.icon"></i>
+            {{item.name}}
+        </a>
+    </div>
+    <div class="menu-cover" ng-class="{'menu-active' : isMenuActive()}">
+    </div>
+</div>

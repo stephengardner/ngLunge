@@ -7,5 +7,11 @@ lungeApp.controller("AlertMessageController", function($scope, AlertMessage) {
 	};
 	$scope.isActive = function() {
 		return AlertMessage.active;
-	}
+	};
+	$scope.hasCloseButton = function() {
+		return AlertMessage.closeButton;
+	};
+	$scope.hide = function() {
+		AlertMessage.hide();
+	};
 });

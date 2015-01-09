@@ -1,0 +1,31 @@
+
+.table-wrapper {
+	display: table;
+	height: 100%;
+	width: 100%;
+	.table-cell {
+		display:table-cell;
+		vertical-align: middle;
+	}
+	.table-contents{
+
+	}
+}
+
+.close-table-position {
+	position:absolute;
+	top:0;
+	bottom:0;
+	right:1em;
+	.close-table-wrapper {
+		position:absolute;
+		right:0;
+		display:table;
+		height:100%;
+	}
+	.table-cell {
+		cursor:pointer;
+		display:table-cell;
+		vertical-align:middle;
+	}
+}
