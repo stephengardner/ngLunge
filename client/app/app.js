@@ -48,14 +48,13 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
         }
       }
     };
-  }).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
-		/*
-		GoogleMapApi.configure({
+  }).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApiProvider) {
+		GoogleMapApiProvider.configure({
 			//    key: 'your api key',
 			v: '3.17',
 			libraries: 'weather,geometry,visualization'
 		});
-		*/
+
 	}])
 
   .run(function ($rootScope, $location, Auth, editableOptions) {

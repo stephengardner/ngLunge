@@ -1,0 +1,71 @@
+<div class="title">
+    My Locations
+</div>
+<div class="content">
+    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="control">
+        <!--
+        <ui-gmap-markers models="markers">
+        </ui-gmap-markers>
+        -->
+        <div ng-repeat="marker in markers">
+            <ui-gmap-marker idkey="marker.id" coords="marker.coords" options="marker.options" click="onClick(marker)" events="marker.events" >
+                <ui-gmap-window show="showWindow" options="windowOptions" closeClick="closeClick()">
+                    <div class="infoWindow">
+                        {{selectedMarker.title}}
+                        <div>
+                            <div class="address_line_1" ng-class="{'active' : selectedMarker.address_line_1}">{{selectedMarker.address_line_1 ? selectedMarker.address_line_1 : ''}}</div>
+                            <div class="city-state">
+                                <span class="city"  ng-class="{'active' : selectedMarker.city}">{{selectedMarker.city ? selectedMarker.city + ',' : ''}}</span>
+                                <span class="state"  ng-class="{'active' : selectedMarker.state}">{{selectedMarker.state ? selectedMarker.state : ''}}</span>
+                            </div>
+                            <div class="zipcode" ng-class="{'active' : selectedMarker.zipcode}">{{selectedMarker.zipcode ? selectedMarker.zipcode : ''}}</div>
+                        </div>
+                    </div>
+                </ui-gmap-window>
+            </ui-gmap-marker>
+        </div>
+        <!--
+        <window coords="selected" show="selected.show">
+            <div style="background:red">L<br/>love</div>
+        </window>
+        -->
+    </ui-gmap-google-map>
+    <div class="clearfix">
+        <div ng-click="toggleLocation()" class="pull-right btn btn-info">
+            Add Location
+        </div>
+        <div  ng-if="!user.locations && !addingLocation">
+            <h3>You don't have any locations yet
+            </h3>
+        </div>
+    </div>
+    <form class="form form-horizontal" ng-show="addingLocation" ng-submit="submitLocation()">
+        <div class="form-group">
+            <label for="title" class="col-sm-3 control-label">
+                Title
+            </label>
+            <div class="col-sm-9">
+                <input id="title" placeholder="ex: Home Studio or Gold's Gym Van Ness" type="text" name="location" ng-model="title" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group clearfix">
+            <label for="location" class="col-sm-3 control-label">
+                Location
+            </label>
+            <div class="col-sm-9">
+                <input id="location" placeholder="Search places" type="text" name="location" ng-model="location" class="form-control"/>
+            </div>
+            <div class="col-sm-12 clearfix">
+                <div class="pull-right">
+                    Can't find your location?
+                </div>
+            </div>
+        </div>
+        <div class="buttons text-right">
+            <button type="submit" class="btn btn-primary">
+                Add
+            </button>
+            <div class="btn btn-danger" ng-click="toggleLocation()">Cancel</div>
+        </div>
+    </form>
+</div>

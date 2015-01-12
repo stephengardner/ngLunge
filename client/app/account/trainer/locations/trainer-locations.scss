@@ -1,0 +1,9 @@
+.angular-google-map-container { height: 400px; }
+.infoWindow {
+	color:black;
+	font-size:12px;
+	.city {
+		&.active {
+		}
+	}
+}

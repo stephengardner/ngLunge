@@ -65,6 +65,7 @@ angular.module('ngLungeFullStack2App')
 						else {
 							currentUser = Trainer.get();
 						}
+						console.log("LOGGED IN NOW CURRENT USER IS:", currentUser);
 						deferred.resolve(data);
 						return cb();
 					}).
@@ -248,6 +249,20 @@ angular.module('ngLungeFullStack2App')
 					Model = this.type == "trainer" ? Trainer : User;
 				console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
 				return Trainer.update({ id: currentUser._id }, dataObject, function(user) {
+					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
+					currentUser = user;
+					return cb(user);
+				}, function(err) {
+					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
+					return cb(err);
+				}).$promise;
+			},
+
+			addLocation : function(dataObject, callback) {
+				var cb = callback || angular.noop,
+					Model = this.type == "trainer" ? Trainer : User;
+				console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
+				return Trainer.addLocation({ id: currentUser._id }, dataObject, function(user) {
 					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
 					currentUser = user;
 					return cb(user);

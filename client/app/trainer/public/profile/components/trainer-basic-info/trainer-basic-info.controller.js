@@ -89,7 +89,7 @@ lungeApp.controller("TrainerBasicInfoController", function(AlertMessage, $window
 		form[inputName].$error['invisible'] = false;
 		form[inputName].$setValidity('mongoose', true);
 		form[inputName].$setValidity('invisible', true);
-	}
+	};
 	$scope.watchMongoose = function(inputName){
 		if(!form[inputName].$error) {
 			return true;
@@ -172,8 +172,13 @@ lungeApp.controller("TrainerBasicInfoController", function(AlertMessage, $window
 		return deferred.promise;
 	};
 
+	Geocoder.bindPlaces("#trainer-location", function(updatedLocation){
+		$scope.updatedLocation = updatedLocation;
+		$scope.$apply();
+	});
+	/*
 	$(function(){
-		if(0) {
+		if(google) {
 			var trainerLocation = $("#trainer-location").geocomplete({blur : true}).on("geocode:result", function(event, result){
 				$scope.$apply(function(){
 					$scope.updatedLocation = Geocoder._unwrapAddressComponents(result);
@@ -187,10 +192,6 @@ lungeApp.controller("TrainerBasicInfoController", function(AlertMessage, $window
 			});
 		}
 		//trainerLocation
-		/*
-		$("#find").click(function(){
-			trainerLocation.trigger("geocode");
-		});
-		*/
 	});
+	*/
 });

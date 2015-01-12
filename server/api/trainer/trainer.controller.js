@@ -60,15 +60,25 @@ exports.changeEmail = function(req, res) {
 		console.log("Attempting to change a trainers email to: " + req.body.email);
 	}
 	Trainer.findById(req.params.id, '-salt -hashedPassword', function(err, trainer){
+		console.log("TESTING!000");
 		if(err) { return handleError(res, err); }
 		if(!trainer) { return res.send(404); }
 		if(req.user && req.user._id == trainer._id) {
+			console.log("TESTING!111");
 			trainer.email = req.body.email;
 			trainer.save(function(err, trainer){
+				console.log("TESTING!222");
+				console.log("Error Changing Email?:", err);
+				if(err) {
+					return validationError(res, err);
+				}
+				if(!trainer) { return res.send(404); }
 				return res.json(trainer);
 			});
 		}
-		else {}
+		else {
+			console.log("TESTING!333");
+		}
 	});
 };
 
@@ -118,6 +128,7 @@ exports.show = function(req, res) {
 			});
 	}
 };
+
 
 exports.showType = function(req, res) {
 	if(req.params.type == "all"){
@@ -175,6 +186,21 @@ exports.update = function(req, res, next) {
 		}
 		trainer.me = true;
 		var updated = _.merge(trainer, req.body);
+		updated.save(function (err) {
+			if (err) { return handleError(res, err); }
+			return res.json(200, trainer);
+		});
+	});
+};
+
+exports.addLocation = function(req, res) {
+	Trainer.findById(req.params.id, function (err, trainer) {
+		if (err) { return handleError(res, err); }
+		if(!trainer) { return res.send(404); }
+		if(req.body.location){
+			trainer.locations.push(req.body.location);
+		}
+		var updated = trainer;
 		updated.save(function (err) {
 			if (err) { return handleError(res, err); }
 			return res.json(200, trainer);

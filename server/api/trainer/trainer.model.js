@@ -24,8 +24,29 @@ var TrainerSchema = new Schema(
 			address_line_2 : {type : String, required : false},
 			city : {type : String, required : false},
 			state : {type : String, required : false},
-			zipcode : {type : Number, required : false}
+			zipcode : {type : Number, required : false},
+			coords : {
+				lat : { type : Number },
+				lon : { type : Number }
+			}
 		},
+		locations : [{
+			google : {
+				placesAPI : {
+					formatted_address : { type : String }
+				}
+			},
+			type : { type : String, required : false },
+			address_line_1 : {type : String, required : false},
+			address_line_2 : {type : String, required : false},
+			city : {type : String, required : false},
+			state : {type : String, required : false},
+			zipcode : {type : Number, required : false},
+			coords : {
+				lat : { type : Number },
+				lon : { type : Number }
+			}
+		}],
 		active: {type : Boolean, default : 1},
 		rating : {type : Number, default : 0},
 		profile_picture : {high_resolution : {url : {type : String}}, medium_resolution : {url : {type : String}}, thumbnail : {url : {type : String, default : "/assets/images/trainers/testImage.jpg"}}},
@@ -284,6 +305,7 @@ TrainerSchema
 	});
 
 // Validate email is not taken
+
 TrainerSchema
 	.path('email')
 	.validate(function(value, respond) {
@@ -297,6 +319,20 @@ TrainerSchema
 			}
 			respond(true);
 		});
+	}, 'The specified email address is already in use.');
+
+TrainerSchema
+	.path('email')
+	.validate(function(value) {
+		var self = this;
+		console.log("-------\n----------\n-ATTEMPTING TO CHANGE EMAIL TO:", value);
+		if(!value) {
+			return this.invalidate('email', 'Enter an email');
+		}
+		if(value.indexOf("@") == -1) {
+			console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n!!!!!!!!!!!!!!!");
+			return this.invalidate('email', 'Please use a real, valid email address');
+		}
 	}, 'The specified email address is already in use.');
 
 // Validate email is not taken

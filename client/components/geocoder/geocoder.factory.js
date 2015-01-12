@@ -23,6 +23,38 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 			});
 			return deferred.promise;
 		},
+		bindPlaces : function(el, cb) {
+			$(function(){
+				if(google) {
+					var trainerLocation = $(el).geocomplete({blur : true}).on("geocode:result", function(event, result){
+						console.log("RESULT: ", result);
+						var updatedLocation = Geocoder._unwrapAddressComponents(result);
+						updatedLocation.google = {
+							placesAPI : {
+								formatted_address : result.formatted_address
+							}
+						};
+						cb(updatedLocation);
+						/*
+						$scope.$apply(function(){
+							$scope.updatedLocation = Geocoder._unwrapAddressComponents(result);
+							$scope.updatedLocation.google = {
+								placesAPI : {
+									formatted_address : result.formatted_address
+								}
+							}
+							console.log($scope.updatedLocation);
+						});
+						*/
+					});
+				}
+				//trainerLocation
+
+				$("#find").click(function(){
+					trainerLocation.trigger("geocode");
+				});
+			});
+		},
 		_deconstruct : function(opt_googleMapsPosition) {
 			this._setPosition(opt_googleMapsPosition);
 			var lat = this.googleMapsPosition.coords.latitude,
@@ -92,7 +124,12 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 					})
 				});
 			});
-
+			if(googleResultObject.geometry && googleResultObject.geometry.location) {
+				result['coords'] = {
+					lat : googleResultObject.geometry.location.k,
+					lon : googleResultObject.geometry.location.D
+				}
+			}
 			// the city is actually the "locality" provided by google, which is not necessarily a city, but rather a
 			// city, (comma) state.  So split this along the comma and get just the city.
 			if(result.city && result.city.indexOf(",") != -1) {

@@ -21,5 +21,6 @@ router.get('/type/:type', controller.showType);
 router.post('/', controller.create);
 router.get('/send_email/:email', controller.sendEmail);
 router.put('/:id/changeEmail', auth.isTrainerAuthenticated(), auth.isTrainerMe(), controller.changeEmail);
+router.put('/:id/addLocation', auth.isTrainerAuthenticated(), auth.isTrainerMe(), controller.addLocation);
 
 module.exports = router;

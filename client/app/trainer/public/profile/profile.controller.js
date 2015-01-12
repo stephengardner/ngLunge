@@ -35,17 +35,17 @@ lungeApp.controller("TrainerProfileController", function(AlertMessage, $timeout,
 		];
 
 		$scope.syncTrainer = function(newTrainer) {
-			$scope.trainer = newTrainer;
-			$scope.trainerEditing = angular.copy(newTrainer);
-			if(Auth.getCurrentUser().urlName != newTrainer.urlName) {
-				$location.url(newTrainer.urlName);
-				$location.replace();
-			}
-			//Auth.setCurrentUser($scope.trainer);
-			// I don't know why the $apply is necessary here, but it has to be here to update the certifications.
+			// I don't know why the tiemout to force scope.apply is necessary here, but it has to be here to update the certifications.
 			// I guess because the certification loop in the scope is a nested object... Not sure... (probably way off)
-			console.log("Syncing the new trainers name to be: ", newTrainer.name.first, newTrainer.name.last);
-			$scope.$apply();
+			$timeout(function(){
+				$scope.trainer = newTrainer;
+				$scope.trainerEditing = angular.copy(newTrainer);
+				if(Auth.getCurrentUser().urlName != newTrainer.urlName) {
+					$location.url(newTrainer.urlName);
+					$location.replace();
+				}
+				console.log("Syncing the new trainers name to be: ", newTrainer.name.first, newTrainer.name.last);
+			})
 		}
 
 		if($stateParams.urlName) {

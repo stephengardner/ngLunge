@@ -107,13 +107,12 @@
                 {{trainer.bio ? trainer.bio : 'No bio yet' }}
             </div>
             <div ng-show="basicInfo.visible">
-                <textarea name="bio" ng-keypress="removeMongooseError('bio')" ui-validate='{invisible : "validator.bio($value, true)", custom : "validator.bio($value)", mongoose : "watchMongoose(\"bio\")"}' class="form-control" ng-model="trainerEditing.bio" placeholder="Enter your bio (400 characters max)"></textarea>
+                <textarea name="bio" ng-keypress="removeMongooseError(form, 'bio')" ui-validate='{invisible : "validator.bio($value, true)", custom : "validator.bio($value)", mongoose : "watchMongoose(\"bio\")"}' class="form-control" ng-model="trainerEditing.bio" placeholder="Enter your bio (400 characters max)"></textarea>
                 <div class="form-error" ng-show="form.bio.$error.invisible && submitted"><span>Bio must be less than 300 characters</span></div>
                 <span class="form-error" ng-show="form.bio.$error.mongoose">{{errors.bio}}</span>
             </div>
         </div>
         <div class="link-social item">
-
             <span trainer-synced-provider provider="facebook"></span>
             <span trainer-synced-provider provider="linkedin"></span>
             <span trainer-synced-provider provider="twitter"></span>

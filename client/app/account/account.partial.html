@@ -5,7 +5,7 @@
             Email
         </div>
         <div class="content">
-            <form class="form update-email">
+            <form novalidate id="form" class="form update-email" ng-submit="changeEmail(form)" name="form">
                 <div ng-class="{'form-group' : emailUpdating}">
                     <div class="row">
                         <div class="col-xs-8">
@@ -18,12 +18,17 @@
                 </div>
                 <div ng-show="emailUpdating">
                     <div class="form-group">
-                        <input ng-model="email" class="form-control" type="text" placeholder="New email"/>
+                        <input ng-keypress="removeMongooseError(form, 'email')" id="email" ng-model="email" name="email" class="form-control" type="text" placeholder="New email"/>
+                        <div class="form-error" ng-show="form.email.$error.invisible && submitted"><span>Please enter a valid email</span></div>
+                        <div class="form-error" ng-show="form.email.$error.mongoose"><span>{{errors.email}}</span></div>
                     </div>
-                    <div class="btn btn-primary" ng-click="changeEmail(email)">Save</div>
+                    <button type="submit" class="btn btn-primary" ng-disabled="isAjax()" ng-class="{ready : !isAjax(), ajax : isAjax()}"><i ng-show="isAjax()" class="fa fa-spin fa-spinner"></i> {{ !isAjax() ? 'Save' : 'Saving' }}</button>
                     <div class="btn btn-danger" ng-click="emailToggle()">Cancel</div>
                 </div>
             </form>
         </div>
+    </section>
+    <section class="locations" ng-if="getType() == 'trainer'">
+        <div ng-controller="TrainerLocationsController" ng-include="'app/account/trainer/locations/trainer-locations.partial.html'"></div>
     </section>
 </div>

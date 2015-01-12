@@ -75,6 +75,12 @@ angular.module('ngLungeFullStack2App')
 					params : {
 						controller : 'changeEmail'
 					}
+				},
+				addLocation : {
+					method : 'PUT',
+					params : {
+						controller : 'addLocation'
+					}
 				}
 			});
 	});

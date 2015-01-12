@@ -44,9 +44,7 @@
     <![endif]-->
 
     <!-- scripts I cannot host on bower_components -->
-    <!--
     <script src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
-    -->
 
     <!-- build:js({client,node_modules}) app/vendor.js -->
     <!-- bower:js -->
@@ -71,6 +69,7 @@
     <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
 
+    <script src="bower_components/geocomplete/jquery.geocomplete.js"></script>
     <!-- build:js({.tmp,client}) app/app.js -->
     <script src="app/app.js"></script>
     <!-- injector:js -->
@@ -80,6 +79,7 @@
     <script src="app/account/login/login.controller.js"></script>
     <script src="app/account/settings/settings.controller.js"></script>
     <script src="app/account/signup/signup.controller.js"></script>
+    <script src="app/account/trainer/locations/trainer-locations.controller.js"></script>
     <script src="app/admin/admin.controller.js"></script>
     <script src="app/admin/admin.js"></script>
     <script src="app/admin/certifications/list/admin-certifications-list.controller.js"></script>
@@ -141,8 +141,8 @@
     <!-- endbuild -->
     <script src="vendors/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.js"></script>
 
+
     <!--
-    <script src="bower_components/geocomplete/jquery.geocomplete.js"></script>
     <script type="text/javascript" src="components/jquery.imgareaselect-0.9.10/scripts/jquery.imgareaselect.js"></script>
     -->
 
