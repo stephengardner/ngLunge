@@ -36,6 +36,7 @@ var TrainerSchema = new Schema(
 					formatted_address : { type : String }
 				}
 			},
+			title : { type : String },
 			type : { type : String, required : false },
 			address_line_1 : {type : String, required : false},
 			address_line_2 : {type : String, required : false},

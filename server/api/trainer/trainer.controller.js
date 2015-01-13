@@ -194,18 +194,21 @@ exports.update = function(req, res, next) {
 };
 
 exports.addLocation = function(req, res) {
-	Trainer.findById(req.params.id, function (err, trainer) {
-		if (err) { return handleError(res, err); }
-		if(!trainer) { return res.send(404); }
-		if(req.body.location){
-			trainer.locations.push(req.body.location);
-		}
-		var updated = trainer;
-		updated.save(function (err) {
-			if (err) { return handleError(res, err); }
-			return res.json(200, trainer);
+		Trainer.findById(req.params.id, function (err, trainer) {
+			trainer.locations = [{}];
+			trainer.save(function(err, trainer){
+				if (err) { return handleError(res, err); }
+				if(!trainer) { return res.send(404); }
+				if(req.body.location){
+					trainer.locations.push(req.body.location);
+				}
+				var updated = trainer;
+				updated.save(function (err) {
+					if (err) { return handleError(res, err); }
+					return res.json(200, trainer);
+				});
+			});
 		});
-	});
 };
 
 exports.modifyCertification = function(req, res) {

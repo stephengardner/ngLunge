@@ -126,8 +126,8 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 			});
 			if(googleResultObject.geometry && googleResultObject.geometry.location) {
 				result['coords'] = {
-					lat : googleResultObject.geometry.location.k,
-					lon : googleResultObject.geometry.location.D
+					lat : googleResultObject.geometry.location.lat(),
+					lon : googleResultObject.geometry.location.lng()
 				}
 			}
 			// the city is actually the "locality" provided by google, which is not necessarily a city, but rather a

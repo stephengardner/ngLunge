@@ -51,7 +51,7 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
   }).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApiProvider) {
 		GoogleMapApiProvider.configure({
 			//    key: 'your api key',
-			v: '3.17',
+			v: '3.13',
 			libraries: 'weather,geometry,visualization'
 		});
 
