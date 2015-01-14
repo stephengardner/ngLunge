@@ -184,8 +184,26 @@ exports.update = function(req, res, next) {
 			req.body.name.first = nameFullParts[0];
 			req.body.name.last = nameFullParts[1];
 		}
-		trainer.me = true;
 		var updated = _.merge(trainer, req.body);
+
+		// save the home location in our locations array.  Delete the old primary location if one existed
+		console.log("-\n-\n-\n-\n req.body.location:", req.body.location);
+		console.log("updated.locations:", updated.locations);
+		if(req.body.location && req.body.location.primary) {
+			console.log("!");
+			if(updated.locations && updated.locations.length == 0) {
+				updated.locations.push(req.body.location);
+			}
+			else {
+				for(var i = 0; i < updated.locations.length; i++){
+					var location = updated.locations[i];
+					if(location.primary) {
+						updated.locations.splice(i, 1);
+						updated.locations.push(req.body.location);
+					}
+				}
+			}
+		}
 		updated.save(function (err) {
 			if (err) { return handleError(res, err); }
 			return res.json(200, trainer);
@@ -195,8 +213,8 @@ exports.update = function(req, res, next) {
 
 exports.addLocation = function(req, res) {
 		Trainer.findById(req.params.id, function (err, trainer) {
-			trainer.locations = [{}];
-			trainer.save(function(err, trainer){
+			//trainer.locations = [];
+			//trainer.save(function(err, trainer){
 				if (err) { return handleError(res, err); }
 				if(!trainer) { return res.send(404); }
 				if(req.body.location){
@@ -207,9 +225,34 @@ exports.addLocation = function(req, res) {
 					if (err) { return handleError(res, err); }
 					return res.json(200, trainer);
 				});
-			});
 		});
 };
+
+exports.removeLocation = function(req, res) {
+	console.log("-------------- removing location\n --------------", req.body.location);
+	Trainer.findById(req.params.id, function (err, trainer) {
+		//trainer.locations = [];
+		//trainer.save(function(err, trainer){
+		if (err) { return handleError(res, err); }
+		if(!trainer) { return res.send(404); }
+		if(req.body.location){
+			console.log("LOCATION TO DELETE is: ", req.body.location);
+			for(var i = 0; i < trainer.locations.length; i++) {
+				var location = trainer.locations[i];
+				if(location._id == req.body.location._id) {
+					console.log("-\n-\n-\n-\n-\n-deleting location:", location, " at index: ", i);
+					trainer.locations.splice(i, 1);
+					trainer.markModified('locations');
+				}
+			}
+		}
+		console.log("--\n--\nthe updated trainer locations:", trainer.locations);
+		trainer.save(function (err) {
+			if (err) { return handleError(res, err); }
+			return res.json(200, trainer);
+		});
+	});
+}
 
 exports.modifyCertification = function(req, res) {
 	Trainer.findById(req.params.id, function (err, trainer) {

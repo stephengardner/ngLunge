@@ -81,6 +81,18 @@ angular.module('ngLungeFullStack2App')
 					params : {
 						controller : 'addLocation'
 					}
+				},
+				removeLocation : {
+					method : 'PUT',
+					params : {
+						controller : 'removeLocation'
+					}
+				},
+				updateLocation : {
+					method : 'PUT',
+					params : {
+						controller : 'updateLocation'
+					}
 				}
 			});
 	});

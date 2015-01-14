@@ -258,11 +258,27 @@ angular.module('ngLungeFullStack2App')
 				}).$promise;
 			},
 
+
+			//TODO: Add location and remove location can be clumped into one function/endpoint, or clustered into updateProfile by passing the model's "locations" array!
 			addLocation : function(dataObject, callback) {
 				var cb = callback || angular.noop,
 					Model = this.type == "trainer" ? Trainer : User;
-				console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
+				console.log("*Auth.service.js attempting to add location with data object: ", dataObject);
 				return Trainer.addLocation({ id: currentUser._id }, dataObject, function(user) {
+					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
+					currentUser = user;
+					return cb(user);
+				}, function(err) {
+					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
+					return cb(err);
+				}).$promise;
+			},
+
+			removeLocation : function(dataObject, callback) {
+				var cb = callback || angular.noop,
+					Model = this.type == "trainer" ? Trainer : User;
+				console.log("*Auth.service.js attempting to remove location with data object: ", dataObject);
+				return Trainer.removeLocation({ id: currentUser._id }, dataObject, function(user) {
 					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
 					currentUser = user;
 					return cb(user);

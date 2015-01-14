@@ -27,3 +27,11 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+.btn-text {
+	color: skyblue;
+	&:hover {
+		color: darken(skyblue, 15%);
+		cursor:pointer;
+	}
+}

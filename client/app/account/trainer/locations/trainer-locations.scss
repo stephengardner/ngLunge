@@ -1,4 +1,33 @@
 .angular-google-map-container { height: 400px; }
+.locations {
+	margin-top:1rem;
+	.table-header {
+		background: white;
+		color: black;
+		font-weight: bold;
+		font-size:1.2em;
+		@include respond-to(xxs){
+			font-size:1em;
+		}
+	}
+	.location {
+		&:nth-of-type(even) {
+			background: lighten($body-bg, 7%);
+		}
+		padding: .5rem 0rem;
+		border-bottom:1px solid;
+		~ .location {
+		}
+	}
+	.empty {
+		padding-bottom:1rem;
+	}
+}
+form {
+	.buttons {
+		margin-top:.5rem;
+	}
+}
 .infoWindow {
 	color:white;
 	font-size:12px;

@@ -1,4 +1,4 @@
-lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geocoder, $timeout, $scope){
+lungeApp.controller('TrainerLocationsController', function(AlertMessage, $compile, Auth, Geocoder, $timeout, $scope){
 	$scope.control = {};
 	$scope.toggleLocation = function(){
 		$scope.addingLocation = !$scope.addingLocation;
@@ -12,10 +12,10 @@ lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geoco
 	}, 4000);
 
 	Auth.isLoggedInAsync(function(){
-		$scope.map = { center: {latitude: $scope.user.location.coords.lat, longitude: $scope.user.location.coords.lon }, zoom: 8,
+		$scope.map = { center: {latitude: $scope.user.location.coords.lat, longitude: $scope.user.location.coords.lon }, zoom: 10,
 			bounds: {} };
 		$scope.options = {
-			scrollwheel: false
+			scrollwheel: true
 		};
 		$scope.markers = [];
 
@@ -23,27 +23,33 @@ lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geoco
 		$scope.closeInfoWindow = function(){
 			$scope.infoWindow.close();
 		}
-		var createGoogleMarker = function(location){
+		var setMarkerContent = function(marker, location) {
 			var map = $scope.control.getGMap();
-			var myLatlng = new google.maps.LatLng(location.coords.lat, location.coords.lon);
 			var contentTitle = location.title ? location.title : $scope.user.name.first + "'s location";
-			var marker = new google.maps.Marker({
-				position: myLatlng,
-				map: map,
-				title: contentTitle
-			});
-			marker.id = ++numMarkers;
 			marker.content = "" +
 			"<div class='infoWindow' id='infoWindow'>" +
-				"<div class='close' ng-click='closeInfoWindow()'><i class='fa fa-times'></i></div>" +
-				"<div class='title'>" + contentTitle  + "</div>"+
-				"<div class='content'>" +
-					"<div class='address_line_1'>" + location.address_line_1 + "</div>" +
-					"<div class='city-state'>" + location.city + ", " + location.state + "</div>" +
-					"<div class='zipcode'>" + location.zipcode + "</div>" +
-				"</div>" +
+			"<div class='close' ng-click='closeInfoWindow()'><i class='fa fa-times'></i></div>" +
+			"<div class='title'>" + contentTitle  + "</div>"+
+			"<div class='content'>" +
+			"<div class='address_line_1'>" + location.address_line_1 + "</div>" +
+			"<div class='city-state'>" + location.city + ", " + location.state + "</div>" +
+			"<div class='zipcode'>" + location.zipcode + "</div>" +
+			"</div>" +
 			"</div>";
-			google.maps.event.addListener(marker, 'click', function() {
+			// if the marker is already on the scope, it means we're updating it, not creating it
+			// this is an issue when we want to set the marker content after calling changeTitle()
+			for(var i = 0; i < $scope.markers.length; i++) {
+				var mk = $scope.markers[i];
+				if(mk.id == marker.id) {
+					mk.content = (marker.content);
+					mk.setTitle(contentTitle);
+					marker = mk;
+				}
+			}
+			if(marker.listener) {
+				google.maps.event.removeListener(marker.listener);
+			}
+			marker.listener = google.maps.event.addListener(marker, 'click', function() {
 				$scope.selectedMarker = marker;
 				var infoBoxContent = marker.content;
 				var infoBoxDimensions = getInfoBoxDimensions(infoBoxContent);
@@ -65,6 +71,23 @@ lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geoco
 				});
 				$scope.infoWindow.open(map, marker);
 			});
+		}
+		var createGoogleMarker = function(location){
+			var map = $scope.control.getGMap();
+			var myLatlng = new google.maps.LatLng(location.coords.lat, location.coords.lon);
+			var contentTitle = location.title ? location.title : $scope.user.name.first + "'s location";
+			var marker = new google.maps.Marker({
+				position: myLatlng,
+				map: map,
+				title: contentTitle
+			});
+			marker.id = location._id;
+			marker.coords = {
+				lat : location.coords.lat,
+				lon : location.coords.lon
+			};
+			setMarkerContent(marker, location);
+			return marker;
 		};
 		function getInfoBoxDimensions( content ) {
 			var sensor = $("<div>").html(content);
@@ -80,13 +103,6 @@ lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geoco
 			// Only need to regenerate once
 			if (!ov.southwest && nv.southwest) {
 				$scope.infoWindow = new InfoBox(); // InfoBox is a custom javascript vendor file
-				for(var i = 0; i < $scope.user.locations.length; i++) {
-					if($scope.user.locations[i].coords) {
-						var marker = createGoogleMarker($scope.user.locations[i]);
-					}
-					$scope.markers.push(marker);
-				}
-
 				// Allowing ng-click directives within the html I use in the infoWindow
 				// I have to $compile the html inside the window once the window is ready
 				function onload(){
@@ -97,9 +113,52 @@ lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geoco
 				google.maps.event.addListener($scope.infoWindow, 'domready', function(a,b,c,d) {
 					onload();
 				});
+				$scope.$watch(function(){
+					return $scope.markers;
+				}, function(){
+					$scope.updateLocations();
+				})
 			}
 		}, true);
 
+		// helper that iterates through all the markers and makes sure they're updated and added.
+		$scope.updateLocations = function() {
+			// remove the marker if it's on the map but our location result's doesn't include it
+			for(var k = 0; k < $scope.markers.length; k++) {
+				var isMarkerFound = false;
+				var marker = $scope.markers[k];
+				for(var i = 0; i < $scope.user.locations.length; i++) {
+					var location = $scope.user.locations[i];
+					if(location.coords.lat == marker.coords.lat && location.coords.lon == marker.coords.lon) {
+						isMarkerFound = true;
+					}
+				}
+				if(!isMarkerFound) {
+					$scope.markers[k].setMap(null);
+					$scope.markers.slice(k, 1);
+				}
+			}
+
+			// add the marker if our location results includes it and it's not on the map
+			for(var i = 0; i < $scope.user.locations.length; i++) {
+				var location = $scope.user.locations[i];
+				var isLocationFound = false;
+				for(var k = 0; k < $scope.markers.length; k++) {
+					var marker = $scope.markers[k];
+					if(marker.id == location._id) {
+						isLocationFound = true;
+						// it's found, great, but it might have changed content (if we call a changeTitle method), so always make sure it's updated.
+						setMarkerContent(marker, location);
+					}
+				}
+				if(!isLocationFound) {
+					var marker = createGoogleMarker($scope.user.locations[i]);
+					$scope.markers.push(marker);
+				}
+			}
+		};
+
+		// when finished with the "Add Location" form
 		$scope.submitLocation = function(form) {
 			$scope.updatedLocation.title = form.title.$modelValue;
 			var dataToSend = {
@@ -110,6 +169,48 @@ lungeApp.controller('TrainerLocationsController', function($compile, Auth, Geoco
 			$scope.sending = true;
 			Auth.addLocation(dataToSend).then(function(response){
 				console.log("AddLocation response: ", response);
+				$scope.user = response;
+				$scope.updateLocations();
+			});
+		};
+
+		// changing the title of a location from the ng-repeat of all locations
+		$scope.toggleChangeTitle = function(location){
+			location.editingTitle = !location.editingTitle;
+		};
+		$scope.changeTitle = function(location) {
+			for(var i = 0; i < $scope.user.locations.length; i++) {
+				var userLocation = $scope.user.locations[i];
+				if(userLocation._id == location._id) {
+					userLocation.title = location.title;
+				}
+			}
+			var dataToSend = {
+				locations : $scope.user.locations
+			};
+			Auth.updateProfile(dataToSend).then(function(response){
+				console.log(response);
+				$scope.toggleChangeTitle(location);
+				AlertMessage.success("Location title changed successfully");
+				$scope.updateLocations();
+			}).catch(function(err){
+				AlertMessage.error("Location title change failed");
+			});
+		}
+
+		// when clicking the "Remove" button from the ng-repeat of all locations
+		$scope.removeLocation = function(location) {
+			location.removing = true;
+			var dataToSend = {
+				location : location
+			};
+			Auth.removeLocation(dataToSend).then(function(response){
+				location.removing = false;
+				console.log("RemoveLocation response: ", response);
+				$scope.user = response;
+				$scope.updateLocations();
+			}).catch(function(err){
+				location.removing = false;
 			});
 		}
 	});

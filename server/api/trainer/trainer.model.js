@@ -19,6 +19,7 @@ var TrainerSchema = new Schema(
 					formatted_address : { type : String }
 				}
 			},
+			primary : { type : Boolean, default : true },
 			type : { type : String, required : false },
 			address_line_1 : {type : String, required : false},
 			address_line_2 : {type : String, required : false},
@@ -36,6 +37,7 @@ var TrainerSchema = new Schema(
 					formatted_address : { type : String }
 				}
 			},
+			primary : { type : Boolean, default : false },
 			title : { type : String },
 			type : { type : String, required : false },
 			address_line_1 : {type : String, required : false},
@@ -259,6 +261,20 @@ TrainerSchema
 		}
 	}, 'Password cannot be blank');
 
+TrainerSchema.path('locations')
+.validate(function(locations){
+		console.log("LOCATIONS:",locations);
+		for(var i = 0; i < locations.length; i++) {
+			var location = locations[i];
+			console.log("Validating location", location);
+			if(location.coords && (typeof location.coords.lat !== "undefined") && (typeof location.coords.lon !== "undefined")) {
+
+			}
+			else {
+				return this.invalidate("location", "There was a problem processing your location");
+			}
+		}
+	});
 // Validate empty password
 TrainerSchema
 	.path('name.first')
