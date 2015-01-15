@@ -30,6 +30,7 @@
 
 .btn-text {
 	color: skyblue;
+	display:inline-block;
 	&:hover {
 		color: darken(skyblue, 15%);
 		cursor:pointer;

@@ -2,11 +2,11 @@
     <h1>Account</h1>
     <section class="email">
         <div class="title">
-            Email
+            My Email
         </div>
         <div class="content">
             <form novalidate id="form" class="form update-email" ng-submit="changeEmail(form)" name="form">
-                <div ng-class="{'form-group' : emailUpdating}">
+                <div ng-show="!emailUpdating" ng-class="{'form-group' : emailUpdating}">
                     <div class="row">
                         <div class="col-xs-8">
                             {{user.email}}

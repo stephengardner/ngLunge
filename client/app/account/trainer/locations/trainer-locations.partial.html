@@ -1,42 +1,10 @@
 <div class="title">
     My Locations
 </div>
+<div class="google-map" ng-class="{'empty-loading' : !googleMapLoaded, 'loaded' : googleMapLoaded}">
     <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="control">
-        <!--
-        <ui-gmap-markers models="markers">
-        </ui-gmap-markers>
-        -->
-        <!--
-        <ui-gmap-markers models="markers" coords="'self'" icon="'icon'" click="'onClick'">
-            <ui-gmap-windows show="selectedMarker.show" options="windowOptions" closeClick="closeClick()">
-                <div>hello world</div>
-            </ui-gmap-windows>
-        </ui-gmap-markers>
-        -->
-        <!--
-    <div ng-repeat="marker in markers">
-        <ui-gmap-marker idkey="marker.id" coords="marker.coords" options="marker.options" click="marker.onClick()" events="marker.events" >
-                <ui-gmap-window show="marker.show" options="windowOptions" closeClick="marker.onCloseClick()" ng-cloak>
-                <div class="infoWindow">
-                    {{selectedMarker.title}}
-                    <div>
-                        <div class="address_line_1" ng-class="{'active' : selectedMarker.address_line_1}">{{selectedMarker.address_line_1 ? selectedMarker.address_line_1 : ''}}</div>
-                        <div class="city-state">
-                            <span class="city"  ng-class="{'active' : selectedMarker.city}">{{selectedMarker.city ? selectedMarker.city + ',' : ''}}</span>
-                            <span class="state"  ng-class="{'active' : selectedMarker.state}">{{selectedMarker.state ? selectedMarker.state : ''}}</span>
-                        </div>
-                        <div class="zipcode" ng-class="{'active' : selectedMarker.zipcode}">{{selectedMarker.zipcode ? selectedMarker.zipcode : ''}}</div>
-                    </div>
-                </div>
-            </ui-gmap-window>
-        </ui-gmap-marker>
-        </div>
-        <!--
-        <window coords="selected" show="selected.show">
-            <div style="background:red">L<br/>love</div>
-        </window>
-        -->
     </ui-gmap-google-map>
+</div>
 <div class="content">
     <div class="clearfix">
         <div class="text-center empty" ng-if="!user.locations.length && !addingLocation">
@@ -53,7 +21,8 @@
                 Location
             </label>
             <div class="col-sm-9">
-                <input id="location" placeholder="Search places" type="text" name="location" ng-model="location" class="form-control"/>
+                <input id="location" ng-keypress="removeMongooseError(form, 'location')" placeholder="Search places" type="text" name="location" ng-model="location" class="form-control"/>
+                <div class="form-error" ng-show="form.location.$error.mongoose"><span>{{errors.location}}</span></div>
             </div>
             <div class="col-sm-12 clearfix">
                 <div class="pull-right">
@@ -66,8 +35,10 @@
                 Name this location
             </label>
             <div class="col-sm-9">
-                <input id="title" placeholder="ex: Home Studio or Gold's Gym Van Ness" type="text" name="title" ng-model="title" class="form-control"/>
+                <input id="title" ng-keypress="removeMongooseError(form, 'title')" placeholder="ex: Home Studio or Gold's Gym Van Ness" type="text" name="title" ng-model="title" class="form-control"/>
+                <div class="form-error" ng-show="form.title.$error.mongoose"><span>{{errors.title}}</span></div>
             </div>
+
         </div>
         <div class="buttons text-right">
             <button type="submit" class="btn btn-primary">
@@ -88,7 +59,7 @@
                 Delete Location?
             </div>
         </div>
-        <div class="location row" ng-repeat="location in user.locations">
+        <div class="location row" ng-repeat="location in user.locations" ng-click="triggerMarkerClick(location)">
             <div class="location-title col-xxs-4">
                 <div ng-if="!location.editingTitle">
                     {{ location.title }}
@@ -106,7 +77,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="btn-text" ng-if="!location.editingTitle" ng-click="toggleChangeTitle(location)"><i class="fa fa-edit"></i> Change Title</div>
+                <div stop-event class="btn-text" ng-if="!location.editingTitle" ng-click="toggleChangeTitle(location)"><i class="fa fa-edit"></i> Change Title</div>
             </div>
             <div class='location-address col-xxs-4'>
                 <div class='address_line_1'>{{ location.address_line_1 }}</div>
@@ -114,7 +85,7 @@
                 <div class='zipcode'>{{ location.zipcode }}</div>
             </div>
             <div class="location-buttons col-xxs-4 text-right">
-                <div class="btn btn-danger" ng-click="removeLocation(location)" ng-disabled="location.removing"><i ng-if="location.removing" class="fa fa-spin fa-spinner"></i> {{location.removing ? 'Removing' : 'Remove'}}</div>
+                <div stop-event class="btn btn-danger" ng-click="removeLocation(location)" ng-disabled="location.removing"><i ng-if="location.removing" class="fa fa-spin fa-spinner"></i> {{location.removing ? 'Removing' : 'Remove'}}</div>
             </div>
         </div>
     </div>

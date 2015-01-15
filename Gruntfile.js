@@ -615,6 +615,7 @@ module.exports = function (grunt) {
 			'injector',
 			'wiredep',
 			'autoprefixer',
+			'ngtemplates',
 			'express:dev',
 			'wait',
 			'open',

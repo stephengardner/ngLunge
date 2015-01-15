@@ -215,6 +215,7 @@ TrainerSchema
 			}
 		}
 	}, 'Lunge Certification Error');
+
 /**
  * Pre-save hook
  */
@@ -262,8 +263,22 @@ TrainerSchema
 	}, 'Password cannot be blank');
 
 TrainerSchema.path('locations')
-.validate(function(locations){
-		console.log("LOCATIONS:",locations);
+.validate(function(locations) {
+		for ( var i=0; i < locations.length; i++ ) {
+			var checkLocation = locations[i];
+			for(var k = 0; k < locations.length; k++) {
+				if(k != i) {
+					var checkLocationAgainst = locations[k];
+					if((checkLocation.coords && checkLocationAgainst.coords) &&
+						(checkLocation.coords.lat == checkLocationAgainst.coords.lat)
+						&& (checkLocation.coords.lon == checkLocationAgainst.coords.lon)
+					) {
+						console.log("locations are:", locations, " and checkLocation == ", checkLocation, " and checkLocationAgainst = ", checkLocationAgainst, " and i = ", i, " and k = ", k);
+						return this.invalidate("location", "That location has already been added!");
+					}
+				}
+			}
+		}
 		for(var i = 0; i < locations.length; i++) {
 			var location = locations[i];
 			console.log("Validating location", location);
@@ -275,6 +290,18 @@ TrainerSchema.path('locations')
 			}
 		}
 	});
+
+TrainerSchema.path('locations')
+	.validate(function(locations){
+		for(var i = 0; i < locations.length; i++) {
+			var location = locations[i];
+			var title = location.title;
+			if(title.length > 30) {
+				return this.invalidate("title", "Title must be less than 30 characters");
+			}
+		}
+	});
+
 // Validate empty password
 TrainerSchema
 	.path('name.first')

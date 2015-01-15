@@ -132,7 +132,7 @@ lungeApp.controller("TrainerBasicInfoController", function(AlertMessage, $window
 			})
 		}
 		// set primary location so that when we add to the locations array we can tag this as our home gym/office
-		if(dataToSend.location.state) {
+		if(dataToSend.location && dataToSend.location.state) {
 			dataToSend.location.primary = true;
 			dataToSend.location.title = "Main Location";
 		}

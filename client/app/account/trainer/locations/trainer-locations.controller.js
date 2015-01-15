@@ -1,9 +1,20 @@
-lungeApp.controller('TrainerLocationsController', function(AlertMessage, $compile, Auth, Geocoder, $timeout, $scope){
+lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $compile, Auth, Geocoder, $timeout, $scope){
 	$scope.control = {};
 	$scope.toggleLocation = function(){
 		$scope.addingLocation = !$scope.addingLocation;
 	};
-
+	$scope.googleMapLoaded = false;
+	$scope.removeMongooseError = function(form, inputName) {
+		console.log("attempting...", form[inputName]);
+		//$scope.submitted = false;
+		if(!form[inputName] || !form[inputName].$error) {
+			return false;
+		}
+		console.log("SETTING INVISIBLE TRUE FOR : ", inputName);
+		form[inputName].$error['invisible'] = false;
+		form[inputName].$setValidity('mongoose', true);
+		form[inputName].$setValidity('invisible', true);
+	};
 	$timeout(function(){
 		Geocoder.bindPlaces("#location", function(updatedLocation){
 			$scope.updatedLocation = updatedLocation;
@@ -118,9 +129,19 @@ lungeApp.controller('TrainerLocationsController', function(AlertMessage, $compil
 				}, function(){
 					$scope.updateLocations();
 				})
+				$scope.googleMapLoaded = true;
 			}
 		}, true);
 
+		$scope.triggerMarkerClick = function(location) {
+			var id = location._id;
+			for(var i = 0; i < $scope.markers.length; i++) {
+				var marker = $scope.markers[i];
+				if(marker.id == id) {
+					new google.maps.event.trigger( marker, 'click' );
+				}
+			}
+		}
 		// helper that iterates through all the markers and makes sure they're updated and added.
 		$scope.updateLocations = function() {
 			// remove the marker if it's on the map but our location result's doesn't include it
@@ -129,7 +150,7 @@ lungeApp.controller('TrainerLocationsController', function(AlertMessage, $compil
 				var marker = $scope.markers[k];
 				for(var i = 0; i < $scope.user.locations.length; i++) {
 					var location = $scope.user.locations[i];
-					if(location.coords.lat == marker.coords.lat && location.coords.lon == marker.coords.lon) {
+					if(location.coords && mnarker.coords && location.coords.lat == marker.coords.lat && location.coords.lon == marker.coords.lon) {
 						isMarkerFound = true;
 					}
 				}
@@ -160,18 +181,46 @@ lungeApp.controller('TrainerLocationsController', function(AlertMessage, $compil
 
 		// when finished with the "Add Location" form
 		$scope.submitLocation = function(form) {
-			$scope.updatedLocation.title = form.title.$modelValue;
-			var dataToSend = {
-				location : $scope.updatedLocation
-			};
-			console.log("=========> SENDING: ", dataToSend);
-			//if(form.$valid){
-			$scope.sending = true;
-			Auth.addLocation(dataToSend).then(function(response){
-				console.log("AddLocation response: ", response);
-				$scope.user = response;
-				$scope.updateLocations();
-			});
+			if($scope.updatedLocation) {
+				var deferred = $q.defer();
+				$scope.updatedLocation.title = form.title.$modelValue;
+				var dataToSend = {
+					location : $scope.updatedLocation
+				};
+				console.log("=========> SENDING: ", dataToSend);
+				//if(form.$valid){
+				$scope.sending = true;
+				Auth.addLocation(dataToSend).then(function(response){
+					console.log("AddLocation response: ", response);
+					$scope.user = response;
+					$scope.updateLocations();
+					$scope.addingLocation = false;
+				}).catch(function(err){
+					//$scope.ajax.email = false;
+					$scope.errors = {};
+					console.log("ERRRRRRRRRRR", err);
+					form.$setPristine();
+					err = err.data;
+					$scope.sending = false;
+					// Update validity of form fields that match the mongoose errors
+					angular.forEach(err.errors, function (error, field) {
+						console.log("Setting form[" + field + "].$dity = false");
+						form[field].$dirty = false;//('mongoose', false);
+						console.log(form[field]);
+						form[field].$setValidity('mongoose', false);
+						$scope.errors[field] = error.message;
+						deferred.reject();
+					});
+				});
+				return deferred.promise;
+			}
+			else {
+				$scope.errors = {};
+				var field = 'location';
+				form[field].$dirty = false;
+				form[field].$setValidity('mongoose', false);
+				$scope.errors[field] = "Invalid location";
+			}
 		};
 
 		// changing the title of a location from the ng-repeat of all locations
