@@ -1,16 +1,26 @@
 .angular-google-map-container { height: 400px; }
+.add-location-form {
+	padding-left: $content-padding;
+	padding-right: $content-padding;
+}
+.add-location-button-wrapper {
+	padding-left: $content-padding;
+	padding-right: $content-padding;
+}
 .locations {
 	margin-top:1rem;
-	.table-header {
+	.location-header {
 		background: white;
 		color: black;
 		font-weight: bold;
 		font-size:1.2em;
+		padding: .5rem $content-padding;
 		@include respond-to(xxs){
 			font-size:1em;
 		}
 	}
 	.location {
+
 		cursor:pointer;
 		&:hover {
 			background: darken($body-bg, 12%)!important;
@@ -18,7 +28,7 @@
 		&:nth-of-type(even) {
 			background: lighten($body-bg, 7%);
 		}
-		padding: .5rem 0rem;
+		padding: .5rem $content-padding;
 		border-bottom:1px solid;
 		~ .location {
 		}
@@ -37,7 +47,13 @@ form {
 		height:400px;
 		background:darken($body-bg, 10%);
 	}
+	.angular-google-map-container {
+		@include respond-to(xxs) {
+			height:250px;
+		}
+	}
 }
+
 $infoWindowBackground : darken($body-bg, 10%);
 .infoWindow {
 	color:white;

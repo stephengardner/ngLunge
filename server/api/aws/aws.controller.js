@@ -120,7 +120,8 @@ var sendToS3 = function(filePath, buf, req){
 	var newS3FileName = userEmail + "_" + crypto.randomBytes(10).toString('hex');
 	console.log("Streaming to: ", "/profile-pictures/trainers/" + newS3FileName + path.extname(filePath));
 	client.putBuffer( buf, "/profile-pictures/trainers/" + newS3FileName + path.extname(filePath), headers, function(err, response){
-		console.log("Response in client.putBuffer is: ", response);
+		//console.log("Response in client.putBuffer is: ", response);
+		console.log("The fucking status code was:", response.statusCode);
 		if (!response || err) {
 			if(response) {
 				console.log("STATUS CODE: ", response.statusCode);
@@ -139,9 +140,8 @@ var sendToS3 = function(filePath, buf, req){
 			console.error(response.statusCode, 'error streaming image!', err);
 			//return next(err);
 		}
-		else if(response && response.path) {
+		else if(response && response.statusCode == 200) {
 			console.log('Your file was uploaded');
-			console.log("Amazon's response was: ", response.path);
 			console.log('Amazon response statusCode: ', response.statusCode);
 			deferred.resolve({ url : "http://lungeapp.s3.amazonaws.com/profile-pictures/trainers/" + newS3FileName + path.extname(filePath)});
 		}
@@ -178,6 +178,12 @@ var cropImage = function(req, res) {
 				}, function(err){
 					console.log("Lunge: Image upload failed");
 					console.log("cropImage SendtoS3 err on resolve: ", err);
+					var configz = {
+						key: config.AWS.AWS_ACCESS_KEY_ID,
+						secret: config.AWS.AWS_SECRET_ACCESS_KEY,
+						bucket: config.AWS.S3_BUCKET
+					};
+					console.log("Credentials were: ", configz);
 					return validationError(res, err);
 				});
 			});

@@ -150,7 +150,7 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 				var marker = $scope.markers[k];
 				for(var i = 0; i < $scope.user.locations.length; i++) {
 					var location = $scope.user.locations[i];
-					if(location.coords && mnarker.coords && location.coords.lat == marker.coords.lat && location.coords.lon == marker.coords.lon) {
+					if(location.coords && marker.coords && location.coords.lat == marker.coords.lat && location.coords.lon == marker.coords.lon) {
 						isMarkerFound = true;
 					}
 				}

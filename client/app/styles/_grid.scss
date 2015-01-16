@@ -2,7 +2,30 @@
 // Grid system
 // --------------------------------------------------
 
+.vertical-align {
+	display: flex;
+	align-items: center;
+}
 
+.no-side-padding {
+	padding-left:0em!important;
+	padding-right:0em!important;
+}
+
+.gutter-small {
+	&.row {
+		margin-left:-6px!important;
+		margin-right:-6px!important;
+	}
+	[class*="col"] {
+		padding-left:6px!important;
+		padding-right:6px!important;
+	}
+}
+
+.content-padding {
+	padding: $content-padding;
+}
 // Container widths
 //
 // Set the container width, and override it for fixed navbars in media queries.

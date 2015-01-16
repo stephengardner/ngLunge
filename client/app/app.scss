@@ -4,6 +4,7 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'styles/mixins/_mixins.scss';
 @import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
 @import 'styles/mixins/_grid-framework.scss';
+@import 'styles/mixins/_responsive-utlities.scss';
 @import 'font-awesome/scss/font-awesome';
 
 /**
@@ -14,13 +15,13 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 	 @include responsive-padding();
  }
 
-.browsehappy { 
+.browsehappy {
     margin: 0.2em 0;
     background: #ccc;
     color: #000;
     padding: 0.2em 0;
-} 
- 
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'account/account.scss';
@@ -43,6 +44,7 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'styles/menu.scss';
 @import 'styles/mixins/_grid-framework.scss';
 @import 'styles/mixins/_mixins.scss';
+@import 'styles/mixins/_responsive-utlities.scss';
 @import 'styles/xeditable.scss';
 @import 'trainer/account/certifications/certifications.scss';
 @import 'trainer/public/profile/components/certifications/profile-certifications.scss';
