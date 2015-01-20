@@ -7,10 +7,21 @@
 	padding-left: $content-padding;
 	padding-right: $content-padding;
 }
+
+.no-main-location {
+	height:80px;
+	font-size:20px;
+	position:absolute;
+	left:0;
+	right: 0;
+	top:50%;
+	margin-top:-20px;
+	text-align:center;
+}
 .locations {
 	margin-top:1rem;
 	.location-header {
-		background: white;
+		background: lighten($body-bg, 55%);
 		color: black;
 		font-weight: bold;
 		font-size:1.2em;
@@ -20,7 +31,21 @@
 		}
 	}
 	.location {
+		.location-title{
+			.btn-text {
+				margin-top:.2rem;
+			}
+		}
+		.primary-location-badge {
+			top: -.1rem;
+			position:absolute;
+			padding: 0em $content-padding;
+			color:gold;
+			font-style:italic;
+			font-size:.8em;
 
+		}
+		position:relative;
 		cursor:pointer;
 		&:hover {
 			background: darken($body-bg, 12%)!important;
@@ -42,10 +67,26 @@ form {
 		margin-top:.5rem;
 	}
 }
+
 .google-map {
+	border-radius: 6px;
 	&.empty-loading {
 		height:400px;
 		background:darken($body-bg, 10%);
+		position:relative;
+		&:before {
+			content: "";
+			background:url('/assets/images/map-logo-bw.png');
+			position:absolute;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%;
+			opacity:.1;
+			background-position:center center;
+			background-repeat:no-repeat;
+			background-size:30%;
+		}
 	}
 	.angular-google-map-container {
 		@include respond-to(xxs) {

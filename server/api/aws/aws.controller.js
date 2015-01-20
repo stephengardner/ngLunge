@@ -4,25 +4,34 @@ var fs = require('fs');
 var path = require('path');
 var appRoot = require('app-root-path');
 //var multer = require('multer');
-var gm = require('gm');
+var config = require('../../config/environment');
+var gm;
+
+// if production, we are on heroku, so use herokus instance of ImageMagick (it doesn't have graphicsmagick)
+if(config.env == "production") {
+	gm = require('gm').subClass({ imageMagick: true });
+}
+else {
+	gm = require('gm');
+}5
 var mime = require('mime');
 //.subClass({ imageMagick: true });
 //var im = require('imagemagick');
 var $q = require('q');
-var AWS = require('aws-sdk');
-var Knox = require('knox');
-//AWS.config.loadFromPath('./config.json');
-var s3 = new AWS.S3();
-var config = require('../../config/environment');
 
+var Knox = require('knox');
 var client = Knox.createClient({
 	key: config.AWS.AWS_ACCESS_KEY_ID,
 	secret: config.AWS.AWS_SECRET_ACCESS_KEY,
 	bucket: config.AWS.S3_BUCKET
 });
+var AWS = require('aws-sdk');
+//AWS.config.loadFromPath('./config.json');
+var s3 = new AWS.S3();
 var validationError = function(res, err) {
 	return res.json(422, err);
 };
+var mainPublicDirectory = config.env === 'production' ? "/public" : "/client"; // on heroku it's called "public"
 var s3UploadService = function(req, res) {
 	/* works for multer
 	 var file = req.files.file;
@@ -39,7 +48,7 @@ var s3UploadService = function(req, res) {
 	req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 		filenameGlobal = filename;
 		realativeFilePath = "/assets/images/trainers/" + filename;
-		tmpUploadPath = path.join(appRoot + "/client" + realativeFilePath);//"/uploads" + filename;//path.join(__dirname, "uploads/", filename);
+		tmpUploadPath = path.join(appRoot + mainPublicDirectory + realativeFilePath);//"/uploads" + filename;//path.join(__dirname, "uploads/", filename);
 		targetPath = path.join(__dirname, "uploads/", filename);
 
 		var imageName = filename;
@@ -98,6 +107,7 @@ var s3UploadService = function(req, res) {
 };
 
 var getImageRatio = function(filePath, userCoords, callback) {
+	console.log("Calling gm('" + filePath + "').size()...");
 	gm(filePath).size(function(err, val) {
 		console.log("the size is: ", val);
 		console.log("err?: ", err);
@@ -138,6 +148,8 @@ var sendToS3 = function(filePath, buf, req){
 		}
 		else if (response.statusCode !== 200) {
 			console.error(response.statusCode, 'error streaming image!', err);
+			console.error("response.errorMessage?", response.errorMessage, " ... ", response.errorCode);
+			deferred.reject(false);
 			//return next(err);
 		}
 		else if(response && response.statusCode == 200) {
@@ -159,7 +171,7 @@ var cropImage = function(req, res) {
 	var userFilePath = req.body.filepath;
 	var userCoords = req.body.coords;
 	console.log("user cords:", userCoords);
-	var filePath = path.join(appRoot +  "/client" + userFilePath);
+	var filePath = path.join(appRoot + mainPublicDirectory + userFilePath);
 	console.log("filepath on OUR server: " ,filePath);
 	getImageRatio(filePath, userCoords, function(imageRatio){
 		console.log("The image ratio is: ", imageRatio);
@@ -178,12 +190,14 @@ var cropImage = function(req, res) {
 				}, function(err){
 					console.log("Lunge: Image upload failed");
 					console.log("cropImage SendtoS3 err on resolve: ", err);
+					/*
 					var configz = {
 						key: config.AWS.AWS_ACCESS_KEY_ID,
-						secret: config.AWS.AWS_SECRET_ACCESS_KEY,
-						bucket: config.AWS.S3_BUCKET
+						secret: config.CONSTANT_AWS_SECRET_ACCESS_KEY,
+						bucket: config.CONSTANT_S3_BUCKET
 					};
 					console.log("Credentials were: ", configz);
+					*/
 					return validationError(res, err);
 				});
 			});

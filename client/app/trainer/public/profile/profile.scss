@@ -27,6 +27,15 @@ $profile-page-max-width: 750px;
 	}
 }
 
+.trainer-profile {
+	.angular-google-map-container {
+		height:300px;
+		@include respond-to(xxs) {
+			height:250px;
+		}
+	}
+}
+
 .profile-picture-container:hover {
 	.upload-button {
 		background: rgba(0,0,0, .4);

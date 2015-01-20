@@ -228,7 +228,14 @@ TrainerSchema
 		else
 			next();
 	});
+TrainerSchema
+	.pre('save', function(next) {
+		if (!this.isNew) return next();
 
+		if (validatePresenceOf(this.location) && !validatePresenceOf(this.locations))
+			this.locations.push(this.location);
+		next();
+	});
 /**
  * Virtuals
  */
@@ -296,6 +303,9 @@ TrainerSchema.path('locations')
 		for(var i = 0; i < locations.length; i++) {
 			var location = locations[i];
 			var title = location.title;
+			if(!validatePresenceOf(title)) {
+				return this.invalidate("title", "Title cannot be blank");
+			}
 			if(title.length > 30) {
 				return this.invalidate("title", "Title must be less than 30 characters");
 			}

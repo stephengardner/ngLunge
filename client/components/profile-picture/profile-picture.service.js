@@ -1,4 +1,4 @@
-lungeApp.factory("ProfilePicture", function(Auth, $timeout, $http, $q, $upload){
+lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q, $upload){
 	var ProfilePicture = {
 		url : false,
 		file : false,
@@ -154,8 +154,10 @@ lungeApp.factory("ProfilePicture", function(Auth, $timeout, $http, $q, $upload){
 				img.src = response.data.url;
 				ProfilePicture.url = response.data.url;
 				img.onload = function() {
+					$timeout(function(){
+						deferred.resolve();
+					})
 					//ProfilePicture.url = response.data.url;
-					deferred.resolve();
 				};
 
 			}, function(response) {

@@ -15,8 +15,7 @@ AWS.config.region = 'sa-east-1';
 var knoxConfig = {
 	key : config.AWS.AWS_ACCESS_KEY_ID,
 	secret : config.AWS.AWS_SECRET_ACCESS_KEY,
-	bucket : "lungeapp"
-	//,region : "sa-east-1"
+	bucket : config.AWS.S3_BUCKET
 };
 Knox.aws = Knox.createClient(knoxConfig);
 var crypto = require("crypto");

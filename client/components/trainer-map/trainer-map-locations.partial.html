@@ -1,0 +1,69 @@
+<div class="locations"  ng-if="trainer.locations.length">
+    <div class="location-header">
+        <div class="row gutter-small">
+            <div class="col-xs-4 col-xxs-5" ng-class="{'col-xs-6 col-xxs-6' : !editable}">
+                Title
+            </div>
+            <div class="col-xs-4 col-xxs-5" ng-class="{'col-xs-6 col-xxs-6' : !editable}">
+                Address
+            </div>
+            <div ng-if="editable" class="col-xxs-2 text-right visible-xxs">
+                Delete
+            </div>
+            <div ng-if="editable" class="col-xs-4 text-right visible-xs">
+                Delete Location?
+            </div>
+        </div>
+    </div>
+    <div class="location" ng-repeat="location in trainer.locations" ng-click="triggerMarkerClick(location)">
+        <div class="row gutter-small vertical-align">
+            <div class="primary-location-badge" ng-if="location.primary && !location.editingTitle">
+                *Primary Location
+            </div>
+            <div class="location-title col-xs-4 col-xxs-6" ng-class="{'col-xs-6' : !editable, 'col-md-12' : location.editingTitle}">
+                <div ng-if="!location.editingTitle">
+                    {{ location.title }}
+                </div>
+                <div ng-if="editable && !location.editingTitle">
+                    <div stop-event class="btn-text"ng-click="toggleChangeTitle(location)">
+                        <i class="fa fa-edit"></i> Change Title
+                    </div>
+                    <br/>
+                    <div stop-event ng-if="!location.primary" class="btn-text" ng-click="toggleChangeTitle(location)">
+                        <i class="fa fa-star"></i> Make Primary
+                    </div>
+                </div>
+                <div stop-event ng-if="location.editingTitle">
+                    <form class="form" ng-submit="changeTitle(location)">
+                        <input type="text" class="form-control" ng-model="location.title"/>
+                        <div stop-event class="buttons" ng-class="{'row gutter-small' : location.editingTitle}">
+                        <span ng-class="{'col-xxs-6' : location.editingTitle}">
+                            <button stop-event ng-class="{'btn-block' : location.editingTitle}" type="submit" class="btn btn-default">
+                                Ok
+                            </button>
+                        </span>
+                        <span ng-class="{'col-xxs-6' : location.editingTitle}">
+                            <div stop-event class="btn btn-danger" ng-class="{'btn-block' : location.editingTitle}" ng-click="toggleChangeTitle(location)">
+                                Cancel
+                            </div>
+                        </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div ng-if="!location.editingTitle" class='location-address col-xs-4 col-xxs-6 ' ng-class="{'col-xxs-6' : location.editingTitle, 'col-xs-6 col-xxs-6' : !editable}">
+                <div class='address_line_1'>{{ location.address_line_1 }}</div>
+                <div class='city-state'>{{ location.city + ', ' + location.state }}</div>
+                <div class='zipcode'>{{ location.zipcode }}</div>
+            </div>
+            <div ng-if="!location.editingTitle && editable" class="location-buttons col-xxs-2 col-xs-4 text-right" ng-class="{'col-xxs-6' : location.editingTitle}">
+                <div stop-event class="delete text-right visible-xxs-inline-block" ng-click="removeLocation(location)" ng-disabled="location.removing">
+                    <i class="fa fa-times"></i>
+                </div>
+                <div stop-event class="btn btn-danger hidden-xxs" ng-click="removeLocation(location)" ng-disabled="location.removing">
+                    <i ng-if="location.removing" class="fa fa-spin fa-spinner"></i> {{location.removing ? 'Removing' : 'Remove'}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

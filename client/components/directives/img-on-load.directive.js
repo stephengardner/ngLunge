@@ -12,7 +12,7 @@ lungeApp.directive('bgImage', function (ProfilePicture, $parse) {
 					image.src = attr.bgImage;
 					image.onload = function() {
 						//Image loaded- set the background image to it
-						element.css("background-image","url("+attr.bgImage+")");
+						element.css("background-image","url('"+attr.bgImage+"')");
 						console.log("bgImage onload");
 						//scope.bgImage = attr.bgImage;
 						scope.$emit("bgImage", attr.bgImage);

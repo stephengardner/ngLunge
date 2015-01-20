@@ -18,7 +18,8 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 			Geocoder.googleMapsPosition = opt_position;
 			var deferred = $q.defer();
 			GoogleMapApi.then(function(maps) {
-				Geocoder.geocoder = new maps.Geocoder();
+				if(!Geocoder.geocoder.geocode)
+					Geocoder.geocoder = new maps.Geocoder();
 				deferred.resolve(Geocoder);
 			});
 			return deferred.promise;

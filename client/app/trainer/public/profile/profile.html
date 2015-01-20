@@ -1,4 +1,4 @@
-<div class="container push-down">
+<div class="container push-down profile-style">
     <!-- alerts, show all alerts active for profile page -->
     <div alerts ng-if="isMe()"></div>
     <!-- profile container -->
@@ -43,6 +43,17 @@
                 </div>
             </div>
         </div>
+        <section class="map"  ng-controller="TrainerMapController" >
+            <div ng-if="isMe()" ui-sref="main.account" class="edit-button pull-right">
+                <div class="edit"><i class="fa fa-edit"></i></div>
+            </div>
+            <div class="title">
+                Locations
+            </div>
+            <trainer-map></trainer-map>
+            <trainer-map-locations editable="false"></trainer-map-locations>
+
+        </section>
         <section class="contact">
             <div class="title">
                 Contact

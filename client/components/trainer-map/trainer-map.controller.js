@@ -1,9 +1,18 @@
-lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $compile, Auth, Geocoder, $timeout, $scope){
+lungeApp.controller("TrainerMapController", function($timeout, Auth, $compile, AlertMessage, Geocoder, $scope){
+
 	$scope.control = {};
+	$scope.boundGeocoder = false;
+	$scope.googleMapLoaded = false;
 	$scope.toggleLocation = function(){
 		$scope.addingLocation = !$scope.addingLocation;
+		if(!$scope.boundGeocoder) {
+			$scope.boundGeocoder = true;
+			Geocoder.bindPlaces("#location", function(updatedLocation){
+				$scope.updatedLocation = updatedLocation;
+				$scope.$apply();
+			});
+		}
 	};
-	$scope.googleMapLoaded = false;
 	$scope.removeMongooseError = function(form, inputName) {
 		console.log("attempting...", form[inputName]);
 		//$scope.submitted = false;
@@ -15,17 +24,11 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 		form[inputName].$setValidity('mongoose', true);
 		form[inputName].$setValidity('invisible', true);
 	};
-	$timeout(function(){
-		Geocoder.bindPlaces("#location", function(updatedLocation){
-			$scope.updatedLocation = updatedLocation;
-			$scope.$apply();
-		});
-	}, 4000);
-
-	Auth.isLoggedInAsync(function(){
-		$scope.user = $scope.user ? $scope.user : $scope.trainer;
-		if($scope.user.location && $scope.user.location.coords) {
-			$scope.map = { center: {latitude: $scope.user.location.coords.lat, longitude: $scope.user.location.coords.lon }, zoom: 10,
+	Auth.isLoggedInAsync(function(trainer){
+		$scope.trainer = Auth.getCurrentUser();
+		//$scope.user = $scope.user ? $scope.user : $scope.trainer;
+		if($scope.trainer.location && $scope.trainer.location.coords) {
+			$scope.map = { center: {latitude: $scope.trainer.location.coords.lat, longitude: $scope.trainer.location.coords.lon }, zoom: 10,
 				bounds: {} };
 		}
 		else {
@@ -44,7 +47,7 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 		}
 		var setMarkerContent = function(marker, location) {
 			var map = $scope.control.getGMap();
-			var contentTitle = location.title ? location.title : $scope.user.name.first + "'s location";
+			var contentTitle = location.title ? location.title : $scope.trainer.name.first + "'s location";
 			marker.content = "" +
 			"<div class='infoWindow' id='infoWindow'>" +
 			"<div class='close' ng-click='closeInfoWindow()'><i class='fa fa-times'></i></div>" +
@@ -94,7 +97,7 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 		var createGoogleMarker = function(location){
 			var map = $scope.control.getGMap();
 			var myLatlng = new google.maps.LatLng(location.coords.lat, location.coords.lon);
-			var contentTitle = location.title ? location.title : $scope.user.name.first + "'s location";
+			var contentTitle = location.title ? location.title : $scope.trainer.name.first + "'s location";
 			var marker = new google.maps.Marker({
 				position: myLatlng,
 				map: map,
@@ -156,8 +159,8 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 			for(var k = 0; k < $scope.markers.length; k++) {
 				var isMarkerFound = false;
 				var marker = $scope.markers[k];
-				for(var i = 0; i < $scope.user.locations.length; i++) {
-					var location = $scope.user.locations[i];
+				for(var i = 0; i < $scope.trainer.locations.length; i++) {
+					var location = $scope.trainer.locations[i];
 					if(location.coords && marker.coords && location.coords.lat == marker.coords.lat && location.coords.lon == marker.coords.lon) {
 						isMarkerFound = true;
 					}
@@ -169,8 +172,8 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 			}
 
 			// add the marker if our location results includes it and it's not on the map
-			for(var i = 0; i < $scope.user.locations.length; i++) {
-				var location = $scope.user.locations[i];
+			for(var i = 0; i < $scope.trainer.locations.length; i++) {
+				var location = $scope.trainer.locations[i];
 				var isLocationFound = false;
 				for(var k = 0; k < $scope.markers.length; k++) {
 					var marker = $scope.markers[k];
@@ -181,18 +184,25 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 					}
 				}
 				if(!isLocationFound) {
-					var marker = createGoogleMarker($scope.user.locations[i]);
+					var marker = createGoogleMarker($scope.trainer.locations[i]);
 					$scope.markers.push(marker);
 				}
 			}
 		};
 
+
+		$scope.$watch(function(){
+			return $scope.trainer.locations
+		}, function(item){
+			$scope.trainer = $scope.trainer;
+			if($scope.control.getGMap)
+				$scope.updateLocations();
+		})
+
 		// when finished with the "Add Location" form
 		$scope.submitLocation = function(form) {
-			alert();
 			console.log($scope.updatedLocation);
 			if($scope.updatedLocation) {
-				alert("!");
 				var deferred = $q.defer();
 				$scope.updatedLocation.title = form.title.$modelValue;
 				var dataToSend = {
@@ -203,7 +213,7 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 				$scope.sending = true;
 				Auth.addLocation(dataToSend).then(function(response){
 					console.log("AddLocation response: ", response);
-					$scope.user = response;
+					$scope.trainer = response;
 					$scope.updateLocations();
 					$scope.addingLocation = false;
 				}).catch(function(err){
@@ -239,14 +249,14 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 			location.editingTitle = !location.editingTitle;
 		};
 		$scope.changeTitle = function(location) {
-			for(var i = 0; i < $scope.user.locations.length; i++) {
-				var userLocation = $scope.user.locations[i];
+			for(var i = 0; i < $scope.trainer.locations.length; i++) {
+				var userLocation = $scope.trainer.locations[i];
 				if(userLocation._id == location._id) {
 					userLocation.title = location.title;
 				}
 			}
 			var dataToSend = {
-				locations : $scope.user.locations
+				locations : $scope.trainer.locations
 			};
 			Auth.updateProfile(dataToSend).then(function(response){
 				console.log(response);
@@ -267,7 +277,7 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 			Auth.removeLocation(dataToSend).then(function(response){
 				location.removing = false;
 				console.log("RemoveLocation response: ", response);
-				$scope.user = response;
+				$scope.trainer = response;
 				$scope.updateLocations();
 			}).catch(function(err){
 				location.removing = false;
@@ -275,4 +285,6 @@ lungeApp.controller('TrainerLocationsController', function($q, AlertMessage, $co
 		}
 	});
 
+});
+lungeApp.controller("TrainerMapLocationsController", function(){
 });

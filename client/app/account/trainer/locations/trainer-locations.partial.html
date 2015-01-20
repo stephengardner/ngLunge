@@ -1,19 +1,27 @@
 <div class="title">
     My Locations
 </div>
-<div class="google-map" ng-class="{'empty-loading' : !googleMapLoaded, 'loaded' : googleMapLoaded}">
-    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="control">
-    </ui-gmap-google-map>
+<div class="google-map"  ng-class="{'empty-loading' : !googleMapLoaded, 'loaded' : googleMapLoaded}">
+    <div ng-show="!trainer.location.state" class="no-main-location">
+        Be sure to set your main location from your <a ui-sref="profilePage({'urlName' : trainer.urlName})">profile page</a> to view your map!
+    </div>
+    <!--
+    <div ng-if="trainer.location.state">
+        <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="control">
+        </ui-gmap-google-map>
+    </div>
+    -->
+    <trainer-map></trainer-map>
 </div>
-<div class="content no-side-padding">
+<div class="content no-side-padding"  ng-show="trainer.location.state">
     <div class="clearfix">
-        <div class="text-center empty" ng-if="!user.locations.length && !addingLocation">
+        <div class="text-center empty" ng-if="!trainer.locations.length && !addingLocation">
             <h3>You don't have any locations yet
             </h3>
         </div>
         <div class="add-location-button-wrapper" ng-show="!addingLocation">
             <div ng-click="toggleLocation()" class="pull-right btn btn-info btn-block">
-                {{ user.locations.length ? 'Add another location' : 'Add location' }}
+                {{ trainer.locations.length ? 'Add another location' : 'Add location' }}
             </div>
         </div>
     </div>
@@ -49,62 +57,7 @@
             <div class="btn btn-danger" ng-click="toggleLocation()">Cancel</div>
         </div>
     </form>
-    <div class="locations" ng-show="user.locations.length">
-        <div class="location-header">
-            <div class="row gutter-small">
-                <div class="col-xs-4 col-xxs-5">
-                    Title
-                </div>
-                <div class="col-xs-4 col-xxs-5">
-                    Address
-                </div>
-                <div class="col-xxs-2 text-right visible-xxs">
-                    Delete
-                </div>
-                <div class="col-xs-4 text-right visible-xs">
-                    Delete Location?
-                </div>
-            </div>
-        </div>
-        <div class="location" ng-repeat="location in user.locations" ng-click="triggerMarkerClick(location)">
-            <div class="row gutter-small vertical-align">
-                <div class="location-title col-xs-4 col-xxs-6" ng-class="{'col-xxs-12' : location.editingTitle}">
-                    <div ng-if="!location.editingTitle">
-                        {{ location.title }}
-                    </div>
-                    <div stop-event class="btn-text" ng-if="!location.editingTitle" ng-click="toggleChangeTitle(location)"><i class="fa fa-edit"></i> Change Title</div>
-                    <div stop-event ng-if="location.editingTitle">
-                        <form class="form" ng-submit="changeTitle(location)">
-                            <input type="text" class="form-control" ng-model="location.title"/>
-                            <div stop-event class="buttons" ng-class="{'row gutter-small' : location.editingTitle}">
-                                <span ng-class="{'col-xxs-6' : location.editingTitle}">
-                                    <button stop-event ng-class="{'btn-block' : location.editingTitle}" type="submit" class="btn btn-default">
-                                        Ok
-                                    </button>
-                                </span>
-                                <span ng-class="{'col-xxs-6' : location.editingTitle}">
-                                    <div stop-event class="btn btn-danger" ng-class="{'btn-block' : location.editingTitle}" ng-click="toggleChangeTitle(location)">
-                                        Cancel
-                                    </div>
-                                </span>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div ng-if="!location.editingTitle" class='location-address col-xs-4 col-xxs-6 ' ng-class="{'col-xxs-6' : location.editingTitle}">
-                    <div class='address_line_1'>{{ location.address_line_1 }}</div>
-                    <div class='city-state'>{{ location.city + ', ' + location.state }}</div>
-                    <div class='zipcode'>{{ location.zipcode }}</div>
-                </div>
-                <div ng-if="!location.editingTitle" class="location-buttons col-xxs-2 col-xs-4 text-right" ng-class="{'col-xxs-6' : location.editingTitle}">
-                    <div stop-event class="delete text-right visible-xxs-inline-block" ng-click="removeLocation(location)" ng-disabled="location.removing">
-                        <i class="fa fa-times"></i>
-                    </div>
-                    <div stop-event class="btn btn-danger hidden-xxs" ng-click="removeLocation(location)" ng-disabled="location.removing">
-                        <i ng-if="location.removing" class="fa fa-spin fa-spinner"></i> {{location.removing ? 'Removing' : 'Remove'}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <trainer-map-locations editable="true"></trainer-map-locations>
+
 </div>
