@@ -7,7 +7,7 @@
 		margin-right: .5em;
 	}
 	span {
-		color:lighten($body-bg, 30%);
+		color:darken($body-bg, 30%);
 	}
 	.facebook {
 		padding: 2px 7px 2px 7px;
@@ -48,6 +48,36 @@
 			color:white;
 			background:#DD4B39;
 			border-radius:4px;
+		}
+	}
+}
+.trainer-profile {
+	.link-cant-find-address {
+		margin-top:.5rem;
+		float:right;
+	}
+	.help {
+		font-size:1.3em;
+		cursor: pointer;
+		float:right;
+		&.active {
+			color:$brand-info;
+		}
+	}
+	form {
+		label {
+			display:block;
+			font-size:1.7rem;
+			&.heading {
+				border-bottom:2px solid white;
+				padding-bottom:1rem;
+				~ .form-group label {
+					font-size:1.4rem;
+				}
+			}
+			small {
+				display:block;
+			}
 		}
 	}
 }

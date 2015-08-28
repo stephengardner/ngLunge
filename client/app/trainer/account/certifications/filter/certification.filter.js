@@ -4,15 +4,15 @@ lungeApp.filter('CertificationQuery', function(){
 	return function (items, something) {
 		var newItems = [];
 		var regex = new RegExp(something, "i");
-		for(var i = 0; i < items.length; i++) {
-			console.log(items[i]);
+		for(var i = 0; items && i < items.length; i++) {
+			//console.log(items[i]);
 			if(regex.test(items[i].name)){
-				console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", items[i]);
+				//console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", items[i]);
 				newItems.push(items[i]);
 			}
-			console.log("===============");
+			//console.log("===============");
 		}
-		console.log(items, something);
+		//console.log(items, something);
 		// return the current `item`, but call `toUpperCase()` on it
 		return newItems;
 	};

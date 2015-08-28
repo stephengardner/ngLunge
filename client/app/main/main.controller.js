@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('ngLungeFullStack2App')
-	.controller('MainCtrl', ['MenuService', 'Auth', 'geolocation', '$scope', '$http', 'socket', 'uiGmapGoogleMapApi',
-		'Geocoder', function(MenuService, Auth, geolocation, $scope, $http, socket, GoogleMapApi, Geocoder) {
-			$scope.awesomeThings = [];
+	.controller('MainCtrl', ['$timeout', '$popover', 'MenuService', 'Auth', 'geolocation', '$scope', '$http', 'socket', 'uiGmapGoogleMapApi',
+		'Geocoder', function($timeout, $popover, MenuService, Auth, geolocation, $scope, $http, socket, GoogleMapApi, Geocoder) {
+			/*
 			$scope.isMenuActive = function(){
 				return MenuService.active;
 			}
+			*/
 			GoogleMapApi.then(function(maps) {
 				var geocoder = new maps.Geocoder();
 				geolocation.getLocation().then(function(position){
@@ -22,25 +23,5 @@ angular.module('ngLungeFullStack2App')
 
 					//$scope.cityState = "Washington, DDC";
 				});
-			});
-
-			$http.get('/api/things').success(function(awesomeThings) {
-				$scope.awesomeThings = awesomeThings;
-				socket.syncUpdates('thing', $scope.awesomeThings);
-			});
-
-			$scope.addThing = function() {
-				if($scope.newThing === '') {
-					return;
-				}
-				$http.post('/api/things', { name: $scope.newThing });
-				$scope.newThing = '';
-			};
-
-			$scope.deleteThing = function(thing) {
-				$http.delete('/api/things/' + thing._id);
-			};
-			$scope.$on('$destroy', function () {
-				socket.unsyncUpdates('thing');
 			});
 		}]);

@@ -21,7 +21,7 @@
 }
 
 @mixin responsive-padding() {
-	@include col-padding(xxs, .25em);
+	@include col-padding(xxs, 12px);
 }
 
 .hidden-xxs {

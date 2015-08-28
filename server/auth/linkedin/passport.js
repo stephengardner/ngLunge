@@ -3,7 +3,6 @@ var LinkedInStrategy = require('passport-linkedin').Strategy;
 var http = require('http');
 
 exports.setup = function (User, config) {
-	console.log("CONFIG IS:", config);
 	passport.use(new LinkedInStrategy({
 			consumerKey: config.linkedin.clientID,
 			consumerSecret: config.linkedin.clientSecret,

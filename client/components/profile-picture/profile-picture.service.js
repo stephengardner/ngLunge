@@ -1,133 +1,186 @@
+// Documentation on this rather confusing Service:
+/*
+ * coords must end up being:
+ * x1, y1, width, imageWidth, imageHeight
+ * x1 : the position of the top left X crop bounding
+ * y1 : the position of the top left Y crop bounding
+ * width : the width of the square bounding box
+ * imageWidth / imageHeight : dimensions of the smaller preview that the original file sits in.
+ */
 lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q, $upload){
 	var ProfilePicture = {
 		url : false,
 		file : false,
 		selection : false,
 		cropping : false,
+		image : {
+			url : "",
+			selection : false
+		},
 		preview : {
 			wrapper : {
 				maxWidth : false,
 				maxHeight : false
 			}
 		},
-		image : false,
-		updateOnResize : function() {
 
-		},
-		attachPreview : function(attachTo, selection) {
-			if(!this.image) {
-				return;
+		/**
+		 * set the selection of the cropping space to be a square bounded by either the height or width, and centered
+		 * if the image turns out to be a square, select the inner portion of it by 10% around the outside
+		 * @returns {*[]}
+		 */
+		getSquareBounding : function() {
+			var imgLoaded = $("#imgLoaded"),
+			imageLoadedWidth =  imgLoaded.width(),
+			imageLoadedHeight = imgLoaded.height(),
+			selectionSize = imageLoadedWidth > imageLoadedHeight ? imageLoadedHeight : imageLoadedWidth,
+			x1 = imageLoadedWidth/2 - (selectionSize/2),
+			y1 = imageLoadedHeight/2 - (selectionSize/2),
+			x2 = x1 + selectionSize,
+			y2 = y1 + selectionSize;
+
+			// if the image is a square, shrink resulting coordinates so that the user can see the cropping area.
+			if(imageLoadedHeight == imageLoadedWidth) {
+				x1 = imageLoadedWidth * .1;
+				y1 = imageLoadedHeight * .1;
+				x2 *= .9;
+				y2 *= .9;
 			}
-			var selection = selection ? selection : ProfilePicture.selection;
-			console.log("--------------- preview -----------------");
-			var coords;
-			coords = selection;
-			coords.imageHeight = this.image.height(); // element == $("#imgLoaded");
-			coords.imageWidth = this.image.width();
-			console.log("this image width is: ", this.image.width());
-			console.log("this attachTo width is: ", $(attachTo).width());
-			var scaleX = $(".profile-picture").width() / selection.width;
-			var scaleY = $(".profile-picture").outerHeight() / selection.height;
-			var newCss = {
-				width: Math.round(scaleX * this.image.width()) + 'px',
-				height: Math.round(scaleY * this.image.height()) + 'px',
-				marginLeft: '-' + Math.round(scaleX * selection.x1) + 'px',
-				marginTop: '-' + Math.round(scaleY * selection.y1) + 'px'
-			};
-			console.log("new css is: ", newCss);
-			attachTo.css(newCss);
-			$timeout(function(){
-				ProfilePicture.scaled = true;
-			}, 500);
-			//alert("TRUE");
-		},
-		getSquareBounding : function(element) {
-			var width = element.width();
-			var height = element.height();
-			var coords;
-			if(width > height) {
-				var diff = width - height;
-				coords = {
-					x1 : diff / 2,
-					x2 : width - (diff / 2),
-					y1 : 0,
-					y2 : height
-				}
-			}
-			else {
-				var diff = height - width;
-				coords = {
-					x1 : 0,
-					x2 : width,
-					y1 : diff / 2,
-					y2 : height - (diff / 2)
-				}
-			}
-			coords.height = coords.y2 - coords.y1;
-			coords.width = coords.x2 - coords.x1;
-			console.log("-0- square bounding box: ", coords);
-			return coords;
+			return [x1, y1, x2, y2];
 		},
 		showImage : function() {
-			$timeout(function(){
-				ProfilePicture.attached = true;
-			})
+			ProfilePicture.attached = true;
 		},
+		// Remove the cropping box and image cropping section
 		removeImage : function() {
 			$timeout(function(){
 				$("#upload_input")[0].value = "";
+				ProfilePicture.image = {}; // this removes the preview
 				ProfilePicture.attached = false;
-				ProfilePicture.imgAreaSelect.cancelSelection();
 			});
 		},
-		attachImgAreaSelect : function(element, cb) {
+		attachJCrop : function(element, cb) {
 			var cb = cb ? cb : angular.noop;
-			this.image = element;
+			this.jCrop = element;
+			var self = this;
 			ProfilePicture.showImage();
-			$timeout(function(){
-				ProfilePicture.updateMaxImageSize();
-				var coords = ProfilePicture.getSquareBounding(element);
+			//$timeout(function() {
+			//ProfilePicture.updateMaxImageSize();
+			console.log("Width: ", this.width, " Height: ", this.height);
+			console.log("ProfilePicture.attachJCrop(", element, ")");
+			//});
+			function setCoords(coords) {
+				console.log("The coords are: ", coords);
+				// re-name these to x1 and y1, for use later
+				coords.x1 = coords.x;
+				coords.y1 = coords.y;
+				coords.width = coords.w;
+				coords.height = coords.h;
+
+				coords.imageHeight = ProfilePicture.jCrop.height(); // element == $("#imgLoaded");
+				coords.imageWidth = ProfilePicture.jCrop.width();
 				ProfilePicture.selection = coords;
-				ProfilePicture.imgAreaSelect = element.imgAreaSelect({
-					handles: true,
-					aspectRatio : "1:1",
-					instance: true,
-					onSelectStart: function(element, selection){
-						//$scope.selection = false;
-					},
-					onSelectEnd: function(element, selection){
-						console.log("------------- ONSELECTEND ---------------");
-						var newSelection = angular.copy(selection);
-						$.each(selection, function(key, val) {
-							//newSelection[key] = val * 2.75;
-						});
-						ProfilePicture.selection = selection;
-						console.log("newselection is:", newSelection);
-						ProfilePicture.attachPreview($('.registration-specific-image-placeholder'), selection);
-					},
-					x1 : coords.x1,
-					x2 : coords.x2,
-					y1 : coords.y1,
-					y2 : coords.y2
-				});
-				cb(coords);
-			})
+
+			};
+			if(this.jcrop_api) {
+				console.log("Setting new jcrop image:", this.image.url);
+				//this.jcrop_api.destroy();//setImage(this.image.url);
+			}
+
+			console.log("THE IMAGE WIDTH AND HEIGHT:", this.image.element.width, " , ", this.image.element.height);
+
+			this.jcrop_api = $.Jcrop($(element), {
+				keySupport: false,
+				aspectRatio: 1/1,
+				onChange: setCoords,
+				onSelect: setCoords,
+				setSelect:   ProfilePicture.getSquareBounding()
+				//,boxWidth : this.width
+				// ,boxHeight : this.height
+				//,trueSize: [this.width, this.height]
+			});
 		},
+
+		// set the size of the profile picture within the modal
+		// only set this once, we're not worrying about browser resizing
+		// this function makes use of the original image ratio and the screen ratio and makes sure it fits
+		// within the specified parameters ( screen width - 40, screen height - 110 ), also bounded by max width 500
 		updateMaxImageSize : function(){
-			var maxWidth = $(".trainer-card").width() + "px",
-				maxHeight = $(".profile-picture").outerHeight() + "px";
-			console.log("updating maxImageSize:", maxWidth, "px, ", maxHeight, "px");
-			ProfilePicture.image.css("maxWidth", maxWidth);
-			ProfilePicture.image.css("maxHeight", maxHeight);
-			console.log("this.images css:", ProfilePicture.image.css("maxHeight"), ProfilePicture.image.css("maxWidth"));
+			var w, h;
+
+			// bound width by screen and height by screen
+			w = $(window).width() - 40;
+			h = $(window).height() - 110;
+
+			var maxWidth = 500;
+			// max width 500px
+			w = w > maxWidth ? maxWidth : w;
+
+			// note the lesser dimension
+			var lesser = w > h ? h : w;
+
+			console.log("The lesser dimension by which we will bound the image is:", lesser + "px");
+			// set pixels based on screen and image ratios
+			if(lesser == w) {
+				if(this.image.ratio >= 1) {
+					console.log("lesser is width, and the image ratio >= 1");
+					this.height = "auto";
+					this.width = lesser;
+				}
+				else {
+					console.log("lesser is width, and the image ratio < 1");
+					var newRatio = this.image.ratio / (w/h);
+					this.height = "auto";
+					this.width = (newRatio * lesser) > maxWidth ? maxWidth : newRatio * lesser;
+				}
+			}
+			else {
+				if(this.image.ratio >= 1) {
+					var newRatio = (w/h) / this.image.ratio;
+					this.width = "auto";
+					this.height = newRatio * lesser;
+				}
+				else {
+					this.width = "auto";
+					this.height = lesser;
+				}
+			}
+			console.log("after updating max image size, this.width is :", this.width, " and this.height is:", this.height);
 		},
-		onFileSelect : function($files){
-			console.log("onFileSelect()");
-			ProfilePicture.status = "loading";// = true;
+
+		// Loads the image URL and returns a promise when done
+		setImage : function(imageUrl) {
+			console.log("Setting image using imageUrl: ", imageUrl);
 			var deferred = $q.defer();
-			//ProfilePicture.url = false;
-			var file = $files[0];
+			// create the image preview, when the image loads, show the image preview (for cropping).
+			var img = new Image();
+			img.src = imageUrl;
+			img.onload = function() {
+				console.log("Setting image: image Set and loaded.");
+				ProfilePicture.image.element = img;
+				ProfilePicture.image.url = imageUrl;
+				ProfilePicture.image.selection = false;
+				ProfilePicture.status = "loaded";
+				ProfilePicture.image.ratio = this.width / this.height;
+
+				ProfilePicture.updateMaxImageSize();
+				$timeout(function(){
+					deferred.resolve();
+				});
+			};
+			img.onerror = function(){
+				deferred.reject();
+			}
+			return deferred.promise;
+		},
+
+		// When files have been selected by the user, upload them and return a promise
+		onFileSelect : function($files){
+			var deferred = $q.defer(),
+				file = $files[0];
+			ProfilePicture.status = "loading";
 			ProfilePicture.file = file;
+
 			// data to post with the picture, was originally formatted for data s3 needs, but that has since been changed
 			var dataToPost = {
 				key: 'profile-pictures/trainers/' + file.name,
@@ -147,33 +200,30 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 
 			// upload the picture!
 			upload.then(function(response){
-				ProfilePicture.selection = false;
-				ProfilePicture.status = "loaded";
-				// create the image preview, when the image loads, show the image preview (for cropping).
-				var img = new Image();
-				img.src = response.data.url;
-				ProfilePicture.url = response.data.url;
-				img.onload = function() {
-					$timeout(function(){
-						deferred.resolve();
-					})
-					//ProfilePicture.url = response.data.url;
-				};
-
+				if(response.status == 200 && response.data) {
+					deferred.resolve(response);
+				}
+				else {
+					ProfilePicture.status = "err";
+					deferred.reject(response);
+				}
 			}, function(response) {
-				console.log("-------- error:", response);
-				if (response.status > 0) ProfilePicture.errorMsg = response.status + ': ' + response.data;
-				deferred.reject();
+				ProfilePicture.status = "err";
+				deferred.reject(response);
 			}, function(evt) {
 				console.log("-------- progress:", evt);
 				ProfilePicture.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+			}).catch(function(err){
+				console.log("Caught err in upload:", err);
+				deferred.reject(err);
 			});
 			return deferred.promise;
 		},
+
 		saveCrop : function() {
 			var deferred = $q.defer();
 			ProfilePicture.status = "cropping";
-			Auth.changeProfilePicture({filepath : ProfilePicture.url, coords : ProfilePicture.selection}, function(response){
+			Auth.changeProfilePicture({filepath : ProfilePicture.image.url, coords : ProfilePicture.selection}, function(response){
 				console.log("CHANGED");
 				ProfilePicture.status = "cropped";
 				console.log("Changed profile picture:",response);

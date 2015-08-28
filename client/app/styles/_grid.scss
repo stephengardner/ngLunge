@@ -2,6 +2,10 @@
 // Grid system
 // --------------------------------------------------
 
+.main-push {
+	margin-top:4rem!important;
+}
+
 .vertical-align {
 	display: flex;
 	align-items: center;
@@ -44,6 +48,18 @@
 	}
 }
 
+.container-responsive-expand {
+	@include container-fixed();
+	@media (min-width: $screen-sm-min) {
+		width: 100%;
+	}
+	@media (min-width: $screen-md-min) {
+		width: $container-md;
+	}
+	@media (min-width: $screen-lg-min) {
+		width: $container-lg;
+	}
+}
 
 // Fluid container
 //
@@ -52,6 +68,15 @@
 
 .container-fluid {
 	@include container-fixed();
+}
+
+.container-small {
+	@include container-fixed();
+	max-width:500px;
+	@include respond-to(xs) {
+		padding-left:.4rem;
+		padding-right:.4rem;
+	}
 }
 
 
@@ -71,11 +96,12 @@
 @include make-grid-columns();
 
 
+@include unmake-grid(xs);
+
 // Extra Extra small grid
 //
 // Columns, offsets, pushes, and pulls for extra small devices like
 // smartphones.
-
 @include make-grid(xxs);
 
 // Extra small grid

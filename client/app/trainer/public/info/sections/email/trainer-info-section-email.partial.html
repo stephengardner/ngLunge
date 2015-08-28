@@ -1,0 +1,33 @@
+<div class="module sm flat-white" ng-controller="TrainerInfoSectionEmailController">
+    <form novalidate id="form" class="form update-email" ng-submit="changeEmail(form)" name="form">
+        <header>
+            <h1>Email</h1>
+            <div class="edit-button" ng-click="toggleEditing(form)">
+                <i class="fa fa-edit"></i>
+            </div>
+        </header>
+        <div class="content">
+                <fieldset ng-disabled="ajax.busy">
+                    <div ng-show="!editing" ng-class="{'form-group' : emailUpdating}">
+                        <div class="row">
+                            <div class="col-xxs-16">
+                                {{trainerFactory.trainer.email}}
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="editing">
+                        <div class="form-group">
+                            <input ng-keypress="removeMongooseError(form, 'email')" id="email" ng-model="trainerFactory.trainerEditing.email" name="email" class="form-control" type="text" placeholder="New email"/>
+                            <div class="form-error" ng-show="form.email.$error.mongoose"><span>{{errors.email}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="action-buttons">
+                                <button type="submit" class="btn-action btn btn-primary" ng-class="{ready : !ajax.busy, ajax : ajax.busy}"><i ng-show="ajax.busy" class="fa fa-spin fa-spinner"></i> {{ !ajax.busy ? 'Save' : 'Saving' }}</button>
+                                <div class="btn-action btn btn-danger" ng-click="toggleEditing(form)">Cancel</div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+        </div>
+    </form>
+</div>

@@ -1,22 +1,28 @@
 lungeApp.factory("AlertMessage", function($timeout){
 	var AlertMessage = {
 		message : false,
+		active : 0,
 		defaults : {
 			closeButton : false,
 			duration : 3100
 		},
+		timeout : false,
 		show : function(type, message, opts) {
 			this.type = type;
 			this.message = message;
 			this.active = 1;
 			var opts = angular.extend({}, this.defaults, opts);
+			console.log("Showing alert message with options:", opts);
 			angular.forEach(opts, function(val, key){
 				console.log("iterating through option val:", val, " key: ", key);
 				AlertMessage[key] = val;
 				console.log("AlertMessage." + key + " = ", AlertMessage[key]);
 			});
 			if(!AlertMessage.closeButton) {
-				$timeout(function(){
+				if(this.timeout) {
+					$timeout.cancel(this.timeout);
+				}
+				this.timeout = $timeout(function(){
 					AlertMessage.hide();
 				}, AlertMessage.duration);
 			}

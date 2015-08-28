@@ -2,15 +2,7 @@
 
 angular.module('ngLungeFullStack2App')
   .config(function ($stateProvider) {
-		$stateProvider.
-			state('main.login', {
-				url: '/login',
-				templateUrl : "app/trainer/account/login/login.html"
-			}).
-			state('main.signup', {
-				url: '/signup',
-				templateUrl : "app/trainer/account/signup/signup.html"
-			})
+		$stateProvider
 			.state('main.dashboard', {
 				url: '/dashboard',
 				templateUrl: 'app/account/user/dashboard/dashboard.html',

@@ -1,6 +1,68 @@
+
+.btn-home {
+	border-width: 3px;
+	padding:10px 22px;
+	font-size:1.65em;
+}
 .btn-transparent {
 	@include button-variant(#fff, transparent, #fff);
 }
+
+// purple: rgb(136, 103, 232)
+
+.btn-info-alt {
+	@include button-variant(#fff, rgb(255, 167, 50), rgb(255, 167, 50)); // other orange (lighter): #FFC17B;
+}
+
+.btn-transparent-primary {
+	@include button-variant(#4183D7, transparent, #4183D7);
+	border-width:2px;
+	font-size:1.2em;
+}
+
+.btn-flat {
+	border-radius:4px;
+	cursor: pointer;
+}
+.btn-flat-white {
+	padding: 6px 10px;
+	color: #4183D7;
+	background: white;
+	border: none;
+	border-left: 2px solid;
+	border-bottom: 2px solid;
+	border-color: #ccc;
+	&:hover {
+		background:#fdfdfd;
+		color: #4183D7;
+		border-color:#bbb;
+	}
+	font-size:1.2em;
+}
+
+.btn-square-1-2 {
+	width:50%;
+	@extend .btn-square;
+}
+
+.btn-action-row {
+	//@extend .row;
+}
+
+.btn-action-container {
+	@extend .col-xxs-12;
+}
+.btn-action {
+	@extend .col-xxs-12;
+	@extend .btn-lg;
+	@extend .btn;
+	//@extend .btn-block;
+	@extend .btn-square;
+	@include respond-to(xxs) {
+		font-size:.9em;
+	}
+}
+
 .btn-login {
 	//@extend .btn-primary;
 	//border-color:white;
@@ -21,6 +83,10 @@
 	padding:1px 7px;
 }
 
+.action-buttons {
+	@extend .col-xxs-24;
+}
+
 .btn-username {
 	max-width: 150px;
 	overflow: hidden;
@@ -39,6 +105,20 @@
 
 .delete {
 	padding: 0em .24em 0em .2em;
-	background: firebrick;
+	//background: firebrick;
 	border-radius: 20px;
+	cursor: pointer;
+}
+
+.btn-square {
+	border-radius:0px!important;
+}
+
+.link-primary {
+	color: rgb(104, 163, 213);
+	&:hover {
+		color: darken(rgb(104, 163, 213), 15%);
+		text-decoration:none;
+	}
+	font-size:1.6rem;
 }

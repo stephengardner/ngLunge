@@ -1,6 +1,5 @@
 
 #category-home {
-	background: #323C4D;
 	color: #FFFDFD;
 	.tab-content {
 		overflow:hidden;
@@ -27,7 +26,7 @@
 	}
 	.tab-pane {
 		background: $lunge-nav-background;
-		color:white;
+		color:$lunge-nav-color;
 		position:relative;
 		border: 1px solid #ddd;
 		border-top: none;
@@ -94,7 +93,7 @@
 	}
 }
 .trainer-card.lg {
-	@extend .col-sm-3;
+	@extend .col-sm-6;
 	text-align:center;
 	//@include custom-col(".col-xs-4", 0);
 	//transition:  1s;

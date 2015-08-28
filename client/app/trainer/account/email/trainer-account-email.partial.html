@@ -1,0 +1,34 @@
+<section class="email">
+    <div class="title">
+        My Email
+        <div class="edit-button small" ng-click="emailToggle()">
+            <div class="edit">
+                <i class="fa fa-edit"></i>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <form novalidate id="form" class="form update-email" ng-submit="changeEmail(form)" name="form">
+            <div ng-show="!emailUpdating" ng-class="{'form-group' : emailUpdating}">
+                <div class="row">
+                    <div class="col-xxs-16">
+                        {{trainerFactory.trainer.email}}
+                    </div>
+                </div>
+            </div>
+            <div ng-show="emailUpdating">
+                <div class="form-group">
+                    <input ng-keypress="removeMongooseError(form, 'email')" id="email" ng-model="trainerFactory.trainerEditing.email" name="email" class="form-control" type="text" placeholder="New email"/>
+                    <div class="form-error" ng-show="form.email.$error.invisible && submitted"><span>Please enter a valid email</span></div>
+                    <div class="form-error" ng-show="form.email.$error.mongoose"><span>{{errors.email}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="action-buttons">
+                        <button type="submit" class="btn-action btn btn-primary" ng-disabled="isAjax()" ng-class="{ready : !isAjax(), ajax : isAjax()}"><i ng-show="isAjax()" class="fa fa-spin fa-spinner"></i> {{ !isAjax() ? 'Save' : 'Saving' }}</button>
+                        <div class="btn-action btn btn-danger" ng-disabled="isAjax()" ng-click="emailToggle()">Cancel</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

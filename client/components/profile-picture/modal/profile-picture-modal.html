@@ -1,0 +1,20 @@
+<div class="modal-content">
+    <!--
+    <div class="modal-header">
+        <div class="button-block" ng-click="closeThisDialog(false)">
+            <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <h4 class="modal-title">Are you sure you want to permanently delete this location?
+        </h4>
+    </div>
+    -->
+    <div class="modal-body">
+        <div class="image-area-select-wrapper">
+            <img id="imgLoaded" ng-src="{{ProfilePicture.image.url}}" ng-style="{'width' : ProfilePicture.width, 'height' : ProfilePicture.height }"/>
+        </div>
+        <div class="buttons clearfix">
+            <div class="btn-square col-xxs-12 btn btn-primary btn-lg" ng-disabled="ProfilePicture.status == 'cropping'"ng-click="saveCrop()">{{ProfilePicture.status == 'cropping' ? 'Cropping' : 'Crop & Save' }}</div><!--
+            --><div class="btn-square col-xxs-12 btn btn-danger btn-lg" ng-click="closeThisDialog(false)">Cancel</div>
+        </div>
+    </div>
+</div>

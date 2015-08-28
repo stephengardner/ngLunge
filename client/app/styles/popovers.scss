@@ -1,0 +1,64 @@
+
+$popover-padding : 1rem;
+.popover-default {
+	display:inline-block;
+	color:#333;
+	background:white;
+	.popover-header, .popover-body {
+		padding: $popover-padding;
+		&.nopadding {
+			padding:0;
+		}
+	}
+
+	.popover-body {
+		background: none;
+		position: relative;
+	}
+
+	// the background overlay icon that shows, for example, a transparent question mark indicating this is a help blurb
+	.background-symbol {
+		color: #E2E2E2;
+		position: absolute;
+		right: 1rem;
+		top: 0rem;
+		font-size: 8rem;
+	}
+
+	// necessary to wrap this so that the text does no get covered by the .background-symbol, but the background does
+	.popover-header-wrapper {
+		background:#ededed;
+		.popover-header {
+			position:relative;
+			h1 {
+				font-size:1.5em;
+			}
+		}
+	}
+	// necessary to declare this in it's own div so that it lays over the background-symbol
+	.popover-header-underline {
+		position: relative;
+		width: 100%;
+		height: 1px;
+		background: #ccc;
+	}
+}
+
+// default inserted class by angularstrap
+.popover {
+	font-size:12px;
+	// force the popover title not to render and therefore the tooltip will align more properly when there is none
+	// we will set the title ourselves.
+	h3.popover-title {
+		display:none;
+	}
+	h2 {
+		font-size:1.85em;
+	}
+	box-shadow: -1px 1px 6px 0px #666;
+}
+
+// default inserted class by angularstrap
+.popover-content {
+	padding:0;
+}

@@ -18,7 +18,7 @@ lungeApp.controller("TrainerHomeController", function(ScreenSize, $http, $scope,
 	$http.get('/api/trainers').success(function(trainers) {
 		$scope.trainers = trainers;
 		console.log(trainers);
-		socket.syncUpdates('trainer', $scope.trainers);
+		//socket.syncUpdates('trainer', $scope.trainers);
 	});
 	$scope.pageIncrement = function(number){
 		function checkPage() {

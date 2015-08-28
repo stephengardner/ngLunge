@@ -6,6 +6,7 @@
     </div>
     <div class="trainer-card wide" ng-repeat="trainer in trainers">
         <div class="trainer clearfix">
+            <div class="delete" ng-click="delete(trainer)">Delete</div>
             <div class="profile-picture-container">
                 <div class="profile-picture" ng-style="{'background-image' : 'url({{trainer.profile_picture.url}})'}" ng-if="trainer.profile_picture" >
                 </div>
@@ -27,6 +28,7 @@
             </div>
         </div>
     </div>
+    <!--
     <div class="trainer-card wide" ng-repeat="trainer in trainers">
         <div class="trainer clearfix">
             <div class="profile-picture-container">
@@ -50,4 +52,5 @@
             </div>
         </div>
     </div>
+    -->
 </div>

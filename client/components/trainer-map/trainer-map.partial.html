@@ -1,4 +1,18 @@
-<div ng-if="trainer.location.state"class="google-map">
-    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="control">
-    </ui-gmap-google-map>
+<div class="google-map"  ng-class="{'empty-loading' : !googleMapLoaded, 'empty' : googleMapLoaded && !trainerFactory.trainer.location.state, 'loaded' : googleMapLoaded && trainerFactory.trainer.location.state}">
+    <div ng-show="!trainerFactory.trainer.location.state" class="no-main-location">
+        <div ng-if="isMe()">
+            <span ui-sref-active="ng-hide">
+                You don't have any locations yet.  Add one below.
+            </span>
+        </div>
+        <div ng-if="!isMe()">
+            {{trainerFactory.trainer.name.first}} doesn't have any locations yet.  Check back soon!
+        </div>
+    </div>
+    <div ng-if="trainerFactory.trainer.location.state" id="google-map" class="google-map">
+        <div ng-show="map.center.latitude && map.bounds">
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="gmapOptions" bounds="map.bounds" control="map.control">
+            </ui-gmap-google-map>
+        </div>
+    </div>
 </div>

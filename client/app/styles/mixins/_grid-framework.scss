@@ -21,6 +21,21 @@
 	}
 }
 
+// Created by augie to revert what the bootstrap sass _grid-framework dces when it loads automatically.  We want to use this one instead
+// [converter] This is defined recursively in LESS, but Sass supports real loops
+@mixin unfloat-grid-columns($class) {
+	$list: '';
+	$i: 1;
+	$list: ".col-#{$class}-#{$i}";
+	@for $i from (1 + 1) through $grid-columns {
+		$list: "#{$list}, .col-#{$class}-#{$i}";
+	}
+	#{$list} {
+		float: none;
+		display:block;
+		width:100%;
+	}
+}
 
 // [converter] This is defined recursively in LESS, but Sass supports real loops
 @mixin float-grid-columns($class) {
@@ -84,4 +99,12 @@
 	@include loop-grid-columns($grid-columns, $class, pull);
 	@include loop-grid-columns($grid-columns, $class, push);
 	@include loop-grid-columns($grid-columns, $class, offset);
+}
+
+@mixin unmake-grid($class) {
+	@include unfloat-grid-columns($class);
+	//@include loop-grid-columns($grid-columns, $class, width);
+	//@include loop-grid-columns($grid-columns, $class, pull);
+	//@include loop-grid-columns($grid-columns, $class, push);
+	//@include loop-grid-columns($grid-columns, $class, offset);
 }

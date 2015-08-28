@@ -1,0 +1,17 @@
+.manual-location-container {
+	text-align:left;
+
+	.horizontal {
+		@extend .form-horizontal;
+		.manual-location-group {
+			@extend .form-group;
+			label {
+				@extend .col-sm-6;
+				@extend .control-label;
+			}
+			.input-container {
+				@extend .col-sm-18;
+			}
+		}
+	}
+}

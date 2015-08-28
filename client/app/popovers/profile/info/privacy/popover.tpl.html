@@ -1,0 +1,44 @@
+<div class="popover-default popover-privacy" ng-controller="PrivacyPopoverController">
+    <i class="background-symbol fa fa-globe"></i>
+    <div class="arrow"></div>
+    <div class="popover-header-wrapper">
+        <div class="popover-header">
+            <h1>Set Privacy To</h1>
+        </div>
+    </div>
+    <div class="popover-header-underline"></div>
+    <div class="popover-body nopadding">
+        <div class="privacy-row" ng-click="changePrivacyTo('private')">
+            <div class="row">
+                <div class="col-xxs-6">
+                    <div class="privacy-icon">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                </div>
+                <div class="col-xxs-18">
+                    <div class="privacy-text">
+                    <span>
+                        Private
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="privacy-row" ng-click="changePrivacyTo('public')">
+            <div class="row">
+                <div class="col-xxs-6">
+                    <div class="privacy-icon">
+                        <i class="fa fa-globe"></i>
+                    </div>
+                </div>
+                <div class="col-xxs-18">
+                    <div class="privacy-text">
+                    <span>
+                        Public
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

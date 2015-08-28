@@ -14,21 +14,45 @@ lungeApp.controller("MenuController", function($state, Auth, $scope, MenuService
 		function setMenuItems() {
 			$scope.menuItems = [
 				{
-					name : "Profile",
-					icon : "fa-user"
+					name : Auth.getCurrentUser().name ? Auth.getCurrentUser().name.first : 'Profile',
+					icon : "fa-user",
+					sref : 'profilePage({urlName : \'' + Auth.getCurrentUser().urlName + '\'})'
 				},
 				{
 					name : "Account",
 					icon : "fa-cog",
-					sref : "main.account"
+					sref : "main.trainer.edit-profile"
+				},
+				{
+					name : "Certifications",
+					icon : "fa-certificate",
+					sref : "main.trainer.certifications"
+				},
+				{
+					name : 'Logout',
+					icon : 'fa-power-off',
+					action : 'logout()'
 				}
 			];
 		};
+
+		$scope.getSref = function(state){
+			//console.log("State is:", $state);
+			return state ? state : $state.current.name;
+		};
+
+		$scope.onAction = function(action) {
+			$scope.hide();
+			$scope.$eval(action);
+		}
 		setMenuItems();
 		$scope.$watch(function(){ return Auth.getCurrentUser()}, function(user){
 			$scope.user = user;
 			setMenuItems();
 		});
+		$scope.isMenuActive = function(){
+			return MenuService.active;
+		}
 
 	});
 });

@@ -390,7 +390,6 @@ module.exports = function (grunt) {
 					}]
 			},
 			after : {
-
 				files: [
 					// added by augie since we're not doing imagemin (breaks some db-stored image paths)
 					{
@@ -524,14 +523,28 @@ module.exports = function (grunt) {
 					starttag: '<!-- injector:js -->',
 					endtag: '<!-- endinjector -->'
 				},
+				// We explicitly set account.js to be the last file grunt injects, because this file contains the
+				// universal user route which will overwrite other routes if we don't do it properly.
+				// Angular UI Router orders routes simply by which ones are set first in the code.
 				files: {
 					'<%= yeoman.client %>/index.html': [
-						['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+						[
+							'{.tmp,<%= yeoman.client %>}/{app,components}/**/(.module)*.js',
+							'{.tmp,<%= yeoman.client %>}/{app,components}/**/!(account)*.js',
 							'!{.tmp,<%= yeoman.client %>}/app/app.js',
 							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
-							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
+							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js',
+							'{.tmp,<%= yeoman.client %>}/{app,components}/**/account*.js']
 					]
 				}
+				//files: {
+				//	'<%= yeoman.client %>/index.html': [
+				//		['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+				//			'!{.tmp,<%= yeoman.client %>}/app/app.js',
+				//			'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
+				//			'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
+				//	]
+				//}
 			},
 
 			// Inject component scss into app.scss

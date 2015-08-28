@@ -1,4 +1,281 @@
+// taken from namecheap.com
+// values (in rem)
+
+
+$module-transparent-header-bg : #eee;
+$module-transparent-header-color: #333;
+$module-transparent-h1-color: black;
+$module-transparent-header-border-color: darken($module-transparent-header-bg, 10%);
+
+$module-font-size: 1.5;
+$module-header-padding: 1.75;
+$module-group-horizontal-margin: $module-header-padding;
+$module-group-vertical-padding: 4;
+$module-header-font-size: 1.0;
+
+$module-main-unit: rem;
+$module-padding-unit: rem;
+$module-header-font-size-unit: em;
+// calculated from above
+$module-has-margin: #{($module-header-padding * $module-header-font-size)}$module-padding-unit;
+
+
+//small
+$module-header-font-size-small: .7;
+$module-header-padding-small: 1.4;
+$module-group-vertical-padding-small: 2;
+$module-group-horizontal-margin-small: $module-header-padding-small;
+
+// responsive xs
+$module-header-horizontal-margin-small-responsive :#{($module-header-padding-small / 2)}$module-padding-unit;
+
+
+//flat white
+$module-flat-white-border-color:#ddd;
+$module-flat-white-header-color: white;
+$module-flat-white-header-bg : #2c3e50;
+
+
+$form-group-margin: 15px;
+
+.form-group {
+	margin-bottom:$form-group-margin;
+
+	// when col-sm's stack, add a margin-top to the children that stack
+	.row {
+		[class*='col-sm-'] {
+			~ [class*='col-sm-'] {
+				@include respond-to(xs) {
+					margin-top:$form-group-margin;
+				}
+			}
+		}
+	}
+
+}
+
+.form-control {
+	font-size:16px;
+	height:40px;
+	border:none;
+	&:not(.no-border) {
+		border-left: 2px solid #ddd!important;
+		border-bottom:2px solid #ddd!important;
+	}
+}
+.input-group-addon {
+	&.left {
+		border-top-left-radius:8px;
+		border-bottom-left-radius:8px;
+		border-left:2px solid #ddd!important;
+		border-bottom:2px solid #ddd!important;
+		~ .form-control {
+			border-left:0!important;
+		}
+	}
+}
+.module {
+	font-size:$module-font-size#{$module-main-unit};
+	background: #f2f2f2;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	~ .module {
+		margin-top:2rem;
+	}
+
+	.help {
+		font-size: 1.6em;
+	}
+	.back {
+		&.top-right {
+			position: absolute;
+			right: $module-header-padding#{$module-padding-unit};
+		}
+	}
+	label {
+		&.label-nopadding {
+			padding-top:0;
+		}
+	}
+	input, select {
+		&.form-control {
+			height:2.8em!important;
+			font-size:$module-font-size#{$module-main-unit};
+		}
+	}
+	.group {
+		padding: $module-group-vertical-padding#{$module-padding-unit} 0;
+	}
+	.group.has-margin {
+		margin:0 $module-has-margin;
+	}
+	.has-margin {
+		margin:0 $module-has-margin;
+	}
+	header {
+		font-size: $module-header-font-size#{$module-header-font-size-unit};
+		margin-bottom:0!important;
+		position: relative;
+		line-height: 1.3333333333;
+		font-weight: bold;
+		color: #fff;
+		background: #6d6e70;
+		padding: $module-header-padding#{$module-padding-unit};
+		-webkit-border-top-left-radius: 5px;
+		-webkit-border-top-right-radius: 5px;
+		-moz-border-radius-topleft: 5px;
+		-moz-border-radius-topright: 5px;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		small {
+			color:#bbb;
+		}
+	}
+
+	&.transparent {
+		background:none;
+		header {
+			background:$module-transparent-header-bg;
+			border-bottom:2px solid $module-transparent-header-border-color;
+			color:$module-transparent-header-color;
+			small {
+				color:lighten($module-transparent-header-color, 8%);
+			}
+		}
+		.module-form {
+			background:none;
+		}
+		border:2px solid white;
+	}
+
+	&.flat-white {
+		background:white;
+		 .flat-white {
+			background:#eee;
+		}
+		border-left:2px solid;
+		border-bottom:2px solid;
+		border-color:$module-flat-white-border-color;
+		header {
+			background: $module-flat-white-header-bg;
+			color: $module-flat-white-header-color;
+		}
+	}
+	&.sm {
+		header {
+			font-size: $module-header-font-size-small#{$module-header-font-size-unit};
+			padding: $module-header-padding-small#{$module-padding-unit};
+			.back {
+				&.top-right {
+					position: absolute;
+					right: $module-header-padding-small#{$module-padding-unit};
+				}
+			}
+			a {
+				color: rgb(104, 163, 213);
+				&:hover {
+					color: darken(rgb(104, 163, 213), 15%);
+					text-decoration:none;
+				}
+				font-size:1.6rem;
+			}
+		}
+		.group {
+			padding: $module-group-vertical-padding-small#{$module-padding-unit} 0;
+			&.has-margin {
+				margin:0 $module-group-horizontal-margin-small#{$module-padding-unit};
+			}
+			&.no-padding {
+				padding:0;
+			}
+		}
+		@include respond-to(xs) {
+			.has-margin {
+				margin:0rem $module-header-horizontal-margin-small-responsive;
+			}
+			// horizontal forms add their own "rows" to the form group, but we need their margins to be equal to the
+			// new padding on this module
+			.form-horizontal {
+				.form-group {
+					margin-left: -$module-header-horizontal-margin-small-responsive;
+					margin-right: -$module-header-horizontal-margin-small-responsive;
+				}
+			}
+		}
+	}
+}
 form {
+	.input-group-addon-inner {
+		position: absolute;
+		z-index: 2;
+		right: .75rem;
+		height: 20px;
+		top: 50%;
+		margin-top: -10px;
+		.fa-times-circle-o {
+			cursor:pointer;
+			&:hover {
+				color:$brand-danger;
+			}
+		}
+	}
+	&.form-horizontal-left {
+		label {
+			&.control-label {
+				text-align:left;
+			}
+		}
+	}
+	&.separate-groups {
+		.form-group:not(:last-of-type) {
+			border-bottom: 1px solid #ddd;
+			padding-bottom: 1.5rem;
+		}
+	}
+	.form-group:last-of-type {
+		margin-bottom:0px;
+	}
+	&.module-form {
+		border: 1px solid;
+		border-radius: 6px;
+		border-color: #ccc;
+		padding: 2rem;
+		background:#F9F9F9;
+		header {
+			h1 {
+				text-align:center;
+				font-size:2.75rem;
+				color:$brand-primary;
+			}
+		}
+		.form-group {
+			.row {
+				[class*='col-sm-*'] ~
+				[class*='col-sm-*'] {
+					@include respond-to(xs) {
+						padding-top:1.5rem;
+					}
+				}
+			}
+			table {
+				margin: 0 auto;
+			}
+		}
+		label:not(.checkbox-inline) {
+			font-size:1.2em;
+			color:$brand-primary;
+		}
+		@include respond-to(xs) {
+			padding: 1rem;
+		}
+	}
+	.ng-invalid-mongoose {
+		border-color:red!important;
+		.dropdown-toggle {
+			border-color:red!important;
+		}
+	}
 	.ng-invalid-custom {
 		border-color:red;
 	}

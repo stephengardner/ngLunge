@@ -1,10 +1,51 @@
 
 $profile-page-max-width: 750px;
+
+.top-masthead {
+	padding-bottom:4rem;
+	background:#ddd;
+}
+.done-editing {
+	background:#eee;
+	border-bottom:2px solid #ddd;
+	padding:19px;
+	position:fixed;
+	top:0;
+	width:100%;
+	left:0%;
+	-webkit-transition: all .65s;
+	z-index: 100;
+	text-align:center;
+	font-size:1.1em;
+	font-weight:bold;
+	cursor: pointer;
+	&.ng-hide-remove-active{
+		left:0%;
+	}
+	&.ng-hide {
+		left:100%;
+	}
+}
+#dashboard {
+	.profile-picture-container {
+		@extend .col-xs-4;
+		@extend .col-xxs-8;
+		.profile-picture {
+			border-radius: 10px;
+			//border:1px solid lighten($body-bg, 5%);
+			width:100%;
+			padding-bottom:100%;
+			background-size: contain!important;
+			background-position: center!important;
+			background-repeat: no-repeat!important;
+		}
+	}
+}
+
 // alert at the top of the profile
 .alert {
 	padding:1em 1.5em;
 	border-radius:8px;
-	border:1px solid;
 	color: #347b4b;
 	margin:0 auto;
 	position:relative;
@@ -14,9 +55,6 @@ $profile-page-max-width: 750px;
 	}
 	&.profile {
 		max-width: $profile-page-max-width;
-	}
-	&.success {
-		background-color:#8AE8B1;
 	}
 	text-align:center;
 	h1 {
@@ -28,12 +66,20 @@ $profile-page-max-width: 750px;
 }
 
 .trainer-profile {
+	.google-map {
+		height:300px;
+		&.empty {
+			height:250px;
+		}
+	}
+	/*
 	.angular-google-map-container {
 		height:300px;
 		@include respond-to(xxs) {
 			height:250px;
 		}
 	}
+	*/
 }
 
 .profile-picture-container:hover {
@@ -51,24 +97,36 @@ $profile-page-max-width: 750px;
 .trainer-card {
 	&.wide {
 		.profile-picture-container {
-			@extend .col-xs-4;
-			@extend .col-xxs-12;
+			@extend .col-xs-8;
+			@extend .col-xxs-24;
 			padding: 0px;
-			border-left:2px solid lighten($body-bg, 15%);
+			//border-left:2px solid lighten($body-bg, 15%);
+			&.info-editing {
+				display:none;
+				@include respond-to(xxs) {
+					//display:block;
+				}
+			}
 		}
 	}
 }
 
+.trainer-synced-account {
+	display: inline-block;
+	margin-bottom:.25rem;
+}
+
 .profile-picture-container {
 	.profile-picture {
+		border-radius: 10px;
 		background-size:contain;
 		background-repeat:no-repeat;
 		background-position:center;
 	}
 	input[type="file"] {
-		visibility:none;
+		visibility:hidden;
 		position: absolute;
-		left:-1000px;
+		left:-9000px;
 		cursor:pointer;
 		&:hover {
 			~ .upload-button {
@@ -86,6 +144,8 @@ $profile-page-max-width: 750px;
 		}
 	}
 	.upload-button {
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius:10px;
 		display:block;
 		padding:1.25em 0em;
 		-webkit-transition: all .4s;
@@ -128,9 +188,8 @@ $profile-page-max-width: 750px;
 	form {
 		&.contact-form {
 			textarea {
-				background: $body-bg;
-				border:1px solid #ccc;
-				color:white;
+				border:none;
+				box-shadow:none;
 			}
 		}
 		.required {
@@ -140,10 +199,14 @@ $profile-page-max-width: 750px;
 		}
 	}
 	.edit-button {
-		float:right;/*
+		border-top-right-radius:8px;
+		cursor: pointer;
+		&.small:hover {
+			background:#3174C8;
+		}
 		position: absolute;
-		right: 0em;
-		*/
+		right: 0;
+		top:0;
 	}
 	.row-centered {
 	text-align:center;
@@ -165,7 +228,7 @@ $profile-page-max-width: 750px;
 	//padding:1em;
 	position:relative;
 	@include respond-to(xxs) {
-		padding:1em 5px;
+		padding:1em 12px;
 	}
 	.trainer-card {
 		.favorite {
@@ -176,7 +239,6 @@ $profile-page-max-width: 750px;
 				font-size:1.5em;
 			}
 		}
-		padding-bottom:1em;
 	}
 	h1 {
 		font-size:1.8em;
@@ -187,43 +249,57 @@ $profile-page-max-width: 750px;
 		}
 	}
 	.information {
-		@extend .col-xs-8;
-		@extend .col-xxs-12;
+		&.info-editing {
+			width:100%;
+			padding:0;
+		}
+		&.full-width {
+			width:100%;
+		}
+		@extend .col-xs-16;
+		@extend .col-xxs-24;
 		text-align:left;
 		@include respond-to(xxs) {
 			padding-top:1em;
+			padding-left:0;
+			padding-right:0;
 		}
 		h2 {
 			font-size:1.3em;
 		}
 		.item {
 			~ .item {
-				margin-top:1em;
+				margin-top:1.5em;
 			}
+
 		}
 		.actions {
 			margin-top:1.5em;
 		}
 	}
 	section {
+		box-shadow: -4px 4px #ddd;
 		text-align: left;
-		border: 1px solid;
+		background:white;
+		//border: 1px solid;
 		padding: 0em;
 		border-radius: 8px;
 		overflow: hidden;
-		margin: 1em 0em;
+		margin: 1.5em 0em;
 		.edit {
-			color: black;
-			padding: .2em .5em;
-			border: 1px solid;
-			margin-top: -1px;
-			margin-right: -1px;
 			border-bottom-left-radius: 5px;
+			padding: .26em .3em;
+			font-size: 1.4em;
+			color:white;
 		}
 		.title {
+			position:relative;
+			border-top-right-radius:8px;
+			border-top-left-radius:8px;
+			overflow:hidden;
 			padding: .7rem;
-			background: white;
-			color: black;
+			background: #4183D7;
+			color: white;
 			line-height:1;
 			margin-bottom:0em;
 			font-size:1.3em;
@@ -237,24 +313,24 @@ $profile-page-max-width: 750px;
 		text-align:center;
 		.certification {
 			font-weight:bold;
-			@extend .col-xs-3;
-			@extend .col-xxs-4;
+			@extend .col-xs-6;
+			@extend .col-xxs-8;
 		}
 	}
 	.trainer-reviews {
 		.review {
 			.picture {
-				@extend .col-xs-2;
-				@extend .col-xxs-4;
+				@extend .col-xs-4;
+				@extend .col-xxs-8;
 			}
 			.review-stars {
-				@extend .col-xs-10;
-				@extend .col-xxs-8;
+				@extend .col-xs-20;
+				@extend .col-xxs-16;
 			}
 			.review-text {
 				font-size:.9em;
-				@extend .col-xs-10;
-				@extend .col-xxs-8;
+				@extend .col-xs-20;
+				@extend .col-xxs-16;
 			}
 			padding-top:1em;
 			padding-bottom:1em;

@@ -1,0 +1,36 @@
+.specialty-list {
+	.none {
+		padding:1rem;
+		font-size:1.5rem;
+		text-align:center;
+	}
+	li {
+		padding:1rem;
+		.delete {
+			float:right;
+			&:hover {
+				color:$brand-danger;
+			}
+		}
+		~ li {
+			border-top:1px solid #ddd;
+		}
+		&:hover {
+			background:#eee;
+		}
+	}
+	.add-specialty-group {
+		width:100%;
+		.add-specialty-input {
+			border-left:0!important;
+			width:80%;
+			display:inline-block;
+		}
+		.add-specialty-button {
+			width:20%;
+			height:40px;
+			border-radius:0;
+			display:inline-block;
+		}
+	}
+}

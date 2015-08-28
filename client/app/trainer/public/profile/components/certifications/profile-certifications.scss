@@ -1,5 +1,87 @@
+
+$cert-padding : 1.5rem;
+
 .certification-list {
 	.empty {
-		padding:1em;
+		padding:$cert-padding;
+	}
+}
+
+.trainer-certifications {
+	.panel-group {
+		margin-bottom:0;
+	}
+}
+
+//on the certifications page (editor) give them borders
+#certifications {
+	.cert {
+		.panel-body {
+			padding:0;
+		}
+		&.panel {
+			//border:1px solid darken($body-bg, 6%);
+		}
+		&:hover {
+			border-left:3px solid lighten($body-bg, 6%);
+			.panel-title,
+			.panel-collapse .panel-body {
+				border-left:0;
+			}
+		}
+	}
+}
+.cert {
+	padding: 0;
+	background: none;
+	border-radius: 0;
+	border:0;
+	&.panel {
+		margin-top:0!important;
+		~ .panel {
+			border-top:1px solid darken($body-bg, 5%);
+		}
+	}
+	.panel-heading {
+		color:inherit;
+		background:none;
+		border:0;
+	}
+	.panel-body {
+		border-top:0!important;
+		padding-top:0;
+	}
+	.panel-heading {
+		padding: 0;
+		position:relative;
+	}
+	.panel-title, .panel-body {
+		border-left:2px solid transparent;
+	}
+	.panel-title {
+		//padding:1rem;
+		a {
+			font-weight:bold;
+			text-decoration:none;
+			&:hover {
+				background: darken($body-bg, 4%);
+				color:#333;
+				text-decoration:none;
+			}
+			padding:$cert-padding;
+			display:block;
+			.name {
+				position: relative;
+			}
+		}
+		.count-bubble {
+			background: darken($body-bg, 15%);
+			font-size: .8em;
+			padding: .1rem .4rem;
+			position: absolute;
+			border-radius: 5px;
+			right: .5em;
+			top: .1em;
+		}
 	}
 }

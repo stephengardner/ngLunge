@@ -8,10 +8,24 @@
 	}
 }
 
+.relative {
+	position:relative;
+}
+
 .ajax {
 	.fa-spinner {
 		display:inline-block;
 	}
+}
+
+// make it so text areas don't get pulled outside, especially of a wrapper that's overflow:hidden
+textarea {
+	max-width: 100%;
+}
+
+.no-gutter > [class*='col-'] {
+	padding-right:0;
+	padding-left:0;
 }
 
 .container {
@@ -24,6 +38,13 @@
 	margin-top: 60px;
 }
 
+ul {
+	-webkit-padding-start:0;
+	margin-bottom:0;
+}
+li {
+	list-style-type:none;
+}
 .editable-text input {
 	font-size: 1.5rem;
 }

@@ -82,7 +82,8 @@ var all = {
 
 	SUPERUSERS : {
 		ADMINS : [
-			'augdog911@gmail.com'
+			'augdog911@gmail.com',
+			'augdog9114@gmail2.com'
 		]
 	}
 };

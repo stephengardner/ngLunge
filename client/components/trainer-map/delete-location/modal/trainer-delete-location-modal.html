@@ -1,0 +1,19 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="button-block" ng-click="closeThisDialog(false)">
+            <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <h4 class="modal-title">Are you sure you want to permanently delete this location?
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="btn btn-primary btn-lg btn-block" ng-click="closeThisDialog(true)">I'm sure!</div>
+            </div>
+            <div class="col-xs-12">
+                <button class="btn btn-default btn-lg btn-block" ng-click="closeThisDialog(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

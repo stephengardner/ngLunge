@@ -21,16 +21,10 @@ angular.module('ngLungeFullStack2App')
 				this.socketFactory = socketFactory;
 			},
 			syncAfterLogin : function () {
-				/*
-				for some reason this socket event is being triggered a LOT!!!!!!!!!!!!!!!!!!!!!!
-				also makes it so the profile page name isn't updated on whichever page loaded second i believe....
-				wierd.....
-				*/
 				if(Auth.socketFactory && Auth.isLoggedIn() ) {
 					console.log("\n-\n-\n-\n-", currentUser);
-					//Auth.socketFactory.unsyncUpdates('trainer');
 					Auth.socketFactory.sync.user('trainer', currentUser, function(event, user){
-						console.log("Setting...", user);
+						console.log("FROM THE AUTH FACTORY WERE SETTING THIS TRAINER: Setting...", user);
 						Auth.setCurrentUser(user);
 					});
 				}
@@ -77,12 +71,15 @@ angular.module('ngLungeFullStack2App')
 
 				return deferred.promise;
 			},
+
 			getCurrentType : function() {
 				return currentType;
 			},
-			register : function(resolvedRegistrationResource, password, password2) {
+
+			register : function(resolvedTrainerResource, password, password2) {
 				var deferred = $q.defer();
-				Registration.submitPassword({ id: resolvedRegistrationResource._id }, { password : password, password2 : password2 }, function(response){
+				console.log("Registering with resolvedTrainerResource:" ,resolvedTrainerResource);
+				Registration.submitPassword({ id: resolvedTrainerResource.registration.authenticationHash }, { password : password, password2 : password2 }, function(response){
 					console.log("RESPONSE:", response);
 					if(response.token){
 						console.log("Auth service register submitPassword callback, setting cookieStore token = :", response.token);
@@ -265,7 +262,7 @@ angular.module('ngLungeFullStack2App')
 					Model = this.type == "trainer" ? Trainer : User;
 				console.log("*Auth.service.js attempting to add location with data object: ", dataObject);
 				return Trainer.addLocation({ id: currentUser._id }, dataObject, function(user) {
-					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
+					console.log("Auth service addLocation update profile on the ", Model, " model returned an updated user of: ", user);
 					currentUser = user;
 					return cb(user);
 				}, function(err) {
@@ -279,11 +276,11 @@ angular.module('ngLungeFullStack2App')
 					Model = this.type == "trainer" ? Trainer : User;
 				console.log("*Auth.service.js attempting to remove location with data object: ", dataObject);
 				return Trainer.removeLocation({ id: currentUser._id }, dataObject, function(user) {
-					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
+					console.log("there wasn't an error...? the cb is:", cb);
 					currentUser = user;
 					return cb(user);
 				}, function(err) {
-					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
+					console.log("there WAS an error...:", err, " and the cb is:", cb);
 					return cb(err);
 				}).$promise;
 			},

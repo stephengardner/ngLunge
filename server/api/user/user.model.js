@@ -78,7 +78,9 @@ UserSchema
   .path('hashedPassword')
   .validate(function(hashedPassword) {
     if (authTypes.indexOf(this.provider) !== -1) return true;
-    return hashedPassword.length;
+		if(hashedPassword)
+            return hashedPassword.length;
+		return true;
   }, 'Password cannot be blank');
 
 // Validate email is not taken

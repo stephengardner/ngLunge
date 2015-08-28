@@ -1,0 +1,36 @@
+<div class="specialty-list">
+    <ul ng-if="trainerFactory.trainerEditing.specialties.length">
+        <li ng-repeat="specialty in trainerFactory.trainerEditing.specialties">
+            <span class="specialty-name">
+                {{specialty.name}}
+            </span>
+            <span ng-if="isMe()" class="delete" ng-click="removeSpecialty(specialty)">
+                <i class="fa fa-times"></i>
+            </span>
+        </li>
+    </ul>
+    <div ng-if="!trainerFactory.trainerEditing.specialties.length" class="none">
+        <div ng-if="isMe()">
+            You don't have any specialties listed yet.
+        </div>
+        <div ng-if="!isMe()">
+            {{trainerFactory.name.first}} doesn't have any specialties listed yet.
+        </div>
+    </div>
+    <div ng-if="editable && isMe()">
+        <form ng-model="specialtyForm" name="specialtyForm" id="specialtyForm" class="form-inline" ng-submit="addSpecialty()">
+            <div class="form-group add-specialty-group">
+                <input id="specialty" name="specialty" ng-disabled="ajax.busy" name="specialty"
+                       typeahead-on-select="setSpecialtyFromTypeahead($item, $model, $label);"
+                       typeahead-template-url="custom-ui-specialties.tpl.html"
+                       ng-model="specialty.selected"
+                       ng-value="specialty.selected"
+                       typeahead="specialty.name for specialty in getSpecialties($viewValue)"
+                       typeahead-select-on-exact="true"
+                       typeahead-select-on-blur="true"
+                       class="add-specialty-input form-control" type="text" placeholder="Add specialty"/><!--
+                --><button ng-disabled="ajax.busy" type="submit" class="add-specialty-button btn btn-primary">Add</button>
+            </div>
+        </form>
+    </div>
+</div>

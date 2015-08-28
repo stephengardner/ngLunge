@@ -24,38 +24,32 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 			});
 			return deferred.promise;
 		},
+		createLocationFromAPIResponse : function(result) {
+			console.log("\n\nThis is the result:", result);
+			var updatedLocation = Geocoder._unwrapAddressComponents(result);
+			updatedLocation.google = {
+				placesAPI : {
+					formatted_address : result.formatted_address
+				}
+			};
+			console.log("\n\nTHIS is out complete location:\n\n", updatedLocation);
+			return updatedLocation;
+		},
+
 		bindPlaces : function(el, cb) {
 			$(function(){
-				if(google) {
+				if(window.google) {
 					var trainerLocation = $(el).geocomplete({blur : true}).on("geocode:result", function(event, result){
-						console.log("RESULT: ", result);
-						var updatedLocation = Geocoder._unwrapAddressComponents(result);
-						updatedLocation.google = {
-							placesAPI : {
-								formatted_address : result.formatted_address
-							}
-						};
+						var updatedLocation = Geocoder.createLocationFromAPIResponse(result);
 						cb(updatedLocation);
-						/*
-						$scope.$apply(function(){
-							$scope.updatedLocation = Geocoder._unwrapAddressComponents(result);
-							$scope.updatedLocation.google = {
-								placesAPI : {
-									formatted_address : result.formatted_address
-								}
-							}
-							console.log($scope.updatedLocation);
-						});
-						*/
 					});
 				}
-				//trainerLocation
-
 				$("#find").click(function(){
 					trainerLocation.trigger("geocode");
 				});
 			});
 		},
+
 		_deconstruct : function(opt_googleMapsPosition) {
 			this._setPosition(opt_googleMapsPosition);
 			var lat = this.googleMapsPosition.coords.latitude,
@@ -112,12 +106,9 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 			return deferred.promise;
 		},
 		_unwrapAddressComponents : function(googleResultObject) {
-			console.log("=========deconstructing===========", googleResultObject);
 			var result = {};
 			angular.forEach(googleResultObject.address_components, function(val, key){
 				angular.forEach(val.types, function(type){
-					console.log("tttype:",type);
-					console.log("vvvvval:",val);
 					angular.forEach(_ADDRESS_TYPES_PLUS, function(_typeObj, _type){
 						if(type == _typeObj.google_type) {
 							result[_type] = val[_typeObj.google_target];
@@ -162,6 +153,66 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 		geocodePosition : function(googleMapsPosition) {
 			Geocoder._setPosition(googleMapsPosition);
 			return Geocoder._deconstruct();
+		},
+		geocodeTextualAddress : function(address) {
+			Geocoder.geocoder.geocode({ 'address': address }, function (results, status) {
+
+				/* The code below only gets run after a successful Google service call has completed. Because this is an asynchronous call, the validator has already returned a 'true' result to supress an error message and then cancelled the form submission.  The code below needs to fetch the true validation from the Google service and then re-execute the jQuery form validator to display the error message.  Futhermore, if the form was
+				 being submitted, the code below needs to resume that submit. */
+
+				// Google reported a valid geocoded address
+				if (status == google.maps.GeocoderStatus.OK) {
+					// Get the formatted Google result
+					var address = results[0].formatted_address;
+
+					/* Count the commas in the fomatted address. This doesn't look great, but it helps us understand how specific the geocoded address is.  For example, "CA" will geocde to "California, USA". */
+					numCommas = address.match(/,/g).length;
+
+					/* A full street address will have at least 3 commas.  Alternate techniques involve fetching the address_components returned by Google Maps. That code looked even more ugly. */
+					if (numCommas >= 3) {
+
+						console.log("This is a valid address");
+						/* Replace the first comma found with a line-break */
+						address = address.replace(/, /, "\n");
+
+						/* Remove USA from the address (remove this, if this is important to you) */
+						address = address.replace(/, USA$/, "");
+						/*
+						// Set the textarea value to the geocoded address
+						$(element).val(address);
+
+						// Cache this latest result
+						$(element).data("LastAddressValidated", address);
+
+						// We have a valid geocoded address
+						$(element).data("IsValid", true);
+						*/
+					} else {
+						console.log("This is not a valid address");
+						/* Google Maps was able to geocode the address, but it wasn't specific enough (not enough commas) to be a valid street address. */
+						//$(element).data("IsValid", false);
+					}
+
+					// Otherwise the address is invalid
+				} else {
+					//$(element).data("IsValid", false);
+				}
+
+				// We're no longer in the midst of validating
+				//$(element).data("IsChecking", false);
+
+				// Get the parent form element for this address field
+				//var form = $(element).parents('form:first');
+
+				/* This code is being run after the validation for this field, if the form was being submitted before this validtor was called then we need to re-submit the form. */
+				if (1/*$(element).data("SubmitForm") == true*/) {
+					//form.submit();
+				} else {
+					// Re-validate this property so we can return the result.
+					//form.validate().element(element);
+				}
+				console.log("our address is: ", address);
+			});
 		}
 	};
 	return Geocoder;

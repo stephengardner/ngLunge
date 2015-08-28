@@ -1,71 +1,90 @@
-lungeApp.controller("NavbarNewController", ['MenuService', 'socket', '$state', '$rootScope', '$location', '$window', '$scope',
-	'$location', 'Auth', function(MenuService, socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
-	$scope.getCurrentUser = Auth.getCurrentUser;
+lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popover', 'MenuService', 'socket',
+	'$state', '$rootScope', '$location', '$window', '$scope',
+	'$location', 'Auth', function(TrainerFactory, $timeout, $popover, MenuService, socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
+		$scope.getCurrentUser = Auth.getCurrentUser;
 
-	$scope.isAdminPage = function(){
-		return $location.path().indexOf('admin') == 1;
-	};
-	console.log($location.path().indexOf("admin"));//.includes('admin'));
-	// check scrolled and do scope apply on home page scrolling
-	angular.element($window).bind("scroll", function() {
-		if($location.path() == "/"){
-			if (this.pageYOffset >= 100) {
-				$scope.scrolled = true;
-			} else {
-				$scope.scrolled = false;
+		$scope.$watch(function(){
+			return $state.current.name
+		}, function(toState, fromState){
+			$scope.isOnProfilePage = toState.indexOf('profile') != -1;
+			$scope.isOnAdminPage = toState.indexOf('admin') != -1;
+		});
+
+		$scope.showShareButton = function() {
+			return $scope.isOnProfilePage && TrainerFactory.isMe();
+		};
+		/*
+		$scope.isAdminPage = function(){
+			return $location.path().indexOf('admin') == 1;
+		};
+		*/
+		console.log($location.path().indexOf("admin"));//.includes('admin'));
+		// check scrolled and do scope apply on home page scrolling
+		angular.element($window).bind("scroll", function() {
+			if($location.path() == "/"){
+				if (this.pageYOffset >= 100) {
+					$scope.scrolled = true;
+				} else {
+					$scope.scrolled = false;
+				}
+				$scope.$apply();
 			}
-			$scope.$apply();
-		}
-	});
+		});
 
-	// check page and scrolled on page changes
-	$rootScope.$on('$locationChangeSuccess', function (event, next) {
+		// check page and scrolled on page changes
+		$rootScope.$on('$locationChangeSuccess', function (event, next) {
+			checkPageAndScrolled();
+		});
+
+		// check page and scrolled on load
 		checkPageAndScrolled();
-	});
 
-	// check page and scrolled on load
-	checkPageAndScrolled();
-
-	// helper function, check location path and scroll distance
-	function checkPageAndScrolled() {
-		if($location.path() == "/"){
-			if(window.pageYOffset < 100){
-				$scope.scrolled = false;
+		// helper function, check location path and scroll distance
+		function checkPageAndScrolled() {
+			if($location.path() == "/"){
+				if(window.pageYOffset < 100){
+					$scope.scrolled = false;
+				}
+				$rootScope.spaced = false;
 			}
-			$rootScope.spaced = false;
+			else {
+				$rootScope.spaced = true;
+				$scope.scrolled = true;
+			}
 		}
-		else {
-			$rootScope.spaced = true;
-			$scope.scrolled = true;
-		}
-	}
-	$scope.isLoggedIn = Auth.isLoggedIn;
-	$scope.isAdmin = Auth.isAdmin;
-	$scope.getCurrentUser = Auth.getCurrentUser;
-	$scope.getCurrentType = Auth.getCurrentType;
-
-	// when a login event is fired from a sibling controller, app.js broadcasts this in a route change
-	// since the navbar will not catch a route change because it typically doesn't repaint, we catch this event here
-	$scope.$on("login", function(){
-		console.log("CAUGHT LOGIN");
 		$scope.isLoggedIn = Auth.isLoggedIn;
-		console.log("Navbar login is now: ", Auth.isLoggedIn);
-		$scope.isLoggedIn = Auth.isLoggedIn;
-	})
+		$scope.isAdmin = Auth.isAdmin;
+		$scope.getCurrentUser = Auth.getCurrentUser;
+		$scope.getCurrentType = Auth.getCurrentType;
 
-	$scope.logout = function() {
-		Auth.logout();
-		$location.path('/login');
-	};
+		// when a login event is fired from a sibling controller, app.js broadcasts this in a route change
+		// since the navbar will not catch a route change because it typically doesn't repaint, we catch this event here
+		$scope.$on("login", function(){
+			console.log("CAUGHT LOGIN");
+			$scope.isLoggedIn = Auth.isLoggedIn;
+			console.log("Navbar login is now: ", Auth.isLoggedIn);
+			$scope.isLoggedIn = Auth.isLoggedIn;
+		})
 
-	$scope.$on("$destroy", function(){
-		alert("destroying the navbar scope");
-		socket.unsync.user("trainer", Auth.getCurrentUser());
-	});
-	/*
-	socket.syncLogin('trainer', function(event, newTrainer) {
-		console.log("LOGIN EVENT, NEW TRAINER: ", newTrainer);
-	});
-	*/
+		$scope.logout = function() {
+			Auth.logout();
+			$location.path('/login');
+		};
 
-}]);
+		$scope.$on("$destroy", function(){
+			alert("destroying the navbar scope");
+			socket.unsync.user("trainer", Auth.getCurrentUser());
+		});
+
+		// Bind the share button popover
+		$scope.$on('$includeContentLoaded', function(){
+			var sharePopover = $popover(angular.element("#share-popover"), {
+				contentTemplate: 'app/popovers/navbar/share/popover.tpl.html',
+				html: true,
+				trigger: 'click',
+				animation : 'am-flip-x',
+				placement : 'bottom',
+				autoClose: true
+			});
+		})
+	}]);

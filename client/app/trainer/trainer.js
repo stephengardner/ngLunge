@@ -38,14 +38,15 @@ angular.module('ngLungeFullStack2App')
 					'registration@main.trainer.register' : {
 						controller : "TrainerRegisterPasswordController",
 						resolve : {
-							resolvedRegistrationResource : ['Registration', '$state', '$http', '$stateParams', '$q', function(Registration, $state, $http, $stateParams, $q){
+							resolvedTrainerResource : ['Registration', '$state', '$http', '$stateParams', '$q', function(Registration, $state, $http, $stateParams, $q){
 								var deferred = $q.defer();
-								Registration.get({ id : $stateParams.authenticationHash}, {}, function(res){
-									console.log("RES:" , res);
-									deferred.resolve(res);
-								}, function(err){
-									deferred.resolve(err);
-								});
+								$http.get('api/registrations/getTrainerByAuthenticationHash/'
+								+  $stateParams.authenticationHash)
+									.success(function(response) {
+										deferred.resolve(response);
+									}).error(function(err){
+										deferred.resolve(err);
+									})
 								return deferred.promise;
 							}]
 						},
@@ -58,6 +59,15 @@ angular.module('ngLungeFullStack2App')
 				views : {
 					'registration@main.trainer.register' : {
 						templateUrl : "app/trainer/register/steps/validation/validation.partial.html"
+					}
+				}
+			}).
+			state('main.trainer.edit-profile', {
+				url: '/info',
+				views : {
+					'@main' : {
+						controller : "TrainerInfoController",
+						templateUrl : "app/trainer/public/info/trainer-info.html"
 					}
 				}
 			}).

@@ -3,6 +3,7 @@
  */
 'use strict';
 
+/*
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var util = require('util');
@@ -68,7 +69,6 @@ var socketio = require('socket.io')(server, {
 });
 
 app.socketio = socketio;
-//app.io = socketio;
 app.sockets = {};
 var socketioJwt = require('socketio-jwt');
 // create a MongoStore for session storage
@@ -92,3 +92,27 @@ require('./config/socketio')(socketio, server);
 // Configurations
 require('./config/express')(app);
 require('./routes')(app);
+var $q = require('q');
+var GoogleMapApi = require('googlemaps');
+var util = require('util');
+var Geocoder = require('./components/geocoder')($q, GoogleMapApi);
+var Trainer = require("./api/trainer/trainer.model");
+var LocationProcessor = require("./components/location-processor/index.js")();
+Trainer.findOne({email : "opensourceaugie@gmail.com"}).exec(function(err, trainer){
+	LocationProcessor.parseTrainer(trainer).then(function(){
+	}).catch(function(err){
+		console.log(err);
+	})
+});
+*/
+
+require("./server.js");
+/*
+console.log("\n\n\n--------------------------------------------------\nGeocoder:");
+
+Geocoder.init().then(function(){
+	Geocoder.geocodeObjectAddress({address_line_1 : "17501 country view way", city : "ashton"});
+});
+
+console.log("\n\n\n--------------------------------------------------\nGeocoder:");
+*/

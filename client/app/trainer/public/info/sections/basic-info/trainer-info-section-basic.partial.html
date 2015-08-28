@@ -1,0 +1,92 @@
+<form id="basicInfo" ng-controller="TrainerInfoSectionBasicInfoController" name="basicInfo" ng-submit="submit(basicInfo)" class="form-horizontal" ng-class="{'editing' : editing}">
+    <fieldset ng-disabled="ajax.busy">
+        <div class="module sm flat-white">
+            <header>
+                <h1>Basic Info</h1>
+                <div class="edit-button" ng-click="toggleEditing(basicInfo)">
+                    <i class="fa fa-edit"></i>
+                </div>
+            </header>
+            <!-- Begin Basic Info Form -->
+            <div class="group has-margin">
+                <!-- Begin Name -->
+                <div class="form-group">
+                    <label for="name" class="info-horizontal-label">
+                        Name:
+                    </label>
+                    <div class="info-horizontal-value">
+                        <div ng-if="!editing">
+                            {{trainerFactory.trainer.name.full}}
+                        </div>
+                        <div ng-if="editing" class="info-horizontal-value-input">
+                            <input ng-change="removeMongooseError(basicInfo, 'name')" name="name" id="name" type="text" class="form-control" ng-model="trainerFactory.trainerEditing.name.full"/>
+                            <div class="form-error" ng-show="errors.name"><span>{{errors.name}}</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Begin Gender -->
+                <div class="form-group has-aside" ng-class="{'editing' : editing}">
+                    <label for="gender" class="info-horizontal-label">
+                        Gender:
+                    </label>
+                    <!-- Gender input -->
+                    <div class="info-horizontal-value">
+                        <!-- Gender display -->
+                        <div class="gender" ng-if="!editing">
+                            {{trainerFactory.trainer.gender.value || '-'}}
+                        </div>
+                        <!-- Gender editing -->
+                        <div ng-if="editing" class="info-horizontal-value-input">
+                            <select class="form-control" name="gender" id="gender" ng-model="trainerFactory.trainerEditing.gender.value">
+                                <option value="none">Not specified</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Gender privacy -->
+                    <div class="info-horizontal-aside" privacy-popover active="{{editing}}" model-to-edit="gender">
+                        <i ng-if="editing" class="fa" ng-class="{'fa-globe' : trainerFactory.trainerEditing.gender.privacy == 'public', 'fa-lock' : trainerFactory.trainerEditing.gender.privacy == 'private'}"></i>
+                        <i ng-if="!editing" class="fa" ng-class="{'fa-globe' : trainerFactory.trainer.gender.privacy == 'public', 'fa-lock' : trainerFactory.trainer.gender.privacy == 'private'}"></i>
+                    </div>
+                </div>
+
+                <!-- Trainer Birthday -->
+                <div class="form-group has-aside">
+                    <label for="birtdhay" class="info-horizontal-label">
+                        Birthday:
+                    </label>
+                    <!-- Birthday input -->
+                    <div class="info-horizontal-value">
+                        <!-- Birthday display -->
+                        <div class="gender" ng-if="!editing">
+                            {{trainerFactory.trainer.birthday.value || '-'}}
+                        </div>
+                        <!-- Birthday editing -->
+                        <div ng-if="editing" class="info-horizontal-value-input">
+                            <span id="birtdhay" data-abc-birthday-picker="{minAge : 18, dateFormat : 'middleEndian', onChange: onBirthdayChange, hiddenDate : true}" data-ng-model="trainerFactory.trainerEditing.birthday.value"></span>
+                        </div>
+                    </div>
+                    <!-- Birthday privacy -->
+                    <div class="info-horizontal-aside" privacy-popover active="{{editing}}" model-to-edit="birthday">
+                        <i ng-if="editing" class="fa" ng-class="{'fa-globe' : trainerFactory.trainerEditing.birthday.privacy == 'public', 'fa-lock' : trainerFactory.trainerEditing.birthday.privacy == 'private'}"></i>
+                        <i ng-if="!editing" class="fa" ng-class="{'fa-globe' : trainerFactory.trainer.birthday.privacy == 'public', 'fa-lock' : trainerFactory.trainer.birthday.privacy == 'private'}"></i>
+                    </div>
+                </div>
+
+                <!-- Basic Info Save Buttons -->
+                <div class="form-group" ng-if="editing">
+                    <div class="col-xxs-24">
+                        <button type="submit" class="btn-action btn-primary" >
+                            Save Changes
+                        </button>
+                        <div class="btn-action btn-danger" ng-click="toggleEditing(basicInfo)">
+                            Cancel
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>

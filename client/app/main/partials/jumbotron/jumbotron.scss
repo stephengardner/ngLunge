@@ -1,9 +1,32 @@
 .jumbo-main {
+	position:relative;
     background:black;
 	text-align:center;
     @include respond-to(xs){
         min-height:300px!important;
     }
+	.welcome-wrapper {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+	}
+	.welcome-container {
+		display:table;
+		height:100%;
+		vertical-align:middle;
+		width:100%;
+	}
+	.welcome-cell {
+		display:table-cell;
+		vertical-align:middle;
+		h1 {
+			font-size:2.6em;
+			color:white;
+		}
+		.buttons {
+			margin-top:3rem;
+		}
+	}
 	.callout {
 		padding:.2em 0em;
 		background: rgba(255,255,255,.8);
@@ -58,7 +81,7 @@
 
 .bg-full {
 	min-height:500px;
-	background:url('/assets/images/man-back.png');
+	background:url('/assets/images/man-back-5.png');
 	background-repeat:no-repeat;
 	background-size:cover;
 	background-position:center;

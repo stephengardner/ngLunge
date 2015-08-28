@@ -7,9 +7,22 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/user/user.model');
-var Trainer = require('../api/trainer/trainer.model');
-var Registration = require('../api/registration/registration.model');
 var validateJwt = expressJwt({ secret: config.secrets.session });
+
+var Trainer, Registration;
+module.exports = function(app) {
+	Trainer = app.models.Trainer;
+	Registration = app.models.Registration;
+	var exports = {};
+	exports.isAuthenticated = isAuthenticated;
+	exports.isTrainerAuthenticated = isTrainerAuthenticated;
+	exports.hasRole = hasRole;
+	exports.signToken = signToken;
+	exports.setTokenCookie = setTokenCookie;
+	exports.isValidRegistration = isValidRegistration;
+	exports.isTrainerMe = isTrainerMe;
+	return exports;
+}
 
 /**
  * Attaches the user object to the request if authenticated
@@ -19,17 +32,16 @@ function isValidRegistration(){
 	return compose()
 		// Attach user to request
 		.use(function(req, res, next) {
-			console.log("body id: ", req.body.id, req.body._id);
-			console.log("body id: ", req.params.id, req.params._id);
-			Registration.findById(req.params.id, function (err, registration) {
+			console.log("body id: ", req.params.id);
+			Trainer.findOne({'registration.authenticationHash' : req.params.id }, function (err, trainer) {
 				if (err) return next(err);
-				if (!registration){
-					console.log("shit", registration);
+				if (!trainer){
+					console.log("shit", trainer);
 					return res.send("That authorization link has already been used");
 				}
 
-				req.registration = registration;
-				console.log("isValidRegistration() FOUND A REGISTRATION:", registration, " and set it as req.registration");;
+				req.trainer = trainer;
+				console.log("isValidRegistration() FOUND A REGISTRATION:", trainer, " and set it as req.registration");
 				next();
 			});
 		});
@@ -89,7 +101,6 @@ var optionalJwt = function(options) {
 			}
 		}
 
-		console.log("=+= req.headers:: ", req.headers);
 		if (req.headers && req.headers.authorization) {
 			var parts = req.headers.authorization.split(' ');
 			if (parts.length == 2) {
@@ -106,9 +117,7 @@ var optionalJwt = function(options) {
 			return next();//new UnauthorizedError('credentials_required', { message: 'No Authorization header was found' }));
 		}
 
-		console.log("=+= token before jwt.verify: ", token);
 		jwt.verify(token, options.secret, options, function(err, decoded) {
-			console.log("=+= jq.verify verified me as: ", decoded);
 			if (err) return next();//new UnauthorizedError('invalid_token', err));
 
 			req.user = decoded;
@@ -119,14 +128,14 @@ var optionalJwt = function(options) {
 
 // used for profile
 function isTrainerMe() {
-	console.log(">> isTrainerMe()");
 	return compose()
 		// Validate jwt
 		.use(function(req, res, next) {
-			console.log("------------------------------------");
+			/*
+			console.log("-------------BEGIN COOKIES isTrainerMe() .use()-----------------------");
 			console.log(req.cookies);
-			console.log("------------------------------------");
-			console.log(">> isTrainerMe inside use1()");
+			console.log("-------------END COOKIES-----------------------");
+			 */
 			// allow access_token to be passed through query parameter as well
 			if(req.params.accessToken) {
 				req.headers.authorization = 'Bearer ' + req.params.accessToken;
@@ -134,18 +143,12 @@ function isTrainerMe() {
 			else if(req.query && req.query.hasOwnProperty('access_token')) {
 				req.headers.authorization = 'Bearer ' + req.query.access_token;
 			}
-			/*
-			else if(req.cookies && req.cookies.token){
-				console.log("*** WARNING ***, using cookies to authenticate the user.  This is NOT what the app came prepackaged to do!");
-				req.headers.authorization = 'Bearer ' + req.cookies.token;
-			}
-			*/
 			try{
 				var optionalVerifyJwt = optionalJwt({ secret: config.secrets.session });
 				optionalVerifyJwt(req, res, next); // THIS is where req.user gets added!
 			}
 			catch(err) {
-				console.log("Request is: ", req);
+				console.log("ERROR!!!\n-------------------\nRequest is: ", req);
 				console.log("config.secrets is: ", config.secrets);
 				console.log("The err:",err);
 				console.log("WWWW");
@@ -153,10 +156,7 @@ function isTrainerMe() {
 		})
 		// Attach user to request
 		.use(function(req, res, next) {
-			console.log(">> isTrainerMe inside use2()");
-			console.log("Req.user is: ", req.user);
 			if(req.user) {
-				console.log (">> req.user is: ", req.user);
 				Trainer.findById(req.user._id, function (err, trainer) {
 					if (err) return next(err);
 					else {
@@ -181,7 +181,6 @@ function isTrainerAuthenticated() {
 	return compose()
 		// Validate jwt
 		.use(function(req, res, next) {
-			console.log("!!!!!!!!!!CHEKCING AUTH.SERVICE IS AUTH()!!!!!!!!!!!!!!!!!!");
 			// allow access_token to be passed through query parameter as well
 			if(req.query && req.query.hasOwnProperty('access_token')) {
 				req.headers.authorization = 'Bearer ' + req.query.access_token;
@@ -212,12 +211,10 @@ function isAuthenticated() {
   return compose()
     // Validate jwt
     .use(function(req, res, next) {
-		  //console.log("!!!!!!!!!!CHEKCING AUTH.SERVICE IS AUTH()!!!!!!!!!!!!!!!!!!");
       // allow access_token to be passed through query parameter as well
       if(req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
       }
-		  console.log("REQ BODY:", req.body);
 		  req.body.type = "trainer";
       validateJwt(req, res, next); // THIS is where req.user gets added!
     })
@@ -279,11 +276,3 @@ function setTokenCookie(req, res) {
 	res.cookie('type', JSON.stringify(type));
   res.redirect('/');
 }
-
-exports.isAuthenticated = isAuthenticated;
-exports.isTrainerAuthenticated = isTrainerAuthenticated;
-exports.hasRole = hasRole;
-exports.signToken = signToken;
-exports.setTokenCookie = setTokenCookie;
-exports.isValidRegistration = isValidRegistration;
-exports.isTrainerMe = isTrainerMe;

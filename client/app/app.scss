@@ -1,4 +1,4 @@
- $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+$icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
 $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'styles/_variables.scss';
 @import 'styles/mixins/_mixins.scss';
@@ -7,6 +7,9 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'styles/mixins/_responsive-utlities.scss';
 @import 'font-awesome/scss/font-awesome';
 
+@font-face { font-family: "Museo Sans"; src: url('/assets/fonts/museo-sans-300-webfont.ttf'); font-weight:normal; font-style:normal;}
+@font-face { font-family: "Museo Sans"; src: url('/assets/fonts/museo-sans-300-italic-webfont.ttf'); font-weight:normal; font-style:italic;}
+@font-face { font-family: "Museo Sans"; src: url('/assets/fonts/museo-sans-700-webfont.ttf'); font-weight:bold; font-style:normal; }
 /**
  * App-wide Styles
  */
@@ -24,9 +27,6 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 
 // Component styles are injected through grunt
 // injector
-@import 'account/account.scss';
-@import 'account/dashboard/dashboard.scss';
-@import 'account/trainer/locations/trainer-locations.scss';
 @import 'admin/admin.scss';
 @import 'admin/trainers/list/admin-trainers-list.scss';
 @import 'animations.scss';
@@ -34,27 +34,36 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'main/partials/find-section/find-section.scss';
 @import 'main/partials/jumbotron/jumbotron.scss';
 @import 'main/partials/trainers-home/category-home.scss';
+@import 'popovers/profile/info/privacy/privacy-popover.scss';
 @import 'styles/_buttons.scss';
 @import 'styles/_grid.scss';
+@import 'styles/_modals.scss';
 @import 'styles/_variables.scss';
 @import 'styles/alerts.scss';
 @import 'styles/bootstrap-overrides.scss';
 @import 'styles/centered-tables.scss';
 @import 'styles/forms.scss';
+@import 'styles/google-map.scss';
 @import 'styles/menu.scss';
 @import 'styles/mixins/_grid-framework.scss';
 @import 'styles/mixins/_mixins.scss';
 @import 'styles/mixins/_responsive-utlities.scss';
+@import 'styles/popovers.scss';
 @import 'styles/xeditable.scss';
 @import 'trainer/account/certifications/certifications.scss';
+@import 'trainer/account/locations/trainer-locations.scss';
+@import 'trainer/account/trainer-account.scss';
+@import 'trainer/public/info/trainer-info.scss';
 @import 'trainer/public/profile/components/certifications/profile-certifications.scss';
 @import 'trainer/public/profile/components/trainer-basic-info/trainer-basic-info.scss';
 @import 'trainer/public/profile/profile-picture.scss';
 @import 'trainer/public/profile/profile.scss';
 @import 'trainer/register/register.scss';
-@import 'trainer/trainer.scss';
 @import 'alert-message/alert-message.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';
+@import 'specialties/specialties.scss';
+@import 'trainer-map/locations.scss';
+@import 'trainer-map/manual-location/trainer-manual-location.scss';
 // endinjector

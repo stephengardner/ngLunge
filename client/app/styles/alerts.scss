@@ -1,10 +1,27 @@
 .alerts {
 	padding-bottom:1em;
+	// how the alerts are compiled means this is the next alert
+	div.ng-scope ~ div.ng-scope {
+		margin-top:1rem;
+	}
 }
 .alert {
+	.welcome-sub {
+
+	}
+	.notemplate-body {
+		margin-top:.5rem;
+	}
 	&.info {
 		background: #8ACBE8;
 		color:#34537B;
+		box-shadow: -3px 3px #8EB7CA;
+	}
+	&.success {
+		//box-shadow: -3px 3px #8ACDA5;
+	}
+	&.success {
+		background-color:$brand-success;
 	}
 	&.error {
 		color: #811D1D;

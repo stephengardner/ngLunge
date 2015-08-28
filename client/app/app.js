@@ -1,54 +1,60 @@
-var lungeApp = angular.module('ngLungeFullStack2App', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'btford.socket-io',
-  'ui.router',
-  'ui.bootstrap',
-		'ui.utils',
-		'xeditable',
-		'geolocation',
-		'uiGmapgoogle-maps',
-		'ngAnimate',
-		'angularFileUpload',
-		'duScroll'
+var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
+	'ngCookies',
+	'ngResource',
+	'ngSanitize',
+	'btford.socket-io',
+	'ui.router',
+	'ui.bootstrap.tabs',
+	'ui.bootstrap.tpls',
+	'ui.bootstrap.accordion',
+	'ui.bootstrap.typeahead',
+	'ngAnimate',
+	'mgcrea.ngStrap',
+	'ui.utils',
+	'xeditable',
+	'geolocation',
+	'uiGmapgoogle-maps',
+	'angularFileUpload',
+	'duScroll',
+	'abcBirthdayPicker',
+	'ngDialog',
+	'ngLodash'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
-    $urlRouterProvider
-      .otherwise('/');
+	.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+		$urlRouterProvider
+			.otherwise('/');
 
-    $locationProvider.html5Mode(true);
-    $httpProvider.interceptors.push('authInterceptor');
-	$httpProvider.defaults.headers.delete = { "Content-Type": "application/json;charset=utf-8" };
-  })
-
-  .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
+		$locationProvider.html5Mode(true);
+		$httpProvider.interceptors.push('authInterceptor');
+		$httpProvider.defaults.headers.delete = { "Content-Type": "application/json;charset=utf-8" };
+	})
+	.factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
 		console.log("cookiestore:", $cookieStore.get("token"));
-    return {
-      // Add authorization token to headers
-      request: function (config) {
-        config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
-        }
-        return config;
-      },
+		return {
+			// Add authorization token to headers
+			request: function (config) {
+				config.headers = config.headers || {};
+				if ($cookieStore.get('token')) {
+					config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+				}
+				return config;
+			},
 
-      // Intercept 401s and redirect you to login
-      responseError: function(response) {
-	      if(response.status === 401) {
-		      $location.path('/login');
-		      // remove any stale tokens
-		      $cookieStore.remove('token');
-		      $cookieStore.remove('type');
-		      return $q.reject(response);
-	      }
-        else {
-          return $q.reject(response);
-        }
-      }
-    };
-  }).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApiProvider) {
+			// Intercept 401s and redirect you to login
+			responseError: function(response) {
+				if(response.status === 401) {
+					$location.path('/login');
+					// remove any stale tokens
+					$cookieStore.remove('token');
+					$cookieStore.remove('type');
+					return $q.reject(response);
+				}
+				else {
+					return $q.reject(response);
+				}
+			}
+		};
+	}).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApiProvider) {
 		GoogleMapApiProvider.configure({
 			//    key: 'your api key',
 			v: '3.13',
@@ -57,7 +63,8 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 
 	}])
 
-  .run(function ($rootScope, $location, Auth, editableOptions) {
+	.run(function ($rootScope, $templateCache, $location, Auth, editableOptions) {
+		FastClick.attach(document.body);
 		// works, will login or logout the user if their token changes, this is not for sockets, socket auth
 		// is handled within auth.
 		$rootScope.$watch(function(){
@@ -84,7 +91,7 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 			Auth.logout();
 			$location.path('/login');
 		};
-    // Redirect to login if route requires auth and you're not logged in
+		// Redirect to login if route requires auth and you're not logged in
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			Auth.isLoggedInAsync(function(loggedIn) {
 				console.log("app.js rootScope stateChangeStart.  loggedIn = ", loggedIn);
@@ -98,4 +105,7 @@ var lungeApp = angular.module('ngLungeFullStack2App', [
 			});
 
 		});
-  });
+	});
+myApp.controller("testController", function($scope){
+	$scope.value = 'test';
+});

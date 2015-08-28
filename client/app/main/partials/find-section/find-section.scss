@@ -3,7 +3,7 @@
 	color:white;
 	.bubble {
 		text-align: center;
-		@extend .col-xs-4;
+		@extend .col-xs-8;
 		@include respond-to(xxs) {
 			~ .bubble {
 				margin-top:2em;

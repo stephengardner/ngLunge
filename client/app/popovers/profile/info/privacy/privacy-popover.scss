@@ -1,0 +1,30 @@
+.popover-privacy {
+	.popover-body {
+		.privacy-row {
+			//padding:1em;
+			cursor: pointer;
+			&:hover {
+				background:rgba(0,0,0,.1);
+			}
+			i {
+				font-size:1.7em;
+			}
+			span {
+				font-size:1.2em;
+			}
+			.privacy-icon {
+				display: inline-block;
+				vertical-align:middle;
+				padding:.5em 1rem;
+			}
+			.privacy-text {
+				display: inline-block;
+				vertical-align:middle;
+				padding:.5em 1rem;
+			}
+			~ .privacy-row {
+				border-top:1px solid #ededed;
+			}
+		}
+	}
+}

@@ -9,7 +9,6 @@ var fs = require('fs');
 var config = require('./config/environment');
 var Knox = require('knox');
 var AWS = require('aws-sdk');
-console.log("THE CONFIG IS:::::::::::::::::::::::", config);
 AWS.config.region = 'sa-east-1';
 //console.log("AWS: ", AWS.config);
 var knoxConfig = {
@@ -20,21 +19,25 @@ var knoxConfig = {
 Knox.aws = Knox.createClient(knoxConfig);
 var crypto = require("crypto");
 
-module.exports = function(app) {
+module.exports = function(express_web, app) {
 	// Insert routes below
-	app.use('/api/things', require('./api/thing'));
-	app.use('/api/users', require('./api/user'));
-	app.use('/api/trainers', require('./api/trainer'));
-	app.use('/api/aws', require('./api/aws'));
-	app.use('/auth', require('./auth'));
-	app.use('/api/registrations', require('./api/registration'));
-	app.use('/api/certifications', require('./api/certification'));
-	app.use('/api/certification-types', require('./api/certification-type'));
+	//express_web.use('/api/things', require('./api/thing'));
+	//express_web.use('/api/users', require('./api/user'));
+	express_web.use('/api/trainers', require('./api/trainer')(app));
+	//express_web.use('/api/aws', require('./api/aws'));
+	express_web.use('/auth', require('./auth')(app));
+	express_web.use('/api/registrations', require('./api/registration')(app));
+	express_web.use('/api/certifications', require('./api/certification')(app));
+	express_web.use('/api/certification-types', require('./api/certification-type')(app));
+	express_web.use('/api/activities', require('./api/activity')(app));
+	express_web.use('/api/specialties', require('./api/specialty')(app));
+	express_web.use('/api/aws', require('./api/aws')(app));
 
 	// All undefined asset or api routes should return a 404
-	app.route('/:url(trainer/api|auth|components|app|bower_components|assets)/*')
+	express_web.route('/:url(trainer/api|auth|components|app|bower_components|assets)/*')
 		.get(errors[404]);
 
+	/*
 	app.post('/uploads2', function(req, res, next) {
 		var fstream;
 		req.pipe(req.busboy);
@@ -113,7 +116,7 @@ module.exports = function(app) {
 
 				}
 			});
-
+			*/
 
 			/*
 			 WORKING:
@@ -155,11 +158,13 @@ module.exports = function(app) {
 			 //res.redirect('back');
 			 });
 			 */
+	/*
 		});
 	});
+	*/
 	// All other routes should redirect to the index.html
-	app.route('/*')
+	express_web.route('/*')
 		.get(function(req, res) {
-			res.sendfile(app.get('appPath') + '/index.html');
+			res.sendFile('/index.html', { root : express_web.get('appPath') });
 		});
 };

@@ -1,16 +1,14 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./aws.controller');
 
-var router = express.Router();
-/*
- router.get('/policy', controller.getS3Policy);
- router.post('/upload', controller.uploadToFS);
- router.put('/upload', controller.uploadToFS);
- */
-router.post('/upload', controller.upload);
-router.put('/upload', controller.upload);
-router.post('/crop', controller.crop);
+module.exports = function createRouter(app) {
+	var controller = require('./aws.controller')(app);
+	var auth = require('../../auth/auth.service')(app);
+	var router = express.Router();
 
-module.exports = router;
+	router.post('/upload', controller.upload);
+	router.put('/upload', controller.upload);
+	router.post('/crop', controller.crop);
+	return router;
+}

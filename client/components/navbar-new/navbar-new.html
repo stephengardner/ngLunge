@@ -1,29 +1,35 @@
 <div>
-    <div class="container">
+    <div class="container relative">
         <div class="brand">
             <a ui-sref="main.home">
-                <i class="fa fa-google-wallet"></i> Lunge
+                <i class="fa fa-google-wallet"></i>
+                <span class="brand-text">Lunge</span>
             </a>
         </div>
         <div class="buttons" ng-class="{'scrolled' : scrolled}">
             <a ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.login" class="btn btn-login">
                 Log in
             </a>
-            <div ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.signup"  class="btn btn-signup">
+            <div ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.trainer.register.email"  class="btn btn-signup">
                 Sign up
             </div>
-            <a ui-sref="main.admin" ng-show="isAdmin()" ui-sref-active="active" ng-class="{active: isAdminPage()}" class="btn btn-info">
+            <a ui-sref="main.admin" ng-show="isAdmin()" ui-sref-active="active" ng-class="{active: isOnAdminPage}" class="btn btn-info">
                 Admin
             </a>
+            <div class="btn btn-share" id="share-popover" ng-show="showShareButton()">
+                <i class="fa fa-share-alt"></i>
+            </div>
             <a ng-if="getCurrentType() == 'user'" ui-sref="main.dashboard" ng-show="isLoggedIn()" class="btn btn-username">
-                {{getCurrentUser().name.full ? getCurrentUser().name.full : getCurrentUser().name}}
+                {{getCurrentUser().name.first ? getCurrentUser().name.first : getCurrentUser().name}}
             </a>
-            <a ng-if="getCurrentType() == 'trainer'" ui-sref="profilePage({urlName : getCurrentUser().urlName})" ng-show="isLoggedIn()" ui-sref-active="active" class="btn btn-username">
-                {{getCurrentUser().name.full ? getCurrentUser().name.full : getCurrentUser().name}}
+            <a ng-if="getCurrentType() == 'trainer'" ui-sref="profilePage({urlName : getCurrentUser().urlName})"
+               ng-show="isLoggedIn()" ui-sref-active="active" class="profile-picture-nav-button">
+                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
             </a>
             <span ng-click="toggle()" ng-show="isLoggedIn()" ng-controller="MenuButtonController" class="menu-button">
                 <i class="fa fa-bars"></i>
             </span>
         </div>
+
     </div>
 </div>

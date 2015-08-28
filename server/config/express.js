@@ -1,7 +1,3 @@
-/**
- * Express configuration
- */
-
 'use strict';
 
 var express = require('express');
@@ -16,44 +12,46 @@ var path = require('path');
 var config = require('./environment');
 var passport = require('passport');
 var session = require('express-session');
+
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
 
-module.exports = function(app) {
-  var env = app.get('env');
+module.exports = function(express_web, app) {
+	var env = express_web.get('env');
+	express_web.set('views', config.root + '/server/views');
+	express_web.engine('html', require('ejs').renderFile);
+	express_web.set('view engine', 'html');
+	express_web.use(compression());
+	express_web.use(bodyParser.urlencoded({ extended: false }));
+	express_web.use(bodyParser.json());
+	express_web.use(methodOverride());
+	express_web.use(cookieParser());
+	express_web.use(passport.initialize());
 
-  app.set('views', config.root + '/server/views');
-  app.engine('html', require('ejs').renderFile);
-  app.set('view engine', 'html');
-  app.use(compression());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
-  app.use(methodOverride());
-  app.use(cookieParser());
-  app.use(passport.initialize());
+	// Persist sessions with mongoStore
+	// We need to enable sessions for passport twitter because its an oauth 1.0 strategy
 
-  // Persist sessions with mongoStore
-  // We need to enable sessions for passport twitter because its an oauth 1.0 strategy
-  app.use(session({
-    secret: config.secrets.session,
-    resave: true,
-    saveUninitialized: true,
-    store: new mongoStore({ mongoose_connection: mongoose.connection })
-  }));
-  
-  if ('production' === env) {
-    app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
-    app.use(express.static(path.join(config.root, 'public')));
-    app.set('appPath', config.root + '/public');
-    app.use(morgan('dev'));
-  }
+	express_web.use(session({
+		secret: config.secrets.session,
+		resave: true,
+		saveUninitialized: true,
+		store: new mongoStore({ mongoose_connection: app.connections.db })
+	}));
 
-  if ('development' === env || 'test' === env) {
-    app.use(require('connect-livereload')());
-    app.use(express.static(path.join(config.root, '.tmp')));
-    app.use(express.static(path.join(config.root, 'client')));
-    app.set('appPath', 'client');
-    app.use(morgan('dev'));
-    app.use(errorHandler()); // Error handler - has to be last
-  }
+
+	if ('production' === env) {
+		express_web.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
+		express_web.use(express.static(path.join(config.root, 'public')));
+		express_web.set('appPath', config.root + '/public');
+		express_web.use(morgan('dev'));
+	}
+
+	if ('development' === env || 'test' === env) {
+		express_web.use(require('connect-livereload')());
+		express_web.use(express.static(path.join(config.root, '.tmp')));
+		express_web.use(express.static(path.join(config.root, 'client')));
+		express_web.set('appPath', 'client');
+		express_web.use(morgan('dev'));
+		//express_web.use(errorHandler()); // Error handler - has to be last
+	}
 };

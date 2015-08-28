@@ -23,7 +23,7 @@ Registration.find({}).remove(function(){
 Trainer.find({}).remove(function() {
 	Trainer.create({
 		name : {first : "Augie", last : "Gardner"},
-		location : {city : "Washington", state : "DC", zipcode : "20090"},
+		location : {city : "Washington", state : "DC", zipcode : "20090", coords: { lat : 0, lon : 0}},
 		type : 'in-home',
 		email : 'augdog9110@gmail.com',
 		profile_picture : {
@@ -34,7 +34,7 @@ Trainer.find({}).remove(function() {
 		password : "test12"
 	},{
 		name : {first : "Paul2", last : "Murskov"},
-		location : {city : "Washington", state : "DC", zipcode : "20090"},
+		location : {city : "Washington", state : "DC", zipcode : "20090", coords: { lat : 0, lon : 0}},
 		type : 'in-home',
 		email : 'augdog9112@gmail.com',
 		profile_picture : {
@@ -45,7 +45,7 @@ Trainer.find({}).remove(function() {
 		password : "test12"
 	},{
 		name : {first : "Paul3", last : "Murskov"},
-		location : {city : "Washington", state : "DC", zipcode : "20090"},
+		location : {city : "Washington", state : "DC", zipcode : "20090", coords: { lat : 0, lon : 0}},
 		type : 'in-home',
 		email : 'augdog9113@gmail.com',
 		profile_picture : {
@@ -56,7 +56,7 @@ Trainer.find({}).remove(function() {
 		password : "test12"
 	},{
 		name : {first : "Paul4", last : "Murskov"},
-		location : {city : "Washington", state : "DC", zipcode : "20090"},
+		location : {city : "Washington", state : "DC", zipcode : "20090", coords: { lat : 0, lon : 0}},
 		type : 'in-home',
 		email : 'augdog9114@gmail2.com',
 		profile_picture : {

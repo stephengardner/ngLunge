@@ -2,13 +2,13 @@
 'use strict';
 
 angular.module('ngLungeFullStack2App')
-	.factory('socket', function(Auth, socketFactory) {
-
+	.factory('socket', function(Auth, socketFactory, $templateCache) {
 		// socket.io now auto-configures its connection when we ommit a connection url
 		var ioSocket = io('', {
 			// Send auth token on connection, you will need to DI the Auth service above
-			query: 'token=' + Auth.getToken()
-			,path: '/socket.io-client'
+			query: 'token=' + Auth.getToken(),
+			path: '/socket.io-client',
+			transports: ['websocket'] // ON PAAS (heroku) we cannot use Polling
 		});
 
 		var socket = socketFactory({

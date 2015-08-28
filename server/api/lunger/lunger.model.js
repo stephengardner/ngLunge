@@ -48,7 +48,7 @@ LungerScheme
 	.pre('save', function(next) {
 		if (!this.isNew) return next();
 
-		if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1)
+		if (this.registration && this.registration.verified && !validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1)
 			next(new Error('Invalid password'));
 		else
 			next();

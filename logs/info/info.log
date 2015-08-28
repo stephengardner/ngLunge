@@ -1,0 +1,126 @@
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:16:37.085Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:16:37.085Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:16:37.085Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:16:37.132Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:16:37.132Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:16:37.132Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:16:37.210Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:16:37.210Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:16:38.193Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:18:25.701Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:18:25.704Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:18:25.705Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:18:25.766Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:18:25.766Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:18:25.767Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:18:25.855Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:18:25.855Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:18:26.723Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:19:37.444Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:19:37.444Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:19:37.444Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:19:37.701Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:19:37.701Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:19:37.701Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:19:37.794Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:19:37.794Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:19:42.452Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:20:39.042Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:20:39.057Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:20:39.057Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:20:39.182Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:20:39.182Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:20:39.182Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:20:39.557Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:20:39.557Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:20:41.425Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:20:58.651Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:20:58.657Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:20:58.657Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:20:58.731Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:21:22.523Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:21:22.523Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:21:22.523Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:21:22.570Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:21:41.802Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:21:41.802Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:21:41.802Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:21:41.864Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:21:41.864Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:21:41.864Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:21:41.989Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:21:41.989Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:21:43.737Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:22:19.379Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:22:19.379Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:22:19.379Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:22:19.462Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:22:19.462Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:22:19.462Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:22:19.568Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:22:19.568Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:22:20.646Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:22:44.588Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:22:44.588Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:22:44.588Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:22:44.651Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:23:07.346Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:23:07.349Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:23:27.587Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:23:27.587Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:23:27.587Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:23:27.633Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:24:03.269Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:24:03.269Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:24:03.269Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:24:03.316Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:24:03.316Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:24:03.316Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:24:03.431Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:24:03.431Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:24:04.512Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:24:48.991Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:24:48.991Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:24:49.006Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:24:49.069Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:24:49.069Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:24:49.069Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:24:49.224Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:24:49.224Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:24:51.025Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:28:09.952Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:28:09.952Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:28:09.952Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:28:09.998Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:28:09.998Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:28:09.998Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:28:10.061Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:28:10.061Z"}
+{"type":"info","msg":"listening","port":61663,"level":"info","message":"","timestamp":"2015-08-04T20:28:11.034Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:28:38.136Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:28:38.152Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:28:38.152Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:28:38.215Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:28:38.215Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:28:38.215Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:28:38.355Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:28:38.355Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:28:39.511Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:29:50.127Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:29:50.142Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:29:50.142Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:29:50.267Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:29:50.267Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:29:50.267Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:29:50.377Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:29:50.377Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:29:52.549Z"}
+{"type":"info","msg":"starting server","level":"info","message":"","timestamp":"2015-08-04T20:30:32.589Z"}
+{"level":"info","message":"Attempting to connect to mongo uri: mongodb://localhost/nglungefullstack2-dev","timestamp":"2015-08-04T20:30:32.589Z"}
+{"level":"info","message":"Attempting to connect to rabbit url: undefined","timestamp":"2015-08-04T20:30:32.589Z"}
+{"level":"info","message":"Emitting Ready from connections/index.js","timestamp":"2015-08-04T20:30:32.620Z"}
+{"level":"info","message":"==========> app.onConnected!","timestamp":"2015-08-04T20:30:32.620Z"}
+{"level":"info","message":"*** ---------------> app setModels()","timestamp":"2015-08-04T20:30:32.620Z"}
+{"level":"info","message":" [x] app.ready","timestamp":"2015-08-04T20:30:32.698Z"}
+{"level":"info","message":"Lunge: createServer()","timestamp":"2015-08-04T20:30:32.698Z"}
+{"type":"info","msg":"listening","port":9000,"level":"info","message":"","timestamp":"2015-08-04T20:30:33.589Z"}

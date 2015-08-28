@@ -1,0 +1,7 @@
+<div class="container push-down profile-style">
+    <h1>Account</h1>
+    <div ng-include="'app/trainer/account/email/trainer-account-email.partial.html'"></div>
+    <div ng-if="getType() == 'trainer'">
+        <div ng-include="'app/trainer/account/locations/trainer-locations.partial.html'"></div>
+    </div>
+</div>

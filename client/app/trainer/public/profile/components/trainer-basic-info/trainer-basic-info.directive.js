@@ -3,7 +3,6 @@ lungeApp.directive("trainerBasicInfo", function(){
 		restrict : "AE",
 		controller : "TrainerBasicInfoController",
 		replace : true,
-
 		templateUrl : "app/trainer/public/profile/components/trainer-basic-info/trainer-basic-info.partial.html"
 	}
 });

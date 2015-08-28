@@ -1,0 +1,39 @@
+<div class="module sm flat-white">
+    <header>
+        <h1>About</h1>
+        <div class="edit-button" ng-click="toggleEditing()">
+            <i class="fa fa-edit"></i>
+        </div>
+    </header>
+    <!-- Begin About Form -->
+    <div class="group has-margin">
+        <form ng-submit="submit(about)" id="about" name="about" class="form-horizontal">
+            <div class="form-group">
+                <label for="bio" class="info-horizontal-label">
+                    Bio:
+                </label>
+                <div class="info-horizontal-value">
+                    <div ng-if="!editing">
+                        {{trainerFactory.trainer.bio || 'Write something about yourself'}}
+                    </div>
+                    <div ng-if="editing" class="info-horizontal-value-input">
+                        <textarea ng-change="removeMongooseError(about, 'bio')" placeholder="Write something about yourself" name="bio" id="bio" class="form-control" ng-model="trainerFactory.trainerEditing.bio"></textarea>
+                        <div class="form-error" ng-show="errors.bio"><span>{{errors.bio}}</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Buttons -->
+            <div class="form-group" ng-if="editing">
+                <div class="col-xxs-24">
+                    <button type="submit" class="btn-action btn-primary" >
+                        Save Changes
+                    </button>
+                    <div class="btn-action btn-danger" ng-click="toggleEditing()">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

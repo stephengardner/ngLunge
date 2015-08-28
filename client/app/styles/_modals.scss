@@ -1,0 +1,92 @@
+.modal-title {
+	font-size: 2rem;
+	font-weight:bold;
+}
+
+.modal {
+	&.in {
+		transition: opacity .4s;
+	}
+}
+
+.ngdialog.ngdialog-theme-default {
+	padding-bottom: 0!important;
+	padding-top: 60px!important;
+}
+
+.modal-header {
+	padding-top: 3rem;
+	padding-bottom:2.5rem;
+	text-align: center;
+	color: green;
+	font-size: 3rem;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	background: #eee;
+	border-bottom:2px solid;
+	@include respond-to(xs) {
+		font-size:2rem;
+		padding-top:2rem;
+		padding-bottom:1.75rem;
+	}
+}
+
+.modal-content {
+	border:5px solid $brand-primary;
+}
+
+.button-block {
+	position:absolute;
+	background:$brand-primary;
+	top: -.1rem;
+	right: -.3rem;
+	padding: .5rem .7rem .5rem .9rem;
+}
+.ngdialog.ngdialog-theme-default {
+	.ngdialog-content {
+		padding:0!important;
+		@include respond-to(sm) {
+			width:500px!important;
+		}
+		@include respond-to(xs) {
+			width:100%!important;
+		}
+	}
+}
+.ngdialog.ngdialog-theme-default .ngdialog-content, .ngdialog-content {
+	background:none;
+}
+
+.ngdialog-theme-fullscreen {
+	padding-top:0px;
+	display:table;
+	width:100%;
+	height:100%;
+	overflow:hidden!important;
+	.ngdialog-content {
+		display:table-cell;
+		vertical-align:middle;
+		.modal-content {
+			max-width: 550px;
+			margin: 0 auto;
+			@include respond-to(xxs) {
+				border:0;
+			}
+			.modal-body {
+				.buttons {
+					margin-top:20px;
+				}
+				@include respond-to(xxs) {
+					padding-top:5px;
+					padding-bottom:5px;
+				}
+			}
+		}
+	}
+	&.ngdialog-overlay,
+	&.ngdialog,
+	.ngdialog-overlay {
+		-webkit-animation:ngdialog-fadein 1.5s!important;
+		animation:ngdialog-fadein 1.5s!important;
+	}
+}

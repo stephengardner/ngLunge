@@ -1,30 +1,45 @@
-lungeApp.controller("TrainerProfileController", function(AlertMessage, $timeout, $state, $location, $q, $document, $window, ProfilePicture, Auth, $scope, $http, $stateParams, socket){
+lungeApp.controller("TrainerProfileController", function(TrainerFactory, Sync, FormControl, $state, AlertMessage, $timeout, $location,
+                                                         $q, $document, $window, ProfilePicture, Auth, $scope, $http,
+                                                         $stateParams, socket){
+	$scope.trainerFactory = TrainerFactory;
+
+	var url = $stateParams.urlName ? '/api/trainers/byUrlName/' + $stateParams.urlName
+			: '/api/trainers/' + $stateParams.id,
+		httpGetTrainer = {
+			url : url,
+			method : 'GET'
+		},
+		onGetTrainerSuccess = function(trainer) {
+			TrainerFactory.init(trainer,
+				{
+					sync : true,
+					syncCallback : function(){
+						if(!AlertMessage.active)
+							AlertMessage.success("Profile updated successfully");
+					}
+				});
+		},
+		onGetTrainerError = function(error){
+			$scope.noTrainer = true;
+		},
+		trainerUpdate = function(){
+			Auth.updateProfile($scope.trainer, function(){
+				console.log("Updated profile");
+			});
+		};
+
+	$scope.$state = $state;
+
+	// Check if the trainer is logged in, get their info, populate the page
 	Auth.isLoggedInAsync(function(){
 		socket.socket.emit('authenticate', {token : Auth.getToken()});
-		$scope.$window = $window;
-		$scope.resetErrors = function(opt_error) {
-			if(opt_error && $scope.errors) {
-				$scope.errors[opt_error] = null;
-			}
-			else {
-				$scope.errors = {};
-			}
-		};
 
-		$scope.showEObject = function($event, eObject) {
-			$scope.getSize($event);
-			// force width from getSize to repaint by using $timeout
-			$timeout(function(){
-				eObject.$show();
-			})
-		};
-
-		$scope.getSize = function(event){
-			if(event && event.target) {
-				$scope.width = $(event.target).innerWidth() + 25 + "px";
-			}
-			else {
-				$scope.width = $(event).innerWidth() + 25 + "px";
+		$scope.popovers = {
+			helpTemplate : {
+				templateUrl : 'app/popovers/help.tpl.html'
+			},
+			location : {
+				templateUrl: 'app/popovers/profile/location/popover.tpl.html'
 			}
 		};
 
@@ -34,60 +49,19 @@ lungeApp.controller("TrainerProfileController", function(AlertMessage, $timeout,
 			{value: 3, text: 'VA'}
 		];
 
-		$scope.syncTrainer = function(newTrainer) {
-			// I don't know why the tiemout to force scope.apply is necessary here, but it has to be here to update the certifications.
-			// I guess because the certification loop in the scope is a nested object... Not sure... (probably way off)
-			$timeout(function(){
-				$scope.trainer = newTrainer;
-				$scope.trainerEditing = angular.copy(newTrainer);
-				if(Auth.getCurrentUser().urlName != newTrainer.urlName) {
-					$location.url(newTrainer.urlName);
-					$location.replace();
-				}
-				console.log("Syncing the new trainers name to be: ", newTrainer.name.first, newTrainer.name.last);
-			})
-		}
+		$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
 
-		if($stateParams.urlName) {
-			$http({
-				url : '/api/trainers/byUrlName/' + $stateParams.urlName,
-				method : "GET"
-			}).success(function(trainer){
-				$scope.syncTrainer(trainer);
-				socket.sync.user('trainer', trainer,  function(event, newTrainer){
-					console.log("in sync.user callback, syncing trainer:", newTrainer);
-					$scope.syncTrainer(newTrainer);
-				});
-			}).error(function(){
-				$scope.noTrainer = true;
-			});
-		}
-		else {
-			$http({
-				url : '/api/trainers/' + $stateParams.id,
-				method : "GET"
-			}).success(function(trainer){
-				$scope.syncTrainer(trainer);
-				socket.sync.user('trainer', trainer,  function(event, newTrainer){
-					console.log("in sync.user callback, syncing trainer:", newTrainer);
-					$scope.syncTrainer(newTrainer);
-				});
-			}).error(function(){
-			});
-		}
 		// ajax is an object that tells us if something is running (show ajax spinner, or disable a button, etc)
 		$scope.ajax = {};
-		$scope.updateProfile = function() {
-			Auth.updateProfile($scope.trainer, function(){
-				console.log("Updated profile");
-			});
-		};
+
+		$scope.updateProfile = trainerUpdate;
+
 		$scope.isMe = function(){
-			return $scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id;
-		};
+			return TrainerFactory.isMe();
+		}
+
 		$scope.$on('$destroy', function () {
-			socket.unsync.user("trainer", $scope.trainer);
-			socket.unsyncUpdates('trainer');
+			TrainerFactory.unsyncModel();
 		});
 	});
 });

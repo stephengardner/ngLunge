@@ -1,0 +1,161 @@
+.angular-google-map-container { height: 400px; }
+.add-location-form {
+	padding-left: $content-padding;
+	padding-right: $content-padding;
+	padding:$content-padding;
+}
+.add-location-button-wrapper {
+	//padding-left: $content-padding;
+	//padding-right: $content-padding;
+}
+
+.no-main-location {
+	height:80px;
+	font-size:20px;
+	position:absolute;
+	left:0;
+	right: 0;
+	top:50%;
+	margin-top:-20px;
+	text-align:center;
+}
+
+.locations {
+	//margin-top:1rem;
+	.location-header {
+		//background: lighten($body-bg, 55%);
+		background:darken($body-bg, 5%);
+		color: black;
+		font-weight: bold;
+		font-size:1.2em;
+		padding: 1rem $content-padding;
+		@include respond-to(xxs){
+			font-size:1em;
+		}
+	}
+	.location {
+		/* this didnt work with accordion, not sure why i had it
+		&:last-of-type {
+			overflow: hidden;
+			border-bottom-right-radius: 8px;
+			border-bottom-left-radius: 8px;
+		}
+		*/
+		.location-title{
+			.btn-text {
+				margin-top:.2rem;
+			}
+		}
+		.primary-location-badge {
+			top: .3rem;
+			font-size: 1.5rem;
+			left: 1rem;
+			position: absolute;
+			color: #4183D7;
+			font-style: italic;
+			z-index:1;
+		}
+		position:relative;
+		cursor:pointer;
+		&:hover {
+			background: darken($body-bg, 12%)!important;
+		}
+		&:nth-of-type(even) {
+			background: lighten($body-bg, 7%);
+		}
+		&:nth-of-type(odd) {
+			background: lighten($body-bg, 4%);
+		}
+		padding: .5rem $content-padding;
+		border-bottom:1px solid lighten($body-bg, 2%);
+		~ .location {
+		}
+	}
+	.empty {
+		padding-bottom:1rem;
+	}
+}
+form {
+	.buttons {
+		margin-top:.5rem;
+	}
+}
+
+.google-map {
+	//border-radius: 6px;
+	&.empty-loading, &.empty{
+		height:400px;
+		background:darken($body-bg, 10%);
+		position:relative;
+		&:before {
+			content: "";
+			background:url('/assets/images/map-logo-bw.png');
+			position:absolute;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%;
+			opacity:.1;
+			background-position:center center;
+			background-repeat:no-repeat;
+			background-size:30%;
+		}
+	}
+	.angular-google-map-container {
+		@include respond-to(xxs) {
+			height:250px;
+		}
+	}
+}
+
+$infoWindowBackground : white;
+.infoWindow {
+	color:#333;
+	font-size:14px;
+	border-radius:5px;
+	overflow: hidden;
+	//border:1px solid lighten($body-bg, 30%);
+	background: $infoWindowBackground;
+	.title {
+		color:white!important;
+		font-weight:200;
+		overflow:hidden;
+		background:#4183D7;
+		//color:white!important;
+		font-size:18px!important;
+		border-bottom:1px solid #666;
+		padding:.8rem 2rem!important;
+	}
+	.close {
+		color:white!important;
+		opacity:.7!important;
+		font-size: 1.45rem!important;
+		padding:.3rem;
+		&:hover {
+			color:#ddd!important;
+		}
+		position:absolute;
+		top: .0rem;
+		right:.2rem;
+	}
+	.content {
+		padding:1.3rem 2rem!important;
+	}
+	.city {
+		&.active {
+		}
+	}
+	&:after {
+		content: "";
+		display:block;
+		position:absolute;
+		bottom:-28px;
+		left:50%;
+		margin-left:-17px;
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-width: 30px 14.5px 0 14.5px;
+		border-color: $infoWindowBackground transparent transparent transparent;
+	}
+}

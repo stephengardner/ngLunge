@@ -1,12 +1,12 @@
-lungeApp.controller("TrainerRegisterPasswordController", function($location, Auth, $cookieStore, $state, Trainer, Registration, $stateParams, resolvedRegistrationResource, $scope, $http){
-	console.log("RESOURCE: ", resolvedRegistrationResource);
-	$scope.resolvedRegistrationResource = resolvedRegistrationResource;
+lungeApp.controller("TrainerRegisterPasswordController", function($location, Auth, $cookieStore, $state, Trainer, Registration, $stateParams, resolvedTrainerResource, $scope, $http){
+	console.log("RESOURCE: ", resolvedTrainerResource);
+	$scope.resolvedTrainerResource = resolvedTrainerResource;
 	$scope.password = "";
 	$scope.password2 = "";
 	$scope.errors = {};
 	$scope.password = {
 		password1 : "",
-		password2 : "",
+		password2 : ""
 	}
 
 	// reset errors, called on keypress in form
@@ -24,7 +24,7 @@ lungeApp.controller("TrainerRegisterPasswordController", function($location, Aut
 			if(form.$valid){
 				$scope.submitted = true;
 				$scope.sending = true;
-				Auth.register(resolvedRegistrationResource, $scope.password.password1, $scope.password.password2).then(function(response){
+				Auth.register(resolvedTrainerResource, $scope.password.password1, $scope.password.password2).then(function(response){
 					$scope.sending = false;
 					$location.url("/" + response.urlName);//.go("main.profilePage", {urlName : response.urlName});
 				}).catch(function(err) {

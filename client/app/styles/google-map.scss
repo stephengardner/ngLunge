@@ -1,0 +1,41 @@
+.angular-google-map-container {
+	height: 100%!important;
+	width: 100%!important;
+	position: absolute!important;
+}
+
+.google-map {
+	position:relative;
+	height:400px;
+}
+
+.trainer-profile {
+	.google-map {
+		&.empty {
+			height:250px;
+		}
+	}
+}
+
+.gmap-zoom {
+	.zoom {
+		padding:1.6rem 1.85rem;
+		-webkit-transition: all .3s;
+		@include respond-to(xxs) {
+			padding:1.2rem 1.45rem;
+		}
+		font-size:1.3em;
+		background:rgba(255,255,255,.6);
+		cursor: pointer;
+		&:hover {
+			background:white;
+		}
+		color:$brand-primary;
+		&:hover {
+			color:darken($brand-primary, 15%);
+		}
+		~ .zoom {
+			border-top:1px solid lighten($brand-primary, 20%);
+		}
+	}
+}
