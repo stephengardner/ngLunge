@@ -1,0 +1,10 @@
+{
+  "name": "customMandrillUserSignup",
+  "version": "0.0.1",
+  "main": "custom-mandrill-user-signup.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["customMandrillSender", "userModel"],
+    "provides": ["customMandrillUserSignup", "customMandrillUserSignupToAdmin"]
+  }
+}

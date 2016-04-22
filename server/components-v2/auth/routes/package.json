@@ -1,0 +1,10 @@
+{
+  "name": "authRoutes",
+  "version": "0.0.1",
+  "main": "routes.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["models", "userModel", "connections"],
+    "provides": ["authRoutes"]
+  }
+}

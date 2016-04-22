@@ -1,0 +1,10 @@
+{
+  "name": "connectionRedis",
+  "version": "0.0.1",
+  "main": "connection-redis.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["logger"],
+    "provides": ["connectionRedis"]
+  }
+}

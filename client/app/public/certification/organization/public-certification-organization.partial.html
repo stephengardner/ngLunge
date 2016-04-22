@@ -1,0 +1,8 @@
+<div ng-if="!certificationOrganization">
+    <div class="empty">
+    </div>
+</div>
+<div ng-if="certificationOrganization">
+    <h1>{{certificationOrganization.name}}</h1>
+    <pre>{{certificationOrganization | json}}</pre>
+</div>

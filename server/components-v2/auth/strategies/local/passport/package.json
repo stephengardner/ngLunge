@@ -1,0 +1,10 @@
+{
+  "name": "authLocal",
+  "version": "0.0.1",
+  "main": "auth-local.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["trainerModel"],
+    "provides": ["authLocal"]
+  }
+}

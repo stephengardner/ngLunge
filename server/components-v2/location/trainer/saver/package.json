@@ -1,0 +1,10 @@
+{
+  "name": "locationTrainerParser",
+  "version": "0.0.1",
+  "main": "location-trainer-parser.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["locationTrainerParser"]
+  }
+}

@@ -1,0 +1,82 @@
+<div class="trainer-certifications trainer-verify-certifications main-push">
+    <header>
+        <h1>My Certifications</h1>
+        <div class="instructions">
+            <div class="top">
+                Lunge independently reviews each verification and requires that you submit an electronic copy of the
+                official document issued by the authorizing organization.
+            </div>
+            <div class="accepted-documents">
+                <strong>To verify a certification, you must upload one of the following</strong>
+                <ul>
+                    <li>
+                        The official organization certificate, scanned and uploaded in .pdf format
+                    </li>
+                    <li>
+                        A copy of a letter form the issuing organization containing your full name, date of issuance,
+                        and date of certification expiration.
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom">
+                Alternate methods will be reviewed on a case-by-case basis.  For questions contact
+                certifications@lunge.io
+            </div>
+        </div>
+    </header>
+    <section class="add-certification">
+        <h1 class="h4" ng-if="certificationsEmpty()">
+            You have no certifications attached to your profile.  Begin by clicking the button below.
+        </h1>
+        <a ui-sref="main.trainer.account.certifications"
+           class="btn btn-block btn-default">{{certificationsEmpty()
+        ? 'Add a certification' : 'Add another certification'}}</a>
+    </section>
+    <section class="certifications">
+        <accordion close-others="true">
+            <accordion-group is-open="certificationOrganization.isOpen"
+                             class="certification-organization"
+                             ng-repeat="mappedOrganization
+                             in trainerFactory.trainer.certifications_v2_map">
+                <accordion-heading>
+                    <div class="name">
+                        <h2>{{mappedOrganization.name}}</h2>
+                    </div>
+                    <div class="count">
+                        <!--<span class="count-added">{{mappedOrganization.count}}</span>-->
+                        <span ng-if="mappedOrganization.count_pending"
+                              class="count-pending"
+                                title="{{mappedOrganization.count_pending}} {{mappedOrganization.count_pending > 1 ? 'certifications' : 'certification'}} pending verification">
+                            {{mappedOrganization.count_pending}}
+                        </span>
+                        <span ng-if="mappedOrganization.count_verified"
+                              class="count-verified"
+                              title="{{mappedOrganization.count_pending}} {{mappedOrganization.count_verified > 1 ? 'certifications' : 'certification'}} verified">
+                            {{mappedOrganization.count_verified}}
+                        </span>
+                    </div>
+                </accordion-heading>
+                <ul class="certification panel-item padded list-unstyled"
+                    ng-repeat="certificationV2 in mappedOrganization.certification_v2s">
+                    <li class="inner">
+                        <div class="row">
+                            <div class="col-xxs-20">
+                                <div class="name">
+                                    {{certificationV2.certification_type.name}}
+                                </div>
+                            </div>
+                            <div class="col-xxs-4">
+                                <div class="verify">
+                                    <div class="btn btn-default btn-xs"
+                                         ng-click="verifyCertificationPopup(certificationV2)">
+                                        <i class="fa fa-upload"></i> Upload proof
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </accordion-group>
+        </accordion>
+    </section>
+</div>

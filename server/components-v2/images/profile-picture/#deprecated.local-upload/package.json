@@ -1,0 +1,10 @@
+{
+  "name": "imageProfilePictureLocalUpload",
+  "version": "0.0.1",
+  "main": "image-profile-picture-local-upload.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["imageProfilePictureLocalUpload"]
+  }
+}

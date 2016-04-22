@@ -1,0 +1,10 @@
+{
+  "name": "customMandrillSender",
+  "version": "0.0.1",
+  "main": "custom-mandrill-sender.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["emailModel", "userModel"],
+    "provides": ["customMandrillSender"]
+  }
+}

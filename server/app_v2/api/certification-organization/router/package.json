@@ -1,0 +1,13 @@
+{
+  "name": "apiCertificationTypeRouter",
+  "version": "0.0.1",
+  "main": "api-certification-type.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "apiCertificationTypeController",
+      "auth"
+    ],
+    "provides": ["apiCertificationTypeRouter"]
+  }
+}

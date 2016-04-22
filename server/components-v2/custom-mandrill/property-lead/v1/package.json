@@ -1,0 +1,10 @@
+{
+  "name": "customMandrillPropertyLead",
+  "version": "0.0.1",
+  "main": "custom-mandrill-property-lead.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["customMandrillSender", "propertyLeadModel"],
+    "provides": ["customMandrillPropertyLead"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "connectionRabbitMQ",
+  "version": "0.0.1",
+  "main": "connection-rabbitmq.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["logger"],
+    "provides": ["connectionRabbitMQ"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "connections",
+  "version": "0.0.1",
+  "main": "connections.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["connector"],
+    "provides": ["connections"]
+  }
+}

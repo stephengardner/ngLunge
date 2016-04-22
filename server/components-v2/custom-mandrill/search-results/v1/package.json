@@ -1,0 +1,12 @@
+{
+  "name": "customMandrillSearchResults",
+  "version": "0.0.1",
+  "main": "custom-mandrill-search-results.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["customMandrillSender"],
+    "provides": ["customMandrillSearchResultsAdmin", "customMandrillSearchResultsAdminEmpty",
+    "customMandrillSearchResultsAdminEarlyBird", "customMandrillSearchResultsUserEarlyBird",
+    "customMandrillSearchResultsUser"]
+  }
+}

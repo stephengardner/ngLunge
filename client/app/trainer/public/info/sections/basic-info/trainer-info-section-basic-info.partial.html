@@ -1,0 +1,148 @@
+<div class="module flat-white larger-style-1" ng-controller="TrainerInfoSectionBasicInfoController">
+    <div cg-busy="{promise : cgBusy}">
+        <form id="basicInfo"
+              name="basicInfo"
+              ng-submit="submit(basicInfo)"
+              class="form-horizontal"
+              ng-class="{'editing' : editing}">
+            <fieldset ng-disabled="ajax.busy">
+                <header>
+                    <h1>Basic Info2</h1>
+                    <div edit-button ng-click="toggleEditing(basicInfo)"></div>
+                </header>
+                <!-- Begin Basic Info Form -->
+                <div class="group has-margin">
+                    <div ng-if="!editing">
+                        <!-- Begin Name -->
+                        <div class="form-group has-aside">
+                            <label for="name" class="info-horizontal-label">
+                                Name:
+                            </label>
+                            <div class="info-horizontal-value">
+                                <div>
+                                    {{trainerFactory.trainer.name.full}}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Begin Gender -->
+                        <div class="form-group has-aside" ng-class="{'editing' : editing}">
+                            <label for="gender" class="info-horizontal-label">
+                                Gender:
+                            </label>
+                            <!-- Gender input -->
+                            <div class="info-horizontal-value">
+                                <!-- Gender display -->
+                                <div class="gender">
+                                    {{trainerFactory.trainer.gender.value || '-'}}
+                                </div>
+                            </div>
+                            <!-- Gender privacy -->
+                            <div class="info-horizontal-aside" privacy-popover active="{{editing}}" model-to-edit="gender">
+                                <i class="fa" ng-class="{'fa-globe' : trainerFactory.trainer.gender.privacy == 'public', 'fa-lock' : trainerFactory.trainer.gender.privacy == 'private'}"></i>
+                            </div>
+                        </div>
+                        <!-- Trainer Birthday -->
+                        <!--<div class="form-group has-aside">-->
+                        <!--<label for="birtdhay" class="info-horizontal-label">-->
+                        <!--Birthday:-->
+                        <!--</label>-->
+                        <!--&lt;!&ndash; Birthday input &ndash;&gt;-->
+                        <!--<div class="info-horizontal-value">-->
+                        <!--&lt;!&ndash; Birthday display &ndash;&gt;-->
+                        <!--<div class="gender">-->
+                        <!--{{trainerFactory.trainer.birthday.value || '-'}}-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; Birthday editing &ndash;&gt;-->
+                        <!--&lt;!&ndash;<div ng-if="editing" class="info-horizontal-value-input">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span id="birtdhay" data-abc-birthday-picker="{minAge : 18, dateFormat : 'middleEndian', onChange: onBirthdayChange, hiddenDate : true}" data-ng-model="trainerFactory.trainerEditing.birthday.value"></span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; Birthday privacy &ndash;&gt;-->
+                        <!--<div class="info-horizontal-aside" privacy-popover active="{{editing}}" model-to-edit="birthday">-->
+                        <!--&lt;!&ndash;<i ng-if="editing" class="fa" ng-class="{'fa-globe' : trainerFactory.trainerEditing.birthday.privacy == 'public', 'fa-lock' : trainerFactory.trainerEditing.birthday.privacy == 'private'}"></i>&ndash;&gt;-->
+                        <!--<i class="fa" ng-class="{'fa-globe' : trainerFactory.trainer.birthday.privacy == 'public', 'fa-lock' : trainerFactory.trainer.birthday.privacy == 'private'}"></i>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group has-aside">
+                            <label for="age" class="info-horizontal-label">
+                                Age
+                            </label>
+                            <div class="info-horizontal-value">
+                                <div class="age">
+                                    {{trainerFactory.trainer.age.value || '-'}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="editing">
+                        <div layout-gt-sm="row" layout-align="start center">
+                            <md-input-container class="md-block" flex>
+                                <label>Name</label>
+                                <input name="name" ng-change="removeMongooseError(basicInfo, 'name')"
+                                       ng-model="trainerFactory.trainerEditing.name.full">
+                                <div ng-messages="basicInfo.name.$error" class="md-auto-hide">
+                                    <div ng-message="mongoose">{{basicInfo.name.$error.mongoose}}</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout="row" layout-align="start center">
+                            <input type="hidden" name="gender"/>
+                            <md-input-container class="md-block" flex>
+                                <label>Gender</label>
+                                <md-select ng-model="trainerFactory.trainerEditing.gender.value">
+                                    <md-option value="none">None specified</md-option>
+                                    <md-option value="male">Male</md-option>
+                                    <md-option value="female">Female</md-option>
+                                </md-select>
+                                <div class="md-errors-spacer"></div>
+                                <div ng-messages="basicInfo.gender.$error" class="md-auto-hide">
+                                    <div ng-message="mongoose">{{form.gender.$error.mongoose}}</div>
+                                </div>
+                            </md-input-container>
+                            <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="gender">
+                                <i class="fa"
+                                   ng-class="{
+                                'fa-globe' : trainerFactory.trainerEditing.gender.privacy == 'public',
+                                'fa-lock' : trainerFactory.trainerEditing.gender.privacy == 'private'
+                               }"></i>
+                            </div>
+                        </div>
+                        <div layout="row" layout-align="start center">
+                            <input type="hidden" name="age"/>
+                            <md-input-container class="md-block" flex>
+                                <label>Age</label>
+                                <md-select ng-model="trainerFactory.trainerEditing.age.value">
+                                    <md-option ng-repeat="age in ageRange" value="{{age}}">
+                                        {{age}}
+                                    </md-option>
+                                </md-select>
+                                <div class="md-errors-spacer"></div>
+                                <div ng-messages="basicInfo.age.$error" class="md-auto-hide">
+                                    <div ng-message="mongoose">{{form.age.$error.mongoose}}</div>
+                                </div>
+                            </md-input-container>
+                            <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="age">
+                                <i class="fa"
+                                   ng-class="{
+                                'fa-globe' : trainerFactory.trainerEditing.age.privacy == 'public',
+                                'fa-lock' : trainerFactory.trainerEditing.age.privacy == 'private'
+                               }"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Basic Info Save Buttons -->
+                <div class="form-group" ng-if="editing">
+                    <div class="col-xxs-24">
+                        <button type="submit" class="btn-action btn-primary" >
+                            Save Changes
+                        </button>
+                        <div class="btn-action btn-danger" ng-click="toggleEditing(basicInfo)">
+                            Cancel
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

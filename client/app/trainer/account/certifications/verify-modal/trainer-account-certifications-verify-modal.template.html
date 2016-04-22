@@ -1,0 +1,163 @@
+<div class="modal-content verify-certificaiton-modal">
+    <div class="modal-header">
+        <div class="button-block" ng-click="closeThisDialog(false)">
+            <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <h4 class="modal-title">
+            Verification of
+            <div class="verifying-certification-name">
+                {{certificationV2.certification_type.organization.name}} - {{certificationV2.certification_type.name}}
+            </div>
+        </h4>
+    </div>
+    <div md-content>
+        <form class="form form-horizontal"
+              name="myForm"
+              ng-submit="submitNewCertification(myForm)">
+            <fieldset ng-disabled="globalAjax.busy && !globalAjax.busy.$cgBusyFulfilled">
+                <div class="modal-body">
+                    <div class="form-group" ng-if="!fileModel.file.name && !certificationV2.verification.files.length">
+                        <div class="col-xxs-24 text-center">
+                            <h1 class="h3">
+                                You haven't uploaded any documents yet
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="certificationV2.verification.files.length">
+                        <div class="files col-xxs-24 text-center">
+                            <header>
+                                <h1 class="h4">
+                                    {{
+                                    certificationV2.verification.files.length > 1
+                                    ? certificationV2.verification.files.length + ' Files'
+                                    : '1 File'
+                                    }} Uploaded
+                                </h1>
+                            </header>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <th class="file-name">
+                                    Name
+                                </th>
+                                <th>
+                                    Verfication
+                                </th>
+                                <th>
+                                    Download
+                                </th>
+                                <th>
+                                    Delete
+                                </th>
+                                </thead>
+                                <tbody>
+
+                                <tr ng-repeat="file in certificationV2.verification.files" >
+                                    <td class="file-name" ng-show="!file.deleting">
+                                        {{file.user_desired_name || 'No name'}}
+                                    </td>
+                                    <td ng-show="!file.deleting">
+                                        {{file.status || 'Pending'}}
+                                    </td>
+                                    <td ng-show="!file.deleting">
+                                        <a ng-href="{{file.s3_url}}" target="_blank">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                    </td>
+                                    <td ng-show="!file.deleting">
+                                        <div class="delete" ng-click="toggleDeleteFile(file)">
+                                            <i class="fa fa-times-circle"></i>
+                                        </div>
+                                    </td>
+                                    <td ng-show="file.deleting" colspan="4" class="delete-file-cell">
+                                        <table class="delete-file-table">
+                                            <tr>
+                                                <td>
+                                                    <header>
+                                                        <h1 class="h4">
+                                                            Are you sure you want to delete this file?
+                                                        </h1>
+                                                    </header>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="form-group">
+                                                    <div class="action-buttons nopadding">
+                                                        <div class="btn btn-action btn-default"
+                                                             ng-click="toggleDeleteFile(file)">
+                                                            Cancel
+                                                        </div>
+                                                        <div class="btn btn-action btn-danger"
+                                                             ng-click="deleteFile(myForm, file)">
+                                                            Delete
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="fileModel.file.name">
+                        <!--<label for="name" class="col-xs-6 control-label">Name</label>-->
+                        <div class="col-xxs-24">
+                            <md-input-container class="md-block">
+                                <label>Name (ex: "My Barre Yoga Certificate")</label>
+                                <input id="name"
+                                       name="name"
+                                       ng-change="formControl.removeMongooseError(myForm, 'name')"
+                                       ng-model="fileModel.name"
+                                       type="text"/>
+                                <div ng-messages="myForm.name.$error" class="md-auto-hide">
+                                    <div ng-message="mongoose">myForm.name.$error.mongoose</div>
+                                </div>
+                            </md-input-container>
+                            <div class="form-error" ng-if="myForm.file.$error">
+                                <span ng-show="myForm.file.$error.mongoose">{{myForm.file.$error.mongoose}}</span>
+                                <!--<span ng-show="myForm.file.$error.maxSize"></span>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="fileModel.file.name">
+                        <div class="action-buttons">
+                            <div class="btn btn-action btn-danger" ng-click="toggleChooseFile(myForm)">
+                                Cancel
+                            </div>
+                            <div class="btn btn-action btn-default" ng-click="submitNewCertification(myForm)">
+                                Submit
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="!fileModel.file.name">
+                        <div class="col-xxs-24">
+                            <div class="btn btn-default btn-block btn-square btn-lg"
+                                 ng-click="toggleChooseFile(myForm)">
+                                {{certificationV2.verification.files.length ? 'Upload another file' : 'Choose a file'}}
+                            </div>
+                        </div>
+                    </div>
+                    <input id="file"
+                           type="file"
+                           ngf-select
+                           ngf-change="fileChanged(myForm, $files, $file)"
+                           ng-model="fileModel.file"
+                           name="file"
+                           ngf-model-invalid="errorFiles"
+                           ngf-max-size="{{maxSize}}MB"
+                           required>
+                    <div class="form-error" ng-if="myForm.file.$error">
+                        <span ng-show="myForm.file.$error.maxSize">File too large:
+                        {{errorFiles[0].size / 1000000|number:1}}MB.  Please upload a file smaller than {{maxSize}}MB</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class=" btn-square btn-lg btn-primary btn-block" ng-click="closeThisDialog(false)">
+                        Done
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

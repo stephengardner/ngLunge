@@ -1,0 +1,12 @@
+{
+  "name": "rcpScraper",
+  "version": "0.0.1",
+  "main": "rcp-scraper.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "simpleScraper"
+    ],
+    "provides": ["rcpScraper"]
+  }
+}

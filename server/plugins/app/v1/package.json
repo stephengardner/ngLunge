@@ -1,0 +1,12 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "main": "app.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["connections", "eventbus", "models", "amqp",
+    "expressConfig",
+    "routesConfig"],
+    "provides": ["app"]
+  }
+}

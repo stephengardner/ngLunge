@@ -1,0 +1,10 @@
+{
+  "name": "connectionDatabase",
+  "version": "0.0.1",
+  "main": "connection-database.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["logger"],
+    "provides": ["connectionDatabase"]
+  }
+}

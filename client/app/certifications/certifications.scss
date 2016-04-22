@@ -1,0 +1,196 @@
+#certifications.trainers {
+	.cert:hover {
+		cursor: pointer;
+		//background: darken($body-bg, 4%);
+		//color:#333;
+	}
+	// this is to have a relative positioning for some absolute elements (the filter)
+	#certifications-inner {
+		position:relative;
+	}
+	#certification-filter {
+		position:absolute;
+		right:0;
+		font-size:1.5em;
+	}
+	.title {
+		position:relative;
+	}
+	.search-form {
+		margin-top:1rem;
+	}
+}
+
+.profile-page-cert {
+	ul {
+		margin-bottom:0px;
+		-webkit-margin-before: 0em;
+		-webkit-padding-start: 0;
+		list-style-type: none;
+		//text-align: left;
+		font-size: .85em;
+		li {
+			padding-top:.5rem;
+			padding-bottom:.5rem;
+		}
+	}
+	cursor:pointer;
+	width:100%;
+	@include respond-to(xxs) {
+		//width:50%;
+	}
+	padding:1em;
+	&:hover {
+		&:not(.active) {
+			background:$body-bg;
+			color:#333;
+		}
+	}
+	&.active {
+		.name {
+			.count-bubble {
+				display:none;
+			}
+		}
+	}
+	.parent-cert {
+		//padding:1em;
+		&:hover {
+		}
+		.name {
+			font-weight:bold;
+			position:relative;
+			display:inline-block;
+			.count-bubble {
+				background: darken($body-bg, 15%);
+				font-size: .8em;
+				padding: .1rem .4rem;
+				position: absolute;
+				border-radius: 5px;
+				right: -1.25em;
+				top: -.8em;
+			}
+		}
+	}
+	.child-cert {
+	}
+}
+#certifications, .certifications {
+	h1 {
+		float:left;
+		@include respond-to(xs) {
+			float:none;
+		}
+	}
+	.search-module {
+		@include respond-to(xs) {
+			margin-top:2rem;
+		}
+	}
+	header {
+		@include clearfix();
+		.buttons {
+			float:right;
+		}
+	}
+}
+.add-certification {
+	margin-top:1em;
+	.buttons {
+		text-align:right;
+		margin-top:1rem;
+	}
+	form {
+		h3 {
+			font-size:1.3em;
+			text-align:center;
+			margin-bottom:1rem;
+		}
+		padding: 1em;
+		background: #ddd;
+		border-radius: 6px;
+		/*
+		padding: 1em 2em;
+		border: 1px solid;
+		border-radius: 10px;
+		background: #555;
+		border-color: #999;
+		*/
+	}
+}
+.cert {
+	.panel-body {
+		padding-bottom:4px;
+	}
+	.cert-info-blurb {
+		color:$flat-success;
+	}
+	.buttons {
+		text-align:right;
+	}
+	.name {
+		h2 {
+			font-size:1.4em;
+			margin-bottom:1rem;
+			i.delete {
+				float:right;
+				cursor:pointer;
+				&:hover {
+					color:firebrick;
+				}
+			}
+		}
+	}
+	.types {
+		form {
+			h3 {
+				font-size:1.3em;
+				text-align:center;
+				margin-bottom:1rem;
+			}
+			padding: 1em 2em;
+			border: 1px solid;
+			border-radius: 10px;
+			background: #555;
+			border-color: #999;
+		}
+		.type {
+			.actions {
+				float:right;
+				.btn {
+					padding:.2em 1em;
+					font-size:12px;
+				}
+			}
+			i.delete {
+				float:right;
+				cursor:pointer;
+				&:hover {
+					color:firebrick;
+				}
+			}
+			&.last {
+				margin-bottom:1em;
+			}
+			padding:1rem 2rem 1rem 2rem;
+		}
+		.type:nth-of-type(odd){
+			background:lighten($body-bg, 10%);
+		}
+	}
+	ul {
+		font-size:16px;
+		list-style-type: none;
+		padding: 0px;
+		margin: 0px;
+		/*
+		padding-left:2rem;
+		*/
+	}
+	padding: 1rem;
+	border-top: 1px solid;
+	border-bottom:1px solid;
+	~ .cert {
+		border-top:0px;
+	}
+}

@@ -1,0 +1,10 @@
+{
+  "name": "connector",
+  "version": "0.0.1",
+  "main": "connector.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["connector"]
+  }
+}

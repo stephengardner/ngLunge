@@ -1,0 +1,134 @@
+.verify-certificaiton-modal {
+	.delete {
+		&:hover {
+			color:$brand-danger;
+		}
+	}
+	.modal-content {
+//		-webkit-backface-visibility: hidden;
+//		-webkit-transform: translateZ(0);
+	}
+	.files {
+		header {
+			background: #eee;
+			padding: 1rem;
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
+			h1 {
+				margin:0;
+			}
+		}
+	}
+//	-webkit-backface-visibility: hidden;
+//	-webkit-transform: translateZ(0);
+	form {
+//		-webkit-backface-visibility: hidden;
+	}
+	.top {
+		text-align:center;
+		font-size:1.4rem;
+		margin-bottom:2rem;
+		.verifying-certification-name {
+			padding:.5rem;
+			background:#eee;
+			margin-top:.5rem;
+		}
+	}
+	.file-name {
+		// long names will create a crazy table, so break the word even if it has no spaces/hyphens
+		word-break: break-all;
+	}
+	#file {
+		overflow: hidden;
+		border: none;
+		outline: none;
+		display: inline;
+		height: 1px;
+		width: 1px;
+		position:absolute;
+	}
+	.delete-file-table {
+		width:100%;
+		header {
+			background:none;
+		}
+	}
+	table {
+		margin-bottom:0;
+		th.file-name, td.file-name {
+			text-align:left;
+		}
+		th {
+			text-align:center;
+		}
+
+		td {
+			&.ng-hide-remove {
+				transition: opacity .8s;
+				-webkit-transition: opacity .8s;
+				-moz-transition: opacity .8s;
+				-o-transition: opacity .8s;
+				opacity : 0;
+			}
+			&.ng-hide-remove-active {
+				transition: opacity .8s;
+				-webkit-transition: opacity .8s;
+				-moz-transition: opacity .8s;
+				-o-transition: opacity .8s;
+				opacity : 1;
+			}
+			td {
+
+				/*
+				&.ng-hide-add {
+					transition: opacity 0s;
+					-webkit-transition: opacity 0s;
+					-moz-transition: opacity .8s;
+					-o-transition: opacity .8s;
+					opacity : 1;
+				}
+				&.ng-hide-add-active {
+					transition: opacity .8s;
+					-webkit-transition: opacity .8s;
+					-moz-transition: opacity .8s;
+					-o-transition: opacity .8s;
+					opacity : 0;
+				}
+				*/
+			}
+			/*
+			&.delete-file-cell {
+				//opacity: 0;
+				&.ng-hide-remove {
+					transition: opacity .8s;
+					-webkit-transition: opacity .8s;
+					-moz-transition: opacity .8s;
+					-o-transition: opacity .8s;
+					opacity : 0;
+				}
+				&.ng-hide-remove-active {
+					transition: opacity .8s;
+					-webkit-transition: opacity .8s;
+					-moz-transition: opacity .8s;
+					-o-transition: opacity .8s;
+					opacity : 1;
+				}
+				&.ng-hide-add {
+					transition: opacity .8s;
+					-webkit-transition: opacity .8s;
+					-moz-transition: opacity .8s;
+					-o-transition: opacity .8s;
+					opacity : 1;
+				}
+				&.ng-hide-add-active {
+					transition: opacity .8s;
+					-webkit-transition: opacity .8s;
+					-moz-transition: opacity .8s;
+					-o-transition: opacity .8s;
+					opacity : 0;
+				}
+			}
+			*/
+		}
+	}
+}
