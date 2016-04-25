@@ -1,8 +1,6 @@
 #certifications.trainers {
 	.cert:hover {
 		cursor: pointer;
-		//background: darken($body-bg, 4%);
-		//color:#333;
 	}
 	// this is to have a relative positioning for some absolute elements (the filter)
 	#certifications-inner {
@@ -22,12 +20,12 @@
 }
 
 .profile-page-cert {
+	border-radius:0;
 	ul {
-		margin-bottom:0px;
-		-webkit-margin-before: 0em;
+		margin-bottom:0;
+		-webkit-margin-before: 0;
 		-webkit-padding-start: 0;
 		list-style-type: none;
-		//text-align: left;
 		font-size: .85em;
 		li {
 			padding-top:.5rem;
@@ -36,10 +34,6 @@
 	}
 	cursor:pointer;
 	width:100%;
-	@include respond-to(xxs) {
-		//width:50%;
-	}
-	padding:1em;
 	&:hover {
 		&:not(.active) {
 			background:$body-bg;
@@ -76,15 +70,13 @@
 	}
 }
 #certifications, .certifications {
+	.my-certifications-link {
+		text-align:right;
+		margin-bottom:10px;
+	}
 	h1 {
-		float:left;
 		@include respond-to(xs) {
 			float:none;
-		}
-	}
-	.search-module {
-		@include respond-to(xs) {
-			margin-top:2rem;
 		}
 	}
 	header {
@@ -109,16 +101,12 @@
 		padding: 1em;
 		background: #ddd;
 		border-radius: 6px;
-		/*
-		padding: 1em 2em;
-		border: 1px solid;
-		border-radius: 10px;
-		background: #555;
-		border-color: #999;
-		*/
 	}
 }
 .cert {
+	&:nth-of-type(odd) {
+		background:#f8f9fa;
+	}
 	.panel-body {
 		padding-bottom:4px;
 	}
@@ -127,6 +115,10 @@
 	}
 	.buttons {
 		text-align:right;
+	}
+	&.panel, .panel-title, .panel-heading {
+		border-radius:0;
+		border:0;
 	}
 	.name {
 		h2 {
@@ -181,16 +173,19 @@
 	ul {
 		font-size:16px;
 		list-style-type: none;
-		padding: 0px;
-		margin: 0px;
+		padding: 0;
+		margin: 0;
 		/*
 		padding-left:2rem;
 		*/
 	}
-	padding: 1rem;
-	border-top: 1px solid;
-	border-bottom:1px solid;
+
+	.name {
+		padding-right:0px!important;
+	}
+//	border-top: 1px solid;
+//	border-bottom:1px solid;
 	~ .cert {
-		border-top:0px;
+		border-top:0;
 	}
 }

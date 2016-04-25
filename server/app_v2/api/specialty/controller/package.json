@@ -1,10 +1,10 @@
 {
-  "name": "apiCertificationTypeController",
+  "name": "apiSpecialtyController",
   "version": "0.0.1",
-  "main": "api-certification-type.controller.js",
+  "main": "api-specialty.controller.js",
   "private": true,
   "plugin": {
-    "consumes": ["certificationTypeModel"],
-    "provides": ["apiCertificationTypeController"]
+    "consumes": ["specialtyModel"],
+    "provides": ["apiSpecialtyController"]
   }
 }

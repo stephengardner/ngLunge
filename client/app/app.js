@@ -1,9 +1,10 @@
 var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
+	'ui.router',
 	'ngCookies',
 	'ngResource',
 	'ngSanitize',
+	'ngMessages',
 	'btford.socket-io',
-	'ui.router',
 	'ui.bootstrap.tabs',
 	'ui.bootstrap.tpls',
 	'ui.bootstrap.accordion',
@@ -11,15 +12,22 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 	'ngAnimate',
 	'mgcrea.ngStrap',
 	'ui.utils',
-	'xeditable',
+	//'xeditable',
 	'geolocation',
 	'uiGmapgoogle-maps',
-	'angularFileUpload',
+	//'angularFileUpload',
 	'duScroll',
 	'abcBirthdayPicker',
 	'ngDialog',
-	'ngLodash'
+	'ngLodash',
+	'infinite-scroll',
+	'ngFileUpload', // using this as new upload service
+	'cgBusy',
+	'angularValidator',
+	'cgBusy',
+	'ngMaterial'
 ])
+
 	.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 		$urlRouterProvider
 			.otherwise('/');
@@ -28,8 +36,52 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		$httpProvider.interceptors.push('authInterceptor');
 		$httpProvider.defaults.headers.delete = { "Content-Type": "application/json;charset=utf-8" };
 	})
+	.config(function(lodash){
+		var _ = lodash;
+		function deepExtend(obj) {
+			var parentRE = /#{\s*?_\s*?}/,
+				slice = Array.prototype.slice;
+
+			_.each(slice.call(arguments, 1), function(source) {
+				for (var prop in source) {
+					if (_.isUndefined(obj[prop]) || _.isFunction(obj[prop]) || _.isNull(source[prop]) || _.isDate(source[prop])) {
+						obj[prop] = source[prop];
+					}
+					else if (_.isString(source[prop]) && parentRE.test(source[prop])) {
+						if (_.isString(obj[prop])) {
+							obj[prop] = source[prop].replace(parentRE, obj[prop]);
+						}
+					}
+					else if (_.isArray(obj[prop]) || _.isArray(source[prop])){
+						if (!_.isArray(obj[prop]) || !_.isArray(source[prop])){
+							throw new Error('Trying to combine an array with a non-array (' + prop + ')');
+						} else {
+							obj[prop] = _.reject(_.deepExtend(_.clone(obj[prop]), source[prop]), function (item) { return _.isNull(item);});
+						}
+					}
+					// Augie Added this...  This might be problematic... Not sure
+					else if (_.isObject(obj[prop]) && _.isUndefined(source[prop])){
+						console.log("source:", source, " [" +prop + "] is undef");
+						obj[prop] = undefined;
+					}
+					else if (_.isObject(obj[prop]) || _.isObject(source[prop])){
+						if (!_.isObject(obj[prop]) || !_.isObject(source[prop])){
+							throw new Error('Trying to combine an object with a non-object (' + prop + ')');
+						} else {
+							obj[prop] = _.deepExtend(_.clone(obj[prop]), source[prop]);
+						}
+					} else {
+						obj[prop] = source[prop];
+					}
+				}
+			});
+			return obj;
+		};
+
+		_.mixin({ 'deepExtend': deepExtend });
+	})
 	.factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
-		console.log("cookiestore:", $cookieStore.get("token"));
+		//console.log("cookiestore:", $cookieStore.get("token"));
 		return {
 			// Add authorization token to headers
 			request: function (config) {
@@ -56,56 +108,51 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		};
 	}).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApiProvider) {
 		GoogleMapApiProvider.configure({
-			//    key: 'your api key',
-			v: '3.13',
-			libraries: 'weather,geometry,visualization'
+			key: 'AIzaSyCsamhmwhWUGzPQ5v73ZPM-xDeuNhjNIlE',
+			//v: '3.13',
+			libraries: 'places'
 		});
-
 	}])
-
-	.run(function ($rootScope, $templateCache, $location, Auth, editableOptions) {
-		FastClick.attach(document.body);
+	.run(function ($timeout, $state, FullMetalSocket, TrainerFactory, $rootScope, $templateCache, $location, Auth/*, editableOptions*/) {
 		// works, will login or logout the user if their token changes, this is not for sockets, socket auth
 		// is handled within auth.
 		$rootScope.$watch(function(){
 			return Auth.getToken();
-		}, function(token){
-			if(token) {
-				console.log("logging in");
+		}, function(newToken, oldToken){
+			if(newToken && newToken != "undefined") {
+				console.log("Loggin IN - app.js - due to watch on tokens");
 				Auth.asyncLoginByToken();
 			}
-			else {
-				console.log("logging out");
-				// unnnecessary... Auth.logout();
-			}
 		});
+		$rootScope.globalAjax = {
+			busy : false
+		}
+
 		$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
 			$rootScope.previousState = from.name;
 			$rootScope.currentState = to.name;
-			console.log('Previous state:'+$rootScope.previousState)
-			console.log('Current state:'+$rootScope.currentState)
 		});
-		editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+
+		//editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+
 		$rootScope.logout = function() {
-			console.log("rootscope logout");
+			console.log("Calling $rootScope.logout");
 			Auth.logout();
-			$location.path('/login');
+			$timeout(function(){
+				$state.go('main.login');
+			});
 		};
 		// Redirect to login if route requires auth and you're not logged in
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			Auth.isLoggedInAsync(function(loggedIn) {
-				console.log("app.js rootScope stateChangeStart.  loggedIn = ", loggedIn);
-				if(loggedIn) {
-					console.log("*************** stateChangeStart and we noticed we are LOGGED IN, we could broadcast a login message here ********************");
-					//$rootScope.$broadcast("login");
-				}
 				if (next.authenticate && !loggedIn) {
 					$location.path('/login');
 				}
 			});
+		});
 
+		$timeout(function(){
+			console.log("Fastclick is attached");
+			FastClick.attach(document.body);
 		});
 	});
-myApp.controller("testController", function($scope){
-	$scope.value = 'test';
-});

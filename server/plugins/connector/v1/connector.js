@@ -8,19 +8,18 @@ module.exports = function setup(options, imports, register){
 	register(null, {
 		connector : {
 			connect : function(mongoUrl, rabbitUrl){
-				console.log(".................!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n111")
 				return new Connector(mongoUrl, rabbitUrl);
 			}
 		}
 	})
-
 }
 
-function Connector(mongoUrl, rabbitUrl, config) {
+function Connector(mongoUrl, rabbitUrl) {
 	EventEmitter.call(this);
 
 	var self = this;
 	var readyCount = 0;
+	var necessaryReadyCount = rabbitUrl ? 3 : 1;
 
 	// https://github.com/heroku-examples/node-articles-nlp
 	// createConnection is the way to go when you want to be able to have multiple DB connections on one node project
@@ -28,7 +27,7 @@ function Connector(mongoUrl, rabbitUrl, config) {
 	this.db = mongoose.createConnection(mongoUrl)
 		//this.db = mongoose.connection
 		.on('connected', function() {
-			//logger.info({ type: 'info', msg: 'connected', service: 'mongodb' });
+			logger.info({ type: 'info', msg: 'connected', service: 'mongodb' });
 			ready();
 		})
 		.on('error', function(err) {
@@ -48,37 +47,39 @@ function Connector(mongoUrl, rabbitUrl, config) {
 	// seed the db if necessary
 	//if(config && config.seedDB) { require('../../config/seed'); }
 
-	this.queue = jackrabbit(rabbitUrl)
-		.on('connected', function() {
-			logger.info({ type: 'info', msg: 'connected', service: 'rabbitmq' });
+	if(rabbitUrl){
+		this.queue = jackrabbit(rabbitUrl)
+			.on('connected', function() {
+				logger.info({ type: 'info', msg: 'connected', service: 'rabbitmq' });
+				ready();
+			})
+			.on('error', function(err) {
+				logger.error({ type: 'error', msg: err, service: 'rabbitmq' });
+			})
+			.on('disconnected', function() {
+				logger.info({ type: 'error', msg: 'disconnected', service: 'rabbitmq' });
+				lost();
+			});
+
+		this.rabbitjscontext = require("rabbit.js").createContext(rabbitUrl);
+		console.log(" [x] Created context %s", rabbitUrl);
+
+		this.rabbitjsqueues = {
+			push : {},
+			worker : {}
+		};
+
+		this.rabbitjscontext.on('ready', function() {
+			logger.info({type: 'info', msg: 'connected', service: '-rabbit.js context'});
 			ready();
 		})
-		.on('error', function(err) {
-			logger.info({ type: 'error', msg: err, service: 'rabbitmq' });
-		})
-		.on('disconnected', function() {
-			logger.info({ type: 'error', msg: 'disconnected', service: 'rabbitmq' });
-			lost();
-		});
-
-	this.rabbitjscontext = require("rabbit.js").createContext(rabbitUrl);
-	console.log(" [x] Created context %s", rabbitUrl);
-
-	this.rabbitjsqueues = {
-		push : {},
-		worker : {}
-	};
-
-	this.rabbitjscontext.on('ready', function() {
-		logger.info({type: 'info', msg: 'connected', service: 'rabbit.js context'});
-		ready();
-	})
-		.on('error', function(err) {
-			logger.info({ type: 'error', msg: err, service: 'rabbitjs context' });
-		});
+			.on('error', function(err) {
+				logger.info({ type: 'error', msg: err, service: 'rabbitjs context' });
+			});
+	}
 
 	function ready() {
-		if (++readyCount === 3) {
+		if (++readyCount === necessaryReadyCount) {
 			logger.info("Emitting Ready from connections/index.js");
 			self.emit('ready');
 		}

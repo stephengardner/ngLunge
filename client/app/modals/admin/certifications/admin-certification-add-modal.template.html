@@ -1,0 +1,34 @@
+<div class="modal-content add-certification-modal">
+    <div class="modal-header">
+        <div class="button-block" ng-click="closeThisDialog(false)">
+            <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <h4 class="modal-title">
+            Add a certification to {{selectedCertificationOrganization.name}}
+        </h4>
+    </div>
+    <form class="form" name="addCertification" ng-submit="submitNewCertiification()">
+        <div class="modal-body">
+            <div class="form-group">
+                <input name="name"
+                       type="text"
+                       class="form-control"
+                       ng-model="newCertification.name"
+                       placeholder="Name" focus-me="true"/>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="action-buttons clearfix">
+                    <div class="btn-action btn-lg btn-primary">
+                        Got it!
+                    </div>
+                    <div class="btn-action btn-lg btn-danger" ng-click="closeThisDialog(false)">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>

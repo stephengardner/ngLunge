@@ -4,7 +4,7 @@
   "main": "app.js",
   "private": true,
   "plugin": {
-    "consumes": ["connections", "eventbus", "models", "amqp"],
+    "consumes": ["connectionDatabase", "express", "routes", "eventbus", "redis", "bruteforce"],
     "provides": ["app"]
   }
 }

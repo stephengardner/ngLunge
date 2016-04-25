@@ -1,10 +1,24 @@
 {
-  "name": "api-trainer.router.js",
+  "name": "api-trainer.controller.js",
   "version": "0.0.1",
-  "main": "api-trainer.router.js",
+  "main": "api-trainer.controller.js",
   "private": true,
   "plugin": {
-    "consumes": ["apiTrainerController"],
-    "provides": ["apiTrainerRouter"]
+    "consumes": [
+      "trainerModel",
+      "redis",
+      "certificationOrganizationModel",
+      "certificationTypeModel",
+      "imageProfilePictureCrop",
+      "locationTrainerParser",
+      "locationTrainerSaver",
+      "certificationDocumentRemoveFromTrainer",
+      "trainerPopulatorCertificationsAggregated",
+      "trainerContactEmail",
+      "profilePictureUploadLocal",
+      "profilePictureUploadS3",
+      "pictureCropper"
+    ],
+    "provides": ["apiTrainerController"]
   }
 }

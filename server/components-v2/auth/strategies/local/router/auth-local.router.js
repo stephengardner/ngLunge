@@ -8,7 +8,7 @@ module.exports = function setup(options, imports, register) {
 	var bruteforce = imports.bruteforce;
 	var router = express.Router();
 
-	router.post('/', bruteforce.prevent, function(req, res, next) {
+	router.post('/', /*bruteforce.prevent,*/ function(req, res, next) {
 		console.log("the request body is: ", req.body);
 		passport.authenticate('local', function (err, userOrTrainer, info) {
 			console.log("passport local authentication callback");
@@ -30,6 +30,6 @@ module.exports = function setup(options, imports, register) {
 	});
 
 	register(null, {
-		authLocalStrategyRouter : router
+		authLocalRouter : router
 	});
 }

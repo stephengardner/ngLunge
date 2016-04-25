@@ -2,6 +2,7 @@ var Promise = require("promise");
 var SmartyStreets = require('machinepack-smartystreets');
 var async = require("async");
 var logger = require("../../logger")();
+var config = require("../../../config/environment");
 /*
 // Verify one or more addresses using the SmartyStreets API
 SmartyStreets.verifyAddress({
@@ -32,19 +33,29 @@ SmartyStreets.verifyAddress({
 var exports = function() {
 	var LocationProcessor = {
 		credentials : {
-			authId : 'e8d46275-e58b-4b69-82c8-5d02745a5574',
-			authToken : 'LCpI38kWxnO74Nw7ErxX'
+			authId : config.smartyStreets.authId,
+			authToken : config.smartyStreets.authToken
 		},
 		processLocation : function(location) {
 			return new Promise(function(resolve, reject){
+				var err;
 				if(!location.address_line_1) {
-					return reject(new Error("This location must have an address_line_1"));
+					err = new Error();
+					err.field = 'address_line_1';
+					err.message = 'Missing address.';
+					return reject(err);
 				}
 				if(!location.state) {
-					return reject(new Error("This location must have a state"));
+					err = new Error();
+					err.field = 'state';
+					err.message = 'Missing state.';
+					return reject(err);
 				}
 				if(!location.city) {
-					return reject(new Error("This location must have a city"));
+					err = new Error();
+					err.field = 'city';
+					err.message = 'Missing city.';
+					return reject(err);
 				}
 				var params = {
 					authId: this.credentials.authId,
@@ -76,18 +87,24 @@ var exports = function() {
 		},
 		convertSmartyStreetsResponseToLungeLocation : function(response) {
 			logger.verbose("Convering response:", response, " into a lunge location");
-			var returnableLocation = {
-				city : response.components.city_name,
-				state : response.components.state_abbreviation,
-				zipcode : response.components.zipcode,
-				address_line_1 : response.delivery_line_1,
-				address_line_2 : response.delivery_line_2,
-				coords : {
-					lat : response.metadata.latitude,
-					lon : response.metadata.longitude
-				},
-				smarty_streets_response : response
-			};
+			try {
+				var returnableLocation = {
+					city : response.components.city_name,
+					state : response.components.state_abbreviation,
+					zipcode : response.components.zipcode,
+					address_line_1 : response.delivery_line_1,
+					address_line_2 : response.delivery_line_2,
+					coords : {
+						lat : response.metadata.latitude,
+						lon : response.metadata.longitude
+					},
+					smarty_streets_response : response
+				};
+			}
+			catch(err) {
+				logger.error(err);
+				return {};
+			}
 			return returnableLocation;
 		},
 		parseTrainer : function(trainer) {
@@ -98,6 +115,7 @@ var exports = function() {
 							console.log("Received a manual location:", item);
 							LocationProcessor.processLocation(item).then(function(response){
 								var index = trainer.locations.indexOf(item);
+								console.log("The response was :", response);
 								var convertedLocation = LocationProcessor
 									.convertSmartyStreetsResponseToLungeLocation(response[0]);
 								convertedLocation.title = item.title;

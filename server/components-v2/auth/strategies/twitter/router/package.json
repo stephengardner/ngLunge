@@ -1,0 +1,13 @@
+{
+  "name": "authTwitterRouter",
+  "version": "0.0.1",
+  "main": "auth-twitter.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "bruteforce",
+      "auth"],
+    "provides": ["authTwitterRouter"]
+  }
+}

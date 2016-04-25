@@ -1,10 +1,10 @@
 {
-  "name": "certificationTypeModel",
+  "name": "certificationOrganizationModel",
   "version": "0.0.1",
-  "main": "certification-type.model.js",
+  "main": "certification-organization.model.js",
   "private": true,
   "plugin": {
-    "consumes": ["connections", "trainerModel"],
-    "provides": ["certificationTypeModel"]
+    "consumes": ["connectionDatabase"],
+    "provides": ["certificationOrganizationModel"]
   }
 }

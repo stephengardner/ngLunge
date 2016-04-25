@@ -1,0 +1,9 @@
+#trainer-map-add-location {
+	.cant-find-location {
+		cursor:pointer;
+		&:hover {
+			color:$brand-primary;
+		}
+		margin-top:4px;
+	}
+}

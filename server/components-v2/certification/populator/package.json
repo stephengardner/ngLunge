@@ -1,0 +1,10 @@
+{
+  "name": "certificationPopulator",
+  "version": "0.0.1",
+  "main": "certification-populator.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["certificationTypeModel", "certificationOrganizationModel"],
+    "provides": ["certificationPopulator"]
+  }
+}

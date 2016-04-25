@@ -1,13 +1,10 @@
 {
-  "name": "apiCertificationTypeRouter",
+  "name": "apiSpecialtyRouter",
   "version": "0.0.1",
-  "main": "api-certification-type.router.js",
+  "main": "api-specialty.router.js",
   "private": true,
   "plugin": {
-    "consumes": [
-      "apiCertificationTypeController",
-      "auth"
-    ],
-    "provides": ["apiCertificationTypeRouter"]
+    "consumes": ["apiSpecialtyController"],
+    "provides": ["apiSpecialtyRouter"]
   }
 }

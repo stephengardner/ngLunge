@@ -14,15 +14,64 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
  * App-wide Styles
  */
 
- .container {
-	 @include responsive-padding();
- }
+.container {
+	@include responsive-padding();
+}
 
+.fa-spin {
+	&.small {
+		transform-origin: 51.5% 44.5%!important;
+	}
+}
+
+// On pages with multiple sections, every section AFTER the angular google map would have a slight alteration:
+// The overflow:hidden on the section item wouldn't render quite right for when the buttons are overflowing and we
+// wanted to cut their corners off.
+.angular-google-map-container {
+	transform: none!important;
+}
+header {
+	h1 {
+		float:none;
+		text-align:center;
+		display:block;
+	}
+	position:relative;
+	.search-module {
+		position:absolute;
+		top:0;
+		right:0;
+		@include respond-to(xs) {
+			margin-top:2rem;
+			position:static;
+		}
+	}
+}
+body {
+	&.ngdialog-open {
+		height:auto!important;
+	}
+}
+h1 {
+	.header-icon {
+		margin-right:7px;
+	}
+}
+body, html {
+	background-color: #ecf0f1;
+	// if this is set to height: auto, ngMAterial's select input boxes dont size right when the screen is small,
+	// they fall off the screen
+	//height:auto!important; // don't let angular material set this to height 100% because it screws with ngModal;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6 {
+	margin:0;
+}
 .browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+	margin: 0.2em 0;
+	background: #ccc;
+	color: #000;
+	padding: 0.2em 0;
 }
 
 // Component styles are injected through grunt
@@ -30,6 +79,8 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'admin/admin.scss';
 @import 'admin/trainers/list/admin-trainers-list.scss';
 @import 'animations.scss';
+@import 'certifications/certification-type/modal-info/certifications-certification-type-modal-info.scss';
+@import 'certifications/certifications.scss';
 @import 'main/main.scss';
 @import 'main/partials/find-section/find-section.scss';
 @import 'main/partials/jumbotron/jumbotron.scss';
@@ -40,19 +91,30 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'styles/_modals.scss';
 @import 'styles/_variables.scss';
 @import 'styles/alerts.scss';
+@import 'styles/angular-material-input.scss';
+@import 'styles/angular-material.scss';
 @import 'styles/bootstrap-overrides.scss';
 @import 'styles/centered-tables.scss';
+@import 'styles/certifications.scss';
 @import 'styles/forms.scss';
 @import 'styles/google-map.scss';
+@import 'styles/infinite-scroll.scss';
+@import 'styles/loaders/squares.scss';
+@import 'styles/locations.scss';
+@import 'styles/logo.scss';
 @import 'styles/menu.scss';
 @import 'styles/mixins/_grid-framework.scss';
 @import 'styles/mixins/_mixins.scss';
 @import 'styles/mixins/_responsive-utlities.scss';
+@import 'styles/modules.scss';
+@import 'styles/ng-dialog-themes/large.scss';
 @import 'styles/popovers.scss';
+@import 'styles/tables.scss';
 @import 'styles/xeditable.scss';
-@import 'trainer/account/certifications/certifications.scss';
-@import 'trainer/account/locations/trainer-locations.scss';
+@import 'trainer/account/certifications/trainer-account-certifications.scss';
+@import 'trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.scss';
 @import 'trainer/account/trainer-account.scss';
+@import 'trainer/public/info/sections/link-social-accounts/link-social-accounts.scss';
 @import 'trainer/public/info/trainer-info.scss';
 @import 'trainer/public/profile/components/certifications/profile-certifications.scss';
 @import 'trainer/public/profile/components/trainer-basic-info/trainer-basic-info.scss';
@@ -60,10 +122,12 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'trainer/public/profile/profile.scss';
 @import 'trainer/register/register.scss';
 @import 'alert-message/alert-message.scss';
+@import 'angular-busy/templates/fullscreen-loader-partial.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';
 @import 'specialties/specialties.scss';
+@import 'trainer-map/add-location/trainer-map-add-location.scss';
 @import 'trainer-map/locations.scss';
 @import 'trainer-map/manual-location/trainer-manual-location.scss';
 // endinjector

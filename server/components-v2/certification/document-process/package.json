@@ -1,0 +1,21 @@
+{
+  "name": "certificationDocumentProcess",
+  "version": "0.0.1",
+  "main": "certification-document-process.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "certificationDocumentUpload",
+      "certificationDocumentS3Upload",
+      "certificationDocumentAddToTrainer",
+      "logger",
+      "certificationDocumentPrevalidate",
+      "errorFormatter",
+      "certificationOrganizationModel",
+      "trainerPopulatorGetSingleCertificationById",
+      "certificationPopulator",
+      "certificationRemoveLocalFile"
+    ],
+    "provides": ["certificationDocumentProcess"]
+  }
+}

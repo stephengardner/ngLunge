@@ -1,0 +1,13 @@
+{
+  "name": "apiRegistrationRouter",
+  "version": "0.0.1",
+  "main": "api-registration.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "apiRegistrationController",
+      "auth"
+    ],
+    "provides": ["apiRegistrationRouter"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "simpleScraper",
+  "version": "0.0.1",
+  "main": "simple-scraper.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["simpleScraper"]
+  }
+}

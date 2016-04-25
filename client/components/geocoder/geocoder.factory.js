@@ -39,10 +39,12 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 		bindPlaces : function(el, cb) {
 			$(function(){
 				if(window.google) {
-					var trainerLocation = $(el).geocomplete({blur : true}).on("geocode:result", function(event, result){
+					var trainerLocation = $(el).geocomplete(/*{blur : true}*/)
+						.on("geocode:result", function(event, result){
 						var updatedLocation = Geocoder.createLocationFromAPIResponse(result);
 						cb(updatedLocation);
 					});
+					$(el).attr('placeholder', '');
 				}
 				$("#find").click(function(){
 					trainerLocation.trigger("geocode");

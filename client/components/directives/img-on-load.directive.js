@@ -2,8 +2,8 @@ lungeApp.directive('bgImage', function (ProfilePicture, $parse) {
 	return {
 		link: function(scope, element, attr) {
 			attr.$observe('bgImage', function() {
-				console.log("----------------- the bg image changed so we should be setting the new profile picture to: ", attr.bgImage);
-				console.log(attr.bgImage);
+				//console.log("----------------- the bg image changed so we should be setting the new profile picture to: ", attr.bgImage);
+				//console.log(attr.bgImage);
 				if (!attr.bgImage) {
 					// No attribute specified, so use default
 					//element.css("background-image","url("+scope.defaultImage+")");
@@ -13,7 +13,7 @@ lungeApp.directive('bgImage', function (ProfilePicture, $parse) {
 					image.onload = function() {
 						//Image loaded- set the background image to it
 						element.css("background-image","url('"+attr.bgImage+"')");
-						console.log("bgImage onload");
+						//console.log("bgImage onload");
 						//scope.bgImage = attr.bgImage;
 						scope.$emit("bgImage", attr.bgImage);
 						//ProfilePicture.attachImgAreaSelect(element);

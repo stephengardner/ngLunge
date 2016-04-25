@@ -1,6 +1,33 @@
-<div class="container">
-    <h1>Admin Access Only</h1>
-    <a ui-sref="main.admin-trainers-list" class="btn btn-transparent">
-        View Trainers
-    </a>
+<div class="admin">
+    <section>
+        <header class="container">
+            <a ui-sref="main.admin.trainers" class="btn btn-transparent">
+                View Trainers
+            </a>
+            <!--
+            <div ui-sref-active="active" ui-sref="admin.clients" class="btn btn-lg btn-primary">
+                Clients
+            </div>
+            <div ui-sref-active="active" ui-sref="admin.properties" class="btn btn-lg btn-info">
+                Properties
+            </div>
+            <div ng-if="isAdmin()" ui-sref-active="active" ui-sref="admin.primeline" class="btn btn-lg btn-warning">
+                Primeline
+            </div>
+            <div ng-if="isAdmin()" ui-sref="admin.createUser" class="btn btn-lg btn-danger">
+                Create User
+            </div>
+            <div ng-if="isAdmin()" ui-sref="admin.units" class="btn btn-lg btn-twitter">
+                Units
+            </div>
+            <div ui-sref="admin.activities" class="btn btn-lg btn-google-plus">
+                Activity
+            </div>
+            <div ng-if="isAdmin()" ui-sref="admin.search" class="btn btn-lg btn-facebook">
+                Search
+            </div>
+            -->
+        </header>
+    </section>
+    <div ui-view></div>
 </div>

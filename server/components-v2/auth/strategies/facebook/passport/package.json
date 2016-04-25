@@ -1,0 +1,12 @@
+{
+  "name": "authFacebookPassport",
+  "version": "0.0.1",
+  "main": "auth-facebook.passport.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel"
+    ],
+    "provides": ["authFacebookPassport"]
+  }
+}

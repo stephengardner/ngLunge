@@ -51,6 +51,7 @@ var customValidationError = function(res, errField, errMessage) {
 };
 
 var mainPublicDirectory = config.env === 'production' ? "/public" : "/client"; // on heroku it's called "public"
+var mainPublicDirectory = '';// we're uploading to the SERVER and this is OK.
 var maxFileMegabytes = 2, //MB. Set this value, the maxFileSize will be inferred
 	maxFileSize = maxFileMegabytes * 1000000;
 

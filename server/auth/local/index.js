@@ -8,7 +8,8 @@ module.exports = function(app) {
 	var auth = require('../auth.service')(app);
 	var router = express.Router();
 
-	router.post('/', function(req, res, next) {
+	router.post('/', /*app.bruteforce.prevent,*/ function(req, res, next) {
+		console.log("?!?!?!?!?!");
 		console.log("the request body is: ", req.body);
 		passport.authenticate('local', function (err, userOrTrainer, info) {
 			console.log("passport local authentication callback");

@@ -1,21 +1,34 @@
 <div class="trainer-certifications certification-list">
-    test
-    <div class="empty" ng-if="!trainerFactory.trainer.certs">
+    <div class="empty" ng-if="!trainerFactory.trainer.certifications_v2.length">
         <div ng-if="isMe()">You have no certifications listed.  If you are certified, make sure to
             <a ui-sref="main.trainer.certifications">add your certifications</a> to your profile
         </div>
         <div ng-if="!isMe()">{{trainerFactory.trainer.name.first}} does not have any active certifications</div>
     </div>
-    <accordion close-others="oneAtATime">
-        <accordion-group ng-click="toggleOpen()" class="profile-page-cert cert"
-                         ng-repeat="certificationV2Mapped in trainerFactory.trainer.certifications_v2_map">
+    <accordion close-others="true">
+        <accordion-group is-open="certificationOrganization.isOpen"
+                         class="profile-page-cert cert"
+                         ng-repeat="certificationOrganization
+                             in trainerFactory.trainer.certifications_v2_coagulated">
             <accordion-heading class="heading">
-                <span class="name">{{certificationV2Mapped.name}}</span>
-                <span class="count-bubble">{{certificationV2Mapped.count}}</span>
+                <span class="name">{{certificationOrganization.name}} </span>
+                <span class="count-bubble">{{certificationOrganization.types.length}}</span>
             </accordion-heading>
             <ul class="child-cert" stop-event>
-                <li ng-repeat="certificationV2 in certificationV2Mapped.certification_v2s">
-                    {{$index + 1}}) {{certificationV2.certification_type.name}}
+                <li ng-repeat="type in certificationOrganization.types">
+                    <span class="name">
+                        {{$index + 1}}) {{type.name}}
+                    </span>
+                 <span class="status pending"
+                       ng-if="type.verification.status == 'Pending'"
+                       title="Pending verification">
+                     <i class="fa fa-warning"></i>
+                 </span>
+                 <span class="status verified"
+                       ng-if="type.verification.status == 'Verified'"
+                       title="Verified by Lunge">
+                     <i class="fa fa-check-circle"></i>
+                 </span>
                 </li>
             </ul>
         </accordion-group>

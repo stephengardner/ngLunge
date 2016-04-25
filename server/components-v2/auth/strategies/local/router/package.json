@@ -1,10 +1,13 @@
 {
-  "name": "authLocal",
+  "name": "authLocalRouter",
   "version": "0.0.1",
-  "main": "auth-local.js",
+  "main": "auth-local.router.js",
   "private": true,
   "plugin": {
-    "consumes": ["trainerModel"],
-    "provides": ["authLocal"]
+    "consumes": [
+      "trainerModel",
+      "bruteforce",
+      "auth"],
+    "provides": ["authLocalRouter"]
   }
 }

@@ -1,0 +1,173 @@
+// The main part to edit modules.
+
+
+$profile-style-horizontal-gutter : .75rem;
+$profile-style-1-header-padding : .75rem; // this should end up being the same as the horizontal gutter
+$profile-style-1-header-bg : #4183D7;
+
+$module-larger-style-1-padding: 1.3;
+$module-larger-style-1-header-bg: #2c3e50;
+
+
+// Larger Style 1 - used on the account page
+.module.larger-style-1 {
+	font-size: 1.4rem;
+	.btn-actions {
+		@extend .col-xxs-24;
+	}
+	header {
+		padding:$module-larger-style-1-padding#{rem};
+		h1 {
+			text-align:left;
+			font-size:1.3em;
+		}
+		overflow:hidden;
+	}
+	.group {
+		padding:2rem 0;
+	}
+	.group.has-margin {
+		margin:0 $module-larger-style-1-padding#{rem};
+	}
+	.edit {
+		background:$module-larger-style-1-header-bg;
+		&:hover {
+			background:darken($module-larger-style-1-header-bg, 10%);
+		}
+		i {
+			font-size:1.15em!important;
+		}
+	}
+}
+
+// Smaller / blue profile style - used on the profile page
+.module.profile-style-1 {
+	.group {
+		padding:2rem 0;
+	}
+	header {
+		background: $profile-style-1-header-bg;
+		text-align:left;
+		font-size:1em;
+		padding: $profile-style-1-header-padding;
+	;
+		h1 {
+			font-size:1.3em;
+		}
+	}
+	form {
+		.form-group {
+			position: relative;
+			@include respond-to(xxs) {
+				.form-control {
+					font-size: 1.4rem;
+					padding: 5px 7px;
+				}
+			}
+		}
+		.btn-actions {
+			//width:auto;
+			@extend .col-xxs-24;
+			padding: 0 $profile-style-horizontal-gutter!important;
+		}
+
+		// like col-xxs-24 but with smaller padding
+		.info-block {
+			@extend .col-xxs-24;
+			padding: 0 $profile-style-horizontal-gutter!important;
+		}
+
+		// hard-overwriting this.  This could cause me confusion later... But I'm doing it.
+		.col-xxs-24 {
+			padding: 0 $profile-style-horizontal-gutter!important;
+		}
+
+		.info-horizontal-label {
+			@extend .col-xxs-8;
+			text-align:left;
+			@include respond-to(xxs) {
+				text-align:left;
+				font-size:1em;
+				width:25%;
+			}
+
+			// give a smaller gutter based on whatever we want
+			padding: 0 $profile-style-horizontal-gutter!important;
+		}
+		.info-horizontal-value {
+			@extend .col-xxs-16;
+			text-align:center;
+			@include respond-to(xs) {
+				text-align:right;
+			}
+			@include respond-to(xxs) {
+				width:75%;
+			}
+			padding: 0 $profile-style-horizontal-gutter!important;
+		}
+		.info-horizontal-aside {
+			position:absolute;
+			right:$grid-gutter-width / 2;
+			top:0;
+			width:40px;
+			text-align:right;
+			color:#c5c5c5;
+		}
+		&.has-aside {
+			/*
+			.info-horizontal-label {
+				@include respond-to(xxs) {
+					text-align:left;
+				}
+				@extend .col-xxs-7;
+			}
+			.info-horizontal-value {
+				@extend .col-xxs-15;
+			}
+			.info-horizontal-edit {
+				@extend .col-xxs-2;
+			}
+			*/
+			.info-horizontal-value {
+				padding-right:60px;
+			}
+		}
+		.edit-button {
+			background:$profile-style-1-header-bg;
+			&:hover {
+				background: darken($profile-style-1-header-bg, 10%);
+			}
+			border-top-right-radius: 8px;
+			cursor: pointer;
+			position: absolute;
+			right: 0;
+			top: 0;
+			.edit {
+				line-height: 1;
+				border-bottom-left-radius:0;
+				padding: .25em .3em;
+				font-size: 1.4em;
+				color: white;
+			}
+		}
+	}
+	&.editing {
+		.info-horizontal-aside {
+			padding:.5em;
+			color:#333;
+			cursor: pointer;
+		}
+	}
+}
+
+
+// across all modules, don't show extra parts of the edit button
+.module {
+	.edit-button {
+		overflow: hidden;
+	}
+}
+
+.group.no-padding {
+	padding:0!important;
+}

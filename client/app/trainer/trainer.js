@@ -1,26 +1,18 @@
 'use strict';
 angular.module('ngLungeFullStack2App')
 	.config(function ($stateProvider) {
+
 		$stateProvider.
 			state('main.trainer', {
 				url : "/trainer",
 				abstract : true
 			}).
+
 			state('main.trainer.register', {
 				url: '/register',
 				views : {
 					'@main' : {
 						templateUrl : "app/trainer/register/register.html"
-					}
-				}
-			}).
-			state('main.trainer.certifications', {
-				url: '/certifications',
-				authenticate: true,
-				views : {
-					'@main' : {
-						controller : "CertificationsController",
-						templateUrl : "app/trainer/account/certifications/certifications.partial.html"
 					}
 				}
 			}).
@@ -31,8 +23,8 @@ angular.module('ngLungeFullStack2App')
 						templateUrl : "app/trainer/register/steps/email/email.partial.html"
 					}
 				}
-			}).
-			state('main.trainer.register.password', {
+			})
+			.state('main.trainer.register.password', {
 				url: '/password/:authenticationHash',
 				views : {
 					'registration@main.trainer.register' : {
@@ -53,30 +45,22 @@ angular.module('ngLungeFullStack2App')
 						templateUrl : "app/trainer/register/steps/password/password.partial.html"
 					}
 				}
-			}).
-			state('main.trainer.register.validation', {
+			})
+			.state('main.trainer.register.validation', {
 				url: '/validation',
 				views : {
 					'registration@main.trainer.register' : {
 						templateUrl : "app/trainer/register/steps/validation/validation.partial.html"
 					}
 				}
-			}).
-			state('main.trainer.edit-profile', {
-				url: '/info',
-				views : {
-					'@main' : {
-						controller : "TrainerInfoController",
-						templateUrl : "app/trainer/public/info/trainer-info.html"
-					}
-				}
-			}).
-			state('main.trainer.public-profile', {
-				url: '/:id',
-				views : {
-					'@main' : {
-						templateUrl : "app/trainer/public/profile/profile.html"
-					}
-				}
-			});
+			})
+			//.state('main.trainer.public-profile', {
+			//	url: '/:id',
+			//	views : {
+			//		'@main' : {
+			//			controller : "TrainerProfileController",
+			//			templateUrl : "app/trainer/public/profile/profile.html"
+			//		}
+			//	}
+			//});
 	});

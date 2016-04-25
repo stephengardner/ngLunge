@@ -1,0 +1,12 @@
+{
+  "name": "trainerContactEmail",
+  "version": "0.0.1",
+  "main": "trainer-contact-email.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel"
+    ],
+    "provides": ["trainerContactEmail"]
+  }
+}

@@ -14,6 +14,9 @@
 		float:left;
 		font-size:2.2em;
 	}
+	.brand-text {
+		vertical-align: middle;
+	}
 	.buttons {
 		// replacing float right with position absolute to actually have the buttons stay on the same line
 		// doesn't work using float even with whitespace nowrap

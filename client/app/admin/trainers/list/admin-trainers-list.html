@@ -1,4 +1,58 @@
 <div class="container" id="trainers-admin">
+    <div class="text-right">
+        <form class="form-inline" ng-submit="query()">
+            <label class="sr-only" for="search">Search</label>
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" id="search" placeholder="Search by email / name"
+                       ng-model="search">
+                <div class="input-group-addon-inner" ng-if="search && things.length" ng-click="clear()"
+                     title="Clear query results"><i class="fa fa-times-circle-o"></i></div>
+            </div>
+        </form>
+    </div>
+    query? {{query}}
+    <div class="widetable">
+        <table class="table table-striped">
+            <thead>
+            <th>
+                Photo
+            </th>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Verified
+            </th>
+            </thead>
+            <tr ng-repeat="trainer in things">
+                <td class="clickable" ui-sref="main.admin.trainer({id : trainer.id})">
+                    <div class="profile-picture thumbnail">
+                        <img ng-src="{{trainer.profile_picture.thumbnail.url}}"/>
+                    </div>
+                </td>
+                <td>
+                    {{trainer.id}}
+                </td>
+                <td>
+                    {{trainer.name.full}}
+                </td>
+                <td>
+                    {{trainer.verified ? 'Yes' : 'No'}}
+                </td>
+            </tr>
+            <div infinite-scroll="get()" infinite-scroll-distance="1"></div>
+        </table>
+    </div>
+    <div class="load-more" ng-if="!complete">
+        <div ng-click="get()" ng-disabled="ajax.busy" class="btn btn-lg btn-block btn-default">
+            {{ ajax.busy ? 'Loading...' : 'Load More' }}
+        </div>
+    </div>
+    <!--
     <div class="actions">
         <div class="btn btn-default">
             <i class="fa fa-plus"></i> Add Trainer
@@ -28,6 +82,8 @@
             </div>
         </div>
     </div>
+    -->
+
     <!--
     <div class="trainer-card wide" ng-repeat="trainer in trainers">
         <div class="trainer clearfix">

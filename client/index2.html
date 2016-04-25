@@ -68,8 +68,9 @@
 <script src="bower_components/ngDialog/js/ngDialog.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
-<script src="bower_components/fastclick/lib/fastclick.js"></script>
 <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
 <!-- endbower -->
 <script src="socket.io-client/socket.io.js"></script>
 <!-- endbuild -->
@@ -86,20 +87,27 @@
 <script src="app/admin/admin.js"></script>
 <script src="app/admin/admin.module.js"></script>
 <script src="app/admin/certifications/list/admin-certifications-list.controller.js"></script>
+<script src="app/admin/trainers/individual/admin-trainer-individual.controller.js"></script>
 <script src="app/admin/trainers/list/admin-trainers-list.controller.js"></script>
 <script src="app/filters/order-object-by.filter.js"></script>
 <script src="app/main/main.controller.js"></script>
 <script src="app/main/main.js"></script>
 <script src="app/main/partials/jumbotron/jumbotron.controller.js"></script>
 <script src="app/main/partials/trainers-home/trainer-home.controller.js"></script>
+<script src="app/modals/admin/certifications/admin-certification-add-modal.controller.js"></script>
 <script src="app/popovers/profile/info/privacy/privacy-popover.directive.js"></script>
 <script src="app/popovers/profile/info/privacy/privacy.popover.controller.js"></script>
+<script src="app/public/certification/certification.routes.js"></script>
+<script src="app/public/certification/organization/public-certification-organization.controller.js"></script>
 <script src="app/trainer/account/certifications/certifications.controller.js"></script>
 <script src="app/trainer/account/certifications/filter/certification.filter.js"></script>
 <script src="app/trainer/account/locations/trainer-locations.controller.js"></script>
 <script src="app/trainer/account/trainer-account.controller.js"></script>
 <script src="app/trainer/account/trainer-account.js"></script>
 <script src="app/trainer/public/info/sections/about/trainer-info-section-about.controller.js"></script>
+<script src="app/trainer/public/info/sections/basic-info/trainer-info-section-basic-info.controller.js"></script>
+<script src="app/trainer/public/info/sections/email/trainer-info-section-email.controller.js"></script>
+<script src="app/trainer/public/info/sections/rate/trainer-info-section-rate.controller.js"></script>
 <script src="app/trainer/public/info/trainer-info.controller.js"></script>
 <script src="app/trainer/public/profile/components/certifications/profile-certifications.controller.js"></script>
 <script src="app/trainer/public/profile/components/certifications/profile-certifications.directive.js"></script>
@@ -126,14 +134,19 @@
 <script src="components/alerts/alerts.controller.js"></script>
 <script src="components/alerts/alerts.directive.js"></script>
 <script src="components/auth/auth.service.js"></script>
+<script src="components/auth/certification-organization/certification-organization.service.js"></script>
+<script src="components/auth/certification-type/certification-type.service.js"></script>
 <script src="components/auth/registration.service.js"></script>
 <script src="components/auth/user.service.js"></script>
 <script src="components/aws-sdk-custom/aws-sdk.js"></script>
 <script src="components/birthdaypicker/index.js"></script>
 <script src="components/broadcast-service/index.js"></script>
 <script src="components/certification/certification.service.js"></script>
+<script src="components/certifications/certifications-list.controller.js"></script>
 <script src="components/directives/compile.directive.js"></script>
 <script src="components/directives/e-autosize.directive.js"></script>
+<script src="components/directives/edit-button.directive.js"></script>
+<script src="components/directives/focus-me.directive.js"></script>
 <script src="components/directives/img-on-load.directive.js"></script>
 <script src="components/directives/my-href.directive.js"></script>
 <script src="components/directives/stop-event.directive.js"></script>
@@ -150,6 +163,8 @@
 <script src="components/navbar-new/navbar-new.js"></script>
 <script src="components/profile-picture/modal/profile-picture-modal.controller.js"></script>
 <script src="components/profile-picture/profile-picture.service.js"></script>
+<script src="components/rates/rates.controller.js"></script>
+<script src="components/rates/rates.directive.js"></script>
 <script src="components/screen-size/screen-size.factory.js"></script>
 <script src="components/scroll-lock/scroll-lock.factory.js"></script>
 <script src="components/socket/socket.service.js"></script>

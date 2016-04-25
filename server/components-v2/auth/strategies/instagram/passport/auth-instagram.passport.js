@@ -1,27 +1,27 @@
 var passport = require('passport'),
-	TwitterStrategy = require('passport-twitter').Strategy,
+	InstagramStrategy = require('passport-instagram').Strategy,
 	config = require("../../../../../config/environment"),
 	_ = require('lodash')
 	;
 module.exports = function setup(options, imports, register) {
 	var trainerModel = imports.trainerModel;
-	var strategy = new TwitterStrategy({
-			consumerKey: config.twitter.clientID,
-			consumerSecret: config.twitter.clientSecret,
-			callbackURL: config.twitter.callbackURL
+	var strategy = new InstagramStrategy({
+			clientID: config.instagram.clientID,
+			clientSecret: config.instagram.clientSecret,
+			callbackURL: config.instagram.callbackURL
 		},
-		function(token, tokenSecret, profile, done) {
-			console.log("Check----------------------------------\n\n");
+		function(accessToken, refreshToken, profile, done) {
+			console.log("Got profile:", profile);
 			return done(null, profile);
 		});
 
 	function doSetup() {
-		console.log("Setting up Facebook Passport");
-		passport.use('twitterTrainerSync', strategy);
+		console.log("Setting up Instagram Passport");
+		passport.use('instagramTrainerSync', strategy);
 	}
 	doSetup();
 
 	register(null, {
-		authTwitterPassport : strategy
+		authInstagramPassport : strategy
 	})
 };

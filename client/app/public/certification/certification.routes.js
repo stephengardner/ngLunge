@@ -2,8 +2,8 @@ angular.module('ngLungeFullStack2App')
 	.config(function ($stateProvider) {
 		$stateProvider
 			.state('main.certification', {
-				url: '/certification',
-				templateUrl : "app/public/certification/certification.html",
+				url: '^/',
+				templateUrl : "app/public/certification/public-certification.html",
 				abstract : true
 			})
 			/*.
@@ -12,9 +12,9 @@ angular.module('ngLungeFullStack2App')
 			 templateUrl : "app/account/signup/signup.html"
 			 })
 			 */
-			.state('main.certification.individual', {
-				url: '^/:name',
-				controller: "PublicCertificationIndividualController",
-				templateUrl: "app/public/certification/individual/certification-individual.partial.html"
+			.state('main.certification.organization', {
+				url: 'organization/:slug',
+				controller: "PublicCertificationOrganizationController",
+				templateUrl: "app/public/certification/organization/public-certification-organization.partial.html"
 			});
 	});

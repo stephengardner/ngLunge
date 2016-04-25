@@ -1,0 +1,10 @@
+{
+  "name": "certificationRemoveLocalFile",
+  "version": "0.0.1",
+  "main": "certification-remove-local-file.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["certificationRemoveLocalFile"]
+  }
+}

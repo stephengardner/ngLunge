@@ -1,0 +1,91 @@
+<div id="trainer-certifications-list" class="certifications container main-push" class="container">
+    <header>
+        <h1>Certifications</h1>
+        <div class="search-module">
+            <form class="form-inline" ng-submit="queryCertifications()">
+                <label class="sr-only" for="search">Search</label>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" class="form-control"
+                           id="search"
+                           placeholder="Search by organization"
+                           ng-model="query">
+                    <div class="input-group-addon-inner" ng-if="query && certificationOrganizations.length" ng-click="clear()" title="Clear query results"><i class="fa fa-times-circle-o"></i></div>
+                </div>
+            </form>
+        </div>
+    </header>
+    <div class="empty search-empty text-center" ng-if="ajax.complete && !certificationOrganizations.length">
+        <h2>No certifications match that query.</h2>
+        <br/>
+        <div class="btn btn-lg btn-info" ng-click="clear()">Clear</div>
+    </div>
+    <section class="certifications">
+        <div class="my-certifications-link">
+            <a ng-if="trainerFactory.trainer" class="btn-text" ui-sref="main.trainer.account.certifications">
+                View My Certifications
+            </a>
+        </div>
+        <accordion close-others="true">
+            <accordion-group is-open="certificationOrganization.isOpen"
+                             class="certification-organization"
+                             ng-repeat="certificationOrganization in certificationOrganizations">
+                <accordion-heading>
+                    <div class="name">
+                        <h2>
+                            {{certificationOrganization.name}}
+                        </h2>
+                    </div>
+                    <div class="count" ng-if="getCertificationOrganizationCount(certificationOrganization)">
+                        <span class="count-added"
+                              ng-attr-title="{{getCertificationOrganizationCount(certificationOrganization)}} {{certificationOrganization.name}} certifications added">
+                            {{getCertificationOrganizationCount(certificationOrganization)}}
+                        </span>
+                    </div>
+                </accordion-heading>
+                <div class="certification panel-item padded"
+                     ng-repeat="certification in certificationOrganization.certifications">
+                    <div class="inner">
+                        <div class="name">
+                            {{certification.name}}
+                        </div>
+                        <form class="buttons">
+                            <fieldset ng-disabled="certification.busy">
+                                <div class="btn btn-sm btn-square btn-primary"
+                                     ng-if="!trainerHasCertification(certification)"
+                                     ng-click="addOrRemoveCertification('add', certification)">
+                                    <span ng-if="!certification.busy">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                    <span ng-if="certification.busy">
+                                        <i class="fa fa-spin fa-spinner"></i>
+                                    </span>
+                                </div>
+                                <div class="btn btn-sm btn-square btn-danger"
+                                     ng-if="trainerHasCertification(certification)"
+                                     ng-click="addOrRemoveCertification('remove', certification)">
+                                    <span ng-if="!certification.busy">
+                                        <i class="fa fa-minus"></i>
+                                    </span>
+                                    <span ng-if="certification.busy">
+                                        <i class="fa fa-spin fa-spinner"></i>
+                                    </span>
+                                </div>
+                                <div class="btn btn-sm btn-square btn-default"
+                                     ng-click="certificationTypeInfoModal(certification)">
+                                    <i class="fa fa-info-circle"></i>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
+        <div infinite-scroll="getCertifications()" infinite-scroll-distance="1"></div>
+        <div class="load-more" ng-if="!ajax.complete">
+            <div ng-click="getCertifications()" ng-disabled="ajax.busy" class="btn btn-lg btn-block btn-default">
+                {{ ajax.busy ? 'Loading...' : 'Load More' }}
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,13 +1,13 @@
 {
-  "name": "authTwitterRouter",
+  "name": "authLinkedinRouter",
   "version": "0.0.1",
-  "main": "auth-twitter.router.js",
+  "main": "auth-linkedin.router.js",
   "private": true,
   "plugin": {
     "consumes": [
       "trainerModel",
       "bruteforce",
       "auth"],
-    "provides": ["authTwitterRouter"]
+    "provides": ["authLinkedinRouter"]
   }
 }

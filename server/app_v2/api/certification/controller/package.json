@@ -1,0 +1,11 @@
+{
+  "name": "apiCertificationController",
+  "version": "0.0.1",
+  "main": "api-certification.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["certificationTypeModel",
+    "certificationOrganizationModel"],
+    "provides": ["apiCertificationController"]
+  }
+}

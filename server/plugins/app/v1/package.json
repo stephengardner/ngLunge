@@ -4,9 +4,7 @@
   "main": "app.js",
   "private": true,
   "plugin": {
-    "consumes": ["connections", "eventbus", "models", "amqp",
-    "expressConfig",
-    "routesConfig"],
+    "consumes": ["connectionDatabase", "redis", "eventbus"],
     "provides": ["app"]
   }
 }

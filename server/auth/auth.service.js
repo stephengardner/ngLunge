@@ -19,8 +19,10 @@ module.exports = function(app) {
 	exports.hasRole = hasRole;
 	exports.signToken = signToken;
 	exports.setTokenCookie = setTokenCookie;
-	exports.isValidRegistration = isValidRegistration;
 	exports.isTrainerMe = isTrainerMe;
+	exports.isValidRegistration = isValidRegistration;
+	exports.attachCorrectTrainerById = attachCorrectTrainerById;
+	exports.authenticate = authenticate;
 	return exports;
 }
 
@@ -78,6 +80,89 @@ function isUserAuthenticated() {
 }
 */
 
+var authenticate = function(){
+	return compose()
+		// Validate jwt
+		.use(function(req, res, next) {
+			console.log("!!!!!!!!!!CHEKCING AUTH.SERVICE IS AUTH()!!!!!!!!!!!!!!!!!!");
+			// allow access_token to be passed through query parameter as well
+			if(req.query && req.query.hasOwnProperty('access_token')) {
+				req.headers.authorization = 'Bearer ' + req.query.access_token;
+			}
+			validateJwt(req, res, next); // THIS is where req.user gets added!
+		})
+		// Attach user to request
+		.use(function(req, res, next) {
+			Trainer.findById(req.user._id, function (err, trainer) {
+				if (err) return next(err);
+				if (!trainer) {
+					User.findById(req.user._id, function (err, user) {
+						if(!user) return res.send(401);
+						req.user = user;
+						next();
+					});
+				}
+				else {
+					req.trainer = trainer;
+					req.session.trainer = trainer;
+					next();
+				}
+			});
+		});
+}
+var attachCorrectTrainerById = function() {
+	return compose()
+		// Attach user to request
+		.use(function(req, res, next) {
+			if(req.params && req.params.id) {
+				console.log("The request params id is:", req.params.id);
+			}
+			// The admin is updating a user but the user is NOT the admin user.
+			// So basically, we attached a trainer to the request but it wasn't the one we're looking to update
+			// so now, attach the right one.
+			console.log("*\n*\n*\nThe request user is:", req.user, "\n*\n*\n");
+
+			// it's a normal user updating themselves
+			if(req.user._id == req.params.id) {
+				console.log("Someone is updating themselves");
+				Trainer.findById(req.params.id, function (err, trainer) {
+					if (err) return next(err);
+					else {
+						req.trainer = trainer;
+
+						// IMPORTANT, FOR LINKING SOCIAL URLS
+						// for passport facebook linking, we log in using passport but we lose the trainer object
+						// so set the trainer object in the session, for this case
+						req.session.trainer = trainer;
+
+						next();
+					}
+				});
+			}
+			else {
+				// it's an admin updating someone else
+				console.log("An admin is updating someone else");
+				Trainer.findById(req.user._id, function(err, trainer){
+					if(err) return next(err);
+					if(trainer.email == 'opensourceaugie@gmail.com') {
+						Trainer.findById(req.params.id, function(err, otherTrainer){
+							if(err) return next(err);
+							req.trainer = otherTrainer;
+
+							// IMPORTANT, FOR LINKING SOCIAL URLS
+							// for passport facebook linking, we log in using passport but we lose the trainer object
+							// so set the trainer object in the session, for this case
+							req.session.trainer = otherTrainer;
+							next();
+						})
+					}
+					else {
+						next(new Error("Unauthorized token in auth service"));
+					}
+				})
+			}
+		});
+}
 // an almost complete replica of express-jwt which mimics what the jwt verification is doing EXCEPT it doesn't throw any errors
 // so, on an api endpoint, when we call isTrainerMe() we can check the JWT and set the user.  If there is no JWT aka
 // no one is logged in, then that's fine.  But if there is a JWT, we will get the current user, and then when pinging the
@@ -176,6 +261,35 @@ function isTrainerMe() {
 			}
 		});
 }
+
+function attachAdmin() {
+	return compose()
+	// Validate jwt
+	.use(function(req, res, next) {
+		// allow access_token to be passed through query parameter as well
+		if(req.query && req.query.hasOwnProperty('access_token')) {
+			req.headers.authorization = 'Bearer ' + req.query.access_token;
+		}
+		validateJwt(req, res, next); // THIS is where req.user gets added!
+	})
+	// Attach user to request
+	.use(function(req, res, next) {
+		Trainer.findById(req.user._id, function (err, trainer) {
+			if (err) return next(err);
+			if (!trainer) {
+				User.findById(req.user._id, function (err, user) {
+					if(!user) return res.send(401);
+					req.user = user;
+					next();
+				});
+			}
+			else {
+				req.trainer = trainer;
+				next();
+			}
+		});
+	});
+};
 
 function isTrainerAuthenticated() {
 	return compose()

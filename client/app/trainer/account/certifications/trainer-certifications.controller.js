@@ -1,12 +1,12 @@
 
-lungeApp.controller("TrainerVerifyCertificationsController",
+lungeApp.controller("TrainerCertificationsController",
 	function(TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth,
 	         Certification, $http, $scope, ngDialog){
 
 		$scope.verifyCertificationPopup = function(certificationV2) {
 			$scope.certificationV2 = certificationV2;
 			$scope.modal = ngDialog.open({
-				template: "app/trainer/account/certifications/verify/verify-modal/trainer-account-certifications-verify-modal.template.html",
+				template: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
 				scope: $scope,
 				className: 'ngdialog-theme-default large',
 				controller: "TrainerAccountVerifyCertificationsModalController"
@@ -35,6 +35,25 @@ lungeApp.controller("TrainerVerifyCertificationsController",
 			else {
 				return false;
 			}
+		}
+
+		$scope.deleteCertification = function(certification){
+			certification.removing = true;
+			var messageToSend = "Removed a " + certification.certification_type.name + " certification from your profile";
+			TrainerFactory.removeCertification(certification.certification_type).save().then(onSuccess).catch(onError);
+			function onSuccess() {
+				certification.removing = false;
+				AlertMessage.success(messageToSend);
+				certification.busy = false;
+				certification.removing = false;
+			}
+			function onError(err){
+				certification.removing = false;
+				certification.busy = false;
+			}
+		}
+		$scope.toggleDeleteCertification = function(certificationV2) {
+			certificationV2.removalConfirmation = !certificationV2.removalConfirmation;
 		}
 
 	});

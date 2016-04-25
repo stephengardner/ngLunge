@@ -1,5 +1,9 @@
 'use strict';
-lungeApp.controller("MainController", function($scope, $location, Auth) {
+lungeApp.controller("MainController", function(FullMetalSocket, $scope, $location, Auth) {
+
+	// testing the on connection method for a socket.  This will connect the socket indefinitely
+	// FullMetalSocket.testConnect();
+
 	$scope.logout = function() {
 		Auth.logout();
 		$location.path('/login');

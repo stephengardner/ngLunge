@@ -8,11 +8,18 @@
 	@include button-variant(#fff, transparent, #fff);
 }
 
+.btn-block {
+	text-align:center;
+	cursor: pointer;
+}
 // purple: rgb(136, 103, 232)
 
 .btn-info-alt {
-	@include button-variant(#fff, rgb(255, 167, 50), rgb(255, 167, 50)); // other orange (lighter): #FFC17B;
+	@include button-variant(#333, #ddd, #ccc);
 }
+//.btn-info-alt {
+//	@include button-variant(#fff, rgb(255, 167, 50), rgb(255, 167, 50)); // other orange (lighter): #FFC17B;
+//}
 
 .btn-transparent-primary {
 	@include button-variant(#4183D7, transparent, #4183D7);
@@ -28,7 +35,6 @@
 	padding: 6px 10px;
 	color: #4183D7;
 	background: white;
-	border: none;
 	border-left: 2px solid;
 	border-bottom: 2px solid;
 	border-color: #ccc;
@@ -76,7 +82,7 @@
 	border-width:.25em;
 }
 .btn-contact {
-	@include button-variant(white, transparent, #323C4D);
+	@include button-variant(white, $brand-primary, #323C4D);
 }
 
 .btn-custom-small {
@@ -84,6 +90,9 @@
 }
 
 .action-buttons {
+	&.nopadding {
+		padding:0;
+	}
 	@extend .col-xxs-24;
 }
 
@@ -95,11 +104,12 @@
 }
 
 .btn-text {
-	color: skyblue;
+	color: $brand-primary;
 	display:inline-block;
 	&:hover {
-		color: darken(skyblue, 15%);
+		color: darken($brand-primary, 15%);
 		cursor:pointer;
+		text-decoration: none;
 	}
 }
 

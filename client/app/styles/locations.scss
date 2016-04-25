@@ -1,0 +1,126 @@
+.location-header{
+	background:#dde4e6;
+	color:#000;
+	font-weight:700;
+	font-size:1.2em;
+	padding:1rem
+}
+@media only screen and (max-width:479px){
+	.locations .location-header{
+		font-size:1em
+	}
+}
+.locations .location{
+	position:relative;
+	cursor:pointer;
+	padding:.5rem 1rem;
+	border-bottom:1px solid #f2f5f5
+}
+.locations .location .location-title .btn-text{
+	margin-top:.2rem
+}
+.locations .location .primary-location-badge{
+	//top:.05rem;
+	font-size:1.5rem;
+	//left:0;
+	padding-right:3px;
+	display:inline-block;
+	//position:absolute;
+	color:#4183D7;
+	font-style:italic;
+	z-index:1
+}
+.locations .location:hover{
+	background:#c9d4d7!important
+}
+.locations .panel:nth-of-type(even){
+	background:#fff;
+}
+.locations .panel:nth-of-type(odd){
+	background:#f8f9fa;
+}
+.locations .empty{
+	padding-bottom:1rem
+}
+form .buttons{
+	margin-top:.5rem
+}
+.google-map.empty,.google-map.empty-loading{
+	height:400px;
+	background:#cfd9db;
+	position:relative
+}
+.google-map.empty-loading:before,.google-map.empty:before{
+	content:"";
+	background:url(/assets/images/map-logo-bw.png);
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	opacity:.1;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-size:30%
+}
+@media only screen and (max-width:479px){
+	.google-map .angular-google-map-container{
+		height:250px
+	}
+}
+.infoWindow{
+	color:#333;
+	font-size:14px;
+	border-radius:5px;
+	overflow:hidden;
+	background:#fff
+}
+.infoWindow .title{
+	color:#fff!important;
+	font-weight:200;
+	overflow:hidden;
+	background:#4183D7;
+	font-size:18px!important;
+	border-bottom:1px solid #666;
+	padding:.8rem 2rem!important
+}
+.infoWindow .close{
+	color:#fff!important;
+	opacity:.7!important;
+	font-size:1.45rem!important;
+	padding:.3rem;
+	position:absolute;
+	top:rem;
+	right:.2rem
+}
+.infoWindow .close:hover{
+	color:#ddd!important
+}
+.infoWindow .content{
+	padding:1.3rem 2rem!important
+}
+.infoWindow:after{
+	content:"";
+	display:block;
+	position:absolute;
+	bottom:-28px;
+	left:50%;
+	margin-left:-17px;
+	width:0;
+	height:0;
+	border-style:solid;
+	border-width:30px 14.5px 0;
+	border-color:#fff transparent transparent
+}
+.location-actions {
+	.fa {
+		color:#999;
+	}
+	padding-left:10px;
+}
+.location-title {
+	.name {
+		position:relative;
+		padding-right:0!important;
+	}
+}

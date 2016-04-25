@@ -14,11 +14,18 @@
 	padding-top: 60px!important;
 }
 
+.modal-body, .modal-footer {
+	// For some reason the position:relative is causing the col- items to be cut off when a modal grows bigger than the
+	// screen length
+	div[class^="col-"], .action-buttons, .btn {
+		position:static!important;
+	}
+}
 .modal-header {
 	padding-top: 3rem;
 	padding-bottom:2.5rem;
 	text-align: center;
-	color: green;
+	color: $brand-primary;
 	font-size: 3rem;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
@@ -41,6 +48,8 @@
 	top: -.1rem;
 	right: -.3rem;
 	padding: .5rem .7rem .5rem .9rem;
+	text-align:center;
+	cursor: pointer;
 }
 .ngdialog.ngdialog-theme-default {
 	.ngdialog-content {

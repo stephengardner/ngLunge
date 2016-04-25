@@ -4,7 +4,7 @@
   "main": "certification-document-s3-upload.js",
   "private": true,
   "plugin": {
-    "consumes": [],
+    "consumes": ["s3"],
     "provides": ["certificationDocumentS3Upload"]
   }
 }

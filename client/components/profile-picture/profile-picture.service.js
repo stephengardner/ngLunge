@@ -7,7 +7,7 @@
  * width : the width of the square bounding box
  * imageWidth / imageHeight : dimensions of the smaller preview that the original file sits in.
  */
-lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q, $upload){
+lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q, Upload /*$upload*/){
 	var ProfilePicture = {
 		url : false,
 		file : false,
@@ -31,13 +31,13 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 		 */
 		getSquareBounding : function() {
 			var imgLoaded = $("#imgLoaded"),
-			imageLoadedWidth =  imgLoaded.width(),
-			imageLoadedHeight = imgLoaded.height(),
-			selectionSize = imageLoadedWidth > imageLoadedHeight ? imageLoadedHeight : imageLoadedWidth,
-			x1 = imageLoadedWidth/2 - (selectionSize/2),
-			y1 = imageLoadedHeight/2 - (selectionSize/2),
-			x2 = x1 + selectionSize,
-			y2 = y1 + selectionSize;
+				imageLoadedWidth =  imgLoaded.width(),
+				imageLoadedHeight = imgLoaded.height(),
+				selectionSize = imageLoadedWidth > imageLoadedHeight ? imageLoadedHeight : imageLoadedWidth,
+				x1 = imageLoadedWidth/2 - (selectionSize/2),
+				y1 = imageLoadedHeight/2 - (selectionSize/2),
+				x2 = x1 + selectionSize,
+				y2 = y1 + selectionSize;
 
 			// if the image is a square, shrink resulting coordinates so that the user can see the cropping area.
 			if(imageLoadedHeight == imageLoadedWidth) {
@@ -54,7 +54,7 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 		// Remove the cropping box and image cropping section
 		removeImage : function() {
 			$timeout(function(){
-				$("#upload_input")[0].value = "";
+				//$("#upload_input")[0].value = "";
 				ProfilePicture.image = {}; // this removes the preview
 				ProfilePicture.attached = false;
 			});
@@ -113,36 +113,40 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 			h = $(window).height() - 110;
 
 			var maxWidth = 500;
+			var maxHeight = h;
+			console.log("w:", w, " h: ", h);
 			// max width 500px
 			w = w > maxWidth ? maxWidth : w;
-
+			console.log("w:", w, " h: ", h);
 			// note the lesser dimension
-			var lesser = w > h ? h : w;
+			var windowLesserDimension = w > h ? h : w;
 
-			console.log("The lesser dimension by which we will bound the image is:", lesser + "px");
+			console.log("The image ratio is:", this.image.ratio);
+			console.log("The lesser dimension by which we will bound the image is:", windowLesserDimension + "px");
 			// set pixels based on screen and image ratios
-			if(lesser == w) {
+			if(windowLesserDimension == w) {
 				if(this.image.ratio >= 1) {
 					console.log("lesser is width, and the image ratio >= 1");
 					this.height = "auto";
-					this.width = lesser;
+					this.width = windowLesserDimension;
 				}
 				else {
 					console.log("lesser is width, and the image ratio < 1");
 					var newRatio = this.image.ratio / (w/h);
 					this.height = "auto";
-					this.width = (newRatio * lesser) > maxWidth ? maxWidth : newRatio * lesser;
+					this.width = (newRatio * windowLesserDimension) > maxWidth ? maxWidth : newRatio * windowLesserDimension;
 				}
 			}
 			else {
+				console.log("Lesser is not w");
 				if(this.image.ratio >= 1) {
 					var newRatio = (w/h) / this.image.ratio;
 					this.width = "auto";
-					this.height = newRatio * lesser;
+					this.height = (newRatio * windowLesserDimension) > maxHeight ? maxHeight : newRatio * windowLesserDimension;
 				}
 				else {
 					this.width = "auto";
-					this.height = lesser;
+					this.height = windowLesserDimension;
 				}
 			}
 			console.log("after updating max image size, this.width is :", this.width, " and this.height is:", this.height);
@@ -150,11 +154,11 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 
 		// Loads the image URL and returns a promise when done
 		setImage : function(imageUrl) {
-			console.log("Setting image using imageUrl: ", imageUrl);
+			console.log("Setting image using imageUrl: ", '\\' + imageUrl);
 			var deferred = $q.defer();
 			// create the image preview, when the image loads, show the image preview (for cropping).
 			var img = new Image();
-			img.src = imageUrl;
+			img.src = '\\' + imageUrl;
 			img.onload = function() {
 				console.log("Setting image: image Set and loaded.");
 				ProfilePicture.image.element = img;
@@ -168,14 +172,16 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 					deferred.resolve();
 				});
 			};
-			img.onerror = function(){
-				deferred.reject();
+			img.onerror = function(err){
+				console.log(err);
+				deferred.reject(err);
 			}
 			return deferred.promise;
 		},
 
 		// When files have been selected by the user, upload them and return a promise
 		onFileSelect : function($files){
+			console.log("onFileSelect files:", $files);
 			var deferred = $q.defer(),
 				file = $files[0];
 			ProfilePicture.status = "loading";
@@ -187,24 +193,33 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 				acl: 'public-read',
 				"Content-Type": file.type === null || file.type === '' ?
 					'application/octet-stream' : file.type,
-				filename: file.name
+				filename: file.name,
+				file : file
 			};
 
-			// define the upload scope variable
-			var upload = $upload.upload({
-				url : '/api/aws/upload',
+			//Auth.getCurrentUser(function(currentUser){
+			file.upload = Upload.upload({
+				url : '/api/trainers/' + Auth.getCurrentUser()._id + '/profile-picture/local',
 				method : 'POST',
-				data : dataToPost,
-				file : file
-			});
+				data : dataToPost
+			})
+			// define the upload scope variable
+			//var upload = $upload.upload({
+			//	url : '/api/aws/upload',
+			//	method : 'POST',
+			//	data : dataToPost,
+			//	file : file
+			//});
 
 			// upload the picture!
-			upload.then(function(response){
+			console.log("ProfilePicture.file is:", ProfilePicture.file);
+			file.upload.then(function(response){
 				if(response.status == 200 && response.data) {
 					deferred.resolve(response);
 				}
 				else {
 					ProfilePicture.status = "err";
+					//ProfilePicture.file = response.data;
 					deferred.reject(response);
 				}
 			}, function(response) {
@@ -217,29 +232,33 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 				console.log("Caught err in upload:", err);
 				deferred.reject(err);
 			});
+			//})
+
 			return deferred.promise;
 		},
 
 		saveCrop : function() {
 			var deferred = $q.defer();
 			ProfilePicture.status = "cropping";
-			Auth.changeProfilePicture({filepath : ProfilePicture.image.url, coords : ProfilePicture.selection}, function(response){
-				console.log("CHANGED");
+			var dataToPost = {
+				url : ProfilePicture.image.url,
+				coords : ProfilePicture.selection
+			};
+			console.log("POSTING DATA:", dataToPost);
+			$http({
+				method : 'POST',
+				url : '/api/trainers/' + Auth.getCurrentUser()._id + '/profile-picture/s3',
+				data : dataToPost
+			}).success(function(data){
 				ProfilePicture.status = "cropped";
-				console.log("Changed profile picture:",response);
-				if(response && response.status != 422) {
-					deferred.resolve(response);
-					ProfilePicture.removeImage();
-				}
-				else {
-					console.log("Updating profile picture returned a status of 422 and response of: ", response);
-					deferred.reject(response);
-				}
-			}, function(err){
-				deferred.reject(err);
+				console.log("data:", data);
+				ProfilePicture.removeImage();
+				deferred.resolve(data);
+			}).error(function(err){
+				console.log(err);
 				ProfilePicture.status = "err";
-				console.log("err profile picture:",err);
-			});
+				deferred.reject(err);
+			})
 			return deferred.promise;
 		}
 	};

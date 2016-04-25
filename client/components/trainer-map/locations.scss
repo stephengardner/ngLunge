@@ -1,7 +1,27 @@
 .location-title, .location-address {
 	padding-top: 1em;
 	padding-bottom:1em;
-	font-size:15px;
+	//font-size:1em;
+}
+.locationEditingForm {
+	@include respond-to(xxs) {
+		font-size:1em;
+	}
+	&.editing {
+		.location {
+			padding-top:20px;
+		}
+	}
+}
+
+form.location-editing-form {
+	.location {
+		padding:1rem;
+	}
+}
+
+form.add-location-form {
+	padding:1rem;
 }
 
 .locations {

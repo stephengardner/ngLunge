@@ -1,0 +1,12 @@
+{
+  "name": "registrationModel",
+  "version": "0.0.1",
+  "main": "registration.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "connectionDatabase"
+    ],
+    "provides": ["registrationModel"]
+  }
+}

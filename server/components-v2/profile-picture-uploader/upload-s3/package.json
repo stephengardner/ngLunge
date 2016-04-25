@@ -1,0 +1,10 @@
+{
+  "name": "profilePictureUploadS3",
+  "version": "0.0.1",
+  "main": "profile-picture-upload-s3.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["profilePictureUploadS3"]
+  }
+}

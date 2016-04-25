@@ -35,7 +35,7 @@ textarea {
 }
 
 .spaced {
-	margin-top: 60px;
+	padding-top: 60px;
 }
 
 ul {
@@ -43,7 +43,8 @@ ul {
 	margin-bottom:0;
 }
 li {
-	list-style-type:none;
+	// dont do this.  Add "list-unstyled" to the ist if you want this!
+	//list-style-type:none;
 }
 .editable-text input {
 	font-size: 1.5rem;

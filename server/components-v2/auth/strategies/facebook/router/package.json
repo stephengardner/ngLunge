@@ -1,0 +1,13 @@
+{
+  "name": "authFacebookRouter",
+  "version": "0.0.1",
+  "main": "auth-facebook.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "bruteforce",
+      "auth"],
+    "provides": ["authFacebookRouter"]
+  }
+}

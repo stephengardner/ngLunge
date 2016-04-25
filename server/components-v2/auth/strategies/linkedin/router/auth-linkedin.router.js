@@ -13,25 +13,25 @@ module.exports = function setup(options, imports, register) {
 		;
 
 	router
-		.get('/trainer-sync', auth.isTrainerMe(), passport.authenticate('twitterTrainerSync', {
-			scope: ['email', 'user_about_me'],
+		.get('/trainer-sync', auth.isTrainerMe(), passport.authenticate('linkedinTrainerSync', {
+			scope: ['r_basicprofile', 'r_emailaddress'],
 			session: false,
-			callbackURL: config.twitter.callbackTrainerURL
+			callbackURL: config.linkedin.callbackTrainerURL
 		}));
 
 	router
-		.get('/callback-trainer-sync', passport.authenticate('twitterTrainerSync', {
-			scope: ['email', 'user_about_me'],
+		.get('/callback-trainer-sync', passport.authenticate('linkedinTrainerSync', {
+			scope: ['r_basicprofile', 'r_emailaddress'],
 			failureRedirect: '/no2',
 			session: false,
-			callbackURL: config.twitter.callbackTrainerURL
+			callbackURL: config.linkedin.callbackTrainerURL
 		}), function(req, res, next) {
 			if(req.session.trainer) {
 				var trainer = req.session.trainer,
-					twitter = req.user._json;
+					linkedin = req.user._json;
 				trainerModel.findById(trainer._id, function(err, trainer){
-					trainer.twitter = twitter;
-					trainer.twitter.link = "http://twitter.com/" + trainer.twitter.screen_name;
+					trainer.linkedin = linkedin;
+					trainer.linkedin.link = linkedin.publicProfileUrl;
 					trainer.save(function(err, saved) {
 						return res.redirect("/trainer/info");
 					});
@@ -40,6 +40,6 @@ module.exports = function setup(options, imports, register) {
 		});
 
 	register(null, {
-		authTwitterRouter : router
+		authLinkedinRouter : router
 	});
 }

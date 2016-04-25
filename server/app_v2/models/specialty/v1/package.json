@@ -1,0 +1,10 @@
+{
+  "name": "specialtyModel",
+  "version": "0.0.1",
+  "main": "specialty.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["connectionDatabase"],
+    "provides": ["specialtyModel"]
+  }
+}

@@ -4,7 +4,9 @@
   "main": "custom-mandrill-sender.js",
   "private": true,
   "plugin": {
-    "consumes": ["emailModel", "userModel"],
+    "consumes": [
+
+    ],
     "provides": ["customMandrillSender"]
   }
 }

@@ -1,5 +1,5 @@
-<div class="module flat-white larger-style-1" ng-controller="TrainerInfoSectionBasicInfoController">
-    <div cg-busy="{promise : cgBusy}">
+<div class="module flat-white larger-style-1">
+    <div cg-busy="{promise : cgBusy}" ng-if="ready">
         <form id="basicInfo"
               name="basicInfo"
               ng-submit="submit(basicInfo)"
@@ -7,7 +7,7 @@
               ng-class="{'editing' : editing}">
             <fieldset ng-disabled="ajax.busy">
                 <header>
-                    <h1>Basic Info2</h1>
+                    <h1>Basic Info</h1>
                     <div edit-button ng-click="toggleEditing(basicInfo)"></div>
                 </header>
                 <!-- Begin Basic Info Form -->
@@ -64,12 +64,22 @@
                         <!--</div>-->
                         <!--</div>-->
                         <div class="form-group has-aside">
-                            <label for="age" class="info-horizontal-label">
+                            <label class="info-horizontal-label">
                                 Age
                             </label>
                             <div class="info-horizontal-value">
                                 <div class="age">
                                     {{trainerFactory.trainer.age.value || '-'}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group has-aside">
+                            <label class="info-horizontal-label">
+                                Years of experience
+                            </label>
+                            <div class="info-horizontal-value">
+                                <div class="yearsOfExperience">
+                                    {{trainerFactory.trainer.years_of_experience.value || '-'}}
                                 </div>
                             </div>
                         </div>
@@ -128,6 +138,21 @@
                                 'fa-lock' : trainerFactory.trainerEditing.age.privacy == 'private'
                                }"></i>
                             </div>
+                        </div>
+                        <div layout="row" layout-align="start center">
+                            <input type="hidden" name="yearsOfExperience"/>
+                            <md-input-container class="md-block" flex>
+                                <label>Years of experience</label>
+                                <md-select ng-model="trainerFactory.trainerEditing.years_of_experience.value">
+                                    <md-option ng-repeat="value in yearsOfExperienceRange" value="{{value}}">
+                                        {{value}}
+                                    </md-option>
+                                </md-select>
+                                <div class="md-errors-spacer"></div>
+                                <div ng-messages="basicInfo.yearsOfExperience.$error" class="md-auto-hide">
+                                    <div ng-message="mongoose">{{form.yearsOfExperience.$error.mongoose}}</div>
+                                </div>
+                            </md-input-container>
                         </div>
                     </div>
                 </div>

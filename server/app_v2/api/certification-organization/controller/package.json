@@ -1,0 +1,10 @@
+{
+  "name": "apiCertificationOrganizaitonController",
+  "version": "0.0.1",
+  "main": "api-certification-organization.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["logger", "certificationOrganizationModel"],
+    "provides": ["apiCertificationOrganizaitonController"]
+  }
+}

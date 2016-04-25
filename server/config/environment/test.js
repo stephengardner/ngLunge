@@ -5,6 +5,6 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/nglungefullstack2-test'
+	  uri: 'mongodb://localhost/nglungefullstack2-dev'
   }
 };

@@ -4,7 +4,7 @@
   "main": "models.js",
   "private": true,
   "plugin": {
-    "consumes": ["connections"],
+    "consumes": ["connections", "trainerModel", "certificationOrganizationModel", "specialtyModel", "certificationTypeModel"],
     "provides": ["models"]
   }
 }

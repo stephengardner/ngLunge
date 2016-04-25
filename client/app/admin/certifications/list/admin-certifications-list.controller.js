@@ -1,74 +1,117 @@
 
-lungeApp.controller("AdminCertificationsListController", function(Certification, $http, $scope, socket){
-	$scope.certifications = Certification.query();
-	console.log("CERTS:", $scope.certifications);
-	$scope.addingTo = {
+lungeApp.controller("AdminCertificationsListController", function(FormControl, CertificationType, $timeout,
+                                                                  CertificationOrganization, ngDialog,
+                                                                  AlertMessage, $http, $scope){
+	// Creating a new certification Organization
+	$scope.newCertificationOrganization = {
+		editing : false
 	};
+	$scope.ajax = { busy : false };
+	$scope.errors = FormControl.errors;
+	$scope.newCertification = {};
+	$scope.certificationOrganizations = [];
+	$scope.selectedCertificationOrganization = {};
+	$scope.toggleNewCertificationOrganization = function() {
+		$scope.newCertificationOrganization.editing = !$scope.newCertificationOrganization.editing;
+	};
+	$scope.removeMongooseError = FormControl.removeMongooseError;
 
-	$scope.newCert = {
-		visibile : false,
-		data : {},
-		toggleVisible : function(){
-			this.visible = !this.visible;
-		},
-		reset : function(){
-			this.visible = false;
-			this.data = {};
+	function preserveOpenAccordions(newResource) {
+		var isOpenMap = {}
+		for(var i = 0; i < $scope.certificationOrganizations.length; i++) {
+			if($scope.certificationOrganizations[i].isOpen) {
+				isOpenMap[$scope.certificationOrganizations[i]._id] = true;
+			}
 		}
+		for(var i = 0; i < newResource.length; i++) {
+			if(isOpenMap[newResource[i]._id]) {
+				newResource[i].isOpen = true;
+			}
+		}
+		return newResource;
 	}
-	$scope.newCertType = {
-		showMoreInfo : false,
-		data : {},
-		toggleMoreInfo : function(){
-			this.showMoreInfo = !this.showMoreInfo;
-		}
-	};
-
-	$scope.addingTypeName = {};
-	$scope.createCert = function(newCert) {
-		Certification.save(newCert.data, function(response){
-			$scope.certifications.push(response.cert);
-			$scope.newCert.reset();
-			console.log("created and pushed a new cert from the resource response:", response);
-		});
-	};
-	$scope.certAddType = function(cert){
-		Certification.addType({id : cert._id}, {types : [$scope.newCertType.data]}, function(response){
-			console.log("updated cert:",response);
-			for(var i = 0; i < $scope.certifications.length; i++){
-				if($scope.certifications[i]._id == response._id){
-					console.log("OK setting new cert:", response);
-					$scope.certifications[i] = response;
-				}
-			}
-		});
-
-	};
-	$scope.deleteCert = function(cert) {
-		Certification.remove({id : cert._id}, function(response){
-			if(response) {
-				for(var i = 0; i < $scope.certifications.length; i++){
-					if($scope.certifications[i]._id == cert._id){
-						$scope.certifications.splice(i, 1);
-					}
-				}
-			}
-			console.log("Removed a certification and got response from server:", response);
+	$scope.queryCertificationOrganizations = function(){
+		CertificationOrganization.query(function(response){
+			$scope.certificationOrganizations = preserveOpenAccordions(response);
 		});
 	};
 
-	$scope.deleteCertType = function(cert, type, index) {
-		Certification.removeType({id : cert._id}, {types : [{_id : type._id}]}, function(response){
-			if(response) {
-				cert.types.splice(index, 1);
-			}
-			console.log("deleted cert type... response:",response);
+	$scope.submitNewCertificationOrganization = function(form){
+		$scope.ajax.busy = true;
+		CertificationOrganization.save($scope.newCertificationOrganization, function(response){
+			AlertMessage.success("Added the " + $scope.newCertificationOrganization.name + " organization");
+			$scope.queryCertificationOrganizations();
+			$scope.ajax.busy = false;
+			$scope.newCertificationOrganization.editing = false;
 		}, function(err){
-			console.log("err on deleting cert type:",err);
+			FormControl.parseValidationErrors(form, err);
+			$scope.errors = FormControl.errors;
+			$scope.ajax.busy = false;
+			console.log("submitNewCertificationOrganization error:", err);
 		});
 	};
 
-	$scope.toggleNewSubType = function(cert, index) {
-		$scope.addingTo[index] = !$scope.addingTo[index];
+
+	/*
+	$scope.toggleOpen = function(certificationOrganization) {
+		if(certificationOrganization.open === true) {
+			console.log("...", certificationOrganization);
+			certificationOrganization.open = false;
+		}
+		else{
+			console.log("---");
+			certificationOrganization.open = true;
+		}
 	}
+	*/
+
+	// Deleting a certification Organization
+	$scope.delete = function(certificationOrganizations){
+		$http({
+			method : 'DELETE',
+			url : 'api/certification-organizations/' + certificationOrganizations._id
+		}).success(function(response){
+			$scope.certificationOrganizations.splice($scope.certificationOrganizations.indexOf(certificationOrganizations), 1);
+			AlertMessage.success(certificationOrganizations.name + " removed!");
+			$scope.queryCertificationOrganizations();
+		}).error(function(err){
+			console.log("Error on removing a cert:", err);
+		})
+	};
+
+	$scope.newCertificationForm = function(issuingOrganization) {
+		$scope.selectedCertificationOrganization = issuingOrganization;
+		$scope.newCertification = {
+			organization : issuingOrganization._id
+		}
+		$scope.modal = ngDialog.open({
+			template: "app/modals/admin/certifications/admin-certification-add-modal.template.html",
+			scope: $scope,
+			controller: "AdminCertificationAddModalController"
+		});
+	};
+
+	$scope.isCertificationOrganizationOpen = function(certificationOrganization) {
+		return certificationOrganization._id == $scope.selectedCertificationOrganization._id;
+	}
+	$scope.submitNewCertiification = function() {
+		console.log("THE NEW CERTIFICATION ISSSSSSSSSSSS:", $scope.newCertification);
+		CertificationType.save($scope.newCertification, function(response){
+			$scope.queryCertificationOrganizations();
+		}, function(err){
+			console.log("submitNewCertification Error:", err);
+		})
+		$scope.modal.close();
+	}
+
+	$scope.deleteCertificationType = function(certificationType) {
+		CertificationType.delete({id : certificationType._id}, function(){
+			$scope.queryCertificationOrganizations();
+		})
+	}
+	$scope.queryCertificationOrganizations();
+
+	CertificationType.query(function(response){
+		console.log("All CertificationType:", response);
+	})
 });

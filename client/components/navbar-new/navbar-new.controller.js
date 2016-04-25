@@ -1,7 +1,10 @@
-lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popover', 'MenuService', 'socket',
+lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popover', 'MenuService', /*'socket',*/
 	'$state', '$rootScope', '$location', '$window', '$scope',
-	'$location', 'Auth', function(TrainerFactory, $timeout, $popover, MenuService, socket, $state, $rootScope, $location, $window, $scope, $location, Auth){
-		$scope.getCurrentUser = Auth.getCurrentUser;
+	'$location', 'Auth', function(TrainerFactory, $timeout, $popover, MenuService, /*socket,*/ $state,
+	                              $rootScope, $location, $window, $scope, $location, Auth){
+		Auth.isLoggedInAsync(function(){
+			$scope.getCurrentUser = Auth.getCurrentUser;
+		})
 
 		$scope.$watch(function(){
 			return $state.current.name
@@ -18,7 +21,7 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popo
 			return $location.path().indexOf('admin') == 1;
 		};
 		*/
-		console.log($location.path().indexOf("admin"));//.includes('admin'));
+		//console.log($location.path().indexOf("admin"));//.includes('admin'));
 		// check scrolled and do scope apply on home page scrolling
 		angular.element($window).bind("scroll", function() {
 			if($location.path() == "/"){
@@ -73,7 +76,7 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popo
 
 		$scope.$on("$destroy", function(){
 			alert("destroying the navbar scope");
-			socket.unsync.user("trainer", Auth.getCurrentUser());
+			//socket.unsync.user("trainer", Auth.getCurrentUser());
 		});
 
 		// Bind the share button popover

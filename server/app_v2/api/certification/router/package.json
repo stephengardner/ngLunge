@@ -1,0 +1,13 @@
+{
+  "name": "apiCertificationRouter",
+  "version": "0.0.1",
+  "main": "api-certification.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "apiCertificationController",
+      "auth"
+    ],
+    "provides": ["apiCertificationRouter"]
+  }
+}

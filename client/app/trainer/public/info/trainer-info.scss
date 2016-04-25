@@ -1,4 +1,19 @@
 #trainer-info {
+
+	.privacy {
+		margin-bottom: 22px;
+		//	padding: 7px 12px;
+		width:35px;
+		text-align:center;
+		padding-top:9px;
+		height:35px;
+		border-radius: 6px;
+		cursor:pointer;
+		&:hover, &:active {
+			background:#eee;
+		}
+	}
+
 	.module {
 		overflow:hidden;
 	}
@@ -14,10 +29,17 @@
 
 		.edit-button {
 			i {
-				padding:.5em;
-				font-size:2em;
+				padding: .2em;
+				font-size: 1.8em;
 			}
 		}
+	}
+
+	textarea[name="bio"] {
+		background:#F9F9F9;
+		padding:.6rem 1rem;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
 	}
 
 	.gender {

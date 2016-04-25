@@ -15,6 +15,7 @@ var session = require('express-session');
 
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
+var ConnectRedis = require("connect-redis");
 
 module.exports = function(express_web, app) {
 	var env = express_web.get('env');
@@ -30,12 +31,24 @@ module.exports = function(express_web, app) {
 
 	// Persist sessions with mongoStore
 	// We need to enable sessions for passport twitter because its an oauth 1.0 strategy
-
+	/*
 	express_web.use(session({
 		secret: config.secrets.session,
 		resave: true,
 		saveUninitialized: true,
 		store: new mongoStore({ mongoose_connection: app.connections.db })
+	}));
+	*/
+
+	var session = require('express-session');
+	var RedisStore = ConnectRedis(session);
+	var store = new RedisStore({
+		client : app.redisClient
+	});
+	express_web.use(session({
+		secret : config.secrets.session,
+		maxAge : new Date(Date.now() + 7200000), // 2 hr session lifetime
+		store : store
 	}));
 
 

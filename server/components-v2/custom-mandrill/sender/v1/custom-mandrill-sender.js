@@ -10,7 +10,6 @@ var config = require('../../../../config/environment'),
 module.exports = function(options, imports, register){
 	var emailLogger = require('winston').loggers.get('emailSending');
 	var loggerType = "custom-mandrill-sender";
-	var emailModel = imports.emailModel;
 	var adminEmail = "apartminty-admin-testing@googlegroups.com" // todo relocate this
 	var CustomMandrillSender = {
 		_simpleCreateParams : function(options){

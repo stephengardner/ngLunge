@@ -23,7 +23,7 @@ angular.module('ngLungeFullStack2App')
 
 angular.module('ngLungeFullStack2App')
 	.factory('Trainer', function ($resource) {
-		return $resource('/api/trainers/:id/:controller', {
+		return $resource('/api/trainers/:id/:controller/:object_id', {
 				id: '@_id'
 			},
 			{
@@ -48,6 +48,13 @@ angular.module('ngLungeFullStack2App')
 					method : 'PUT',
 					params : {
 						controller : 'certification'
+					}
+				},
+				deleteCertificationFile : {
+					method : 'DELETE',
+					params : {
+						controller : 'certification-file',
+						object_id : '@_object_id'
 					}
 				},
 				/*

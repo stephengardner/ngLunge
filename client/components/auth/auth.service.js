@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('ngLungeFullStack2App')
-	.factory('Auth', function Auth($state, $location, $rootScope, $http, Trainer, Registration, User, $cookieStore, $q) {
+	.factory('Auth', function Auth($state, $rootScope, $http, Trainer, Registration, User, $cookieStore, $q) {
 		var currentUser = {};
 		var currentType = "";
-		console.log("COOKIESTORE: ", $cookieStore.get('token'));
+		//console.log("COOKIESTORE: ", $cookieStore.get('token'));
 		var Auth = {
 			/**
 			 * Authenticate user and save token
@@ -19,6 +19,9 @@ angular.module('ngLungeFullStack2App')
 			},
 			setSocketFactory : function(socketFactory) {
 				this.socketFactory = socketFactory;
+			},
+			setFullMetalSocket : function(fullMetalSocket){
+				this.fullMetalSocket = fullMetalSocket;
 			},
 			syncAfterLogin : function () {
 				if(Auth.socketFactory && Auth.isLoggedIn() ) {
@@ -39,34 +42,36 @@ angular.module('ngLungeFullStack2App')
 					type : lunger.type
 				}).
 					success(function(data) {
-						//Auth.logout();
-						//return;
-						console.log("logged in, this should have a token and type: ", data);
-
 						// put the token and user type in our cookie store.  Authenticate the user on every ping request
 						$cookieStore.put('token', data.token);
 						$cookieStore.put('type', data.type);
 						// authenticate the socket.  We could potentially wait and authenticate the socket whenever it
 						// next sendsa socket event.  But we're going to authenticate it anyways.  There is an almost
 						// infinitely small difference here...
-						Auth.socket.emit('custom-authenticate', {token : Auth.getToken()});
+						//Auth.socket.emit('custom-authenticate', {token : Auth.getToken()});
 						currentType = data.type;
 						Auth.type = data.type;
+						// If I watch for this in app.js, this doesn't need to be here.
+						//FullMetalSocket.init(Auth.getToken());
 						console.log("client side auth service checking the return json 'type' param og the login() response and then GETting whichever it should be");
 						if(lunger.type == "user") {
-							currentUser = User.get();
+							User.get(function(response){
+								currentUser = response;
+								deferred.resolve(data);
+							});
 						}
 						else {
-							currentUser = Trainer.get();
+							Trainer.get(function(response){
+								currentUser = response;
+								$rootScope.$emit('trainerLogin');
+								deferred.resolve(data);
+							});
 						}
-						console.log("LOGGED IN NOW CURRENT USER IS:", currentUser);
-						deferred.resolve(data);
-						return cb();
 					}).
 					error(function(err) {
-						this.logout();
+//						this.logout();
 						deferred.reject(err);
-						return cb(err);
+						//return cb(err);
 					}.bind(this));
 
 				return deferred.promise;
@@ -106,11 +111,22 @@ angular.module('ngLungeFullStack2App')
 			 * @param  {Function}
 			 */
 			logout: function() {
+				alert("Auth logout()");
+				Auth.fullMetalSocket.trainer.logout(Auth.getCurrentUser());
+				Auth.fullMetalSocket.trainer.unsyncAuth();
 				$cookieStore.remove('token');
 				$cookieStore.remove('type');
 				currentUser = {};
 			},
-
+			// When the socket pushes a login event, don't push the socket event multiple times
+			logoutBySocket : function(){
+				console.log("Auth.logoutBySocket(); should only be called once.");
+				Auth.fullMetalSocket.trainer.unsyncAuth();
+				$cookieStore.remove('token');
+				$cookieStore.remove('type');
+				currentUser = {};
+				$state.go("main.login");
+			},
 			createRegistration : function(registration, callback) {
 				var cb = callback || angular.noop;
 
@@ -183,43 +199,6 @@ angular.module('ngLungeFullStack2App')
 				}).$promise;
 			},
 
-			addCertification: function(certificationStringOrArray, callback) {
-				var cb = callback || angular.noop,
-					Model = currentType == "trainer" ? Trainer : User;
-				return Model.addCertification({ id: currentUser._id }, {
-					certification: certificationStringOrArray
-				}, function(user) {
-					currentUser = user;
-					return cb(user);
-				}, function(err) {
-					return cb(err);
-				}).$promise;
-			},
-
-			removeCertification: function(certificationStringOrArray, callback) {
-				var cb = callback || angular.noop,
-					Model = currentType == "trainer" ? Trainer : User;
-				return Model.removeCertification({ id: currentUser._id }, {
-					certification: certificationStringOrArray
-				}, function(user) {
-					currentUser = user;
-					return cb(user);
-				}, function(err) {
-					return cb(err);
-				}).$promise;
-			},
-
-			modifyCertification : function(data, callback) {
-				var cb = callback || angular.noop,
-					Model = currentType == "trainer" ? Trainer : User;
-				return Model.modifyCertification({ id: currentUser._id }, data, function(user) {
-					currentUser = user;
-					return cb(user);
-				}, function(err) {
-					return cb(err);
-				}).$promise;
-			},
-
 			changeProfilePicture : function(data, callback){
 				console.log("Auth changeProfilePicture");
 				var cb = callback || angular.noop,
@@ -236,6 +215,13 @@ angular.module('ngLungeFullStack2App')
 					return cb(err);
 				}).$promise;
 			},
+
+			// For cases where we want to see if the current user is the same as some other user
+			// for example, when we're an admin, and we update some other user, we might not want to do certain things
+			// such as travel to a URLname on URLname change during trainer syncing.
+			isUserCurrent : function(user){
+				return user._id == currentUser._id;
+			},
 			/**
 			 * Updates any object on the Trainer / User MongoDB document.  Can be a large or a small update.
 			 *
@@ -244,43 +230,17 @@ angular.module('ngLungeFullStack2App')
 			updateProfile : function(dataObject, callback) {
 				var cb = callback || angular.noop,
 					Model = this.type == "trainer" ? Trainer : User;
-				console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
-				return Trainer.update({ id: currentUser._id }, dataObject, function(user) {
-					console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
-					currentUser = user;
+				//console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
+				return Trainer.update({ id: dataObject._id }, dataObject, function(user) {
+					//console.log("Auth service update profile on the ", Model, " model returned an updated user of: ", user);
+					// in the event where an admin updates a different user, we don't want to override the admin login
+					if(user._id == currentUser._id) {
+						currentUser = user;
+					}
+
 					return cb(user);
 				}, function(err) {
 					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
-					return cb(err);
-				}).$promise;
-			},
-
-
-			//TODO: Add location and remove location can be clumped into one function/endpoint, or clustered into updateProfile by passing the model's "locations" array!
-			addLocation : function(dataObject, callback) {
-				var cb = callback || angular.noop,
-					Model = this.type == "trainer" ? Trainer : User;
-				console.log("*Auth.service.js attempting to add location with data object: ", dataObject);
-				return Trainer.addLocation({ id: currentUser._id }, dataObject, function(user) {
-					console.log("Auth service addLocation update profile on the ", Model, " model returned an updated user of: ", user);
-					currentUser = user;
-					return cb(user);
-				}, function(err) {
-					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
-					return cb(err);
-				}).$promise;
-			},
-
-			removeLocation : function(dataObject, callback) {
-				var cb = callback || angular.noop,
-					Model = this.type == "trainer" ? Trainer : User;
-				console.log("*Auth.service.js attempting to remove location with data object: ", dataObject);
-				return Trainer.removeLocation({ id: currentUser._id }, dataObject, function(user) {
-					console.log("there wasn't an error...? the cb is:", cb);
-					currentUser = user;
-					return cb(user);
-				}, function(err) {
-					console.log("there WAS an error...:", err, " and the cb is:", cb);
 					return cb(err);
 				}).$promise;
 			},
@@ -316,7 +276,7 @@ angular.module('ngLungeFullStack2App')
 			isLoggedInAsync: function(cb) {
 				if(currentUser.hasOwnProperty('$promise')) {
 					currentUser.$promise.then(function(response) {
-						console.log("auth service isLoggedInAsync response:", response);
+						//console.log("auth service isLoggedInAsync response:", response);
 						cb(true);
 					}).catch(function(err) {
 						console.log("auth service isLoggedInAsync err:", err);
@@ -347,6 +307,7 @@ angular.module('ngLungeFullStack2App')
 			},
 
 			asyncLoginByToken : function() {
+				// alert("Async login by token");
 				// the token has been set, so simply just shout out to the API to get the user!
 				var type;
 				try {
@@ -358,23 +319,29 @@ angular.module('ngLungeFullStack2App')
 				catch(err) {
 					console.log("Cookiestore error: ", err);
 				}
-				if(type == "trainer")
-					currentUser = Trainer.get(function(response, headers){
+				if(type == "trainer"){
+					currentUser = Trainer.get(function(response, headers) {
+						//alert("Broadcasting AsyncLoginByToken!");
+						Auth.fullMetalSocket.trainer.syncAuth(Auth.getToken());
 						console.log("Auth service auto logged in with response: ", response);
-						//Auth.syncAfterLogin();
+						//$rootScope.$broadcast('asyncLoginByToken');
 					}, function(err){
 						console.log("Auth service auto login ERRRO: ", err);
 					});
+				}
 				else
 					currentUser = User.get(function(response, headers){
 						//Auth.syncAfterLogin();
 					});
 			}
 		};
-		if($cookieStore.get('token')) {
-			Auth.asyncLoginByToken();
-		}
-		console.log("current user is:", currentUser);
+
+		//this is now happening in app.run. removed so it wouldn't double-call
+		//if($cookieStore.get('token')) {
+		//	Auth.asyncLoginByToken();
+		//}
+
+		//console.log("current user is:", currentUser);
 		return Auth;
 
 	});

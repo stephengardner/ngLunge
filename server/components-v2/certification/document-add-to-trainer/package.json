@@ -1,0 +1,10 @@
+{
+  "name": "certificationDocumentAddToTrainer",
+  "version": "0.0.1",
+  "main": "certification-document-add-to-trainer.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["certificationDocumentAddToTrainer"]
+  }
+}

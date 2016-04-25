@@ -1,35 +1,9 @@
-myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage, socket, FormControl, $popover, Sync, $scope, Auth){
+myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage, /*socket,*/ FormControl,
+                                                   $popover, Sync, $scope, Auth){
 
 	$scope.editingPrivacyFor = false;
 
-	//$scope.isMe = TrainerFactory.isMe;
-
 	$scope.trainerFactory = TrainerFactory;
-	//$scope.trainerEditing2 = TrainerFactory.trainer_editing;
-
-	// BEGIN controller syncing
-	/*
-	// note - The fastest way to completely sync trainer and trainer editing with the socket events, and changes within
-	// note - the controller when the controller updates something
-	function initAndSync(user){
-		// Set trainer and trainerEditing on the sync object, then put them on the scope
-		Sync.syncTrainer(user);
-		$scope.trainer = Sync.trainer;
-		$scope.trainerEditing = Sync.trainerEditing;
-
-		// Get notified by the socket for updates on this user, when updates happen, sync the trainer
-		socket.sync.user('trainer', user,  function(event, newTrainer){
-			Sync.syncTrainer(newTrainer);
-			AlertMessage.success("Profile updated successfully");
-		});
-
-		// the Sync service will emit a trainerUpdated event, which re-syncs this scope
-		$scope.$on('trainerUpdated', function(){
-			$scope.trainer = Sync.trainer;
-			$scope.trainerEditing = Sync.trainerEditing;
-		});
-	};
-	*/
 
 	$scope.isMe = function(){
 		return TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id);
@@ -37,10 +11,12 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 
 	// Sync the user up. and we're good to go!
 	Auth.isLoggedInAsync(function(){
-		TrainerFactory.init(Auth.getCurrentUser()), { sync : true } ;
+		TrainerFactory.init(Auth.getCurrentUser(), { sync : true });
+	});
+	$scope.$on('$destroy', function(){
+		TrainerFactory.unsyncModel();
 	});
 	// END controller syncing
-
 	// Remaining scope functions outside of syncing
 	$scope.removeMongooseError = FormControl.removeMongooseError;
 	$scope.$watch(function() {
@@ -85,9 +61,11 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 	var privacyPopover;
 
 	$scope.$on("privacy-change", function(event, value){
-		$scope.trainerFactory.trainerEditing[$scope.editingPrivacyFor].privacy = value;
-		privacyPopover.$promise.then(privacyPopover.toggle);
-		$scope.editingPrivacyFor = false;
+		if($scope.editingPrivacyFor) {
+			$scope.trainerFactory.trainerEditing[$scope.editingPrivacyFor].privacy = value;
+			privacyPopover.$promise.then(privacyPopover.toggle);
+			$scope.editingPrivacyFor = false;
+		}
 	});
 
 	$scope.togglePopover = function(event, modelToEdit){
@@ -97,6 +75,7 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 		}
 		else {
 			$scope.editingPrivacyFor = modelToEdit;
+			console.log("ModelToEdit:", $scope.editingPrivacyFor);
 			privacyPopover = $popover(angular.element(event.currentTarget), {
 				contentTemplate: 'app/popovers/profile/info/privacy/popover.tpl.html',
 				html: true,

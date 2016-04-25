@@ -1,10 +1,10 @@
 {
-  "name": "authLocal",
+  "name": "authLocalPassport",
   "version": "0.0.1",
-  "main": "auth-local.js",
+  "main": "auth-local.passport.js",
   "private": true,
   "plugin": {
     "consumes": ["trainerModel"],
-    "provides": ["authLocal"]
+    "provides": ["authLocalPassport"]
   }
 }

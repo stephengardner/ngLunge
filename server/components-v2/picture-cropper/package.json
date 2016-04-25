@@ -1,0 +1,10 @@
+{
+  "name": "pictureCropper",
+  "version": "0.0.1",
+  "main": "picture-cropper.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["pictureCropper"]
+  }
+}

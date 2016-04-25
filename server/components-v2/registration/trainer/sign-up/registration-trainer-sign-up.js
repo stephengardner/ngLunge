@@ -3,7 +3,7 @@ module.exports = function setup(options, imports, register) {
 		customMandrill = imports.customMandrillSender,
 		config = require('../../../../config/environment')
 	;
-	var Registrar = {
+	var registrationTrainerSignUp = {
 		sendEmail : function(trainerModel) {
 			return new Promise(function(resolve, reject){
 				logger.info("SendingRegistrationEmail...");
@@ -32,6 +32,6 @@ module.exports = function setup(options, imports, register) {
 	};
 
 	register(null, {
-		registrationTrainerSignUp : Registrar
+		registrationTrainerSignUp : registrationTrainerSignUp
 	});
 }

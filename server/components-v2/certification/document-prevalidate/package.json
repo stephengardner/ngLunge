@@ -1,0 +1,14 @@
+{
+  "name": "certificationDocumentPrevalidate",
+  "version": "0.0.1",
+  "main": "certification-document-prevalidate.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "certificationTypeModel",
+      "trainerModel",
+      "errorFormatter"
+    ],
+    "provides": ["certificationDocumentPrevalidate"]
+  }
+}

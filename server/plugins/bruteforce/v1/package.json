@@ -1,0 +1,10 @@
+{
+  "name": "bruteforce",
+  "version": "0.0.1",
+  "main": "bruteforce.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["bruteforce"]
+  }
+}

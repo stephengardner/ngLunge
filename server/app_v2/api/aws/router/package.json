@@ -1,0 +1,10 @@
+{
+  "name": "apiAWSRouter",
+  "version": "0.0.1",
+  "main": "api-aws.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["apiAWSController", "bruteforce", "auth"],
+    "provides": ["apiAWSRouter"]
+  }
+}

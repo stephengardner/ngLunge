@@ -1,6 +1,6 @@
-<div class="trainer-certifications trainer-verify-certifications main-push">
+<div id="trainer-certifications" class="trainer-certifications trainer-verify-certifications main-push">
     <header>
-        <h1>My Certifications</h1>
+        <h1><i class="header-icon fa fa-trophy"></i>My Certifications</h1>
         <div class="instructions">
             <div class="top">
                 Lunge independently reviews each verification and requires that you submit an electronic copy of the
@@ -24,15 +24,18 @@
             </div>
         </div>
     </header>
-    <section class="add-certification">
-        <h1 class="h4" ng-if="certificationsEmpty()">
-            You have no certifications attached to your profile.  Begin by clicking the button below.
-        </h1>
-        <a ui-sref="main.trainer.account.certifications"
-           class="btn btn-block btn-default">{{certificationsEmpty()
-        ? 'Add a certification' : 'Add another certification'}}</a>
-    </section>
     <section class="certifications">
+        <div class="add-certification clearfix">
+            <h1 class="h4" ng-if="certificationsEmpty()">
+                You have no certifications attached to your profile.  Begin by clicking the button below.
+            </h1>
+            <div>
+                <a ui-sref="main.trainer.account.certifications.list"
+                   class="btn btn-default"><i class="fa fa-plus"></i> {{certificationsEmpty()
+                    ? 'Add a certification' : 'Add another certification'}}
+                </a>
+            </div>
+        </div>
         <accordion close-others="true">
             <accordion-group is-open="certificationOrganization.isOpen"
                              class="certification-organization"
@@ -46,7 +49,7 @@
                         <!--<span class="count-added">{{mappedOrganization.count}}</span>-->
                         <span ng-if="mappedOrganization.count_pending"
                               class="count-pending"
-                                title="{{mappedOrganization.count_pending}} {{mappedOrganization.count_pending > 1 ? 'certifications' : 'certification'}} pending verification">
+                              title="{{mappedOrganization.count_pending}} {{mappedOrganization.count_pending > 1 ? 'certifications' : 'certification'}} pending verification">
                             {{mappedOrganization.count_pending}}
                         </span>
                         <span ng-if="mappedOrganization.count_verified"
@@ -56,26 +59,43 @@
                         </span>
                     </div>
                 </accordion-heading>
-                <ul class="certification panel-item padded list-unstyled"
-                    ng-repeat="certificationV2 in mappedOrganization.certification_v2s">
-                    <li class="inner">
-                        <div class="row">
-                            <div class="col-xxs-20">
-                                <div class="name">
-                                    {{certificationV2.certification_type.name}}
-                                </div>
-                            </div>
-                            <div class="col-xxs-4">
-                                <div class="verify">
-                                    <div class="btn btn-default btn-xs"
-                                         ng-click="verifyCertificationPopup(certificationV2)">
-                                        <i class="fa fa-upload"></i> Upload proof
+                <form ng-repeat="certificationV2 in mappedOrganization.certification_v2s">
+                    <fieldset ng-disabled="certificationV2.removing">
+                        <ul class="certification panel-item padded list-unstyled">
+                            <li class="inner">
+                                <div ng-if="!certificationV2.removalConfirmation" class="certification-visible clearfix">
+                                    <div class="name">
+                                        {{certificationV2.certification_type.name}}
+                                    </div>
+                                    <div class="actions">
+                                        <div class="btn btn-default btn-xs"
+                                             ng-click="verifyCertificationPopup(certificationV2)">
+                                            <i class="fa fa-upload"></i> Upload proof
+                                        </div>
+                                        <div class="btn btn-danger btn-xs"
+                                             ng-click="toggleDeleteCertification(certificationV2)">
+                                            <i class="fa fa-trash"></i> Remove
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                                <div ng-if="certificationV2.removalConfirmation" class="certification-removing">
+                                    <h1 class="h4">
+                                        Are you sure you want to remove the
+                                        {{certificationV2.certification_type.name}}
+                                        certification?
+                                    </h1>
+                                    <div class="btn btn-danger" ng-click="deleteCertification(certificationV2)">
+                                        <span ng-if="!certificationV2.removing">Delete</span>
+                                        <span ng-if="certificationV2.removing">
+                                            <i class="fa fa-spin fa-spinner"></i>
+                                        </span>
+                                    </div>
+                                    <div class="btn btn-default" ng-click="toggleDeleteCertification(certificationV2)">Cancel</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </form>
             </accordion-group>
         </accordion>
     </section>

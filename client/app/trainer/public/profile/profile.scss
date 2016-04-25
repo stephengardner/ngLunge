@@ -26,6 +26,15 @@ $profile-page-max-width: 750px;
 		left:100%;
 	}
 }
+
+// Trainer rating
+.rating {
+	.fa-star, .fa-star-half {
+		color: #FECF0A;
+		text-shadow: 0px 0px 2px #9A9A9A;
+	}
+}
+
 #dashboard {
 	.profile-picture-container {
 		@extend .col-xs-4;
@@ -184,6 +193,14 @@ $profile-page-max-width: 750px;
 		}
 	}
 }
+
+.profile-style-1 {
+	header {
+		h1 {
+			text-align:left;
+		}
+	}
+}
 .trainer-profile, .profile-style {
 	form {
 		&.contact-form {
@@ -241,7 +258,7 @@ $profile-page-max-width: 750px;
 		}
 	}
 	h1 {
-		font-size:1.8em;
+		//font-size:1.8em;
 	}
 	.bio {
 		.text {

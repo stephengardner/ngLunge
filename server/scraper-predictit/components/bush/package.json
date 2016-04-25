@@ -1,0 +1,11 @@
+{
+  "name": "bush",
+  "version": "0.0.1",
+  "main": "bush.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+    ],
+    "provides": ["bush"]
+  }
+}

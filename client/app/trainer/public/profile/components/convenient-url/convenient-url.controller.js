@@ -1,5 +1,6 @@
 lungeApp.controller("ConvenientUrlController", function($scope, $q, Auth, $location){
 	$scope.updateProfileUrlName = function($data) {
+		console.log("----------------------- UPDATING PROFILE URL NAME! ------------------------ ");
 		var deferred = $q.defer();
 		var dataToSend = {urlName : $data, urlNameChanged : true};
 		console.log("Sending:",dataToSend);

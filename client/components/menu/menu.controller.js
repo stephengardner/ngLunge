@@ -6,6 +6,7 @@ lungeApp.controller("MenuController", function($state, Auth, $scope, MenuService
 		$scope.toggle = MenuService.toggle;
 		$scope.user = Auth.getCurrentUser();
 		$scope.goToProfile = function(){
+			alert("going to profile");
 			$scope.hide();
 			if($scope.user.urlName) {
 				$state.go("profilePage", {urlName : $scope.user.urlName});
@@ -16,17 +17,23 @@ lungeApp.controller("MenuController", function($state, Auth, $scope, MenuService
 				{
 					name : Auth.getCurrentUser().name ? Auth.getCurrentUser().name.first : 'Profile',
 					icon : "fa-user",
-					sref : 'profilePage({urlName : \'' + Auth.getCurrentUser().urlName + '\'})'
+					sref : 'profile'
+					//sref : 'profilePage({urlName : \'' + Auth.getCurrentUser().urlName + '\'})'
 				},
 				{
 					name : "Account",
 					icon : "fa-cog",
-					sref : "main.trainer.edit-profile"
+					sref : "main.trainer.account.edit-profile"
 				},
+				//{
+				//	name : "Add Certifications",
+				//	icon : "fa-certificate",
+				//	sref : "main.trainer.account.certifications"
+				//},
 				{
 					name : "Certifications",
-					icon : "fa-certificate",
-					sref : "main.trainer.certifications"
+					icon : "fa-trophy",
+					sref : "main.trainer.account.certifications"
 				},
 				{
 					name : 'Logout',

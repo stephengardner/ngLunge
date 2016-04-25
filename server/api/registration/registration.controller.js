@@ -25,20 +25,24 @@ module.exports = function(app) {
 
 	var exports = {};
 
-// Get list of things
-	exports.index = function(req, res) {
-		Registration.find(function (err, trainers) {
-			if(err) { return handleError(res, err); }
-			return res.json(200, trainers);
-		});
-	};
-
 	/**
 	 * Get a single registration
 	 */
 	String.prototype.toObjectId = function() {
 		var ObjectId = (require('mongoose').Types.ObjectId);
 		return new ObjectId(this.length != 12 ? "DONTVALIDATE" : this.toString());
+	};
+
+	var validationError = function(res, err) {
+		return res.json(422, err);
+	};
+
+	// Get list of things
+	exports.index = function(req, res) {
+		Registration.find(function (err, trainers) {
+			if(err) { return handleError(res, err); }
+			return res.json(200, trainers);
+		});
 	};
 
 	exports.show = function (req, res, next) {
@@ -52,24 +56,20 @@ module.exports = function(app) {
 	};
 
 	exports.getTrainerByAuthenticationHash = function (req, res, next) {
-			Trainer.findOne( {$or : [ { '_id' : req.params.id.toObjectId() }, { 'registration.authenticationHash' : req.params.id }]}, function(err, trainer) {
-				if(err) return next(err);
+		Trainer.findOne( {$or : [ { '_id' : req.params.id.toObjectId() }, { 'registration.authenticationHash' : req.params.id }]}, function(err, trainer) {
+			if(err) return next(err);
 
-				if(!trainer) return res.send(404, "Invalid registration link");
-				console.log("............");
-				res.json(trainer);
-			});
-		};
+			if(!trainer) return res.send(404, "Invalid registration link");
+			console.log("............");
+			res.json(trainer);
+		});
+	};
 
 	exports.test = function(req, res) {
 		Registration.create({email : req.params.email}, function(err, registration) {
 			if(err) { return handleError(res, err); }
 			return res.json(201, registration);
 		});
-	};
-
-	var validationError = function(res, err) {
-		return res.json(422, err);
 	};
 
 	exports.create = function(req, res) {
@@ -142,30 +142,6 @@ module.exports = function(app) {
 				res.json({ trainer : trainer, token: token });
 			});
 		});
-		/*
-		Registration.findById(registrationId, function(err, registration){
-			console.log("found: ", registration);
-			var email = registration.email;
-			var trainerProperties = {
-				name : {
-					first : "Anonymous",
-					last : "Trainer"
-				},
-				type : "in-home",
-				email : email,
-				password : password1,
-				role : "trainer"
-			}
-			var trainer = new Trainer(trainerProperties);
-			trainer.save(function(err, trainer){
-				console.log("The error was:", err);
-				console.log("SAVED:", trainer);
-				if (err) return validationError(res, err);
-				var token = jwt.sign({_id: trainer._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-				res.json({ trainer : trainer, token: token });
-			});
-		});
-		*/
 	};
 
 	return exports;

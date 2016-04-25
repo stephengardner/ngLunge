@@ -4,7 +4,15 @@
   "main": "routes.js",
   "private": true,
   "plugin": {
-    "consumes": ["models", "userModel", "connections"],
+    "consumes": [
+      "trainerModel",
+      "authLocalPassport",
+      "authLocalRouter",
+      "authFacebookRouter",
+      "authTwitterRouter",
+      "authLinkedinRouter",
+      "authInstagramRouter"
+    ],
     "provides": ["authRoutes"]
   }
 }

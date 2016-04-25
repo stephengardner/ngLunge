@@ -1,0 +1,13 @@
+{
+  "name": "trainer-model",
+  "version": "0.0.1",
+  "main": "trainer.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "certificationMapCreator",
+      "connectionDatabase"
+    ],
+    "provides": ["trainerModel"]
+  }
+}

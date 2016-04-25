@@ -1,0 +1,14 @@
+{
+  "name": "trainerPopulatorCertificationsAggregated",
+  "version": "0.0.1",
+  "main": "trainer-populator-certifications-aggregated.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "certificationOrganizationModel",
+      "trainerModel",
+      "certificationMapCreator"
+    ],
+    "provides": ["trainerPopulatorCertificationsAggregated"]
+  }
+}

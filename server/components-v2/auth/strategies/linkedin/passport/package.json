@@ -1,12 +1,12 @@
 {
-  "name": "authTwitterPassport",
+  "name": "authLinkedinPassport",
   "version": "0.0.1",
-  "main": "auth-twitter.passport.js",
+  "main": "auth-linkedin.passport.js",
   "private": true,
   "plugin": {
     "consumes": [
       "trainerModel"
     ],
-    "provides": ["authTwitterPassport"]
+    "provides": ["authLinkedinPassport"]
   }
 }

@@ -1,0 +1,38 @@
+.trainer-verify-certifications {
+	.instructions {
+		.top {
+			margin-bottom:1rem;
+		}
+		.bottom {
+			margin-top:1rem;
+		}
+		margin-top:2rem;
+		.accepted-documents {
+			padding-left:2rem;
+			ul {
+				padding-left:2rem;
+			}
+		}
+	}
+	.certification {
+		.verify {
+			text-align:right;
+			//float: right;
+		}
+	}
+}
+#trainer-certifications {
+	.add-certification {
+		margin-top:0;
+		margin-bottom:2rem;
+		text-align:left;
+		h1 {
+			text-align:left;
+			float:none!important;
+		}
+	}
+	h1 {
+		text-align:center;
+		margin-bottom:1rem!important;
+	}
+}

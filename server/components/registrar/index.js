@@ -1,28 +1,35 @@
 var Promise = require("promise");
 var nodemailer = require('nodemailer');
+var logger = require("../logger")();
 module.exports = function(app) {
+	var CustomMandrill = require("../custom-mandrill")(app);
 	var config = app.config;
-	 var Registrar = {
-		 sendRegistrationEmail : function(trainerModel) {
-			 return new Promise(function(resolve, reject){
-				 var transporter = nodemailer.createTransport({
-					 service: 'gmail',
-					 auth: {
-						 user: config.MAIL.user,
-						 pass: config.MAIL.pass
-					 }
-				 });
-				 transporter.sendMail({
-					 from: 'augdog911@gmail.com',
-					 to: trainerModel.email,
-					 subject: 'Lunge Automatic Email Validation',
-					 text: 'Thanks for registering with Lunge.  To activate your account please click on this link:' + config.DOMAIN + '/trainer/register/password/' + trainerModel.registration.authenticationHash
-				 }, function(err, response) {
-					 if(err) return reject(err);
-					 return resolve(response);
-				 });
-			 })
-		 }
-	 }
+	var Registrar = {
+		sendRegistrationEmail : function(trainerModel) {
+			return new Promise(function(resolve, reject){
+				logger.info("SendingRegistrationEmail...");
+				var params = {
+					template_name : 'trainer-registration-v1',
+					template_content :[],
+					message : {
+						to : [{email : config.email.admin}],
+						merge_language : 'handlebars',
+						inline_css : true,
+						global_merge_vars : [
+							{
+								name : 'domain',
+								content : config.DOMAIN
+							},
+							{
+								name : 'authenticationHash',
+								content : trainerModel.registration.authenticationHash
+							}
+						]
+					}
+				};
+				CustomMandrill._send(params).then(resolve, reject).catch(reject);
+			})
+		}
+	}
 	return Registrar;
 }

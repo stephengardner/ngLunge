@@ -1,6 +1,6 @@
 var http = require("http");
-var web = require("../../../web");
-var logger = require("../../../components/logger")();
+//var web = require("../../../web");
+//var logger = require("../../../components/logger")();
 EventEmitter = require('events').EventEmitter;
 var _ = require("lodash");
 
@@ -21,19 +21,15 @@ var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
 
 module.exports = function setup(options, imports, register) {
-	var connections = imports.connections,
-		config = options.config,
-		bus = imports.eventbus,
-		models = imports.models,
-		amqp = imports.amqp,
-		expressConfig = imports.expressConfig,
-		routesConfig = imports.routesConfig
+	var connectionDatabase = imports.connectionDatabase;
+	var config = options.config;
+	var logger = imports.logger.info;
 	;
 
 	function App(config) {
 		this.config = config;
-		this.connections = connections;
-		this.amqp = amqp;
+		//this.connections = connections;
+		//this.amqp = amqp;
 	}
 
 	App.prototype = Object.create(EventEmitter.prototype);
@@ -51,53 +47,15 @@ module.exports = function setup(options, imports, register) {
 	}
 
 
-	// Let the console know which app (worker/clock/web) is handling the queue
-	bus.on('amqp-subscribed', function(){
-		console.log("----------> This app is handling queue tasks <------------");
-	});
-
-	amqp.init(connections.queue).then(function(){
-		logger.info("Emitting amqp-ready");
-		bus.emit('amqp-ready');
-		if(options.handleQueues) {
-			amqp.subscribe.all().then(function(){
-				logger.info("Emitting amqp-subscribed");
-				bus.emit('amqp-subscribed');
-			}).catch(logger.error);
-		}
-	}).catch(logger.error);
-
 //	bus.on('architect-ready', function(Architect){
 //	instancep.emit('ready, Architect');
 //	})
 
 	function createServer(instance, config) {
-		logger.info("appv2 Apartminty: createServer()");
+		logger.info("appv2 lunge: createServer()");
 		process.on('SIGTERM', shutdown);
-		var web = express();
-		expressConfig.configure(web);
-		routesConfig.configure(web);
-		//web.use('/api/property-lead', imports.apiPropertyLeadRouter);
-		//web.use('/api/yardi', imports.apiYardiRouter);
-		//web.use('/api/users', imports.apiUserRouter);
-		//web.use('/api/primeline-activities', imports.apiPrimelineActivityRouter);
-		//web.use('/api/properties-v2', imports.apiPropertyV2Router);
-		//web.use('/api/feeds', imports.apiFeedRouter);
-		//web.use('/api/emails', imports.apiEmailRouter);
-		//web.use('/api/apartment_sizes', imports.apiApartmentSizeRouter);
-		//web.use('/api/email-search-results', imports.apiEmailSearchResultsRouter);
-		//web.use('/auth', imports.authRoutes);
-		//web.use('/api/geolocation', imports.apiGeolocationRouter);
-
-
-		//var web = imports.web;
-		//var webConfig = imports.webConfig;
-
-		//webConfig.configExpress(instance)
-		// Configure the new routes first, because the old routes will then reroute anything that doesn't match them
-		//webConfig.configNewRoutes();
-		//webConfig.configOldRoutes(instance);
-
+		//var web = express();
+		imports.web;
 		instance.web = web;
 
 		var server = http.createServer(web, config);
@@ -113,21 +71,21 @@ module.exports = function setup(options, imports, register) {
 
 		function onListen() {
 			logger.info({type: 'info', msg: 'appv2 plugin listening', port: server.address().port});
-			configSocketIO();
+			//configSocketIO();
 			register(null, {
 				app : instance
 			})
 		}
 
-		function configSocketIO() {
-			// set up socketio now that the server has been created
-			var socketio = require('socket.io')(server, {
-				serveClient: (config.env === 'production') ? false : true,
-				path: '/socket.io-client',
-				transports: ['websocket']  // On PAAS ( Heroku ) we can only use the websocket transport
-			});
-			require('../../../config/socketio')(socketio);
-		}
+		//function configSocketIO() {
+		//	// set up socketio now that the server has been created
+		//	var socketio = require('socket.io')(server, {
+		//		serveClient: (config.env === 'production') ? false : true,
+		//		path: '/socket.io-client',
+		//		transports: ['websocket']  // On PAAS ( Heroku ) we can only use the websocket transport
+		//	});
+		//	require('../../../config/socketio')(socketio);
+		//}
 
 		function shutdown() {
 			logger.log({type: 'info', msg: 'appv2 plugin shutting down'});
@@ -141,7 +99,7 @@ module.exports = function setup(options, imports, register) {
 }
 
 function abort() {
-	logger.info("Apartminty: abort()");
+	logger.info("Lunge: abort()");
 	logger.log({ type: 'info', msg: 'appv2 plugin shutting down', abort: true });
 	process.exit();
 }

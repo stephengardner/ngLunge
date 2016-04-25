@@ -52,6 +52,12 @@
 	}
 }
 .trainer-profile {
+	.basic-info-inner {
+		position:relative; //the padding outside of this we don't want, so use a relative pos.
+	}
+	.name {
+		padding-right:80px;//to make room for the edit button
+	}
 	.link-cant-find-address {
 		margin-top:.5rem;
 		float:right;

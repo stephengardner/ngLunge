@@ -31,45 +31,50 @@ $cert-padding : 1.5rem;
 		}
 	}
 }
+.profile-style {
+}
+
 .cert {
-	padding: 0;
-	background: none;
-	border-radius: 0;
-	border:0;
+	.cert {
+		padding: 0;
+		background: none;
+		border-radius: 0;
+		border: 0;
+	}
 	&.panel {
-		margin-top:0!important;
+		margin-top: 0 !important;
 		~ .panel {
-			border-top:1px solid darken($body-bg, 5%);
+//			border-top: 1px solid darken($body-bg, 5%);
 		}
 	}
 	.panel-heading {
-		color:inherit;
-		background:none;
-		border:0;
+		color: inherit;
+		background: none;
+		border: 0;
 	}
 	.panel-body {
-		border-top:0!important;
-		padding-top:0;
+		border-top: 0 !important;
+		padding-top: 0;
 	}
 	.panel-heading {
 		padding: 0;
-		position:relative;
+		position: relative;
 	}
 	.panel-title, .panel-body {
-		border-left:2px solid transparent;
+		border-left: 2px solid transparent;
 	}
 	.panel-title {
 		//padding:1rem;
 		a {
-			font-weight:bold;
-			text-decoration:none;
+			font-weight: bold;
+			text-decoration: none;
 			&:hover {
 				background: darken($body-bg, 4%);
-				color:#333;
-				text-decoration:none;
+				color: #333;
+				text-decoration: none;
 			}
-			padding:$cert-padding;
-			display:block;
+			padding: $cert-padding;
+			display: block;
 			.name {
 				position: relative;
 			}

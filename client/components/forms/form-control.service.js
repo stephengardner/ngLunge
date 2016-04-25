@@ -1,4 +1,4 @@
-lungeApp.factory("FormControl", function(broadcastService){
+lungeApp.factory("FormControl", function(broadcastService, lodash){
 	var FormControl = function() {
 	};
 	FormControl.prototype = {
@@ -17,7 +17,7 @@ lungeApp.factory("FormControl", function(broadcastService){
 			}
 		},
 		removeMongooseError : function(form, inputName) {
-			console.log("Removing mongoose error for :", inputName);
+			//console.log("Removing mongoose error for :", inputName);
 			if(!form[inputName] || !form[inputName].$error) {
 				return false;
 			}
@@ -27,6 +27,9 @@ lungeApp.factory("FormControl", function(broadcastService){
 				delete this.errors['rent'];
 			}
 			form[inputName].$setValidity('mongoose', true);
+			if(form[inputName] && form[inputName].$error) {
+				form[inputName].$error.mongoose = undefined;
+			}
 			if(this.errors && inputName) {
 				delete this.errors[inputName];
 			}
@@ -38,14 +41,14 @@ lungeApp.factory("FormControl", function(broadcastService){
 			broadcastService.send(msg, obj);
 		},
 		setError : function(form, propertyName, errorMessage) {
-			console.log("Setting form." + propertyName + " to error: ", errorMessage);
+			console.log(" [FormControl] Setting form." + propertyName + " to error: ", errorMessage);
 			if(form && form[propertyName]) {
 				form[propertyName].$setValidity('mongoose', false);
 			}
 			if(errorMessage && this.errors) {
 				this.errors[propertyName] = errorMessage;
 			}
-			console.log("this.errors is now:", this.errors);
+			console.log(" [FormControl] this.errors is now:", this.errors);
 			return false;
 		},
 		parseValidationErrors : function(form, err){
@@ -54,19 +57,27 @@ lungeApp.factory("FormControl", function(broadcastService){
 			this.resetErrors();
 			form.$setPristine(); // not sure if this is wanted - but was in the trainer basic info controller
 			// Update validity of form fields that match the mongoose errors
+			if(!err.errors && err.data && err.data.errors) {
+				// we passed in the wrong object, we should have passed in err.data but we just passed in err
+				// in this case, just help the user out and infer that we wanted err.data
+				err.errors = lodash.merge({}, err.data.errors);
+				console.log("ok : ", err);
+			}
 			angular.forEach(err.errors, function(error, field) {
 				fieldCheck = field;
 				try {
-					console.log("trying to set:", field, " with ", error);
+					console.log(" [FormControl] trying to set:", field, " with ", error);
 					self.setError(form, field, error.message);
+					form[field].$error.mongoose = error.message;
 				}
 				catch (err) {
-					console.log("FormControl caught an error, ", err);
+					console.log(" [FormControl] FormControl caught an error, ", err);
 					if(field == "city" || field == "state" || field == "zipcode") {
 						self.setError(form, 'location', error.message);
 					}
 				}
 			});
+			form.errors = this.errors;
 
 			// not used just yet, but can be.  instead we're using a $watch in the controller
 			//this.broadcast('form.parsed');

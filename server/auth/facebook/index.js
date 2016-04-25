@@ -15,7 +15,8 @@ module.exports = function(app) {
 			scope: ['email', 'user_about_me'],
 			failureRedirect: '/signup',
 			session: false
-		}))
+		}));
+
 	router
 		.get('/callback', passport.authenticate('facebook', {
 			failureRedirect: '/signup',
@@ -29,7 +30,24 @@ module.exports = function(app) {
 			failureRedirect: '/signup',
 			session: false,
 			callbackURL: config.facebook.callbackTrainerURL
-		}))
+		}), function(req, res, next) {
+			if(req.session.trainer) {
+				var trainer = req.session.trainer;
+				Trainer.findById(req.session.trainer._id, function(err, trainer){
+					var trainer = trainer;
+					trainer.facebook = req.user.facebook;
+					trainer.save(function(err, user) {
+						return res.redirect("/" + req.session.trainer.urlName);
+						//return res.json(req.session.trainer);
+					});
+				});
+			}
+			else {
+				console.log("Lunge Error: auth.facebook.index.js NO req.session.trainer");
+				return res.redirect("/" + req.session.trainer.urlName);
+			}
+		});
+
 	router
 		.get('/callback-trainer-sync', passport.authenticate('facebook', {
 			failureRedirect: '/signup',

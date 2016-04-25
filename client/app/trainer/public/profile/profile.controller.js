@@ -1,6 +1,7 @@
-lungeApp.controller("TrainerProfileController", function(TrainerFactory, Sync, FormControl, $state, AlertMessage, $timeout, $location,
-                                                         $q, $document, $window, ProfilePicture, Auth, $scope, $http,
-                                                         $stateParams, socket){
+lungeApp.controller("TrainerProfileController", function($timeout, $rootScope, TrainerFactory, Sync, FormControl,
+                                                         $state, AlertMessage, $location, $q, $document, $window,
+                                                         ProfilePicture, Auth, $scope, $http,
+                                                         $stateParams){
 	$scope.trainerFactory = TrainerFactory;
 
 	var url = $stateParams.urlName ? '/api/trainers/byUrlName/' + $stateParams.urlName
@@ -10,14 +11,18 @@ lungeApp.controller("TrainerProfileController", function(TrainerFactory, Sync, F
 			method : 'GET'
 		},
 		onGetTrainerSuccess = function(trainer) {
+			/*
 			TrainerFactory.init(trainer,
 				{
 					sync : true,
 					syncCallback : function(){
-						if(!AlertMessage.active)
+						if(Auth.isUserCurrent(TrainerFactory.trainer) && !AlertMessage.active)
 							AlertMessage.success("Profile updated successfully");
 					}
 				});
+				*/
+
+			TrainerFactory.init(trainer);
 		},
 		onGetTrainerError = function(error){
 			$scope.noTrainer = true;
@@ -28,11 +33,18 @@ lungeApp.controller("TrainerProfileController", function(TrainerFactory, Sync, F
 			});
 		};
 
+	var cleanUpEvent = $rootScope.$on('asyncLoginByToken', function(event){
+		$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
+	});
+	$scope.$on('$destroy', function() {
+		cleanUpEvent();
+	});
+
 	$scope.$state = $state;
 
 	// Check if the trainer is logged in, get their info, populate the page
 	Auth.isLoggedInAsync(function(){
-		socket.socket.emit('authenticate', {token : Auth.getToken()});
+		//socket.socket.emit('authenticate', {token : Auth.getToken()});
 
 		$scope.popovers = {
 			helpTemplate : {
@@ -57,7 +69,8 @@ lungeApp.controller("TrainerProfileController", function(TrainerFactory, Sync, F
 		$scope.updateProfile = trainerUpdate;
 
 		$scope.isMe = function(){
-			return TrainerFactory.isMe();
+			//console.log("***************** calling isme and the response is:" + TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id));
+			return TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id);
 		}
 
 		$scope.$on('$destroy', function () {

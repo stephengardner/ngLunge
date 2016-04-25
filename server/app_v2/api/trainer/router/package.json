@@ -1,0 +1,10 @@
+{
+  "name": "api-trainer.router.js",
+  "version": "0.0.1",
+  "main": "api-trainer.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["apiTrainerController", "bruteforce", "auth"],
+    "provides": ["apiTrainerRouter"]
+  }
+}

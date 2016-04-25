@@ -34,10 +34,10 @@ module.exports = function(app) {
 
 	// Get a single thing
 	exports.show = function(req, res) {
-		Certification.find({ id : req.params.id}, function (err, cert) {
+		Certification.findById(req.params.id, function (err, cert) {
 			if(err) { return handleError(res, err); }
-			if(!cert[0]) { return res.send(404); }
-			return res.json(cert[0]);
+			if(!cert) { return res.status(404).send(404); }
+			return res.json(cert);
 		});
 	};
 

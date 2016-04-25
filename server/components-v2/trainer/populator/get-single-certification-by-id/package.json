@@ -1,0 +1,13 @@
+{
+  "name": "trainerPopulatorGetSingleCertificationById",
+  "version": "0.0.1",
+  "main": "trainer-populator-get-single-certification-by-id.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "certificationOrganizationModel",
+      "trainerModel"
+    ],
+    "provides": ["trainerPopulatorGetSingleCertificationById"]
+  }
+}

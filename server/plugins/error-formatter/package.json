@@ -1,0 +1,10 @@
+{
+  "name": "errorFormatter",
+  "version": "0.0.1",
+  "main": "error-formatter.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["errorFormatter"]
+  }
+}

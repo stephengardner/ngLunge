@@ -1,18 +1,20 @@
 var passport = require('passport'),
-	LinkedInStrategy = require('passport-linkedin').Strategy,
+	LinkedInStrategy = require('passport-linkedin-oauth2').Strategy,
 	config = require("../../../../../config/environment"),
 	_ = require('lodash')
 	;
 module.exports = function setup(options, imports, register) {
 	var trainerModel = imports.trainerModel;
+	console.log("Am i here?");
 	var strategy = new LinkedInStrategy({
-			consumerKey: config.linkedin.clientID,
-			consumerSecret: config.linkedin.clientSecret,
+			clientID: config.linkedin.clientID,
+			clientSecret: config.linkedin.clientSecret,
 			callbackURL: config.linkedin.callbackURL,
-			profileFields: ['id', 'first-name', 'last-name', 'email-address', 'headline', 'summary', 'picture-url', 'public-profile-url'],
-			passReqToCallback : true
+			scope: ['r_basicprofile', 'r_emailaddress'],
+			state : true
 		},
-		function(req, token, tokenSecret, profile, done) {
+		function(accessToken, refreshToken, profile, done) {
+			console.log("Am i here, too?");
 			return done(null, profile);
 		});
 

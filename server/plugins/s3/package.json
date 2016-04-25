@@ -1,0 +1,10 @@
+{
+  "name": "s3",
+  "version": "0.0.1",
+  "main": "s3.js",
+  "private": true,
+  "plugin": {
+    "consumes": [],
+    "provides": ["s3"]
+  }
+}

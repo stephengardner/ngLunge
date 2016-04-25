@@ -1,0 +1,14 @@
+{
+  "name": "apiRegistrationController",
+  "version": "0.0.1",
+  "main": "api-registration.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "registrationModel",
+      "trainerModel",
+      "registrationTrainerSignUp"
+    ],
+    "provides": ["apiRegistrationController"]
+  }
+}

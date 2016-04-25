@@ -1,0 +1,10 @@
+{
+  "name": "apiAWSController",
+  "version": "0.0.1",
+  "main": "api-aws.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["imageProfilePictureLocalUpload"],
+    "provides": ["apiAWSController"]
+  }
+}

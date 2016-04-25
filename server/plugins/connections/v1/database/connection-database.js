@@ -23,6 +23,7 @@ module.exports = function setup(options, imports, register) {
 		});
 
 	function ready(dbConnection) {
+		console.log("Database ready!\n");
 		autoIncrement.initialize(dbConnection);
 		register(null, {
 			connectionDatabase : dbConnection

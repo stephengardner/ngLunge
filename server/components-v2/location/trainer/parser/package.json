@@ -4,7 +4,7 @@
   "main": "location-trainer-parser.js",
   "private": true,
   "plugin": {
-    "consumes": [],
+    "consumes": ["logger"],
     "provides": ["locationTrainerParser"]
   }
 }

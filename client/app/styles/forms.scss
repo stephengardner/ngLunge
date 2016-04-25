@@ -192,7 +192,7 @@ $form-group-margin: 15px;
 		}
 		@include respond-to(xs) {
 			.has-margin {
-				margin:0rem $module-header-horizontal-margin-small-responsive;
+				//margin:0rem $module-header-horizontal-margin-small-responsive;
 			}
 			// horizontal forms add their own "rows" to the form group, but we need their margins to be equal to the
 			// new padding on this module
@@ -206,6 +206,10 @@ $form-group-margin: 15px;
 	}
 }
 form {
+	.form-intro {
+		margin-bottom: 10px;
+		color: #525252;
+	}
 	.input-group-addon-inner {
 		position: absolute;
 		z-index: 2;
@@ -302,5 +306,11 @@ form {
 			padding: .35em 1em;
 			display: inline-block;
 		}
+	}
+}
+
+// new styles
+.module {
+	&.profile-style-1 {
 	}
 }

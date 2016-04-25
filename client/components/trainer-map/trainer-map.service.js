@@ -47,7 +47,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 					control : {}
 				};
 			}
-			console.log("-------------\n-------------\n setting map : ", this.map, " ------------\n--------------\n");
+			//console.log("-------------\n-------------\n setting map : ", this.map, " ------------\n--------------\n");
 			return this;
 		},
 
@@ -81,7 +81,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 		},
 
 		_addNewMarkers : function() {
-			console.log("Trainer-map._addNewMarkers() locations:", this.trainer.locations);
+			//console.log("Trainer-map._addNewMarkers() locations:", this.trainer.locations);
 			var i, k;
 			function afterCreatingMarker(marker){
 				TrainerMap.markers.push(marker);
@@ -101,7 +101,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 						}
 					}
 					if(!isLocationFound) {
-						console.log("updateLocations created a marker for location:", this.trainer.locations[i]);
+						//console.log("updateLocations created a marker for location:", this.trainer.locations[i]);
 						this._createGoogleMarker(this.trainer.locations[i]).then(afterCreatingMarker);
 					}
 				}
@@ -137,7 +137,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 					northwest : null
 				}};
 			}
-			console.log("-------------\n-------------\n setting map center : ", this.map, " ------------\n--------------\n");
+			//console.log("-------------\n-------------\n setting map center : ", this.map, " ------------\n--------------\n");
 			return this;
 		},
 
@@ -162,13 +162,13 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 		 * @private
 		 */
 		_triggerMarkerClick : function(location) {
-			console.log("TrainerMap TriggerMarkerClick for location:",location);
+			//console.log("TrainerMap TriggerMarkerClick for location:",location);
 			var id = location._id;
-			console.log("Trainer map markers:", TrainerMap.markers);
+			//console.log("Trainer map markers:", TrainerMap.markers);
 			for(var i = 0; i < TrainerMap.markers.length; i++) {
 				var marker = TrainerMap.markers[i];
 				if(marker.id == id) {
-					console.log("found the marker, the map has been sent the click event");
+					//console.log("found the marker, the map has been sent the click event");
 					new google.maps.event.trigger( marker, 'click' );
 				}
 			}
@@ -259,7 +259,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 			google.maps.event.addListener(TrainerMap.infoWindow, 'domready', function(a,b,c,d) {
 				onload();
 			});
-			console.log("++++++++++ Bound Info Window:", this.infoWindow);
+			//console.log("++++++++++ Bound Info Window:", this.infoWindow);
 			this.googleMapLoaded = true;
 			return this;
 		},
@@ -274,7 +274,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 
 			var deferred = $q.defer();
 			if(this.map.control.getGMap) {
-				console.log("something created a marker...");
+				//console.log("something created a marker...");
 				var map = this.map.control.getGMap();
 				var myLatlng = new google.maps.LatLng(location.coords.lat, location.coords.lon);
 				var contentTitle = location.title ? location.title : this.trainer.name.first + "'s location";
@@ -290,7 +290,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 				};
 				this.setMarkerContent(marker, location);
 				google.maps.event.addListener(marker, 'click', function() {
-					console.log("set the selected location as: ", location);
+					//console.log("set the selected location as: ", location);
 					this.selectedMarkerLocation = location;
 				}.bind(this));
 				//return marker;

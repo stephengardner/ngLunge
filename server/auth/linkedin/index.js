@@ -13,7 +13,7 @@ module.exports = function(app) {
 		.get('/', passport.authenticate('linkedin', {
 			failureRedirect: '/signup',
 			session: false,
-			scope: ['r_basicprofile', 'r_fullprofile', 'r_emailaddress', 'r_contactinfo']
+			scope: ['r_basicprofile', 'r_emailaddress']
 		}))
 
 		.get('/callback', passport.authenticate('linkedin', {

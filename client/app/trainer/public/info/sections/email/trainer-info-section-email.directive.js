@@ -1,11 +1,11 @@
-lungeApp.directive("trainerInfoSectionBasicInfo", function(){
+lungeApp.directive("trainerInfoSectionEmail", function(){
 	return {
 		restrict : "AE",
-		templateUrl : 'app/trainer/public/info/sections/basoc-info/trainer-info-section-basic-info.partial.html',
+		templateUrl : 'app/trainer/public/info/sections/email/trainer-info-section-email.partial.html',
 		//scope: {
 		//	trainerFactory : '@'
 		//},
 		scope : {},
-		controller : 'trainerInfoSectionBasicInfo'
+		controller : 'TrainerInfoSectionEmailController'
 	}
 })

@@ -1,0 +1,10 @@
+{
+  "name": "certificationMapCreator",
+  "version": "0.0.1",
+  "main": "certification-map-creator.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["certificationOrganizationModel"],
+    "provides": ["certificationMapCreator"]
+  }
+}

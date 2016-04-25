@@ -13,7 +13,7 @@ exports.setup = function (User, config) {
 		},
 		function(req, accessToken, refreshToken, profile, done) {
 			if(req.user) {
-				done(req.user)
+				done(null, req.user)
 			}
 			else {
 				User.findOne({

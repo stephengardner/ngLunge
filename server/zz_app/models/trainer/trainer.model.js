@@ -299,30 +299,33 @@ TrainerSchema.virtual('certifications_v2_coagulated')
 		// AFAIK, in virtuals.
 		if(trainer.certifications_v2 && trainer.certifications_v2.length){
 			for(var i = 0; i < trainer.certifications_v2.length; i++) {
-				var certType = trainer.certifications_v2[i];
+				var certification_v2 = trainer.certifications_v2[i];
 				// note - possible invalid values when populating in abstract methods
 				// for example, during the Auth.isTrainerMe() call, we don't really need to populate this, so we don't.
 				// therefore the certType.organization.name will not be populated
 				// so in that case if this returns an empty set that's ok.
 				// WE COULD populate it in isTrainerMe() and then not bother in the actual controller method
 				// in-fact, that's probably ideal
-				if(certType.organization && certType.organization.name) {
-					var key = certificationsCoagulated[certType.organization.name];
-					if(certType.active) {
-						delete certType.active;
+				if(certification_v2.organization && certification_v2.organization.name) {
+					var key = certificationsCoagulated[certification_v2.organization.name];
+					if(certification_v2.active) {
+						delete certification_v2.active;
 						if(!key){
-							certificationsCoagulated[certType.organization.name] = {
-								types : [{
-									_id : certType._id,
-									name : certType.name
-								}]
+							certificationsCoagulated[certification_v2.organization.name] = {
+								certifications : [
+									certification_v2
+								]
+								//types : [{
+								//	test : true,
+								//	_id : certification_v2._id,
+								//	name : certification_v2.name,
+								//	active : certification_v2.active,
+								//	verification : certification_v2.verification
+								//}]
 							};
 						}
 						else {
-							certificationsCoagulated[certType.organization.name].types.push({
-								_id : certType._id,
-								name : certType.name
-							});
+							certificationsCoagulated[certification_v2.organization.name].types.push(certification_v2);
 						}
 					}
 				}
@@ -332,7 +335,8 @@ TrainerSchema.virtual('certifications_v2_coagulated')
 			returnArray.push({
 				name : name,
 				isOpen : false,
-				types : certificationsCoagulated[name].types
+				certifications : certificationsCoagulated[name].certifications
+				//types : certificationsCoagulated[name].types
 			});
 		}
 		return returnArray;

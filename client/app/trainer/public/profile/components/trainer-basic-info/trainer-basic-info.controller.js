@@ -1,5 +1,5 @@
-lungeApp.controller("TrainerBasicInfoController", function($document, $popover, FormControl, AlertMessage, $window,
-                                                           Geocoder, $timeout, $q, Auth, $scope){
+lungeApp.controller("TrainerBasicInfoController", function(ngDialog, $document, $popover, FormControl, AlertMessage,
+                                                           $window, Geocoder, $timeout, $q, Auth, $scope){
 	// Necessary, remove err on keyup
 	$scope.removeMongooseError = FormControl.removeMongooseError;
 
@@ -46,6 +46,15 @@ lungeApp.controller("TrainerBasicInfoController", function($document, $popover, 
 		}
 	};
 
+	$scope.contactModal = function() {
+		$scope.modal = ngDialog.open({
+			template: "app/trainer/public/profile/components/contact-modal/trainer-contact-modal.partial.html",
+			scope: $scope,
+			className: 'ngdialog-theme-default large',
+			controller: "TrainerContactModalController",
+			showClose : false
+		});
+	};
 	// Tracks if manual location has been toggled on or off
 	$scope.manualLocation = {
 		isActive : function(){

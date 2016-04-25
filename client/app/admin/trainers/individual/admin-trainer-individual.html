@@ -1,0 +1,31 @@
+<div class="container" id="trainers-admin">
+    <div id="trainer-info" class="trainer-profile profile-style">
+        <header>
+            <h1><i class="fa fa-user"></i> Info</h1>
+        </header>
+        <section ng-include="'app/trainer/public/info/sections/email/trainer-info-section-email.partial.html'"></section>
+        <section ng-include="'app/trainer/public/info/sections/basic-info/trainer-info-section-basic.partial.html'"></section>
+        <section ng-controller='TrainerInfoSectionAboutController'
+                 ng-include="'app/trainer/public/info/sections/about/trainer-info-section-about.partial.html'"></section>
+        <section class="module sm flat-white">
+            <header>
+                <h1>Locations</h1>
+            </header>
+            <!-- Begin About Form -->
+            <div class="group no-padding">
+                <trainer-map mapseditable="{{isMe()}}"></trainer-map>
+                <trainer-map-locations mapseditable="{{isMe()}}"></trainer-map-locations>
+            </div>
+        </section>
+        <section class="module flat-white larger-style-1" ng-controller="CertificationsListController">
+            <header>
+                <h1>Certifications</h1>
+                <div edit-button ui-sref="main.trainer.certifications"></div>
+            </header>
+            <div class="group no-padding">
+                <div ng-include="'components/certifications/certification-list.partial.html'"></div>
+            </div>
+        </section>
+        <section rates class="larger-style-1" editable="isMe()"></section>
+    </div>
+</div>

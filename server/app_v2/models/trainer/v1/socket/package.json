@@ -1,0 +1,16 @@
+{
+  "name": "trainer-socket",
+  "version": "0.0.1",
+  "main": "trainer.socket.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "connectionDatabase",
+      "trainerModel",
+      "socket",
+      "certificationOrganizationModel",
+      "trainerPopulatorCertificationsAggregated"
+    ],
+    "provides": ["trainerSocket"]
+  }
+}

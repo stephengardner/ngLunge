@@ -1,12 +1,12 @@
 {
-  "name": "authTwitterPassport",
+  "name": "authInstagramPassport",
   "version": "0.0.1",
-  "main": "auth-twitter.passport.js",
+  "main": "auth-instagram.passport.js",
   "private": true,
   "plugin": {
     "consumes": [
       "trainerModel"
     ],
-    "provides": ["authTwitterPassport"]
+    "provides": ["authInstagramPassport"]
   }
 }

@@ -1,16 +1,8 @@
-lungeApp.directive("trainerInfoSectionBasicInfo", function(){
+lungeApp.directive("certificationsList", function(){
 	return {
 		restrict : "AE",
-		templateUrl : 'app/trainer/public/info/sections/basic-info/trainer-info-section-basic-info.partial.html',
-		//scope: {
-		//	trainerFactory : '@'
-		//},
+		templateUrl : 'components/certifications/certifications-list.partial.html',
 		scope : {},
-		link : {
-			post : function(scope, elem, attrs) {
-				scope.ready = true;
-			}
-		},
-		controller : 'TrainerInfoSectionBasicInfoController'
+		controller : 'CertificationsListController'
 	}
 })

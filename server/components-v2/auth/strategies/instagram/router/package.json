@@ -1,13 +1,13 @@
 {
-  "name": "authTwitterRouter",
+  "name": "authInstagramRouter",
   "version": "0.0.1",
-  "main": "auth-twitter.router.js",
+  "main": "auth-instagram.router.js",
   "private": true,
   "plugin": {
     "consumes": [
       "trainerModel",
       "bruteforce",
       "auth"],
-    "provides": ["authTwitterRouter"]
+    "provides": ["authInstagramRouter"]
   }
 }

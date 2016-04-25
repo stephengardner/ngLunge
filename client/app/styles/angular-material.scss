@@ -1,0 +1,48 @@
+$md-errors-spacer-height : 22px;
+.md-errors-spacer {
+	//display:none; // I think since I already have space that this isn't necessary, but honestly im not sure atm
+	min-height:$md-errors-spacer-height;
+}
+
+// if md-errors-spacer is on, we must add this for the privacy items: {
+.privacy {
+	margin-bottom: $md-errors-spacer-height;
+}
+
+md-input-container {
+	margin: 11px 0 11px 0;
+}
+
+textarea {
+	overflow: auto;
+}
+// add the layout-row class to rows that have inputs in them
+// because their margins are doubled when this happens
+// so remove the top margin on these instances... This will effectively remove both above and below margins
+// you'll see. It makes sense
+.layout-row {
+	~ md-input-container {
+		margin-top:0!important;
+	}
+}
+md-input-container {
+	~ .layout-row {
+		.md-input-container {
+			margin-top:0!important;
+		}
+	}
+}
+// Changing this to a different ems to make the label lower and closer to the input box
+md-input-container.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-placeholder label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float)
+{
+	transform: translate3d(0, .8em, 0) scale(0.75);
+	-webkit-transform: translate3d(0, .8em, 0) scale(0.75);
+//	transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s,
+//	left cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s;
+//	-webkit-transition: transform cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s,
+//	left linear 0.25s;
+}
+md-input-container label:not(.md-no-float):not(.md-container-ignore), md-input-container .md-placeholder {
+//	transition: all cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s;
+//	-webkit-transition: all cubic-bezier(0.25, 0.8, 0.25, 1) 0.25s;
+}

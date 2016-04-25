@@ -1,0 +1,7 @@
+.ngdialog.ngdialog-theme-default.large .ngdialog-content {
+	width:auto;
+	max-width:80%;
+	@include respond-to(xs) {
+		max-width:100%;
+	}
+}

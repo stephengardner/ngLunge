@@ -29,25 +29,33 @@ module.exports = function(app) {
 
 	// Get a single thing
 	exports.show = function(req, res) {
-		CertificationType.find({ id : req.params.id}, function (err, cert) {
+		CertificationType.findById(req.params.id, function (err, cert) {
 			if(err) { return handleError(res, err); }
-			if(!cert[0]) { return res.send(404); }
-			return res.json(cert[0]);
+			if(!cert) { return res.status(404).send(404); }
+			return res.json(cert);
 		});
 	};
 
 	// Creates a new thing in the DB.
 	exports.create = function(req, res) {
-
-		//Certification.findOne({name : req.body.cert.name})
 		var newCertType = new CertificationType(req.body);
-		newCertType.save(function(err, cert_type){
+		newCertType.save(function(err, savedCertType){
 			if (err) return validationError(res, err);
-			res.json({ cert : cert });
+			else res.status(200).json(savedCertType);
 		});
 
 	};
 
+	exports.destroy = function(req, res) {
+		CertificationType.findById(req.params.id, function (err, cert) {
+			if(err) { return handleError(res, err); }
+			if(!cert) { return res.send(404); }
+			cert.remove(function(err) {
+				if(err) { return handleError(res, err); }
+				return res.send(204);
+			});
+		});
+	};
 	return exports;
 }
 

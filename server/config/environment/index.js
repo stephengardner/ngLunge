@@ -3,7 +3,13 @@
 var path = require('path');
 var _ = require('lodash');
 
-function requiredProcessEnv(name) {
+if(!process.env.NODE_ENV) {
+	console.warn("There's no node_env variable, so we're setting this to test and loading the 'all' set of env vars");
+	process.env = _.merge(require("../local.env.js"));
+	process.env.NODE_ENV = "test";
+}
+
+function requiredEnv(name) {
 	if(!process.env[name]) {
 		throw new Error('You must set the ' + name + ' environment variable');
 	}
@@ -43,6 +49,41 @@ var all = {
 		}
 	},
 
+	mandrill : {
+		API_KEY : process.env.MANDRILL_API_KEY || "no-key"
+	},
+
+	redis : {
+		redisToGoURL : process.env.REDISTOGO_URL || false
+	},
+
+	email : {
+		admin : getEnv('EMAIL_ADMIN')  || 'opensourceaugie@gmail.com',
+		adminTest : getEnv('EMAIL_ADMIN_TEST')  || 'opensourceaugie@gmail.com'
+	},
+
+	smartyStreets : {
+		authId : getEnv('SMARTY_STREETS_AUTH_ID'),
+		authToken : getEnv('SMARTY_STREETS_AUTH_TOKEN')
+	},
+
+	profile_picture : {
+		upload : {
+			maxSize : requiredEnv('PROFILE_PICTURE_UPLOAD_MAX_FILE_SIZE')
+		}
+	},
+	certification : {
+		upload : {
+			maxSize : requiredEnv('CERTIFICATION_UPLOAD_MAX_FILE_SIZE')
+		}
+	},
+	twilio : {
+		notifier : {
+			sid : process.env.TWILIO_SID_NOTIFIER,
+			token : process.env.TWILIO_TOKEN_NOTIFIER,
+			secret : process.env.TWILIO_SECRET_NOTIFIER
+		}
+	},
 	facebook: {
 		clientID:     process.env.FACEBOOK_ID || 'id',
 		clientSecret: process.env.FACEBOOK_SECRET || 'secret',
@@ -60,6 +101,13 @@ var all = {
 		clientSecret: process.env.TWITTER_SECRET || 'secret',
 		callbackURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback',
 		callbackTrainerURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback-trainer-sync'
+	},
+
+	instagram: {
+		clientID:     requiredEnv('INSTAGRAM_ID'),
+		clientSecret: requiredEnv('INSTAGRAM_SECRET'),
+		callbackURL:  (process.env.DOMAIN || '') + '/auth/instagram/callback',
+		callbackTrainerURL:  (process.env.DOMAIN || '') + '/auth/instagram/callback-trainer-sync'
 	},
 
 	google: {
@@ -87,9 +135,29 @@ var all = {
 		]
 	}
 };
+function getEnv(variable){
+	if (process.env[variable] === undefined){
+		throw new Error('You must create an environment variable for ' + variable);
+	}
+
+	return process.env[variable];
+};
+
+// If the process is a foreman process, we haven't loaded in the environment variables (that's something grunt does
+// for us), so manually load the local vars.
+var fileToMerge, vars;
+if(process.env.NODE_ENV != 'foreman') {
+	fileToMerge = './' + process.env.NODE_ENV + '.js';
+}
+if(fileToMerge) {
+	vars = require(fileToMerge)
+}
+else {
+	vars = {};
+}
 // Export the config object based on the NODE_ENV
 // ==============================================
 module.exports = _.merge(
 	all,
 	//AWS,
-	require('./' + process.env.NODE_ENV + '.js') || {});
+	vars);

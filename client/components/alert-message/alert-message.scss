@@ -1,10 +1,11 @@
 .alert-message {
-	// positioning at the bottom of the nav bar
-	position: absolute;
-	top: 100%;
 	left: 0;
 	right: 0;
 	color:white;
+	z-index:999999999999;
+	// positioning at the bottom of the nav bar
+	position: absolute;
+	top: 100%;
 	.message {
 		transform-origin:50% 0%;
 		transition : transform .5s, opacity .5s;

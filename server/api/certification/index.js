@@ -9,6 +9,7 @@ module.exports = function createRouter(app) {
 	var router = express.Router();
 
 	router.get('/', controller.index);
+	router.get('/:id', controller.show);
 	router.put('/:id', controller.update);
 	router.put('/:id/addType', controller.addType);
 	router.post('/:id/removeType', controller.removeType);

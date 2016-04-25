@@ -1,13 +1,13 @@
 {
-  "name": "apiCertificationTypeRouter",
+  "name": "apiCertificationOrganizationRouter",
   "version": "0.0.1",
-  "main": "api-certification-type.router.js",
+  "main": "api-certification-organization.router.js",
   "private": true,
   "plugin": {
     "consumes": [
-      "apiCertificationTypeController",
+      "apiCertificationOrganizaitonController",
       "auth"
     ],
-    "provides": ["apiCertificationTypeRouter"]
+    "provides": ["apiCertificationOrganizationRouter"]
   }
 }

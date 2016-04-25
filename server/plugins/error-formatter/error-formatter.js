@@ -1,9 +1,34 @@
+var _ = require('lodash')
+;
 module.exports = function setup(options, imports, register) {
-	var errorHelper = {
-
+	var errorFormatter = {
+		format : function(err, cb) {
+			return errorHelper(err, cb);
+		},
+		customValidationError : function(object) {
+			//var err = new Error();
+			var err = {
+				message : 'Custom Validation Failed',
+				name : 'CustomValidationError',
+				errors : {
+				}
+			};
+			err.errors[object.path] = {
+				message : object.message,
+				name : 'CustomValidationError',
+				path : object.path,
+				type : 'custom'
+			};
+			console.log("Returning validation error:", err);
+			//err = _.merge(err, object);
+			return err;
+		}
 	}
 	function errorHelper(err, cb) {
+
+
 		//If it isn't a mongoose-validation error, just throw it.
+		console.log("hmmm heres the err:", err);
 		if (err.name !== 'ValidationError') return cb(err);
 		var messages = {
 			'required': "%s is required.",
@@ -26,6 +51,11 @@ module.exports = function setup(options, imports, register) {
 			else errors.push(require('util').format(messages[eObj.type], eObj.path));
 		});
 
+		console.log("Errorformatter calling back with errors:", errors);
+
 		return cb(errors);
 	}
+	register(null, {
+		errorFormatter : errorFormatter
+	});
 }

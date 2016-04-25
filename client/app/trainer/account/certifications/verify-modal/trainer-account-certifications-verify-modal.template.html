@@ -104,14 +104,17 @@
                         <!--<label for="name" class="col-xs-6 control-label">Name</label>-->
                         <div class="col-xxs-24">
                             <md-input-container class="md-block">
-                                <label>Name (ex: "My Barre Yoga Certificate")</label>
+                                <label>Name</label>
                                 <input id="name"
                                        name="name"
                                        ng-change="formControl.removeMongooseError(myForm, 'name')"
                                        ng-model="fileModel.name"
                                        type="text"/>
+                                <div class="ag-hint-wrapper">
+                                    <ag-hint on-focus="true">Ex: "Yoga certificate 2016"</ag-hint>
+                                </div>
                                 <div ng-messages="myForm.name.$error" class="md-auto-hide">
-                                    <div ng-message="mongoose">myForm.name.$error.mongoose</div>
+                                    <div ng-message="mongoose">{{myForm.name.$error.mongoose}}</div>
                                 </div>
                             </md-input-container>
                             <div class="form-error" ng-if="myForm.file.$error">

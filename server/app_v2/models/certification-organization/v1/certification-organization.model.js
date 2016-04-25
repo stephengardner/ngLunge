@@ -2,32 +2,24 @@
 
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	autoIncrement = require('mongoose-auto-increment');
+	autoIncrement = require('mongoose-auto-increment'),
+	slug = require('slug');
 var crypto = require('crypto');
 
 
-var CertificationTypeSchema = new Schema(
+var CertificationOrganizationSchema = new Schema(
 	{
 		id : { type : Number },
-		// deprecated
-		certification : {type : Schema.Types.ObjectId, ref : 'Certification'},
-		// organization should be the new usage
-		organization : {type : Schema.Types.ObjectId, ref : 'CertificationOrganization'},
 		name : { type : String },
+		// types deprecated
+		//types : [{ type : Schema.Types.ObjectId, ref : 'CertificationType' }],
+		certifications : [{ type : Schema.Types.ObjectId, ref : 'CertificationType' }],
 		about : { type : String },
+		address : { type : String },
+		phone : { type : String },
+		website : { type : String },
 		active: {type : Boolean, default : 1},
-		courseMaterialPrice : Number,
-		examPrice : Number,
-		examDeliveryMethod : String,
-		practicalExamRequired : Boolean,
-		prerequisite : [String],
-		renewalPeriod : String,
-		CECorCEUperRenewalPeriod : Number,
-		renewalFee : Number,
-		continuingEducationTerm : String,
-		oneHourContinuingEducationEquals : Number,
-		category : [String]
-
+		slug : String
 	},
 	{
 		toObject: { virtuals: true },
@@ -35,85 +27,46 @@ var CertificationTypeSchema = new Schema(
 	}
 );
 
-Array.prototype.remove = function() {
-	var what, a = arguments, L = a.length, ax;
-	while (L && this.length) {
-		what = a[--L];
-		while ((ax = this.indexOf(what)) !== -1) {
-			this.splice(ax, 1);
+CertificationOrganizationSchema
+	.pre('save', function(next){
+		if(this.name) {
+			this.slug = slug(this.name, {lower: true});
 		}
-	}
-	return this;
-};
+		next();
+	});
 
-Array.prototype.pushUnique = function (item){
-	if(this.indexOf(item) == -1) {
-		//if(jQuery.inArray(item, this) == -1) {
-		this.push(item);
-		return true;
-	}
-	return false;
-}
+// Pre validation can use 'this' for referencing the whole document.
+// Since .path validation requires it be defined in the first place.
+CertificationOrganizationSchema
+	.pre('validate', function (next){
+		if(!this.name){
+			this.invalidate('name', 'A name is required');
+		}
+		next();
+	});
+
+CertificationOrganizationSchema
+	.path('name')
+	.validate(function(name, respond){
+		var self = this;
+		console.log("Validating name:", name);
+		var regex = new RegExp(["^", name, "$"].join(""), "i");
+		this.constructor.findOne({name: regex}, function(err, cert) {
+			console.log("CERT:",cert);
+			if(err) throw err;
+			if(cert) {
+				if(self.id === cert.id) return respond(true);
+				return respond(false);
+			}
+			return respond(true);
+		});
+	}, 'There is already a certification with that name');
 
 module.exports = function setup(options, imports, register) {
-	var connections = imports.connections;
-	var trainerModel = imports.trainerModel;
-	var Model = connections.db.model('CertificationType', CertificationTypeSchema);
-
-	CertificationTypeSchema.plugin(autoIncrement.plugin, { model: 'CertificationType', field: 'id' });
-
-	CertificationTypeSchema.post('save', function(certType){
-		console.log("Saved cert type with cert organization:", certType.organization);
-		Model.findById(certType.organization, function(err, foundOrganization){
-			if(err) {
-
-			}
-			if(!foundOrganization) {
-
-			}
-			else {
-				foundOrganization.certifications.pushUnique(certType._id);
-				foundOrganization.markModified('certifications');
-				foundOrganization.save(function(err, savedOrganization){
-					console.log("Saved organization as now:", savedOrganization);
-				})
-			}
-		})
-	});
-	CertificationTypeSchema.post('remove', function(certType){
-		// Remove the certification from the trainers list of certifications
-		trainerModel.find({certifications_v2 : certType._id.toString()}).exec(function(err, trainers){
-			if(err) {
-			}
-			if(!trainers) {
-			}
-			else {
-				for(var i = 0; i < trainers.length; i++) {
-					var trainer = trainers[i];
-					trainer.certifications_v2.remove(certType._id);
-					trainer.markModified('certifications_v2');
-					trainer.save();
-				}
-			}
-		});
-		// todo add this back in
-		// Remove the certification from the organizations list of certifications
-		//app.models.CertificationOrganization.findById(certType.organization, function(err, foundOrganization){
-		//	if(err) {
-		//	}
-		//	if(!foundOrganization) {
-		//	}
-		//	else {
-		//		var certifications = foundOrganization.certifications, found = false;
-		//		foundOrganization.certifications.remove(certType._id);
-		//		foundOrganization.markModified('certifications');
-		//		foundOrganization.save(function(err, savedOrganization){
-		//			console.log("Saved organization as now:", savedOrganization);
-		//		})
-		//	}
-		//});
-	})
+	var connectionDatabase = imports.connectionDatabase;
+	CertificationOrganizationSchema.plugin(autoIncrement.plugin, { model: 'CertificationOrganization', field: 'id' });
+	var Model = connectionDatabase.model('CertificationOrganization', CertificationOrganizationSchema);
 	register(null, {
-		certificationTypeModel : Model
-	})
+		certificationOrganizationModel : Model
+	});
 }

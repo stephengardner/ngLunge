@@ -17,7 +17,8 @@ myApp.factory('Sync', function($location, Auth, $rootScope){
 			}
 
 			// if they suddenly changed their urlname, go to that url
-			if(Auth.getCurrentUser().urlName != trainer.urlName) {
+			if(Auth.isUserCurrent(trainer) && Auth.getCurrentUser().urlName != trainer.urlName) {
+				alert("GOING to urlname");
 				$location.url(trainer.urlName);
 				$location.replace();
 			}

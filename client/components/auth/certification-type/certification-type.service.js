@@ -1,5 +1,5 @@
-lungeApp.factory('Certification', function ($resource) {
-	return $resource('/api/certifications/:id/:controller', {
+lungeApp.factory('CertificationType', function ($resource) {
+	return $resource('/api/certification-types/:id/:controller', {
 			id: '@_id'
 		},
 		{

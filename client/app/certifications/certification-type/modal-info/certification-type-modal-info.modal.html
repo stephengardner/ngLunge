@@ -1,0 +1,124 @@
+<div class="modal-content certification-type-modal-info">
+    <div class="modal-header">
+        <div class="button-block" ng-click="closeThisDialog(false)">
+            <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <h4 class="modal-title">
+            <i class="h4 fa fa-info-circle"></i> Certification Info
+        </h4>
+    </div>
+    <form class="form" name="addCertification" ng-submit="submitNewCertiification()">
+        <div class="modal-body">
+            <div class="certification-info">
+                <h1 class="h3">
+                    {{certificationType.name}}
+                </h1>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Description
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                    <span class="value">
+                        {{certificationType.description || '-'}}
+                    </span>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Course Price
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            {{'$' + certificationType.courseMaterialPrice || '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Exam Price
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            {{'$' + certificationType.examPrice || '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Exam Delivery Method
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            {{certificationType.examDeliveryMethod || '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Practical Exam Required
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            {{certificationType.practicalExamRequired ? 'Yes' : 'No'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Prerequisite
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            {{certificationType.preqrequisite || '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Renewal Period
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            {{certificationType.renewalPeriod || '-'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row certification-info-row">
+                    <div class="col-xs-6">
+                    <span class="inline-label">
+                        Category
+                    </span>
+                    </div>
+                    <div class="col-xs-18">
+                        <div class="value">
+                            <ul class="list-unstyled">
+                                <li ng-repeat="category in certificationType.category" class="category">
+                                    {{category}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="btn btn-block btn-lg btn-default" ng-click="closeThisDialog(false)">
+                Close
+            </div>
+        </div>
+    </form>
+</div>

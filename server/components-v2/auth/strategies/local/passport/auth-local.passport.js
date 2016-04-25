@@ -1,7 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var config = require("../../../../../config/environment");
-exports.setup = function setup(options, imports, register) {
+module.exports = function setup(options, imports, register) {
 	var Trainer = imports.trainerModel;
 	var strategy = new LocalStrategy({
 			// by default, local strategy uses username and password, we will override with email
@@ -30,12 +30,12 @@ exports.setup = function setup(options, imports, register) {
 			}
 		}
 	);
-	function setup() {
+	function doSetup() {
 		passport.use(strategy);
 	}
 	register(null, {
-		authLocalStrategyPassport : {
-			setup : setup
+		authLocalPassport : {
+			setup : doSetup
 		}
 	})
 };

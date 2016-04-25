@@ -1,0 +1,13 @@
+{
+  "name": "registrationTrainerSignUp",
+  "version": "0.0.1",
+  "main": "registration-trainer-sign-up.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "customMandrillSender",
+      "logger"
+    ],
+    "provides": ["registrationTrainerSignUp"]
+  }
+}

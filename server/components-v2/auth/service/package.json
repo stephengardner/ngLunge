@@ -4,7 +4,7 @@
   "main": "auth.js",
   "private": true,
   "plugin": {
-    "consumes": ["models", "userModel"],
+    "consumes": ["trainerModel"],
     "provides": ["auth"]
   }
 }

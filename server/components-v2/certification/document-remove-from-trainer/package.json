@@ -1,0 +1,10 @@
+{
+  "name": "certificationDocumentRemoveFromTrainer",
+  "version": "0.0.1",
+  "main": "certification-document-remove-from-trainer.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["certificationPopulator"],
+    "provides": ["certificationDocumentRemoveFromTrainer"]
+  }
+}

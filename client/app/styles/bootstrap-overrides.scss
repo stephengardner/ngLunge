@@ -8,3 +8,7 @@
 .input-group-addon {
 	border:none!important;
 }
+
+.panel-group .panel + .panel {
+	margin-top:0;
+}

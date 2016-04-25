@@ -1,0 +1,98 @@
+<section class="module flat-white">
+    <div cg-busy="{promise : cgBusy}">
+        <div class="show-info" ng-cloak>
+            <form ng-submit="submit(rateForm)" id="rateForm" name="rateForm" class="form-horizontal">
+                <fieldset ng-disabled="!editing">
+                    <header>
+                        <h1>Cost</h1>
+                        <div edit-button ng-click="toggleEditing(rateForm)"></div>
+                    </header>
+                    <!-- Begin About Form -->
+                    <div class="group has-margin">
+                        <!-- Rate -->
+                        <div ng-if="!editing">
+                            <div class="form-group">
+                                <label for="rateGeneralPrice" class="info-horizontal-label">
+                                    Rate / Hour:
+                                </label>
+                                <div class="info-horizontal-value">
+                                    <span ng-if="trainerFactory.trainer.rate.general.price">
+                                        ${{trainerFactory.trainer.rate.general.price}} / hr
+                                    </span>
+                                    <span ng-if="!trainerFactory.trainer.rate.general.price">
+                                        None set
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Comments -->
+                            <div class="form-group">
+                                <div >
+                                    <label for="rateGeneralComments" class="info-horizontal-label">
+                                        Comments:
+                                    </label>
+                                    <div class="info-horizontal-value">
+                                        {{trainerFactory.trainer.rate.general.comments}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="editing">
+                            <md-input-container class="md-block" flex>
+                                <label for="rateGeneralPrice">
+                                    Rate / Hour:
+                                </label>
+                                <md-icon>
+                                    <i class="fa fa-dollar"></i>
+                                </md-icon>
+                                <input  ng-change="removeMongooseError(rateForm, 'rateGeneralPrice')"
+                                        type="text"
+                                        name="rateGeneralPrice"
+                                        id="rateGeneralPrice"
+                                        ng-model="trainerFactory.trainerEditing.rate.general.price"/>
+                                <div class="ag-hint-wrapper">
+                                    <ag-hint on-focus="true">Enter dollar amount</ag-hint>
+                                </div>
+                                <div ng-messages="rateForm.rateGeneralPrice.$error">
+                                    <div ng-message="mongoose">
+                                        {{rateForm.rateGeneralPrice.$error.mongoose}}
+                                    </div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="rateGeneralComments">
+                                    Comments:
+                                </label>
+                                    <textarea ng-change="removeMongooseError(rateForm, 'rateGeneralComments')"
+                                              name="rateGeneralComments"
+                                              id="rateGeneralComments"
+                                              ng-model="trainerFactory.trainerEditing.rate.general.comments"></textarea>
+                                <!--<div class="form-error" ng-show="errors.rateGeneralComments">-->
+                                <!--<span>{{errors.rateGeneralComments}}</span>-->
+                                <!--</div>-->
+                                <div class="ag-hint-wrapper">
+                                    <ag-hint on-focus="true">Add some extra notes about your rates</ag-hint>
+                                </div>
+                                <div ng-messages="rateForm.rateGeneralComments.$error">
+                                    <div ng-message="mongoose">
+                                        {{rateForm.rateGeneralComments.$error.mongoose}}
+                                    </div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <!-- Save Buttons -->
+                    <div class="row" ng-if="editing">
+                        <div class="action-buttons">
+                            <button type="submit" class="btn-action btn-primary" >
+                                Save Changes
+                            </button>
+                            <div class="btn-action btn-danger" ng-click="toggleEditing(rateForm)">
+                                Cancel
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>

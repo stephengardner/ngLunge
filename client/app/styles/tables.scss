@@ -1,0 +1,49 @@
+
+/* See Lea Verou's explanation background-attachment:
+ * http://lea.verou.me/2012/04/background-attachment-local/
+ */
+.widetable {
+	overflow-x: auto;
+	background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #ffffff), color-stop(100%, rgba(255, 255, 255, 0))), -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #ffffff), color-stop(100%, rgba(255, 255, 255, 0))), -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #c3c3c5), color-stop(100%, rgba(195, 195, 197, 0))), -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #c3c3c5), color-stop(100%, rgba(195, 195, 197, 0)));
+	/* background-image: -webkit-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0)), -webkit-linear-gradient(right, #ffffff, rgba(255, 255, 255, 0)), -webkit-linear-gradient(left, #c3c3c5, rgba(195, 195, 197, 0)), -webkit-linear-gradient(right, #c3c3c5, rgba(195, 195, 197, 0)); */
+	background-image: -moz-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0)), -moz-linear-gradient(right, #ffffff, rgba(255, 255, 255, 0)), -moz-linear-gradient(left, #c3c3c5, rgba(195, 195, 197, 0)), -moz-linear-gradient(right, #c3c3c5, rgba(195, 195, 197, 0));
+	background-image: -o-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0)), -o-linear-gradient(right, #ffffff, rgba(255, 255, 255, 0)), -o-linear-gradient(left, #c3c3c5, rgba(195, 195, 197, 0)), -o-linear-gradient(right, #c3c3c5, rgba(195, 195, 197, 0));
+	background-image: linear-gradient(left, #ffffff, rgba(255, 255, 255, 0)), linear-gradient(right, #ffffff, rgba(255, 255, 255, 0)), linear-gradient(left, #c3c3c5, rgba(195, 195, 197, 0)), linear-gradient(right, #c3c3c5, rgba(195, 195, 197, 0));
+	background-position: 0 0, 100% 0, 0 0, 100% 0;
+	background-repeat: no-repeat;
+	background-color: white;
+	background-size: 4em 100%, 4em 100%, 1em 100%, 1em 100%;
+	background-attachment: local, local, scroll, scroll;
+}
+
+tr {
+	td {
+		&.clickable {
+			cursor: pointer;
+			&:hover {
+				box-shadow: 0 0 3px rgba(0, 0, 0, .25) inset;
+				//color: darken($brand-primary, 20%);
+			}
+		}
+	}
+}
+
+
+.sort-ascending:after {
+	content: "\f077";
+	font-family: 'FontAwesome';
+	color: $brand-success;
+}
+
+.sort-descending:after {
+	content: "\f078";
+	font-family: 'FontAwesome';
+	color: $brand-danger;
+}
+
+.sortable:after {
+	content: "\f07d";
+	color:#ccc;
+	margin-left:3px;
+	font-family: 'FontAwesome';
+}

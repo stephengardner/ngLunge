@@ -25,13 +25,17 @@ module.exports = function(express_web, app) {
 	//express_web.use('/api/users', require('./api/user'));
 	express_web.use('/api/trainers', require('./api/trainer')(app));
 	//express_web.use('/api/aws', require('./api/aws'));
-	express_web.use('/auth', require('./auth')(app));
+	//express_web.use('/auth', require('./auth')(app));
 	express_web.use('/api/registrations', require('./api/registration')(app));
 	express_web.use('/api/certifications', require('./api/certification')(app));
 	express_web.use('/api/certification-types', require('./api/certification-type')(app));
 	express_web.use('/api/activities', require('./api/activity')(app));
 	express_web.use('/api/specialties', require('./api/specialty')(app));
 	express_web.use('/api/aws', require('./api/aws')(app));
+	express_web.use('/api/certification-organizations', require('./api/certification-organization')(app));
+
+	// v1 routes
+	express_web.use('/api/trainers/v1', require('./api/trainer/v1/routes/trainer-v1.routes')(app));
 
 	// All undefined asset or api routes should return a 404
 	express_web.route('/:url(trainer/api|auth|components|app|bower_components|assets)/*')

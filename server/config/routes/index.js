@@ -21,7 +21,7 @@ module.exports = function(app) {
 	app.use(bodyParser.json());
 	app.set('trust proxy', true);
 	app.use(wwwRedirect);
-	if(process.env.NODE_ENV == "development")
+	if(process.env.NODE_ENV != "production")
 		app.use(force200Responses);
 
 	// TODO Remove password and set in config

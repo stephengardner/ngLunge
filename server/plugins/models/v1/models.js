@@ -8,21 +8,16 @@ module.exports = function setup(options, imports, register){
 	}
 	register(null, {
 		models : {
-			ApartmentSize : require('../../../app/models/apartment_size/apartment_size.model.js')(MockApp),
-			User : require('../../../app/models/user/user.model.js')(MockApp),
-			Property : require('../../../app/models/property/property.model.js')(MockApp),
-			PropertyV2 : require('../../../app/models/property_v2/property-v2.model.js')(MockApp),
-			PropertyNew : require('../../../app/models/property_new/property-new.model.js')(MockApp),
-			PropertyMerged : require('../../../app/models/property_merged/property-merged.model.js')(MockApp),
-			Feed : require('../../../app/models/feed/feed.model.js')(MockApp),
-			Email : require('../../../app/models/email/email.model.js')(MockApp),
-			PropertyLead : require('../../../app/models/property_lead/property-lead.model.js')(MockApp),
-			PrimelineActivity : require('../../../app/models/primeline_activity/primeline-activity.model.js')(MockApp),
-			Amenity : require('../../../app/models/amenity/amenity.model.js')(MockApp),
-			EmailSearchResults : require('../../../app/models/email_search_results/email-search-results.model.js')(MockApp),
-			Primeline : require("../../../primeline")(MockApp),
-			UnitUpdater : require("../../../components/updaters/unit-updater")(MockApp),
-			FeedUpdater : require("../../../components/updaters/feed-updater")(MockApp)
+			Trainer : imports.trainerModel,
+			CertificationOrganization : imports.certificationOrganizationModel,
+			CertificationType : imports.certificationTypeModel,
+			Specialty : imports.specialtyModel
+			//Registration : require("../../../app/models/registration/registration.model")(MockApp),
+			//Certification : require("../../../app/models/certification/certification.model")(MockApp),
+			//CertificationType : require("../../../app/models/certification-type/certification-type.model")(MockApp),
+			//Activity : require("../../../app/models/activity/activity.model")(MockApp),
+			//Specialty : require("../../../app/models/specialty/specialty.model")(MockApp),
+			//CertificationOrganization :	require("../../../app/models/certification-organization/certification-organization.model")(MockApp)
 		}
 	})
 }

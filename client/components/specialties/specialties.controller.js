@@ -1,6 +1,7 @@
 myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory, $q, $http, $scope){
 	$scope.ajax = {
-		busy : false
+		busy : false,
+		promise : false
 	};
 	$scope.specialty = {
 		selected : ''
@@ -28,12 +29,15 @@ myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory,
 		$scope.specialty.selected = $item;
 	};
 
+	$scope.toggleRemoveSpecialty = function(specialty){
+		specialty.removing = !specialty.removing;
+	}
 	//$scope.reset();
 
 	$scope.addSpecialty = function(){
 		$scope.ajax.busy = true;
 		console.log("the specialty is:", $scope.specialty.selected);
-		TrainerFactory.addSpecialty($scope.specialty.selected)
+		$scope.cgBusy = TrainerFactory.addSpecialty($scope.specialty.selected)
 			.save()
 			.then(function(response){
 				$scope.resetSpecialty();
@@ -47,9 +51,10 @@ myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory,
 
 	$scope.removeSpecialty = function(specialty) {
 		$scope.ajax.busy = true;
-		TrainerFactory.removeSpecialty(specialty)
+		$scope.cgBusy = TrainerFactory.removeSpecialty(specialty)
 			.save()
 			.then(function(response){
+				$scope.toggleRemoveSpecialty(specialty);
 				$scope.resetSpecialty();
 			}).catch(function(err){
 				$scope.resetSpecialty();

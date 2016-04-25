@@ -1,10 +1,10 @@
 {
-  "name": "web",
+  "name": "express",
   "version": "0.0.1",
-  "main": "web.js",
+  "main": "express.js",
   "private": true,
   "plugin": {
-    "consumes": [],
-    "provides": ["web", "webConfig"]
+    "consumes": ["redis"],
+    "provides": ["express"]
   }
 }

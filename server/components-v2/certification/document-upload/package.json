@@ -1,0 +1,10 @@
+{
+  "name": "certificationDocumentUpload",
+  "version": "0.0.1",
+  "main": "certification-document-upload.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["certificationDocumentS3Upload"],
+    "provides": ["certificationDocumentUpload"]
+  }
+}

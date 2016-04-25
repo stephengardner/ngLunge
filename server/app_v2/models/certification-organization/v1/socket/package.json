@@ -1,0 +1,10 @@
+{
+  "name": "certificationOrganizationSocket",
+  "version": "0.0.1",
+  "main": "certification-organization.socket",
+  "private": true,
+  "plugin": {
+    "consumes": ["trainerModel", "socket", "certificationOrganizationModel"],
+    "provides": ["certificationOrganizationSocket"]
+  }
+}
