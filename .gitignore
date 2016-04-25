@@ -4,4 +4,3 @@ node_modules
 .idea
 client/bower_components
 dist
-/server/config/local.env.js
