@@ -5,21 +5,28 @@
         <div ng-if="!trainerFactory.trainer">
             Loading...
         </div>
-        <div ng-if="trainerFactory.trainer && isMe()">
-            <div ng-if="isMe()">
+        <div ng-if="trainerFactory.trainer">
+            <div>
                 <span ui-sref-active="ng-hide">
-                    You don't have any locations yet.  Add one below.
+                    No locations have been added yet.
                 </span>
             </div>
-            <div ng-if="!isMe()">
-                {{trainerFactory.trainer.name.first}} doesn't have any locations yet.  Check back soon!
-            </div>
+            <md-button class="md-fab add-location" ng-show="mapseditable" ng-click="locationDialog($event)">
+                <md-icon>
+                    <i class="material-icons">add</i>
+                </md-icon>
+            </md-button>
         </div>
     </div>
     <div ng-if="trainerFactory.trainer.location.state" id="google-map" class="google-map">
         <div ng-show="map.center.latitude && map.bounds">
             <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="gmapOptions" bounds="map.bounds" control="map.control">
             </ui-gmap-google-map>
+            <md-button class="md-fab add-location" ng-show="mapseditable" ng-click="locationDialog($event)">
+                <md-icon>
+                    <i class="material-icons">add</i>
+                </md-icon>
+            </md-button>
         </div>
     </div>
 </div>

@@ -1,55 +1,54 @@
 <div id="trainer-map-add-location" ng-if="mapseditable">
-    <div class="clearfix" ng-show="mapseditable && !addingLocation">
-        <div class="add-location-button-wrapper">
-            <div ng-click="toggleLocation()" class="pull-right btn btn-info btn-block btn-square btn-lg">
-                {{ trainerFactory.trainer.locations.length ? 'Add another location' : 'Add location' }}
-            </div>
-        </div>
-    </div>
-    <div md-content>
-        <div cg-busy="{promise : cgBusy}">
-            <form class="add-location-form form form-horizontal"
-                  ng-show="addingLocation && !manualLocation.isActive()"
-                  name="form" id="form" ng-submit="submitLocation(form)">
-                <fieldset ng-disabled="ajax.busy">
-                    <md-input-container class="md-block">
-                        <label>Location</label>
-                        <input id="geocoder-location" ng-change="removeMongooseError(form, 'location')"
-                               type="text" name="location" ng-model="location"
-                               class=""/>
-                        <div class="ag-hint-wrapper">
-                            <div class="cant-find-location pull-right" ng-click="manualLocation.toggle()">
-                                Can't find your location?
-                            </div>
-                            <ag-hint on-focus="true">Search google places</ag-hint>
-                        </div>
-                        <div ng-messages="form.location.$error" class="md-auto-hide">
-                            <div ng-message="mongoose">{{form.location.$error.mongoose}}</div>
-                        </div>
-                    </md-input-container>
-                    <md-input-container class="md-block">
-                        <label>Name this location</label>
-                        <input id="title" ng-change="removeMongooseError(form, 'title')"
-                               type="text" name="title"
-                               ng-model="trainerFactory.newLocation.title" />
-                        <div class="ag-hint-wrapper">
-                            <ag-hint on-focus="true">ex: 'Home Studio' or 'Gold's Gym Van Ness'</ag-hint>
-                        </div>
-                        <div ng-messages="form.title.$error" class="md-auto-hide">
-                            <div ng-message="mongoose">{{form.title.$error.mongoose}}</div>
-                        </div>
-                    </md-input-container>
-                    <!-- Add location action buttons -->
-                    <div class="form-group">
-                        <div class="action-buttons">
-                            <button type="submit" class="btn-action btn-primary">Add</button>
-                            <div class="btn-action btn-danger" ng-click="toggleLocation()">Cancel</div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-    </div>
+    <!--<div class="clearfix" ng-show="mapseditable && !addingLocation">-->
+        <!--<div class="add-location-button-wrapper">-->
+            <!--<div ng-click="locationDialog($event)" class="pull-right btn btn-info btn-block btn-square btn-lg">-->
+                <!--{{ trainerFactory.trainer.locations.length ? 'Add another location' : 'Add location' }}-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div md-content-->
+         <!--layout-padding-->
+         <!--cg-busy="{promise : cgBusy}">-->
+        <!--<form class="add-location-form form form-horizontal"-->
+              <!--ng-show="addingLocation && !manualLocation.isActive()"-->
+              <!--name="form" id="form" ng-submit="submitLocation(form)">-->
+            <!--<fieldset ng-disabled="ajax.busy">-->
+                <!--<ag-floating-label>-->
+                    <!--<label>-->
+                        <!--Location-->
+                    <!--</label>-->
+                    <!--<input id="geocoder-location"-->
+                           <!--ng-change="removeMongooseError(form, 'location')"-->
+                           <!--type="text"-->
+                           <!--name="location"-->
+                           <!--ng-model="location"/>-->
+                    <!--<div ng-messages="form.location.$error" class="md-auto-hide">-->
+                        <!--<div ng-message="mongoose">{{form.location.$error.mongoose}}</div>-->
+                    <!--</div>-->
+                <!--</ag-floating-label>-->
+                <!--<ag-floating-label class="md-block" flex>-->
+                    <!--<label>-->
+                        <!--Name this location-->
+                    <!--</label>-->
+                    <!--<input id="title"-->
+                           <!--ng-change="removeMongooseError(form, 'title')"-->
+                           <!--type="text"-->
+                           <!--name="title"-->
+                           <!--ng-model="trainerFactory.newLocation.title" />-->
+                    <!--<div ng-messages="form.title.$error" class="md-auto-hide">-->
+                        <!--<div ng-message="mongoose">{{form.title.$error.mongoose}}</div>-->
+                    <!--</div>-->
+                <!--</ag-floating-label>-->
+                <!--&lt;!&ndash; Add location action buttons &ndash;&gt;-->
+                <!--<div class="form-group">-->
+                    <!--<div class="action-buttons">-->
+                        <!--<button type="submit" class="btn-action btn-primary">Add</button>-->
+                        <!--<div class="btn-action btn-danger" ng-click="toggleLocation()">Cancel</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</fieldset>-->
+        <!--</form>-->
+    <!--</div>-->
     <form name="manualForm" id="manualForm" ng-submit="submitLocation(manualForm)"
           class="add-location-form form form-horizontal" ng-if="addingLocation && manualLocation.isActive()">
         <fieldset ng-disabled="ajax.busy">

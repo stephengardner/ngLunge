@@ -1,85 +1,77 @@
-<div class="module flat-white larger-style-1">
-    <div cg-busy="{promise : cgBusy}">
-        <div md-content>
-            <form ng-submit="submit()"
-                  id="about"
-                  name="about"
-                  class="form-horizontal">
-                <header>
-                    <h1>Link Social Accounts</h1>
-                    <div edit-button ng-click="toggleEditing()"></div>
-                </header>
-                <!-- Begin About Form -->
-                <div class="group has-margin">
-                    <md-input-container class="md-block">
-                        <a ng-class="{'active' : trainerHasSocial('facebook')}"
-                           class="sync-icon sync-facebook"
-                           target="_self"
-                           ng-click="syncOAuth('facebook')"
-                           ng-attr-title="{{editing ? '' : 'Sync your Facebook account with Lunge'}">
-                            <i class="fa fa-facebook-square"></i><!--
+<md-card>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Link Social Accounts</span>
+            </h2>
+            <span flex></span>
+            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing(basicInfo)">
+                <i  class="material-icons">mode_edit</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="linkSocial"
+          name="linkSocial"
+          ng-submit="submit()">
+        <md-card-content cg-busy="{promise : cgBusy}">
+            <a ng-class="{'active' : trainerHasSocial('facebook')}"
+               class="sync-icon sync-facebook"
+               target="_self"
+               ng-click="syncOAuth('facebook')"
+               ng-attr-title="{{editing ? '' : 'Sync your Facebook account with Lunge'}">
+                <i class="fa fa-facebook-square"></i><!--
                             --><span class="remove"
                                      title="Remove your Facebook account from your profile"
                                      ng-if="editing && trainerHasSocial('facebook')"
                                      ng-click="removeSocial('facebook')"
-                                >
+            >
                                 <i class="fa fa-times-circle"></i>
                             </span>
-                        </a>
-                        <a ng-class="{'active' : trainerHasSocial('twitter')}"
-                           class="sync-icon sync-twitter"
-                           target="_self"
-                           ng-click="syncOAuth('twitter')"
-                           ng-attr-title="{{editing ? '' : 'Sync your Twitter account with Lunge'}"
-                                >
-                            <i class="fa fa-twitter-square"></i><!--
+            </a>
+            <a ng-class="{'active' : trainerHasSocial('twitter')}"
+               class="sync-icon sync-twitter"
+               target="_self"
+               ng-click="syncOAuth('twitter')"
+               ng-attr-title="{{editing ? '' : 'Sync your Twitter account with Lunge'}"
+            >
+                <i class="fa fa-twitter-square"></i><!--
                             --><span class="remove"
                                      title="Remove your Twitter account from your profile"
                                      ng-if="editing && trainerHasSocial('twitter')"
                                      ng-click="removeSocial('twitter')">
                                 <i class="fa fa-times-circle"></i>
                             </span>
-                        </a>
-                        <a ng-class="{'active' : trainerHasSocial('linkedin')}"
-                           class="sync-icon sync-linkedin"
-                           target="_self"
-                           ng-click="syncOAuth('linkedin')"
-                           ng-attr-title="{{editing ? '' : 'Sync your LinkedIn account with Lunge'}">
-                            <i class="fa fa-linkedin-square"></i><!--
+            </a>
+            <a ng-class="{'active' : trainerHasSocial('linkedin')}"
+               class="sync-icon sync-linkedin"
+               target="_self"
+               ng-click="syncOAuth('linkedin')"
+               ng-attr-title="{{editing ? '' : 'Sync your LinkedIn account with Lunge'}">
+                <i class="fa fa-linkedin-square"></i><!--
                             --><span class="remove"
                                      title="Remove your LinkedIn account from your profile"
                                      ng-if="editing && trainerHasSocial('linkedin')"
                                      ng-click="removeSocial('linkedin')">
                                 <i class="fa fa-times-circle"></i>
                             </span>
-                        </a>
-                        <a ng-class="{'active' : trainerHasSocial('instagram')}"
-                           class="sync-icon sync-instagram"
-                           target="_self"
-                           ng-click="syncOAuth('instagram')"
-                           ng-attr-title="{{editing ? '' : 'Sync your Instagram account with Lunge'}">
-                            <i class="fa fa-instagram"></i><!--
+            </a>
+            <a ng-class="{'active' : trainerHasSocial('instagram')}"
+               class="sync-icon sync-instagram"
+               target="_self"
+               ng-click="syncOAuth('instagram')"
+               ng-attr-title="{{editing ? '' : 'Sync your Instagram account with Lunge'}">
+                <i class="fa fa-instagram"></i><!--
                             --><span class="remove"
                                      title="Remove your Instagram account from your profile"
                                      ng-if="editing && trainerHasSocial('instagram')"
                                      ng-click="removeSocial('instagram')">
                                 <i class="fa fa-times-circle"></i>
                             </span>
-                        </a>
-                    </md-input-container>
-                </div>
-                <!-- Save Buttons -->
-                <div class="form-group" ng-if="editing">
-                    <div class="col-xxs-24">
-                        <button type="submit" class="btn-action btn-primary" >
-                            Save Changes
-                        </button>
-                        <div class="btn-action btn-danger" ng-click="toggleEditing()">
-                            Cancel
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+            </a>
+        </md-card-content>
+        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+            <md-button type="submit">Save</md-button>
+            <md-button ng-click="toggleEditing()">Cancel</md-button>
+        </md-card-actions>
+    </form>
+</md-card>

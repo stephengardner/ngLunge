@@ -28,7 +28,7 @@ lungeApp.factory("FormControl", function(broadcastService, lodash){
 			}
 			form[inputName].$setValidity('mongoose', true);
 			if(form[inputName] && form[inputName].$error) {
-				form[inputName].$error.mongoose = undefined;
+				form[inputName].$error.mongoose = false;
 			}
 			if(this.errors && inputName) {
 				delete this.errors[inputName];
@@ -53,9 +53,8 @@ lungeApp.factory("FormControl", function(broadcastService, lodash){
 		},
 		parseValidationErrors : function(form, err){
 			var self = this;
-			err = err.data;
 			this.resetErrors();
-			form.$setPristine(); // not sure if this is wanted - but was in the trainer basic info controller
+			//form.$setPristine(); // not sure if this is wanted - but was in the trainer basic info controller
 			// Update validity of form fields that match the mongoose errors
 			if(!err.errors && err.data && err.data.errors) {
 				// we passed in the wrong object, we should have passed in err.data but we just passed in err
@@ -64,11 +63,15 @@ lungeApp.factory("FormControl", function(broadcastService, lodash){
 				console.log("ok : ", err);
 			}
 			angular.forEach(err.errors, function(error, field) {
-				fieldCheck = field;
+				// fieldCheck = field;
 				try {
 					console.log(" [FormControl] trying to set:", field, " with ", error);
 					self.setError(form, field, error.message);
 					form[field].$error.mongoose = error.message;
+					// Augie - New, set up an error message on the form itself.
+					// if(!form.errors) form.errors = {};
+					// if(!form.errors[field]) form.errors[field] = {};
+					// form.errors[field] = error.message;
 				}
 				catch (err) {
 					console.log(" [FormControl] FormControl caught an error, ", err);

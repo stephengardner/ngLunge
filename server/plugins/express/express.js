@@ -11,13 +11,17 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var session = require('express-session');
 var ConnectRedis = require("connect-redis");
+var errors = require('../../components/errors');
 
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
 module.exports = function setup(options, imports, register) {
 
 	var web = express();
+	web.use(require('connect-livereload')());
 	var env = web.get('env');
+
+
 	if ('production' === env) {
 		web.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
 		web.use(express.static(path.join(config.root, 'public')));
@@ -34,17 +38,6 @@ module.exports = function setup(options, imports, register) {
 	}
 	//web.use(require('prerender-node').set('prerenderToken', 'gzjdwTTaxq127132SXOw'));
 	//require("../../../config/routes")(web);
-	var expressConfig = {
-		configExpress : function(app) {
-			require('../../../config/express')(web, app);
-		},
-		configOldRoutes : function(app) {
-			require('../../../routes')(web, app, imports);
-		},
-		configNewRoutes : function() {
-			return web;
-		}
-	};
 
 	function wwwRedirect(req, res, next) {
 		if (req.headers.host.slice(0, 4) === 'www.') {
@@ -66,10 +59,8 @@ module.exports = function setup(options, imports, register) {
 	web.set('views', config.root + '/server/views');
 	web.engine('html', require('ejs').renderFile);
 	web.set('view engine', 'html');
-	web.use(compression());
 	web.use(methodOverride());
 	web.use(cookieParser());
-	console.log("Dirname plus uploads = " + path.join(config.root, 'server/uploads'));
 	web.use('/server/uploads', express.static(path.join(config.root, 'server/uploads')));
 	//web.use(express.static(path.join(config.root, 'public')));
 	web.use(passport.initialize());
@@ -79,7 +70,6 @@ module.exports = function setup(options, imports, register) {
 	web.set('trust proxy', true);
 	web.use(wwwRedirect);
 
-	web.use(require('connect-livereload')());
 	// attach redis sessions to the requests, etc.
 	var session = require('express-session');
 	var RedisStore = ConnectRedis(session);
@@ -92,8 +82,12 @@ module.exports = function setup(options, imports, register) {
 		store : store
 	}));
 
+
+	console.log("The app path is:", web.get('appPath'));
+	web.set('json spaces', 2);
+	web.set('json replacer', web.get('json replacer'));
+
 	register(null, {
-		express : web,
-		expressConfig : expressConfig
+		express : web
 	})
 };

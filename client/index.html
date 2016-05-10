@@ -10,6 +10,8 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
     <!-- bower:css -->
@@ -20,6 +22,7 @@
     <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.css" />
     <link rel="stylesheet" href="bower_components/angular-busy/dist/angular-busy.css" />
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/ag-floating-label/dist/floating-label.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -31,6 +34,7 @@
     <!--
     <link rel="stylesheet" type="text/css" href="components/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css" />
     -->
+    <!--<script src="//localhost:35729/livereload.js"></script>-->
 </head>
 <body ng-app="ngLungeFullStack2App">
 <div class="cg-remove-style" cg-busy="{promise:globalAjax.busy, wrapperClass: '', templateUrl:'/components/angular-busy/templates/fullscreen.partial.html'}"></div>
@@ -94,6 +98,8 @@
 <script src="bower_components/angular-material/angular-material.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
 <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+<script src="bower_components/ng-focus-if/focusIf.js"></script>
+<script src="bower_components/ag-floating-label/dist/floating-label.js"></script>
 <!-- endbower -->
 <script src="socket.io-client/socket.io.js"></script>
 <!-- endbuild -->
@@ -123,6 +129,8 @@
 <script src="app/popovers/profile/info/privacy/privacy.popover.controller.js"></script>
 <script src="app/public/certification/certification.routes.js"></script>
 <script src="app/public/certification/organization/public-certification-organization.controller.js"></script>
+<script src="app/register/main/register-main.controller.js"></script>
+<script src="app/register/register.js"></script>
 <script src="app/trainer/account/certifications/filter/certification.filter.js"></script>
 <script src="app/trainer/account/certifications/list/trainer-certifications-list.controller.js"></script>
 <script src="app/trainer/account/certifications/trainer-certifications.controller.js"></script>
@@ -133,6 +141,7 @@
 <script src="app/trainer/public/info/sections/about/trainer-info-section-about.directive.js"></script>
 <script src="app/trainer/public/info/sections/basic-info/trainer-info-section-basic-info.controller.js"></script>
 <script src="app/trainer/public/info/sections/basic-info/trainer-info-section-basic-info.directive.js"></script>
+<script src="app/trainer/public/info/sections/certifications/trainer-info-section-certifications.directive.js"></script>
 <script src="app/trainer/public/info/sections/email/trainer-info-section-email.controller.js"></script>
 <script src="app/trainer/public/info/sections/email/trainer-info-section-email.directive.js"></script>
 <script src="app/trainer/public/info/sections/link-social-accounts/trainer-info-section-link-social-accounts.controller.js"></script>
@@ -183,6 +192,8 @@
 <script src="components/directives/stop-event.directive.js"></script>
 <script src="components/forms/form-control.service.js"></script>
 <script src="components/geocoder/geocoder.factory.js"></script>
+<script src="components/google-places/google-places.service.js"></script>
+<script src="components/google-places/places-autocomplete.directive.js"></script>
 <script src="components/jCrop/jquery.Jcrop.js"></script>
 <script src="components/menu-button/menu-button.controller.js"></script>
 <script src="components/menu/menu.controller.js"></script>
@@ -198,6 +209,7 @@
 <script src="components/rates/rates.directive.js"></script>
 <script src="components/screen-size/screen-size.factory.js"></script>
 <script src="components/scroll-lock/scroll-lock.factory.js"></script>
+<script src="components/server-error/server-error.directive.js"></script>
 <script src="components/socket/socket.service.js"></script>
 <script src="components/specialties/specialties.controller.js"></script>
 <script src="components/specialties/specialties.directive.js"></script>
@@ -205,6 +217,7 @@
 <script src="components/sync/sync.service.js"></script>
 <script src="components/trainer-certifications/trainer-certifications.service.js"></script>
 <script src="components/trainer-factory/trainer.factory.js"></script>
+<script src="components/trainer-map/add-location/dialog/trainer-map-add-location-dialog.controller.js"></script>
 <script src="components/trainer-map/add-location/trainer-map-add-location.controller.js"></script>
 <script src="components/trainer-map/add-location/trainer-map-add-location.directive.js"></script>
 <script src="components/trainer-map/delete-location/modal/trainer-delete-location-modal.controller.js"></script>
@@ -220,6 +233,7 @@
 <script src="components/trainer-map/ui-overlays/trainer-map-ui-overlays.service.js"></script>
 <script src="components/upload/upload.controller.direct.to.s3.working.js"></script>
 <script src="components/upload/upload.controller.js"></script>
+<script src="components/validate-on-blur/validate-on-blur.directive.js"></script>
 <script src="components/validation/validation.service.js"></script>
 <script src="app/account/account.js"></script>
 <script src="app/account/components/email-component/account-email-component.controller.js"></script>

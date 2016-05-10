@@ -4,7 +4,9 @@
   "main": "express.js",
   "private": true,
   "plugin": {
-    "consumes": ["redis"],
+    "consumes": [
+      "redis"
+    ],
     "provides": ["express"]
   }
 }

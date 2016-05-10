@@ -1,0 +1,13 @@
+{
+  "name": "api-user.router.js",
+  "version": "0.0.1",
+  "main": "api-user.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "apiUserController",
+      "bruteforce",
+      "auth"],
+    "provides": ["apiUserRouter"]
+  }
+}

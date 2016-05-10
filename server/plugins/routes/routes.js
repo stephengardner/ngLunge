@@ -1,29 +1,30 @@
 
-var errors = require('../../components/errors');
+var errors = require('../../components/errors'),
+	compression = require('compression');
 module.exports = function setup(options, imports, register) {
-	var express = imports.express;
+	var web = imports.express;
 	var routes = {
 		attach : function() {
-			console.log("The app path is:", express.get('appPath'));
-			express.set('json spaces', 2);
-			express.set('json replacer', express.get('json replacer'));
 
-			// API Endpoints
-			express.use('/api/trainers', imports.apiTrainerRouter);
-			express.use('/api/certifications', imports.apiCertificationRouter);
-			express.use('/api/certification-types', imports.apiCertificationTypeRouter);
-			express.use('/api/certification-organizations', imports.apiCertificationOrganizationRouter);
-			express.use('/api/specialties', imports.apiSpecialtyRouter);
+			web.use('/api/trainers', imports.apiTrainerRouter);
+			web.use('/api/certifications', imports.apiCertificationRouter);
+			web.use('/api/certification-types', imports.apiCertificationTypeRouter);
+			web.use('/api/certification-organizations', imports.apiCertificationOrganizationRouter);
+			web.use('/api/specialties', imports.apiSpecialtyRouter);
+			web.use('/api/users', imports.apiUserRouter);
 			//express.use('/api/aws', imports.apiAWSRouter);
-			express.use('/auth', imports.authRoutes);
-			express.use('/api/registrations', imports.apiRegistrationRouter);
-
-			express.route('/:url(api|auth|components|app|bower_components|assets)/*')
+			web.use('/auth', imports.authRoutes);
+			web.use('/api/registrations', imports.apiRegistrationRouter);
+			console.log("App Path in Routes.js is:", web.get('appPath'));
+			web.route('/:url(api|auth|components|app|bower_components|assets)/*')
 				.get(errors[404]);
-			express.route('/*')
+			web.route('/*')
 				.get(function(req, res) {
-					res.sendFile('/index.html', { root : express.get('appPath') });
+					res.sendFile('/index.html', { root : web.get('appPath') });
 				});
+			// I don't know why, but compression messed up with url rerouting.  This must be AFTER the route /*
+			// which redirects all routes to index.html
+			web.use(compression());
 		}
 	}
 	register(null, {

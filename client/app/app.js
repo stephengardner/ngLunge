@@ -25,7 +25,9 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 	'cgBusy',
 	'angularValidator',
 	'cgBusy',
-	'ngMaterial'
+	'ngMaterial',
+	'focus-if',
+	'agFloatingLabel'
 ])
 
 	.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {

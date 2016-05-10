@@ -11,28 +11,11 @@
     <section>
         <trainer-info-section-about></trainer-info-section-about>
     </section>
-    <section class="module flat-white larger-style-1">
-        <header>
-            <h1>Locations</h1>
-        </header>
-        <!-- Begin About Form -->
-        <div class="group no-padding">
-            <trainer-map-full mapseditable="{{isMe()}}"></trainer-map-full>
-            <!--<trainer-map mapseditable="{{isMe()}}"></trainer-map>-->
-            <!--<div trainer-map-add-location mapseditable="{{isMe()}}"></div>-->
-            <!--<trainer-map-locations mapseditable="{{isMe()}}"></trainer-map-locations>-->
-        </div>
+    <section>
+        <trainer-map-full mapseditable="{{isMe()}}"></trainer-map-full>
     </section>
-    <section class="module flat-white larger-style-1"
-             ng-controller="CertificationsListController">
-        <header>
-            <h1>Certifications</h1>
-            <div edit-button ui-sref="main.trainer.account.certifications"></div>
-        </header>
-        <div class="group no-padding">
-            <certifications-list></certifications-list>
-            <!--<div ng-include="'components/certifications/certification-list.partial.html'"></div>-->
-        </div>
+    <section>
+        <trainer-info-section-certifications></trainer-info-section-certifications>
     </section>
     <section rates
              class="larger-style-1"

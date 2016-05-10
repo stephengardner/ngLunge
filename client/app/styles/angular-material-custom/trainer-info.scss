@@ -1,0 +1,38 @@
+#trainer-info {
+	md-card {
+		text-align:left;
+		font-size:1.5rem;
+		md-toolbar {
+			background: $brand-primary;
+			//@include depth(3);
+		}
+		.info-row {
+			@extend .layout-row;
+			text-align:left;
+			.name {
+				font-weight:bold;
+			}
+			.value {
+				text-align:right;
+			}
+			~ .info-row {
+				margin-top:1.5rem;
+			}
+		}
+		.privacy-column {
+			text-align:right;
+			margin-left: auto;
+		}
+		md-card-actions {
+
+		}
+		ag-floating-label:last-of-type {
+			.ag-floating-label-content-wrapper {
+				margin-bottom:0;
+			}
+		}
+	}
+}
+label {
+	margin-bottom:0!important;
+}

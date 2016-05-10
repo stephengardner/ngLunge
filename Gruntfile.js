@@ -17,7 +17,9 @@ module.exports = function (grunt) {
 		cdnify: 'grunt-google-cdn',
 		protractor: 'grunt-protractor-runner',
 		injector: 'grunt-asset-injector',
-		buildcontrol: 'grunt-build-control'
+		buildcontrol: 'grunt-build-control',
+		connect: 'grunt-contrib-connect',
+		gruntSass: 'grunt-sass'
 	});
 
 	// Time how long tasks take. Can help when optimizing build times
@@ -25,7 +27,14 @@ module.exports = function (grunt) {
 
 	// Define the configuration for all the tasks
 	grunt.initConfig({
-
+		connect: {
+			server: {
+				options: {
+					// keepalive: true
+					livereload: true
+				}
+			}
+		},
 		// Project settings
 		pkg: grunt.file.readJSON('package.json'),
 		yeoman: {
@@ -88,7 +97,7 @@ module.exports = function (grunt) {
 			sass: {
 				files: [
 					'<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
-				tasks: ['sass', 'autoprefixer']
+				tasks: ['sass'/*, 'autoprefixer'*/]
 			},
 			gruntfile: {
 				files: ['Gruntfile.js']
@@ -432,10 +441,11 @@ module.exports = function (grunt) {
 		// Run some tasks in parallel to speed up the build process
 		concurrent: {
 			server: [
-				'sass',
+				'sass:server',
+				'copy:styles'
 			],
 			test: [
-				'sass',
+				'copy:styles',
 			],
 			debug: {
 				tasks: [
@@ -447,8 +457,12 @@ module.exports = function (grunt) {
 				}
 			},
 			dist: [
+				// 'sass',
+				// //'imagemin',
+				// 'svgmin'
 				'sass',
-				//'imagemin',
+				'copy:styles',
+				'imagemin',
 				'svgmin'
 			]
 		},
@@ -491,17 +505,53 @@ module.exports = function (grunt) {
 			all: localConfig
 		},
 
-		// Compiles Sass to CSS
+		// OLD grunt-contrib-sass crap, Compiles Sass to CSS
+		// sass: {
+			// server: {
+			// 	options: {
+			// 		loadPath: [
+			// 			'<%= yeoman.client %>/bower_components',
+			// 			'<%= yeoman.client %>/app',
+			// 			'<%= yeoman.client %>/components'
+			// 		],
+			// 		compass: false
+			// 	},
+			// 	files: {
+			// 		'.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'
+			// 	}
+			// }
+		// },
+		// NEW grunt-sass which uses libsass and is 10x faster than grunt-contrib-sass.
+		// I had to delete grunt-contrib-sass and add grunt-sass.  Then this works
 		sass: {
+			// options: {
+			// 	includePaths: [
+			// 		'bower_components'
+			// 	]
+			// },
+			dist: {
+				files: [{
+					expand: true,
+					cwd: '<%= yeoman.app %>/styles',
+					src: ['*.scss'],
+					dest: '.tmp/styles',
+					ext: '.css'
+				}]
+			},
 			server: {
-				options: {
-					loadPath: [
-						'<%= yeoman.client %>/bower_components',
-						'<%= yeoman.client %>/app',
-						'<%= yeoman.client %>/components'
-					],
-					compass: false
-				},
+					options: {
+							includePaths: [
+,								'<%= yeoman.client %>/bower_components',
+								'<%= yeoman.client %>/components'
+							],
+						// },
+						loadPath: [
+							'<%= yeoman.client %>/bower_components',
+							'<%= yeoman.client %>/app',
+							'<%= yeoman.client %>/components'
+						],
+						compass: false
+					},
 				files: {
 					'.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'
 				}

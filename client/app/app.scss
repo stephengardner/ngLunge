@@ -30,6 +30,10 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 .angular-google-map-container {
 	transform: none!important;
 }
+
+*:focus {
+	outline:none;
+}
 header {
 	h1 {
 		float:none;
@@ -58,7 +62,8 @@ h1 {
 	}
 }
 body, html {
-	background-color: #ecf0f1;
+	background:white;
+	//background-color: #ecf0f1;
 	// if this is set to height: auto, ngMAterial's select input boxes dont size right when the screen is small,
 	// they fall off the screen
 	//height:auto!important; // don't let angular material set this to height 100% because it screws with ngModal;
@@ -86,14 +91,18 @@ body, html {
 @import 'main/partials/jumbotron/jumbotron.scss';
 @import 'main/partials/trainers-home/category-home.scss';
 @import 'popovers/profile/info/privacy/privacy-popover.scss';
+@import 'register/register.scss';
 @import 'styles/_buttons.scss';
 @import 'styles/_grid.scss';
 @import 'styles/_modals.scss';
 @import 'styles/_variables.scss';
 @import 'styles/alerts.scss';
+@import 'styles/angular-material-custom/main.scss';
+@import 'styles/angular-material-custom/trainer-info.scss';
 @import 'styles/angular-material-input.scss';
 @import 'styles/angular-material.scss';
 @import 'styles/bootstrap-overrides.scss';
+@import 'styles/cards/card.scss';
 @import 'styles/centered-tables.scss';
 @import 'styles/certifications.scss';
 @import 'styles/forms.scss';

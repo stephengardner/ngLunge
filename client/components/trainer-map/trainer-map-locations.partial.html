@@ -4,19 +4,15 @@
 <!-- Locations table -->
 <div class="locations"  ng-if="trainerFactory.trainer.locations.length">
     <!-- Locations table headers -->
-    <div class="location-header">
-        <div class="row gutter-small">
-            <div class="col-xs-8 col-xxs-10" ng-class="{'col-xs-12 col-xxs-12' : !mapseditable}">
+    <div class="header" layout-padding>
+        <div layout="row" layout-align="space-between center">
+            <div flex="40">
                 Title
             </div>
-            <div class="col-xs-8 col-xxs-10" ng-class="{'col-xs-12 col-xxs-12' : !mapseditable}">
+            <div flex="40">
                 Address
             </div>
-            <div ng-if="mapseditable" class="col-xxs-2 text-right visible-xxs">
-                Delete
-            </div>
-            <div ng-if="mapseditable" class="col-xs-4 text-right visible-xs">
-                Delete Location?
+            <div flex>
             </div>
         </div>
     </div>
@@ -27,109 +23,116 @@
                 <accordion-group
                         ng-repeat="location in trainerFactory.trainer.locations | orderObjectBy:'primary'"
                         ng-if="location._id"
-                        ng-click="triggerMarkerClick(location)"
-                        is-open="accordionIndexViewable($index)" >
+                        ng-click="triggerMarke0rClick(location)"
+                        is-open="accordionIndexViewable($index)">
                     <div md-content>
-                        <form class="location-editing-form form"
+                        <form
+                              class="location-editing-form form"
                               ng-class="{'editing' : location.editingTitle}"
                               name="locationEditingForm"
                               ng-submit="changeTitle(locationEditingForm, location)">
                             <div class="location"
-                                 ng-class="{'primary' : location.primary,
-                                 'selected' : isMarkerLocationSelected(location)}">
-                                <div class="row gutter-small vertical-align">
-                                    <!-- Location title -->
-                                    <div ng-if="!location.editingTitle"
-                                         class="location-title col-xxs-12"
-                                         ng-class="{mapseditable : 'col-xs-10 col-xxs-11'}"
-                                         ng-class="{'col-xs-12' : !mapseditable, 'col-md-24' : location.editingTitle}">
-                                        <div class="name">
-                                            <!-- Location primary icon -->
-                                            <div class="primary-location-badge"
-                                                 ng-if="location.primary && !location.editingTitle"
-                                                 title="{{trainerFactory.trainer.name.first}}'s primary location">
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                            {{ location.title }}
-                                        </div>
-                                        <!-- Location column edit buttons -->
-                                        <div class="location-actions"
-                                             ng-if="mapseditable && !location.editingTitle">
-                                            <div stop-event
-                                                 class="btn-text"
+                                 layout="row"
+                                 layout-padding
+                                 layout-align="space-between center">
+                                <div class=name"
+                                     flex="40"
+                                     ng-if="!location.editingTitle">
+                                    <div class="primary-location-badge"
+                                         ng-if="location.primary"
+                                         title="{{trainerFactory.trainer.name.first}}'s primary location">
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    {{ location.title }}
+                                    <!-- Location name edit buttons -->
+                                    <div class="primary-actions"
+                                         ng-if="mapseditable && !location.editingTitle">
+                                        <md-button class="hidden-xxs"
+                                                   stop-event
+                                                   ng-click="toggleChangeTitle(location)">
+                                            <md-icon>
+                                                <i class="material-icons">title</i>
+                                            </md-icon>
+                                            <span class="hidden-xxs">
+                                                Change Title
+                                            </span>
+                                        </md-button>
+                                        <md-button stop-event
+                                                   ng-if="!location.primary"
+                                                   ng-click="makePrimary(location)"
+                                                   class="hidden-xxs">
+                                            <md-icon>
+                                                <i class="material-icons">star</i>
+                                            </md-icon>
+                                            Make Primary
+                                        </md-button>
+                                        <md-icon class="visible-xxs"
+                                                 stop-event
                                                  ng-click="toggleChangeTitle(location)">
-                                                <i class="fa fa-font"></i> Change Title
-                                            </div>
-                                            <br/>
-                                            <div stop-event
+                                            <i class="material-icons">title</i>
+                                        </md-icon>
+                                        <md-icon class="visible-xxs"
                                                  ng-if="!location.primary"
-                                                 ng-click="makePrimary(location)"
-                                                 class="btn-text">
-                                                <i class="fa fa-star"></i> Make Primary
-                                            </div>
-                                        </div>
+                                                 ng-click="makePrimary(location)">
+                                            <i class="material-icons">star</i>
+                                        </md-icon>
                                     </div>
-                                    <!-- Location address -->
-                                    <div class="col-xxs-12"
-                                         ng-class="{mapseditable : 'col-xs-10 col-xxs-11'}"
-                                         ng-if="!location.editingTitle"
-                                         class='location-address col-xs-8 col-xxs-12'>
-                                        <div class='address_line_1'>{{ location.address_line_1 }}</div>
-                                        <div class='city-state'>{{ location.city + ', ' + location.state }}</div>
-                                        <div class='zipcode'>{{ location.zipcode }}</div>
-                                    </div>
-                                    <div class="location-buttons col-xxs-2 col-xs-4 text-right"
-                                         ng-controller="TrainerDeleteLocationController"
-                                         ng-if="!location.editingTitle && mapseditable"
-                                            >
-                                        <div stop-event
-                                             class="delete text-right visible-xxs-inline-block"
+                                </div>
+                                <div class="address"
+                                     flex="40"
+                                     ng-class="{mapseditable : 'col-xs-10 col-xxs-11'}"
+                                     ng-if="!location.editingTitle">
+                                    <div class='address_line_1'>{{ location.address_line_1 }}</div>
+                                    <div class='city-state'>{{ location.city + ', ' + location.state }}</div>
+                                    <div class='zipcode'>{{ location.zipcode }}</div>
+                                </div>
+                                <div class="remove"
+                                     flex="20"
+                                     ng-controller="TrainerDeleteLocationController"
+                                     ng-if="!location.editingTitle && mapseditable">
+                                    <md-icon stop-event
+                                             class="visible-xxs"
                                              ng-click="deleteLocationModal(location)"
                                              ng-disabled="location.removing">
-                                            <i class="fa fa-times"></i>
-                                        </div>
-                                        <div stop-event
-                                             class="btn btn-danger hidden-xxs"
-                                             ng-click="deleteLocationModal(location)" ng-disabled="location.removing">
-                                            <i ng-if="location.removing" class="fa fa-spin fa-spinner"></i>
-                                            {{location.removing ? 'Removing' : 'Remove'}}
-                                        </div>
-                                    </div>
-                                    <!-- Location editing title -->
-                                    <div stop-event
-                                         ng-if="location.editingTitle" class="col-xxs-24">
+                                        <i class="material-icons">delete</i>
+                                    </md-icon>
+                                    <md-button stop-event
+                                               class="md-accent hidden-xxs"
+                                               ng-click="deleteLocationModal(location)" ng-disabled="location.removing">
+                                        <i ng-if="location.removing" class="fa fa-spin fa-spinner"></i>
+                                        {{location.removing ? 'Removing' : 'Remove'}}
+                                    </md-button>
+                                </div>
+                                <!-- Location editing title -->
+                                <div stop-event
+                                     ng-if="location.editingTitle" class="col-xxs-24">
+                                    <md-card>
                                         <fieldset ng-disabled="ajax.busy">
-                                            <md-input-container class="md-block">
-                                                <label>Title</label>
-                                                <input name="title"
-                                                       ng-model="trainerFactory.trainerEditing.locations
+                                            <md-card-content>
+                                                <ag-floating-label>
+                                                    <label>Title</label>
+                                                    <input name="title"
+                                                           ng-model="trainerFactory.trainerEditing.locations
                                                        [trainerFactory.trainer.locations.indexOf(location)].title"
-                                                       ng-change="removeMongooseError(locationEditingForm, 'title')">
-                                                <div ng-messages="locationEditingForm.title.$error"
-                                                     class="md-auto-hide">
-                                                    <div ng-message="mongoose">
-                                                        {{locationEditingForm.title.$error.mongoose}}
+                                                           ng-change="removeMongooseError(locationEditingForm, 'title')">
+                                                    <div ng-messages="locationEditingForm.title.$error"
+                                                         class="md-auto-hide">
+                                                        <div ng-message="mongoose">
+                                                            {{locationEditingForm.title.$error.mongoose}}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </md-input-container>
-                                            <div stop-event
-                                                 class="buttons"
-                                                 ng-class="{'row gutter-small' : location.editingTitle}">
-                                            <span ng-class="{'col-xxs-12' : location.editingTitle}">
-                                                <button stop-event ng-class="{'btn-block' : location.editingTitle}"
-                                                        type="submit" class="btn btn-default">
-                                                    Ok
-                                                </button>
-                                            </span>
-                                            <span ng-class="{'col-xxs-12' : location.editingTitle}">
-                                                <div stop-event class="btn btn-danger"
-                                                     ng-class="{'btn-block' : location.editingTitle}" ng-click="toggleChangeTitle(location)">
+                                                </ag-floating-label>
+                                            </md-card-content>
+                                            <md-card-actions layout="row" layout-align="end center">
+                                                <md-button stop-event type="submit">
+                                                    Save
+                                                </md-button>
+                                                <md-button ng-click="toggleChangeTitle(location)">
                                                     Cancel
-                                                </div>
-                                            </span>
-                                            </div>
+                                                </md-button>
+                                            </md-card-actions>
                                         </fieldset>
-                                    </div>
+                                    </md-card>
                                 </div>
                             </div>
                         </form>
@@ -138,16 +141,22 @@
             </div>
         </accordion>
     </div>
-    <!--
-    <button class="btn btn-square btn-block btn-default" ng-hide="locations.length === trainer.locations.length"
-            ng-click="limit = 4">Show More</button>
-    <button class="btn btn-square btn-block btn-default" ng-if="locations.length >= trainer.locations.length"
-            ng-click="limit = 1">Show Less</button>
-            -->
-    <button ng-if="trainerFactory.trainer.locations.length > 1" class="btn btn-square btn-block btn-info-alt"
-            ng-click="toggleLimitLocations()">
-        <span ng-if="locationsShowMore()"><i class="fa fa-chevron-down"></i> Show More</span>
-        <span ng-if="!locationsShowMore()"><i class="fa fa-chevron-up"></i> Show Less</span>
-    </button>
-
+    <div class="expand"
+         layout="row"
+         layout-align="center center"
+         ng-if="trainerFactory.trainer.locations.length > 1"
+         ng-click="toggleLimitLocations()">
+        <md-button flex ng-if="locationsShowMore()">
+            <md-icon>
+                <i class="material-icons">expand_more</i>
+            </md-icon>
+            Show More
+        </md-button>
+        <md-button flex ng-if="!locationsShowMore()">
+            <md-icon>
+                <i class="material-icons">expand_less</i>
+            </md-icon>
+            Show Less
+        </md-button>
+    </div>
 </div>

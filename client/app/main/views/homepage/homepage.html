@@ -1,4 +1,82 @@
 <div ng-include="'app/main/partials/jumbotron/jumbotron.partial.html'"></div>
+
+<ag-floating-label>
+    <label>
+        Rate / Hour:
+    </label>
+    <input  ng-change="removeMongooseError(rateForm, 'rateGeneralPrice')"
+            type="text"
+            name="rateGeneralPrice"
+            id="rateGeneralPrice"
+            ng-model="trainerFactory.trainerEditing.rate.general.price"/>
+    <div ag-hints>
+        <div ag-hint>
+            Enter dollar amount
+        </div >
+    </div>
+</ag-floating-label>
+
+<md-card>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Basic Info</span>
+            </h2>
+            <span flex></span>
+            <md-button md-ink-ripple class="md-icon-button" aria-label="Favorite">
+                <i  class="material-icons">mode_edit</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-card-content layout="row" layout-align="center">
+
+        <div layout="row" layout-gt-sm="row">
+            <div flex="30">
+                Name:
+            </div>
+            <div flex="80">
+                {{trainerFactory.trainer.name.full}}
+            </div>
+
+            <div flex hide-sm hide-xs>
+                [flex]
+            </div>
+        </div>
+    </md-card-content>
+    <md-card-actions layout="row" layout-align="end center">
+        <md-button>Save</md-button>
+        <md-button>Cancel</md-button>
+    </md-card-actions>
+</md-card>
+<md-content layout="row" layout-align="center">
+    <div layout="column">
+        <div flex layout="column" layout-fill> <!-- this is what I change -->
+            <div flex="33">
+                <md-input-container>
+                    <label>Enter Room's Name</label>
+                    <input ng-model="test" placeholder="Enter Room's Name">
+                </md-input-container>
+            </div>
+            <div flex="66">
+                <md-button class="md-raised md-accent">
+                    Create Chat Room
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+</md-content>
+<div layout="row">
+    <div flex="20">
+        [flex="20"]
+    </div>
+    <div flex="70">
+        [flex="70"]
+    </div>
+    <div flex hide-sm hide-xs>
+        [flex]
+    </div>
+</div>
 <!--
 <div ng-include="'app/main/partials/trainers-home/trainers-home.partial.html'"></div>
 <div ng-include="'app/main/partials/find-section/find-section.partial.html'"></div>

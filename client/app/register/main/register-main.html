@@ -1,0 +1,61 @@
+<div class="container" id="sign-up">
+    <form name="registrationForm" class="form" ng-submit="submit(registrationForm)">
+        <div class="sign-up">
+            <h1>Sign up</h1>
+            <md-content autoc>
+                <md-input-container class="md-block">
+                    <label>
+                        Email
+                    </label>
+                    <input ng-model="user.email"
+                           ng-change="removeMongooseError(registrationForm, 'email')"
+                           type="email"
+                           name="email"
+                           focus-if/>
+                    <div ng-messages="registrationForm.email.$error"
+                         >
+                        <div ng-message="mongoose">
+                            {{registrationForm.email.$error.mongoose}}
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>
+                        Password
+                    </label>
+                    <input ng-model="user.password"
+                           ng-change="removeMongooseError(registrationForm, 'password')"
+                           name="password"
+                           type="password"/>
+                    <div ng-messages="registrationForm.password.$error" class="md-auto-hide">
+                        <div ng-message="mongoose">
+                            {{registrationForm.password.$error.mongoose}}
+                        </div>
+                    </div>
+                </md-input-container>
+            </md-content>
+            <h1 class="h3">Or</h1>
+            <h1>Create your profile with just one click!</h1>
+            <div class="social-logins">
+                <div class="social-login">
+                    <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
+                        <i class="fa fa-facebook"></i> Connect with Facebook
+                    </a>
+                </div>
+                <div class="social-login">
+                    <a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">
+                        <i class="fa fa-google-plus"></i> Connect with Google+
+                    </a>
+                </div>
+                <div class="social-login">
+                    <a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">
+                        <i class="fa fa-twitter"></i> Connect with Twitter
+                    </a>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>

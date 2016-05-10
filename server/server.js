@@ -17,8 +17,11 @@ var web = require('./web-server');
 
 http.globalAgent.maxSockets = Infinity;
 
+var test = function(){
+
+}
 // spin up our workers...? ok
-throng(start, { workers: config.max_concurrency ? config.max_concurrency : 1 });
+throng({ start : start, workers: config.max_concurrency ? config.max_concurrency : 1 });
 
 var instance;
 
@@ -35,64 +38,8 @@ function start() {
 
 	function onCreateApp(Architect) {
 		logger.info("App created!");
-		//var socketio = Architect.getService('socket');
-		//var defaultNamespace = socketio.of('/');
-		//defaultNamespace.on('connection', function(socket){
-		//	console.log("!!!!!!!!!!!!!!!");
-		//});
 	}
 }
-
-/*
-function start() {
-	logger.info({
-		type: 'info',
-		msg: 'starting server',
-		concurrency: config.concurrency,
-		thrifty: config.thrifty,
-		timeout: config.timeout,
-		busy_ms: config.busy_ms
-	});
-	instance = app(config);
-	instance.once('ready', function(){
-		var server = http.createServer(web(instance), config);
-		instance
-			.removeListener('lost', abort)
-			.on('lost', shutdown);
-		server.listen(config.port, config.ip, onListen);
-		function onListen() {
-			console.log("onListen...");
-			//logger.info({ type: 'info', msg: 'listening', port: server.address().port });
-			configSocketIO();
-		}
-		function configSocketIO() {
-			// set up socketio now that the server has been created
-			var socketio = require('socket.io')(server, {
-				serveClient: (config.env === 'production') ? false : true
-				, path: '/socket.io-client',
-				transports : ['websocket']  // On PAAS ( Heroku ) we can only use the websocket transport
-			});
-			instance.socketio = socketio;
-			require('./config/socketio')(instance);
-		}
-		function shutdown() {
-			console.log("Shutdown...");
-			logger.log({ type: 'info', msg: 'shutting down' });
-			server.close(function() {
-				logger.log({ type: 'info', msg: 'exiting' });
-				process.exit();
-			});
-		}
-	});
-	instance.once('lost', abort)
-
-	function abort() {
-		console.log("Lunge abort()");
-		logger.log({ type: 'info', msg: 'shutting down', abort: true });
-		process.exit();
-	}
-}
-*/
 
 function onError(err) {
 	logger.error(err);

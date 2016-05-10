@@ -171,9 +171,9 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 		unset : function() {
 			this.init({}, {});
 		},
-		addEditedLocation : function(isManual) {
-			console.log("before addEditingLocation, trainerFactory.trainer ( the real trainer ).locations is::",
-				this.trainer.locations, " if one of these is null, WHY?!?!?!?!");
+		addEditedLocation : function(location, isManual) {
+			console.log("Trainer addEditedLocation adding:", location);
+			this.newLocation = location;
 			this.newLocation.type = isManual ? "manual" : undefined;
 			this.trainerEditing.locations.push(this.newLocation);
 			console.log("After addEditingLocation, trainerEditing.locations are:", this.trainerEditing.locations);

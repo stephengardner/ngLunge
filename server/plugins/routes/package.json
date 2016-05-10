@@ -11,7 +11,8 @@
       "apiCertificationOrganizationRouter",
       "apiSpecialtyRouter",
       "authRoutes",
-      "apiRegistrationRouter"
+      "apiRegistrationRouter",
+      "apiUserRouter"
     ],
     "provides": ["routes"]
   }

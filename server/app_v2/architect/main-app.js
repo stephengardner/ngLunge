@@ -26,6 +26,7 @@ module.exports = function(config) {
 		"../models/certification-type/v1",
 		"../models/specialty/v1",
 		"../models/registration",
+		"../models/user",
 		//"../../plugins/models/v1",
 		{
 			packagePath : "../../plugins/socket/v1",
@@ -74,6 +75,9 @@ module.exports = function(config) {
 		// registration
 		"../../app_v2/api/registration/controller",
 		"../../app_v2/api/registration/router",
+		// regular user
+		"../../app_v2/api/user/controller",
+		"../../app_v2/api/user/router",
 
 
 		// COMPONENTS

@@ -1,0 +1,12 @@
+{
+  "name": "user-model",
+  "version": "0.0.1",
+  "main": "user.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "connectionDatabase"
+    ],
+    "provides": ["userModel"]
+  }
+}

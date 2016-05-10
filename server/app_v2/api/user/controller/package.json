@@ -1,0 +1,13 @@
+{
+  "name": "api-user.controller.js",
+  "version": "0.0.1",
+  "main": "api-user.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "redis",
+      "userModel"
+    ],
+    "provides": ["apiUserController"]
+  }
+}

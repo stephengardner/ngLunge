@@ -1,7 +1,7 @@
 lungeApp.controller("TrainerMapController", function(TrainerFactory, Sync, $document, $anchorScroll, $interval,
                                                      trainerMap, trainerMapUIOverlays, uiGmapGoogleMapApi,
                                                      uiGmapIsReady, snazzyStyleBlue, FormControl, $q, $timeout, Auth,
-                                                     $compile, AlertMessage, Geocoder, $scope){
+                                                     $compile, AlertMessage, Geocoder, $scope, $mdDialog){
 	$scope.boundGeocoder = false;
 	$scope.errors = FormControl.errors;
 	$scope.removeMongooseError = FormControl.removeMongooseError;
@@ -41,4 +41,24 @@ lungeApp.controller("TrainerMapController", function(TrainerFactory, Sync, $docu
 		$scope.map = trainerMap.init(TrainerFactory.trainer).map;
 		// TEST THE ABOVE
 	});
+
+
+	$scope.locationDialog = function(ev) {
+		// Appending dialog to document.body to cover sidenav in docs app
+		// Modal dialogs should fully cover application
+		// to prevent interaction outside of dialog
+		$mdDialog.show(
+			{
+				controller: 'TrainerMapAddLocationDialogController',
+				templateUrl: '/components/trainer-map/add-location/dialog/trainer-map-add-location-dialog.partial.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true
+			}
+		).then(function(location) {
+
+		}, function() {
+
+		});
+	};
 });

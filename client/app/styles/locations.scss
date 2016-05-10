@@ -10,10 +10,29 @@
 		font-size:1em
 	}
 }
+
+.locations {
+	.expand {
+		.md-button {
+			margin: 0;
+		}
+	}
+}
+.panel {
+	outline: none;
+}
+
+.location:hover {
+	@include depth(1);
+}
+.location:focus {
+	@include depth(2);
+	outline: none!important;
+}
+
 .locations .location{
 	position:relative;
 	cursor:pointer;
-	padding:.5rem 1rem;
 	border-bottom:1px solid #f2f5f5
 }
 .locations .location .location-title .btn-text{
@@ -29,9 +48,6 @@
 	color:#4183D7;
 	font-style:italic;
 	z-index:1
-}
-.locations .location:hover{
-	background:#c9d4d7!important
 }
 .locations .panel:nth-of-type(even){
 	background:#fff;
@@ -112,15 +128,31 @@ form .buttons{
 	border-width:30px 14.5px 0;
 	border-color:#fff transparent transparent
 }
-.location-actions {
-	.fa {
-		color:#999;
+
+.locations {
+	.primary-actions {
+		md-button, button {
+			margin: 0;
+		}
+		@include respond-to(xxs) {
+			md-icon {
+				margin-left:0;
+			}
+		}
 	}
-	padding-left:10px;
-}
-.location-title {
-	.name {
-		position:relative;
-		padding-right:0!important;
+
+	.location-actions {
+		.fa {
+			color:#999;
+		}
+		padding-left:10px;
+		md-button, .md-button {
+			text-transform: none;
+			font-size:.9em;
+			margin:0;
+		}
+		@include respond-to(xxs) {
+			padding-left:0;
+		}
 	}
 }

@@ -14,17 +14,20 @@
 	}
 }
 
-form.location-editing-form {
-	.location {
-		padding:1rem;
-	}
-}
-
 form.add-location-form {
 	padding:1rem;
 }
 
+trainer-map {
+	.md-fab.add-location {
+		position:absolute;
+		right:0;
+		bottom:0;
+	}
+}
 .locations {
+	.actions {
+	}
 	.panel-heading {
 		display:none;
 	}

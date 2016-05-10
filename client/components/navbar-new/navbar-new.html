@@ -13,9 +13,12 @@
             <a ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.login" class="btn btn-login">
                 Log in
             </a>
-            <div ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.trainer.register.email"  class="btn btn-signup">
+            <a ng-show="!isLoggedIn()"
+                 ui-sref-active="active"
+               href="/sign-up"
+                 class="btn btn-signup">
                 Sign up
-            </div>
+            </a>
             <a ui-sref="main.admin" ng-show="isAdmin()" ui-sref-active="active" ng-class="{active: isOnAdminPage}" class="btn btn-info">
                 Admin
             </a>
