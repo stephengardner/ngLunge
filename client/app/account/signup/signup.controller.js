@@ -1,37 +1,55 @@
-'use strict';
+lungeApp.controller("SignupController", function($timeout, $rootScope, TrainerFactory, Sync, FormControl,
+                                                       $state, AlertMessage, $location, $q, $document, $window,
+                                                       ProfilePicture, Auth, $scope, $http,
+                                                       $stateParams,
+                                                       $auth,
+                                                       $mdToast
+){
+	$scope.user = {
+		email : ''
+	};
 
-angular.module('ngLungeFullStack2App')
-  .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
-    $scope.user = {};
-    $scope.errors = {};
+	$scope.submit = function(registrationForm) {
+		console.log("passing in:", $scope.user);
 
-    $scope.register = function(form) {
-      $scope.submitted = true;
+		$http({
+			method : 'POST',
+			url : '/api/registrations',
+			data : $scope.user
+		}).success(function(data){
+			AlertMessage.success('Your verification email has been sent!');
+			$scope.success = true;
+			$scope.trainer = data.trainer;
+		}).error(function(err){
+			FormControl.parseValidationErrors(registrationForm, err);
+		})
+	};
 
-      if(form.$valid) {
-        Auth.createUser({
-          name: $scope.user.name,
-          email: $scope.user.email,
-          password: $scope.user.password
-        })
-        .then( function() {
-          // Account created, redirect to home
-          $location.path('/');
-        })
-        .catch( function(err) {
-          err = err.data;
-          $scope.errors = {};
+	$scope.resendEmail = function(resendEmailForm) {
+		$http({
+			method : 'POST',
+			url : '/api/registrations/resend',
+			data : {
+				trainer : $scope.trainer
+			}
+		}).success(function(data) {
+			$scope.resent = true;
+			AlertMessage.success('Email has been resent!');
+		}).error(function(err) {
+			FormControl.parseValidationErrors(resendEmailForm, err);
+			AlertMessage.error('Please wait a moment, then try again');
+		})
+	}
+	$scope.authenticate = function(provider) {
+		$auth.authenticate(provider, { type : 'trainer-register' }).then(function(response){
+			$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));
+			Auth.setCurrentUser(response.data.trainer);
+			$state.go('profile');
+			// $window.location.href = '/trainer/info';
+		}).catch(function(err){
+			$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+			console.log("err", err);
+		});
+	};
 
-          // Update validity of form fields that match the mongoose errors
-          angular.forEach(err.errors, function(error, field) {
-            form[field].$setValidity('mongoose', false);
-            $scope.errors[field] = error.message;
-          });
-        });
-      }
-    };
-
-    $scope.loginOauth = function(provider) {
-      $window.location.href = '/auth/' + provider;
-    };
-  });
+});

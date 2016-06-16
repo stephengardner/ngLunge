@@ -3,7 +3,10 @@ var Promise = require('promise'),
 	expect = require('chai').expect,
 	_ = require('lodash'),
 	config = require('../../../../config/environment'),
-	mandrill = require('node-mandrill')(config.mandrill.API_KEY)
+	mandrill = require('node-mandrill')(config.mandrill.API_KEY),
+	sendgrid = require("sendgrid").SendGrid(config.sendgrid.clientSecret)
+	rp = require('request-promise')
+	;
 ;
 var customValidationError = function(res, errField, errMessage) {
 	var err = {
@@ -25,15 +28,14 @@ var validationError = function(res, err) {
 	return res.status(422).json(err);
 };
 module.exports = function setup(options, imports, register) {
-	var trainerModel = imports.trainerModel;
+	var trainerModel = imports.trainerModel,
+		bruteforce = imports.bruteforce
+	;
 	var trainerContactEmail = {
 		send : function(req, res){
 			send(req, res).then(function(response){
 				res.status(200).json({});
 			}).catch(function(err){
-				//if(err.type == 'mandrill') {
-				//	return customValidationError(res, 'mandrill', err.message);
-				//}
 				if(err.code == 500) {
 					return res.status(500).json(err);
 				}
@@ -43,10 +45,15 @@ module.exports = function setup(options, imports, register) {
 	}
 	function send(req, res) {
 		return new Promise(function(resolve, reject){
-			expect(req).to.have.property('body');
-			expect(req.body).to.have.property('trainer');
-			var trainer, inquiryAddedIndex = false
-			;
+			var trainerId = req.params.id;
+			expect(trainerId).to.exist;
+			expect(req.body.inquiry).to.exist;
+			expect(req.body.inquiry.user).to.exist;
+			expect(req.body.inquiry.user.name).to.exist;
+
+			var trainer, inquiryAddedIndex = false,
+				inquiry = req.body.inquiry
+				;
 
 			function attachMandrillResponse(error, response) {
 				return new Promise(function(resolve, reject){
@@ -72,12 +79,26 @@ module.exports = function setup(options, imports, register) {
 			}
 			async.waterfall([
 				function getTrainer(callback) {
-					trainerModel.findById(req.body.trainer._id).exec(function(err, foundTrainer){
+					trainerModel.findById(trainerId).exec(function(err, foundTrainer){
 						if(err) return callback(err);
 						if(!foundTrainer) return callback(new Error(404));
 						trainer = foundTrainer;
 						callback(null);
 					})
+				},
+				function validate(callback) {
+					var newEmailInquiry = _.merge({}, req.body.inquiry);
+					trainer.email_inquiries.push(newEmailInquiry);
+					trainer.validate(function(err, validatedTrainer){
+						if(err) return callback(err);
+						callback(null);
+					})
+				},
+				function brute(callback) {
+					bruteforce.trainerContactInquiry.prevent(req, res, callback);
+				},
+				function bruteDaily(callback) {
+					bruteforce.trainerContactInquiryMaxDaily.prevent(req, res, callback);
 				},
 				function addEmailInquiry(callback) {
 					var newEmailInquiry = _.merge({}, req.body.inquiry);
@@ -90,43 +111,89 @@ module.exports = function setup(options, imports, register) {
 					})
 				},
 				function sendInquiry(callback) {
-					//var newEmailInquiry = _.merge({}, req.body.inquiry);
-					//trainer.email_inquiries.push(newEmailInquiry);
-					var options = {
-						template_name : 'trainer-inquiry-v1-1',
-						template_content : [],
-						message : {
-							to : [{email : 'opensourceaugie@gmail.com'}],
-							merge_language : "handlebars",
-							inline_css : true,
-							subject : 'You\'ve got a new Lunge message!',
-							global_merge_vars : [
+					console.log("body.inquiry is:", req.body.inquiry);
+					console.log("domain is:", config.DOMAIN);
+					console.log("urlanme is:", trainer.urlName);
+					var request = sendgrid.emptyRequest();
+					request.method = 'POST';
+					request.path = '/v3/mail/send';
+					request.body = {
+						"from": {
+							"email": "messages@golunge.com"
+						},
+						"personalizations": [
+							{
+								"to": [
+									{
+										"email": "opensourceaugie@gmail.com"
+									}
+								],
+								"substitutions" : {
+									"-name-" : inquiry.user.name.first + " " + inquiry.user.name.last,
+									"-email-" : inquiry.user.email,
+									"-message-" : inquiry.message,
+									"-domain-" : config.DOMAIN,
+									"-url_name-" : trainer.urlName
+								}
+							}
+						],
+						"content" : [
+							{
+								"type" : "text/html",
+								"value" : "."
+							}
+						],
+						"template_id": "bde37a68-1bea-4114-b4dc-df7e55877f37",
+						"category": [
+							"inquiry"
+						]
+					};
+					sendgrid.API(request, function (response) {
+						// console.log('resposne:', response);
+						console.log('code:' , response.statusCode);
+						console.log(response.body);
+						console.log(response.headers);
+						callback();
+					});
+					/*
+					rp({
+						method : 'POST',
+						uri : 'https://api.sendgrid.com/v3/mail/send',
+						headers: {
+							'Authorization' : 'Bearer ' + config.sendgrid.clientSecret,
+							'Content-Type' : 'application/json'
+						},
+						body : {
+							"personalizations": [
 								{
-									name : 'trainer',
-									content : req.body.trainer
-								},
+									"to": [
+										{
+											"email": "opensourceaugie@gmail.com"
+										}
+									],
+									"subject": "Hello, World!"
+								}
+							],
+							"from": {
+								"email": "from_address@example.com"
+							},
+							"content": [
 								{
-									name : 'inquiry',
-									content : req.body.inquiry
+									"type": "text",
+									"value": "Hello, World!"
 								}
 							]
-						}
-					}
-					mandrill('messages/send-template', options, function(error, response){
-						attachMandrillResponse(error, response).then(function(unusedSavedTrainerResponse){
-							if(error) {
-								// catch the mandirll error and display a custom validation error
-								var err = new Error();
-								err.message = 'Something went wrong and your message was not sent ' +
-								'please try again later';
-								err.code = 500;
-								err.type = 'mandrill';
-								return callback(err);
-							}
-							return callback(null);
-						}).catch(callback);
+						},
+						json: true // Automatically parses the JSON string in the response
+					}).then(function(response){
+						console.log("Response:", response);
+						callback();
+					}).catch(function(err){
+						console.log("err:", err);
+						callback(err);
 					});
-				},
+					*/
+				}
 			], function(err, response){
 				if(err) return reject(err);
 				return resolve(response);

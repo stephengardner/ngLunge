@@ -1,0 +1,34 @@
+#signup-trainer-social,
+#signup-user-social,
+#login-social {
+	a {
+		text-decoration: none;
+		&:hover {
+			text-decoration: none;
+		}
+	}
+	ng-md-icon {
+		display:flex;
+	}
+}
+md-button, a {
+	&.social-button {
+		color: white;
+		padding: 0 20px 0 15px;
+		ng-md-icon, i {
+			color: white;
+		}
+	}
+	&.facebook {
+		background: $facebook!important;
+	}
+	&.twitter {
+		background: $twitter!important;
+	}
+	&.linkedin {
+		background: $linkedin!important;
+	}
+	&.google {
+		background: $googleplus!important;
+	}
+}

@@ -5,6 +5,8 @@
   "private": true,
   "plugin": {
     "consumes": [
+      "instagramSatellizer",
+      "instagramSatellizerSync",
       "trainerModel",
       "bruteforce",
       "auth"],

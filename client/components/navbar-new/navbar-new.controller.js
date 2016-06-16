@@ -1,11 +1,31 @@
-lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popover', 'MenuService', /*'socket',*/
-	'$state', '$rootScope', '$location', '$window', '$scope',
-	'$location', 'Auth', function(TrainerFactory, $timeout, $popover, MenuService, /*socket,*/ $state,
-	                              $rootScope, $location, $window, $scope, $location, Auth){
+lungeApp.controller("NavbarNewController", ['TrainerFactory',
+	'$timeout',
+	'$popover',
+	'MenuService',
+	'$state',
+	'$rootScope',
+	'$location',
+	'$window',
+	'$scope',
+	'Auth',
+	'Menu',
+	function(TrainerFactory,
+	         $timeout,
+	         $popover,
+	         MenuService,
+	         $state,
+	         $rootScope,
+	         $location,
+	         $window,
+	         $scope,
+	         Auth,
+	         Menu){
 		Auth.isLoggedInAsync(function(){
 			$scope.getCurrentUser = Auth.getCurrentUser;
 		})
 
+		$scope.toggleMenu = Menu.toggleLeft;
+		
 		$scope.$watch(function(){
 			return $state.current.name
 		}, function(toState, fromState){
@@ -17,10 +37,10 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popo
 			return $scope.isOnProfilePage && TrainerFactory.isMe();
 		};
 		/*
-		$scope.isAdminPage = function(){
-			return $location.path().indexOf('admin') == 1;
-		};
-		*/
+		 $scope.isAdminPage = function(){
+		 return $location.path().indexOf('admin') == 1;
+		 };
+		 */
 		//console.log($location.path().indexOf("admin"));//.includes('admin'));
 		// check scrolled and do scope apply on home page scrolling
 		angular.element($window).bind("scroll", function() {
@@ -81,13 +101,13 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory', '$timeout', '$popo
 
 		// Bind the share button popover
 		$scope.$on('$includeContentLoaded', function(){
-			var sharePopover = $popover(angular.element("#share-popover"), {
-				contentTemplate: 'app/popovers/navbar/share/popover.tpl.html',
-				html: true,
-				trigger: 'click',
-				animation : 'am-flip-x',
-				placement : 'bottom',
-				autoClose: true
-			});
+			// var sharePopover = $popover(angular.element("#share-popover"), {
+			// 	contentTemplate: 'app/popovers/navbar/share/popover.tpl.html',
+			// 	html: true,
+			// 	trigger: 'click',
+			// 	animation : 'am-flip-x',
+			// 	placement : 'bottom',
+			// 	autoClose: true
+			// });
 		})
 	}]);

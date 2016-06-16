@@ -17,49 +17,7 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 		TrainerFactory.unsyncModel();
 	});
 	// END controller syncing
-	// Remaining scope functions outside of syncing
-	$scope.removeMongooseError = FormControl.removeMongooseError;
-	$scope.$watch(function() {
-		return FormControl.errors
-	}, function(newErrors){
-			$scope.errors = newErrors;
-	});
-	// toggle editing for a specific section
-	// such as: 'basicInfo'
-	$scope.toggleEditing = function(section) {
-		TrainerFactory.resetEditing('basicInfo');
-		if($scope.editing == section)
-			$scope.editing = false;
-		else
-			$scope.editing = section;
-	}
-	$scope.editing = false;
-	$scope.onBirthdayChange = function(value){
-		console.log("CHANING TO DO:", value);
-		var date = new Date(value);
-
-		console.log("Date is:", date);
-		TrainerFactory.trainerEditing.birthday.value = date;
-	}
-
-	$scope.ajax = {
-		busy : false
-	}
-	$scope.submit = function(form, opt_section){
-		$scope.ajax.busy = true;
-		TrainerFactory.save(opt_section).then(function(){
-			$scope.ajax.busy = false;
-			$scope.editing = false;
-			AlertMessage.success("Profile updated successfully");
-		}).catch(function(err){
-			$scope.ajax.busy = false;
-			FormControl.parseValidationErrors(form, err);
-		})
-	}
-
-	// Privacy Popover Related Functions, can probably separate these into another controller
-	var privacyPopover;
-
+	/*
 	$scope.$on("privacy-change", function(event, value){
 		if($scope.editingPrivacyFor) {
 			$scope.trainerFactory.trainerEditing[$scope.editingPrivacyFor].privacy = value;
@@ -87,4 +45,5 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 			privacyPopover.$promise.then(privacyPopover.toggle);
 		}
 	};
+	*/
 })

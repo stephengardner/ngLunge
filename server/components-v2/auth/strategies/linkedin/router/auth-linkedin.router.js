@@ -9,36 +9,35 @@ module.exports = function setup(options, imports, register) {
 	var auth = imports.auth,
 		bruteforce = imports.bruteforce,
 		router = express.Router(),
-		trainerModel = imports.trainerModel
+		trainerModel = imports.trainerModel,
+		linkedinSatellizer = imports.linkedinSatellizer,
+		linkedinSatellizerSync = imports.linkedinSatellizerSync,
+		linkedinSatellizerRegister = imports.linkedinSatellizerRegister,
+		linkedinSatellizerLogin = imports.linkedinSatellizerLogin
 		;
-
-	router
-		.get('/trainer-sync', auth.isTrainerMe(), passport.authenticate('linkedinTrainerSync', {
-			scope: ['r_basicprofile', 'r_emailaddress'],
-			session: false,
-			callbackURL: config.linkedin.callbackTrainerURL
-		}));
-
-	router
-		.get('/callback-trainer-sync', passport.authenticate('linkedinTrainerSync', {
-			scope: ['r_basicprofile', 'r_emailaddress'],
-			failureRedirect: '/no2',
-			session: false,
-			callbackURL: config.linkedin.callbackTrainerURL
-		}), function(req, res, next) {
-			if(req.session.trainer) {
-				var trainer = req.session.trainer,
-					linkedin = req.user._json;
-				trainerModel.findById(trainer._id, function(err, trainer){
-					trainer.linkedin = linkedin;
-					trainer.linkedin.link = linkedin.publicProfileUrl;
-					trainer.save(function(err, saved) {
-						return res.redirect("/trainer/info");
-					});
+	router.post('/', linkedinSatellizer,
+		function (req, res, next) {
+			if (req.body.type == 'trainer-register') {
+				console.log("linkedinSatellizerRegister");
+				return linkedinSatellizerRegister(req, res, next);
+			}
+			else if (req.body.type == 'trainer-login') {
+				console.log("linkedinSatellizerLogin");
+				return linkedinSatellizerLogin(req, res, next);
+			}
+			else if (req.body.type == 'trainer-sync') {
+				auth.authenticate()(req, res, function(){
+					return linkedinSatellizerSync(req, res, next);
+				})
+			}
+			else {
+				console.log("req.body:", req.body);
+				res.status(404).send({
+					message: 'No thanks'
 				});
 			}
-		});
-
+		}
+	);
 	register(null, {
 		authLinkedinRouter : router
 	});

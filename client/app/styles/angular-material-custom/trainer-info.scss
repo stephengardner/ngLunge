@@ -1,9 +1,9 @@
-#trainer-info {
+#profile-body, #account-body {
 	md-card {
 		text-align:left;
 		font-size:1.5rem;
 		md-toolbar {
-			background: $brand-primary;
+			//background: $brand-primary;
 			//@include depth(3);
 		}
 		.info-row {
@@ -33,6 +33,14 @@
 		}
 	}
 }
+
+.nomargin {
+	margin: 0!important;
+}
+.nopadding {
+	padding: 0!important;
+}
+
 label {
 	margin-bottom:0!important;
 }

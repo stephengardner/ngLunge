@@ -1,0 +1,27 @@
+<md-dialog flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
+    <form name="googlePlacesForm"
+          ng-submit="submit(googlePlacesForm)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Remove location</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="vm.cancel(false)">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div md-content layout-padding>
+                <h3>Are you sure you want to permanently remove this location?</h3>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="vm.confirm(true)">
+                Confirm
+            </md-button>
+            <md-button ng-click="vm.cancel(false)">
+                Cancel
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -11,6 +11,11 @@ module.exports = function setup(options, imports, register) {
 		get: function (trainerOrId) {
 			return new Promise(function (resolve, reject) {
 				var aggregated;
+				if(!trainerOrId) {
+					console.warn('Not sure why, but we asked for certificationsAggregated and didn\'t pass in ' +
+						'a trainer or id object at all');
+					return resolve([]);
+				}
 				var _id = trainerOrId._id ? trainerOrId._id : mongoose.Types.ObjectId(trainerOrId);
 				async.waterfall([
 					function getAggregated(callback) {
@@ -41,7 +46,9 @@ module.exports = function setup(options, imports, register) {
 							if(!aggregatedResponse) {
 								return callback(new Error('No Trainer found using that objectOrID'));
 							}
-							aggregated = aggregatedResponse[0];
+							if(!aggregatedResponse[0])
+								aggregated = [];
+							else aggregated = aggregatedResponse[0];
 							callback(null);
 						});
 					},
@@ -55,6 +62,7 @@ module.exports = function setup(options, imports, register) {
 						})
 					},
 					function populateTrainer(trainer, callback) {
+						console.log("Trainer i s:", trainer);
 						trainer.certifications_v2 = aggregated.certifications_v2;
 						trainer
 							.populate('certifications_v2.certification_type specialties',

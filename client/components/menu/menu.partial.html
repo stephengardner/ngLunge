@@ -1,11 +1,15 @@
 <div ng-controller="MenuController" >
     <div class="menu spaced" ng-class="{'active' : isMenuActive()}">
         <div ng-repeat="item in menuItems">
-            <a ng-if="item.name=='Profile'" class="menu-item" ng-click="goToProfile()">
+            <a ng-if="item.name=='Profile'"
+               class="menu-item"
+               ng-click="goToProfile()">
                 <i class="fa" ng-class="item.icon"></i>
                 {{item.name}}
             </a>
-            <a ng-if="item.name != 'Profile'" class="menu-item" ng-click="onAction(item.action)" ui-sref="{{getSref(item.sref)}}">
+            <a ng-if="item.name != 'Profile'"
+               class="menu-item"
+               ng-click="onAction(item.action)" ui-sref="{{getSref(item.state)}}">
                 <i class="fa" ng-class="item.icon"></i>
                 {{item.name}}
             </a>

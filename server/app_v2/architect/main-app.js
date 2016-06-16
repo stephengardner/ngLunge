@@ -139,6 +139,9 @@ module.exports = function(config) {
 		// certification document prevalidate
 		"../../components-v2/trainer/populator/get-single-certification-by-id",
 
+		// trainer populator
+		"../../components-v2/trainer/populator/simple",
+
 		// trainer contact email
 		"../../components-v2/trainer/contact/email",
 
@@ -154,7 +157,32 @@ module.exports = function(config) {
 		"../../components-v2/registration/trainer/sign-up",
 
 		// certification document prevalidate
-		"../../plugins/error-formatter"
+		"../../plugins/error-formatter",
+		
+		// SATELLIZER
+		// facebook satellizer
+		"../../components-v2/auth/strategies/facebook/satellizer",
+		"../../components-v2/auth/strategies/facebook/satellizer/register",
+		"../../components-v2/auth/strategies/facebook/satellizer/login",
+		"../../components-v2/auth/strategies/facebook/satellizer/sync",
+
+
+		"../../components-v2/auth/strategies/linkedin/satellizer",
+		"../../components-v2/auth/strategies/linkedin/satellizer/register",
+		"../../components-v2/auth/strategies/linkedin/satellizer/login",
+		"../../components-v2/auth/strategies/linkedin/satellizer/sync",
+
+		"../../components-v2/auth/strategies/twitter/satellizer",
+		"../../components-v2/auth/strategies/twitter/satellizer/register",
+		"../../components-v2/auth/strategies/twitter/satellizer/login",
+		"../../components-v2/auth/strategies/twitter/satellizer/sync",
+
+		"../../components-v2/auth/strategies/instagram/satellizer",
+		"../../components-v2/auth/strategies/instagram/satellizer/sync",
+
+		"../../components-v2/password-reset/sender",
+		
+		"../../components-v2/sendgrid/email-sender"
 
 	];
 	var tree = architect.resolveConfig(appConfig, __dirname);

@@ -1,82 +1,168 @@
-<div class="container">
-    <div class="sign-up">
-        <h1>Create your profile with just one click!</h1>
-        <div class="social-logins">
-            <div class="social-login">
-                <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
-                    <i class="fa fa-facebook"></i> Connect with Facebook
-                </a>
-            </div>
-            <div class="social-login">
-                <a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">
-                    <i class="fa fa-google-plus"></i> Connect with Google+
-                </a>
-            </div>
-            <div class="social-login">
-                <a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">
-                    <i class="fa fa-twitter"></i> Connect with Twitter
-                </a>
-            </div>
-        </div>
+<!--<div class="container">-->
+<!--<div class="log-in-tabs">-->
+<!--<tabset>-->
+<!--<tab heading="Trainer">-->
+<!--<div class="log-in" ng-controller="LoginController">-->
+<!--<form name="form" class="form-horizontal" role="form" ng-submit="login(form)">-->
+<!--<div class="form-group">-->
+<!--<label for="email" class="col-sm-4 control-label">Email</label>-->
+<!--<div class="col-sm-20">-->
+<!--<input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label for="password" class="col-sm-4 control-label">Password</label>-->
+<!--<div class="col-sm-20">-->
+<!--<input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">-->
+<!--</div>-->
+<!--</div>-->
+<!--<div ng-if="errors.password || errors.hashedPassword" class="form-group has-error">-->
+<!--<div class="help-block"  ng-repeat="error in errors">-->
+<!--{{error}}-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="form-group last">-->
+<!--<div class="col-xs-24 col-sm-20 col-sm-push-4">-->
+<!--<input class="form-control input-lg" type="submit" value="{{!sending ? 'Log in' : 'Logging in...'}}" ng-disabled="submitting">-->
+<!--</div>-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
+<!--</tab>-->
+<!--<tab heading="Public (Coming Soon!)">-->
+<!--<div class="log-in">-->
+<!--<h3>Lunge is bringing it's training interface to public clients.  Stay tuned!</h3>-->
+<!--</div>-->
+<!--<div ng-if="0" class="log-in" ng-controller="LoginController">-->
+<!--<h1>Log in using one of the services below</h1>-->
+<!--<div class="social-logins">-->
+<!--<div class="social-login">-->
+<!--<a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">-->
+<!--<i class="fa fa-facebook"></i> Log in with Facebook-->
+<!--</a>-->
+<!--</div>-->
+<!--<div class="social-login">-->
+<!--<a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">-->
+<!--<i class="fa fa-google-plus"></i> Log in with Google+-->
+<!--</a>-->
+<!--</div>-->
+<!--<div class="social-login">-->
+<!--<a class="btn btn-linkedin" href="" ng-click="loginOauth('linkedin')">-->
+<!--<i class="fa fa-linkedin"></i> Log in with LinkedIn-->
+<!--</a>-->
+<!--</div>-->
+<!--<div class="social-login last">-->
+<!--<a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">-->
+<!--<i class="fa fa-twitter"></i> Log in with Twitter-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</tab>-->
+<!--</tabset>-->
+<!--</div>-->
+<!--</div>-->
+<div layout="row"
+     layout-align="center center"
+     class="main-push">
+    <div class="flex-column" id="signup">
+        <md-card ng-if="!success">
+            <form name="registrationForm"
+                  novalidate
+                  ng-submit="submit(registrationForm)">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>
+                            Sign Up
+                        </h2>
+                    </div>
+                </md-toolbar>
+                <md-tabs md-selected="selectedIndex"
+                         md-border-bottom
+                         md-dynamic-height
+                         md-autoselect>
+                    <md-tab label="User" >
+                        <md-card-content layout="column" layout-align="center center">
+                            Users
+                        </md-card-content>
+                    </md-tab>
+                    <md-tab label="Trainer" id="signup-trainer">
+                        <div id="signup-trainer">
+                            <div id="signup-trainer-social">
+                                <h1>Are you a Certified Trainer?</h1>
+                                <h2>Get started with Lunge today!</h2>
+                                <div>
+                                    <md-button class="facebook social-button"
+                                               href=""
+                                               ng-click="authenticate('facebook')">
+                                        <md-icon>
+                                            <ng-md-icon icon="facebook"></ng-md-icon>
+                                        </md-icon>
+                                        Connect with Facebook
+                                    </md-button>
+                                </div>
+                                <div>
+                                    <md-button class="linkedin social-button"
+                                               href=""
+                                               ng-click="authenticate('linkedin')">
+                                        <md-icon>
+                                            <ng-md-icon icon="linkedin"></ng-md-icon>
+                                        </md-icon>
+                                        Connect with LinkedIn
+                                    </md-button>
+                                </div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div id="signup-trainer-local">
+                                <md-card-content>
+                                    <h3>
+                                        Or Signup Using Your Email
+                                    </h3>
+                                    <ag-floating-label>
+                                        <label>
+                                            Email
+                                        </label>
+                                        <input type="text"
+                                               server-error
+                                               name="email"
+                                               ng-model="user.email"/>
+                                        <div ng-messages="registrationForm.email.$error">
+                                            <div ng-message="mongoose">
+                                                {{registrationForm.errors.email}}
+                                            </div>
+                                        </div>
+                                    </ag-floating-label>
+                                </md-card-content>
+                                <md-card-actions>
+                                    <md-button type="submit">
+                                        Sign up
+                                    </md-button>
+                                </md-card-actions>
+                            </div>
+                        </div>
+                    </md-tab>
+                </md-tabs>
+            </form>
+        </md-card>
+        <form name="resendEmailForm"
+              ng-submit="resendEmail()">
+            <md-card ng-if="success">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">
+                            Check your email!
+                        </span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    We sent you a link to verify your identity and get started using Lunge.
+                </md-card-content>
+                <md-card-actions>
+                    <md-button type="submit">
+                        Resend email
+                    </md-button>
+                </md-card-actions>
+            </md-card>
+        </form>
     </div>
 </div>
-<!--
-<div class="row">
-v class="col-sm-12">
-    <h1>Login</h1>
-    <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code></p>
-    <p>Admin account is <code>admin@admin.com</code> / <code>admin</code></p>
-</div>
-<div class="col-sm-12">
-    <form class="form" name="form" ng-submit="login(form)" novalidate>
-
-        <div class="form-group">
-            <label>Email</label>
-
-            <input type="email" name="email" class="form-control" ng-model="user.email" required>
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-
-            <input type="password" name="password" class="form-control" ng-model="user.password" required>
-        </div>
-
-        <div class="form-group has-error">
-            <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
-                Please enter your email and password.
-            </p>
-            <p class="help-block" ng-show="form.email.$error.email && submitted">
-                Please enter a valid email.
-            </p>
-
-            <p class="help-block">{{ errors.other }}</p>
-        </div>
-
-        <div>
-            <button class="btn btn-inverse btn-lg btn-login" type="submit">
-                Login
-            </button>
-            <a class="btn btn-default btn-lg btn-register" href="/signup">
-                Register
-            </a>
-        </div>
-
-        <hr>
-        <div>
-            <a target="_self" href="/auth/facebook" class="btn btn-danger">FB+</a>
-            <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
-                <i class="fa fa-facebook"></i> Connect with Facebook
-            </a>
-            <a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">
-                <i class="fa fa-google-plus"></i> Connect with Google+
-            </a>
-            <a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">
-                <i class="fa fa-twitter"></i> Connect with Twitter
-            </a>
-        </div>
-    </form>
-</div>
-</div>
-</div>
--->

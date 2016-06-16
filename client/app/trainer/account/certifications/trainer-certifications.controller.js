@@ -23,7 +23,7 @@ lungeApp.controller("TrainerCertificationsController",
 		}
 
 		$scope.certificationsEmpty = function() {
-			if($scope.trainerFactory) {
+			if($scope.trainerFactory && $scope.trainerFactory.trainer.certifications_v2) {
 				var arr = $scope.trainerFactory.trainer.certifications_v2.filter(function(item){
 					if(item.active == false){
 						return false;

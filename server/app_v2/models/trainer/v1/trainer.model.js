@@ -14,7 +14,12 @@ var TrainerSchema = new Schema(
 	{
 		id : { type : Number },
 		email : { type : String, unique : true },
-		name : { first : {type : String, required : false}, last : {type : String, required : false} },
+		name : {
+			first : {
+				type : String, required : false
+			},
+			last : {type : String, required : false}
+		},
 		gender : {
 			value : { type : String, default : 'none' },
 			privacy : { type : String, default : 'private' }
@@ -31,9 +36,17 @@ var TrainerSchema = new Schema(
 			value : { type : String, default : '-' },
 			privacy : { type : String, default : 'public' }
 		},
+		password_reset : {
+			created_at : { type : Date, default : new Date() },
+			used_at : Date,
+			expires_at : Date,
+			authenticationHash : { type : String },
+			active : { type : Boolean, default : true }
+		},
 		registration : {
 			sent : { type : Number },
-			verified : { type : Boolean, default : false },
+			email_verified : { type : Boolean, default : false },
+			password_set : { type : Boolean, default : false },
 			sent_at : Date,
 			resend : { type : Boolean, default : false },
 			email : String,
@@ -49,6 +62,13 @@ var TrainerSchema = new Schema(
 				price : { type : Number },
 				comments : { type : String }
 			}
+		},
+		registration_providers : {
+			facebook : String,
+			linkedin : String,
+			google : String,
+			twitter : String,
+			local : { type : Boolean, default : false }
 		},
 		location: {
 			title : { type : String, default : "Main Location", required : false },
@@ -157,7 +177,7 @@ var TrainerSchema = new Schema(
 					},
 					email : String
 				},
-				comment : String
+				message : String
 			}
 		]
 		//certifications : [{ type : Schema.Types.ObjectId, ref : 'CertificationType' }]//,
@@ -172,6 +192,23 @@ var TrainerSchema = new Schema(
 var validatePresenceOf = function(value) {
 	return value && value.length;
 };
+
+// TrainerSchema.virtual('name.full')
+// 	.get(function () {
+// 		return this.name.first + ' ' + this.name.last;
+// 	})
+// 	.set(function (setFullNameTo) {
+// 		console.log("Setting full name to: ", setFullNameTo);
+// 		if(setFullNameTo) {
+// 			var split = setFullNameTo.split(' ')
+// 				, firstName = split[0]
+// 				, lastName = split[1];
+//
+// 			this.set('name.first', firstName);
+// 			this.set('name.last', lastName);
+// 		}
+// 	});
+
 // Speed up calls to hasOwnProperty
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -211,6 +248,7 @@ TrainerSchema.virtual('name.full').get(function () {
 		return this.name.last;
 }).set(function(fullName) {
 	var regexp = /^[a-zA-Z- ]+$/
+	console.log("SETTTTTTTTTTTTTTTTTTTTTTING", fullName);
 	function isValid(str) { return regexp.test(str); }
 	if(!isValid(fullName)){
 		return this.invalidate('name', 'Only letters and hyphens are allowed in a name');
@@ -226,6 +264,12 @@ TrainerSchema.virtual('name.full').get(function () {
 	}
 });
 
+TrainerSchema.pre('save', function(next){
+	if(this.email) {
+		this.email = this.email.toLowerCase();
+		next();
+	}
+});
 
 // Before saving, make sure the speacialties that are passed in are just an array of objectIDs.
 // - Since they will likely be coming in as full objects, strip everything from them except the _id.
@@ -233,11 +277,11 @@ TrainerSchema.pre('save', function(next){
 	console.log("-___________________________\n_____________________\n_____________________\n");
 	// remove empty specialties
 	this.specialties = this.specialties.filter(function(specialty) {
-		if(typeof specialty != 'object') {
-			return this.invalidate('specialty', 'Please type a valid specialty');
-		}
-		return specialty != null && specialty != undefined
-	})
+			if(typeof specialty != 'object') {
+				return this.invalidate('specialty', 'Please type a valid specialty');
+			}
+			return specialty != null && specialty != undefined
+		})
 		// map the specialties array to objectIDs only.  If they come in as objects, they leave as IDs
 		.map(function(specialty){
 			if(!specialty) return undefined;
@@ -258,7 +302,7 @@ TrainerSchema.pre('save', function(next){
 TrainerSchema
 	.pre('save', function(next) {
 		console.log("PRESAVE!\n\n\n\n");
-		if (!this.isNew) return next();
+		if (!this.isNew || !this.email) return next();
 		var newUrlName = this.email.split("@");
 		newUrlName = newUrlName[0];
 		var self = this;
@@ -266,28 +310,28 @@ TrainerSchema
 		emailSplit = emailSplit[0];
 		this.constructor
 			.find({
-				urlName: new RegExp(emailSplit, "i")
-			},
-			null,
-			{sort : {urlName : -1 }},
-			function(err, trainer) {
-				if(err) throw err;
-				if(trainer.length) {
-					var maxUrlName = trainer[0].urlName,
-						secondToLastChar = maxUrlName.charAt(maxUrlName.length - 2),
-						lastChar = maxUrlName.charAt(maxUrlName.length - 1);
-					if(secondToLastChar == "-")
-						newUrlName = maxUrlName.substr(0, maxUrlName.length - 2) + "-" + (parseInt(lastChar) + 1);
-					else {
-						newUrlName = maxUrlName + "-2";
+					urlName: new RegExp(emailSplit, "i")
+				},
+				null,
+				{sort : {urlName : -1 }},
+				function(err, trainer) {
+					if(err) throw err;
+					if(trainer.length) {
+						var maxUrlName = trainer[0].urlName,
+							secondToLastChar = maxUrlName.charAt(maxUrlName.length - 2),
+							lastChar = maxUrlName.charAt(maxUrlName.length - 1);
+						if(secondToLastChar == "-")
+							newUrlName = maxUrlName.substr(0, maxUrlName.length - 2) + "-" + (parseInt(lastChar) + 1);
+						else {
+							newUrlName = maxUrlName + "-2";
+						}
+						self.urlName = newUrlName;
 					}
-					self.urlName = newUrlName;
-				}
-				else {
-					self.urlName = newUrlName;
-				}
-				next();
-			});
+					else {
+						self.urlName = newUrlName;
+					}
+					next();
+				});
 	});
 
 TrainerSchema.pre('save', function(next){
@@ -332,9 +376,14 @@ TrainerSchema
 TrainerSchema
 	.path('email_inquiries')
 	.validate(function(inquiries) {
-		for(var i = 0; i < inquiries.length; i++) {
-			var inquiry = inquiries[i];
+		var inquiryLength = inquiries.length,
+			lastInquiry = inquiries[inquiries.length - 1]
+		;
+		if(!inquiryLength || !lastInquiry) return;
+		// for(var i = 0; i < inquiries.length; i++) {
+			var inquiry = lastInquiry;//inquiries[i];
 			// First Name
+			console.log("inquiry is new?", inquiry.isNew);
 			if(!inquiry.user.name.first) {
 				this.invalidate('firstName', 'The email inquiry requires a first name');
 			}
@@ -351,14 +400,14 @@ TrainerSchema
 			else if(!validator.isEmail(inquiry.user.email)) {
 				this.invalidate('email', 'Please use a valid email address');
 			}
-			// Comment
-			if(!inquiry.comment) {
-				this.invalidate('comment', 'Please add a message');
+			// Message
+			if(!inquiry.message) {
+				this.invalidate('message', 'Please add a message');
 			}
-			else if(!validator.isLength(inquiry.comment, {max : 1000})) {
-				this.invalidate('comment', 'Please limit your message to 1000 characters');
+			else if(!validator.isLength(inquiry.message, {max : 1000})) {
+				this.invalidate('message', 'Please limit your message to 1000 characters');
 			}
-		}
+		// }
 	}, 'Lunge Email Inquiry Error');
 
 

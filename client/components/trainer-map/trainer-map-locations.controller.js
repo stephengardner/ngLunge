@@ -9,7 +9,6 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
                                                               Geocoder,
                                                               $q
 ){
-
 	$scope.ajax = {
 		busy : false,
 		promise : false
@@ -86,17 +85,9 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 		$scope.trainerFactory = TrainerFactory;
 		TrainerFactory.trainer.locations && TrainerFactory.trainer.locations[0]
 			? TrainerFactory.trainer.locations[0].open = true : false;
+
 		$scope.triggerMarkerClick = function(location){
-			if(location.editingTitle) {
-				return false;
-			}
-			for(var i = 0; i < TrainerFactory.trainer.locations.length; i++ ){
-				TrainerFactory.trainer.locations[i].selected = false;
-			}
-			location.selected = true;
-			var mapElement = angular.element(document.getElementById('google-map'));
-			$document.scrollToElement(mapElement, 60, 400);
-			trainerMap._triggerMarkerClick(location);
+			trainerMap.showWindowForLocationModel(location);
 		};
 	});
 });

@@ -6,7 +6,6 @@ lungeApp.controller("MenuController", function($state, Auth, $scope, MenuService
 		$scope.toggle = MenuService.toggle;
 		$scope.user = Auth.getCurrentUser();
 		$scope.goToProfile = function(){
-			alert("going to profile");
 			$scope.hide();
 			if($scope.user.urlName) {
 				$state.go("profilePage", {urlName : $scope.user.urlName});

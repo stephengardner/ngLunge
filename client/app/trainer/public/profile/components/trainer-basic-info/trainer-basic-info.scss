@@ -1,58 +1,62 @@
-.trainer-synced-account {
-	cursor:pointer;
-	~ .trainer-synced-account {
-		margin-left:.5em;
-	}
-	.unlink {
-		margin-right: .5em;
-	}
-	span {
-		color:darken($body-bg, 30%);
-	}
-	.facebook {
-		padding: 2px 7px 2px 7px;
-	}
-	.linkedin {
-		padding: 2px 7px 2px 5px;
-	}
-	.twitter {
-		padding: 2px 4px;
-	}
-	.google-plus {
-		padding: 2px 4px;
-	}
-	span {
-		&:hover {
-			color:white;
-			border-color:transparent;
-		}
-	}
-	a {
-		vertical-align: middle;
-		&.facebook {
-			background: #3a5795;
-			border-radius: 4px;
-			color: white;
-		}
-		&.linkedin {
-			background:rgb(26, 133, 188);
-			border-radius: 4px;
-			color: white;
-		}
-		&.twitter {
-			color: white;
-			background: #0084B4;
-			border-radius: 4px;
-		}
-		&.google-plus {
-			color:white;
-			background:#DD4B39;
-			border-radius:4px;
-		}
-	}
-}
+//.trainer-synced-account {
+//	cursor:pointer;
+//	~ .trainer-synced-account {
+//		margin-left:.5em;
+//	}
+//	.unlink {
+//		margin-right: .5em;
+//	}
+//	span {
+//		color:darken($body-bg, 30%);
+//	}
+//	.facebook {
+//		padding: 2px 7px 2px 7px;
+//	}
+//	.linkedin {
+//		padding: 2px 7px 2px 5px;
+//	}
+//	.twitter {
+//		padding: 2px 4px;
+//	}
+//	.google-plus {
+//		padding: 2px 4px;
+//	}
+//	span {
+//		&:hover {
+//			color:white;
+//			border-color:transparent;
+//		}
+//	}
+//	a {
+//		vertical-align: middle;
+//		&.facebook {
+//			background: #3a5795;
+//			border-radius: 4px;
+//			color: white;
+//		}
+//		&.linkedin {
+//			background:rgb(26, 133, 188);
+//			border-radius: 4px;
+//			color: white;
+//		}
+//		&.twitter {
+//			color: white;
+//			background: #0084B4;
+//			border-radius: 4px;
+//		}
+//		&.google-plus {
+//			color:white;
+//			background:#DD4B39;
+//			border-radius:4px;
+//		}
+//	}
+//}
 .trainer-profile {
 	.basic-info-inner {
+		.edit {
+			position: absolute;
+			right: 0;
+		}
 		position:relative; //the padding outside of this we don't want, so use a relative pos.
 	}
 	.name {

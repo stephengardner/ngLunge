@@ -6,7 +6,7 @@ var passport = require('passport'),
 	;
 module.exports = function setup(options, imports, register) {
 	var trainerModel = imports.trainerModel;
-	var strategy = new FacebookStrategy({
+	var trainerSyncStrategy = new FacebookStrategy({
 			passReqToCallback: true,
 			clientID: config.facebook.clientID,
 			clientSecret: config.facebook.clientSecret,
@@ -21,18 +21,40 @@ module.exports = function setup(options, imports, register) {
 				profile._json.picture.data.thumbnail = _.merge({}, profile._json.picture.data);
 				profile._json.picture.data.url = res.location;
 				console.log("Lunge: Facebook Graph API returned an updated photo.  " +
-				"And we've successfully set the new facebook.picture.data.url = " + res.location);
+					"And we've successfully set the new facebook.picture.data.url = " + res.location);
+				return done(null, profile);
+			});
+		});
+
+	var trainerRegisterStrategy = new FacebookStrategy({
+			passReqToCallback: true,
+			clientID: config.facebook.clientID,
+			clientSecret: config.facebook.clientSecret,
+			callbackURL: config.facebook.callbackURL,
+			profileFields : ['id', 'displayName', 'photos', 'email', 'profileUrl']
+		},
+		function(req, accessToken, refreshToken, profile, done) {
+			console.log("WTF");
+			// The req.session.trainer is added in auth.isTrainerMe.
+			graph.setAccessToken(accessToken);
+			// get the larger version of the facebook picture
+			graph.get("/" + profile.id + "/picture", { width : 300 },  function(err, res) {
+				profile._json.picture.data.thumbnail = _.merge({}, profile._json.picture.data);
+				profile._json.picture.data.url = res.location;
+				console.log("Lunge: Facebook Graph API returned an updated photo.  " +
+					"And we've successfully set the new facebook.picture.data.url = " + res.location);
 				return done(null, profile);
 			});
 		});
 
 	function doSetup() {
 		console.log("Setting up Facebook Passport");
-		passport.use('facebookTrainerSync', strategy);
+		passport.use('facebookTrainerSync', trainerSyncStrategy);
+		passport.use('facebookTrainerRegister', trainerRegisterStrategy);
 	}
 	doSetup();
 
 	register(null, {
-		authFacebookPassport : strategy
+		authFacebookPassport : trainerRegisterStrategy
 	})
 };

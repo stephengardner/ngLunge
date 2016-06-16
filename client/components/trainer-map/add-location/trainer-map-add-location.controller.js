@@ -15,9 +15,7 @@ lungeApp.controller("TrainerMapAddLocationController", function(TrainerFactory, 
                                                                 AlertMessage,
                                                                 Geocoder,
                                                                 $scope,
-                                                                trainerMapLocations,
-                                                                $mdDialog,
-                                                                $mdMedia
+                                                                trainerMapLocations
 ){
 
 	$scope.errors = FormControl.errors;

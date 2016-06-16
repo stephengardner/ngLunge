@@ -36,6 +36,12 @@ angular.module('ngLungeFullStack2App')
 						controller:'password'
 					}
 				},
+				contactInquiries : {
+					method : 'POST',
+					params : {
+						controller : 'contact-inquiries'
+					}
+				},
 				/*
 				addCertification : {
 					method : 'PUT',

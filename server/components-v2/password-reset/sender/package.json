@@ -1,0 +1,14 @@
+{
+  "name": "passwordResetSender",
+  "version": "0.0.1",
+  "main": "password-reset-sender.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerPopulator",
+      "sendgridEmailSender",
+      "logger"
+    ],
+    "provides": ["passwordResetSender"]
+  }
+}

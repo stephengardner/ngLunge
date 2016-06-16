@@ -1,0 +1,18 @@
+#login {
+	#forgot-password {
+		text-align: right;
+		max-width: 300px;
+		margin: 0 auto;
+		margin-top: -35px;
+		position: relative;
+		z-index: 1;
+		&:hover {
+			a {
+				color: black;
+			}
+		}
+		a {
+			color: #999;
+		}
+	}
+}

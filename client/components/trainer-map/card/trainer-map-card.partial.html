@@ -1,0 +1,20 @@
+<md-card>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Locations</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button"
+                       ng-if="editable"
+                       ng-click="locationDialog($event)">
+                <md-icon>
+                    <i class="material-icons">add</i>
+                </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <trainer-map></trainer-map>
+    <!--<trainer-map-add-location editable="{{editable}}"></trainer-map-add-location>-->
+    <trainer-map-locations editable="{{editable}}"></trainer-map-locations>
+</md-card>

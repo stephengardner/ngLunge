@@ -1,5 +1,13 @@
-myApp.controller("ProfilePictureModalController", function($interval, ScrollLock, AlertMessage, $timeout, ngDialog, ProfilePicture, $scope){
+myApp.controller("ProfilePictureModalController", function($interval, 
+                                                           ScrollLock, 
+                                                           AlertMessage, 
+                                                           $timeout, 
+                                                           ngDialog, 
+                                                           ProfilePicture, 
+                                                           $mdDialog,
+                                                           $scope){
 	var intervalChecks = 0;
+	$scope.ProfilePicture = ProfilePicture;
 
 	// Attach jCrop after the image has loaded from the ng-src event.
 	// we can check directly on ng-src, but I'm going to do it here.
@@ -10,7 +18,7 @@ myApp.controller("ProfilePictureModalController", function($interval, ScrollLock
 			AlertMessage.error("There was a problem uploading your image, please try a different one", {closeButton : true});
 			$interval.cancel($scope.interval);
 			ProfilePicture.removeImage();
-			$scope.closeThisDialog(false);
+			$mdDialog.hide(false);
 		}
 		else {
 			intervalChecks = 0;
@@ -25,17 +33,18 @@ myApp.controller("ProfilePictureModalController", function($interval, ScrollLock
 	}, 100);
 
 	// Lock the page to show this modal
-	ScrollLock.lock();
+	// ScrollLock.lock();
 
+	$scope.close = $mdDialog.hide;
 	// Crop and save the image to the server, then close the modal
 	$scope.saveCrop = function(){
 		ProfilePicture.saveCrop().then(function(response){
 			// $scope.trainer does NOT need to be updated because it will be automatically updated by parent sync
-			$scope.closeThisDialog(response);
+			$mdDialog.hide(response);
 			ProfilePicture.removeImage();
 			AlertMessage.success("Profile picture updated successfully!");
 		}, function(){
-			$scope.closeThisDialog(false);
+			$mdDialog.cancel(false);
 			ProfilePicture.removeImage();
 			AlertMessage.error("Image upload failed.  There may be a problem with your image or internet connection.",
 				{closeButton : true})

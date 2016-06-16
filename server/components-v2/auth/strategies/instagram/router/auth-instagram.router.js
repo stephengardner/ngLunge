@@ -9,34 +9,25 @@ module.exports = function setup(options, imports, register) {
 	var auth = imports.auth,
 		bruteforce = imports.bruteforce,
 		router = express.Router(),
-		trainerModel = imports.trainerModel
+		trainerModel = imports.trainerModel,
+		instagramSatellizer = imports.instagramSatellizer,
+		instagramSatellizerSync = imports.instagramSatellizerSync
 		;
-
-	router
-		.get('/trainer-sync', auth.isTrainerMe(), passport.authenticate('instagramTrainerSync', {
-			session: false,
-			callbackURL: config.instagram.callbackTrainerURL
-		}));
-
-	router
-		.get('/callback-trainer-sync', passport.authenticate('instagramTrainerSync', {
-			failureRedirect: '/no2',
-			session: false,
-			callbackURL: config.instagram.callbackTrainerURL
-		}), function(req, res, next) {
-			if(req.session.trainer) {
-				var trainer = req.session.trainer,
-					instagram = req.user._json.data;
-				trainerModel.findById(trainer._id, function(err, trainer){
-					trainer.instagram = instagram;
-					trainer.instagram.link = 'http://instagram.com/' + instagram.username;
-					trainer.save(function(err, saved) {
-						return res.redirect("/trainer/info");
-					});
+	router.post('/', instagramSatellizer,
+		function (req, res, next) {
+			if (req.body.type == 'trainer-sync') {
+				auth.authenticate()(req, res, function(){
+					return instagramSatellizerSync(req, res, next);
+				})
+			}
+			else {
+				console.log("req.body:", req.body);
+				res.status(404).send({
+					message: 'No thanks'
 				});
 			}
-		});
-
+		}
+	);
 	register(null, {
 		authInstagramRouter : router
 	});

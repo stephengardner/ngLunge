@@ -4,8 +4,9 @@
 <!-- Locations table -->
 <div class="locations"  ng-if="trainerFactory.trainer.locations.length">
     <!-- Locations table headers -->
-    <div class="header" layout-padding>
-        <div layout="row" layout-align="space-between center">
+    <div class="header">
+        <div layout="row" layout-padding
+             layout-align="space-between center">
             <div flex="40">
                 Title
             </div>
@@ -23,11 +24,10 @@
                 <accordion-group
                         ng-repeat="location in trainerFactory.trainer.locations | orderObjectBy:'primary'"
                         ng-if="location._id"
-                        ng-click="triggerMarke0rClick(location)"
+                        ng-click="triggerMarkerClick(location)"
                         is-open="accordionIndexViewable($index)">
                     <div md-content>
-                        <form
-                              class="location-editing-form form"
+                        <form class="location-editing-form form"
                               ng-class="{'editing' : location.editingTitle}"
                               name="locationEditingForm"
                               ng-submit="changeTitle(locationEditingForm, location)">
@@ -46,7 +46,7 @@
                                     {{ location.title }}
                                     <!-- Location name edit buttons -->
                                     <div class="primary-actions"
-                                         ng-if="mapseditable && !location.editingTitle">
+                                         ng-if="editable && !location.editingTitle">
                                         <md-button class="hidden-xxs"
                                                    stop-event
                                                    ng-click="toggleChangeTitle(location)">
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="address"
                                      flex="40"
-                                     ng-class="{mapseditable : 'col-xs-10 col-xxs-11'}"
+                                     ng-class="{editable : 'col-xs-10 col-xxs-11'}"
                                      ng-if="!location.editingTitle">
                                     <div class='address_line_1'>{{ location.address_line_1 }}</div>
                                     <div class='city-state'>{{ location.city + ', ' + location.state }}</div>
@@ -88,17 +88,18 @@
                                 </div>
                                 <div class="remove"
                                      flex="20"
-                                     ng-controller="TrainerDeleteLocationController"
-                                     ng-if="!location.editingTitle && mapseditable">
+                                     ng-controller="TrainerDeleteLocationController">
                                     <md-icon stop-event
+                                             ng-if="!location.editingTitle && editable"
                                              class="visible-xxs"
                                              ng-click="deleteLocationModal(location)"
                                              ng-disabled="location.removing">
                                         <i class="material-icons">delete</i>
                                     </md-icon>
                                     <md-button stop-event
+                                               ng-if="!location.editingTitle && editable"
                                                class="md-accent hidden-xxs"
-                                               ng-click="deleteLocationModal(location)" ng-disabled="location.removing">
+                                               ng-click="deleteLocationModal(location, $event)" ng-disabled="location.removing">
                                         <i ng-if="location.removing" class="fa fa-spin fa-spinner"></i>
                                         {{location.removing ? 'Removing' : 'Remove'}}
                                     </md-button>
@@ -146,17 +147,19 @@
          layout-align="center center"
          ng-if="trainerFactory.trainer.locations.length > 1"
          ng-click="toggleLimitLocations()">
-        <md-button flex ng-if="locationsShowMore()">
+        <md-button flex>
             <md-icon>
-                <i class="material-icons">expand_more</i>
+                <i class="material-icons expand_more"
+                   ng-class="{'rotate-up' : !locationsShowMore()}">
+                    expand_more
+                </i>
             </md-icon>
-            Show More
-        </md-button>
-        <md-button flex ng-if="!locationsShowMore()">
-            <md-icon>
-                <i class="material-icons">expand_less</i>
-            </md-icon>
-            Show Less
+            <span ng-if="locationsShowMore()">
+                Show More
+            </span>
+            <span ng-if="!locationsShowMore()">
+                Show Less
+            </span>
         </md-button>
     </div>
 </div>

@@ -1,27 +1,13 @@
-<div id="trainer-info" class="main-push trainer-profile profile-style">
+<div id="account-body" class="main-push">
     <header>
         <h1><i class="fa fa-user"></i> Account</h1>
     </header>
-    <section>
-        <trainer-info-section-basic-info toggle-popover="togglePopover"></trainer-info-section-basic-info>
-    </section>
-    <section>
-        <trainer-info-section-link-social-accounts></trainer-info-section-link-social-accounts>
-    </section>
-    <section>
-        <trainer-info-section-about></trainer-info-section-about>
-    </section>
-    <section>
-        <trainer-map-full mapseditable="{{isMe()}}"></trainer-map-full>
-    </section>
-    <section>
-        <trainer-info-section-certifications></trainer-info-section-certifications>
-    </section>
-    <section rates
-             class="larger-style-1"
-             editable="isMe()">
-    </section>
-    <section>
-        <trainer-info-section-email></trainer-info-section-email>
-    </section>
+    <trainer-info-section-basic-info toggle-popover="togglePopover"></trainer-info-section-basic-info>
+    <trainer-info-section-link-social-accounts></trainer-info-section-link-social-accounts>
+    <trainer-info-section-about></trainer-info-section-about>
+    <trainer-map-card editable="{{isMe()}}"></trainer-map-card>
+    <specialties editable="{{isMe()}}"></specialties>
+    <trainer-info-section-certifications editable="{{isMe()}}"></trainer-info-section-certifications>
+    <rates editable="{{isMe()}}"></rates>
+    <trainer-info-section-email></trainer-info-section-email>
 </div>

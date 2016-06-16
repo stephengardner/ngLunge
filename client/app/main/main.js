@@ -16,7 +16,7 @@ angular.module('ngLungeFullStack2App')
 				abstract : true,
 				url: '',
 				templateUrl :  'app/main/main.html',
-				controller: 'MainCtrl'
+				controller: 'MainCtrl as vm'
 			})
 			.state('main.home', {
 				url: '^/',

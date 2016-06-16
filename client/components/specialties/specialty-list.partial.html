@@ -1,41 +1,59 @@
-<div class="specialty-list">
-    <div cg-busy="{promise : cgBusy}">
-        <ul ng-if="trainerFactory.trainerEditing.specialties.length" class="list-unstyled">
-            <li class="specialty-added" ng-repeat="specialty in trainerFactory.trainerEditing.specialties">
-            <span class="specialty-name" ng-if="!specialty.removing">
-                {{specialty.name}}
-            </span>
-            <span ng-if="isMe() && !specialty.removing" class="delete" ng-click="toggleRemoveSpecialty(specialty)">
-                <i class="fa fa-times"></i>
-            </span>
-                <div class="specialty-removing" ng-if="specialty.removing">
-                    <h1 class="h4">Are you sure you want to remove the {{specialty.name}} specialty?</h1>
-                </div>
-            </li>
-        </ul>
-        <div ng-if="!trainerFactory.trainerEditing.specialties.length" class="none">
-            <div ng-if="isMe()">
-                You don't have any specialties listed yet.
-            </div>
-            <div ng-if="!isMe()">
-                {{trainerFactory.trainer.name.first}} doesn't have any specialties listed yet.
-            </div>
+<md-card>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Specialties</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button"
+                       ng-if="editable"
+                       ng-click="showDialog($event)">
+                <i class="material-icons">add</i>
+            </md-button>
         </div>
-        <div ng-if="editable && isMe()">
-            <form ng-model="specialtyForm" name="specialtyForm" id="specialtyForm" class="form-inline" ng-submit="addSpecialty()">
-                <div class="form-group add-specialty-group">
-                    <input id="specialty" name="specialty" ng-disabled="ajax.busy" name="specialty"
-                           typeahead-on-select="setSpecialtyFromTypeahead($item, $model, $label);"
-                           typeahead-template-url="custom-ui-specialties.tpl.html"
-                           ng-model="specialty.selected"
-                           ng-value="specialty.selected"
-                           typeahead="specialty.name for specialty in getSpecialties($viewValue)"
-                           typeahead-select-on-exact="true"
-                           typeahead-select-on-blur="true"
-                           class="add-specialty-input form-control" type="text" placeholder="Add specialty"/><!--
-                --><button ng-disabled="ajax.busy" type="submit" class="add-specialty-button btn btn-primary">Add</button>
+    </md-toolbar>
+    <md-card-content cg-busy="{promise : cgBusy}">
+        <md-list>
+            <md-list-item ng-repeat="specialty in trainerFactory.trainerEditing.specialties">
+                <p ng-if="!specialty.removing">{{specialty.name}}</p>
+                <md-button class="md-secondary md-icon-button"
+                           ng-if="editable">
+                    <md-icon ng-if="!specialty.removing">
+                        <i class="material-icons"
+                           ng-click="toggleRemoveSpecialty(specialty)">
+                            delete
+                        </i>
+                    </md-icon>
+                </md-button>
+                <p ng-if="specialty.removing">
+                    Are you sure you want to remove the <strong>{{specialty.name}}</strong> specialty?
+                </p>
+
+                <div hide-xs ng-if="specialty.removing" layout="row" layout-align="center right">
+                    <md-button ng-click="removeSpecialty(specialty)">
+                        Yes
+                    </md-button>
+                    <md-button ng-click="toggleRemoveSpecialty(specialty)">
+                        Cancel
+                    </md-button>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>
+                <div hide-gt-xs ng-if="specialty.removing" layout="row" layout-align="center right">
+                    <md-button class="md-icon-button" ng-click="removeSpecialty(specialty)">
+                        <i class="material-icons">check</i>
+                    </md-button>
+                    <md-button class="md-icon-button" ng-click="toggleRemoveSpecialty(specialty)">
+                        <i class="material-icons">cancel</i>
+                    </md-button>
+                </div>
+            </md-list-item>
+            <div ng-if="!trainerFactory.trainerEditing.specialties.length" class="none">
+                <div ng-if="isMe()">
+                    You don't have any specialties listed yet.
+                </div>
+                <div ng-if="!isMe()">
+                    {{trainerFactory.trainer.name.first}} doesn't have any specialties listed yet.
+                </div>
+            </div>
+        </md-list>
+    </md-card-content>
+</md-card>

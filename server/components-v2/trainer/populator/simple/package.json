@@ -1,0 +1,12 @@
+{
+  "name": "trainerPopulator",
+  "version": "0.0.1",
+  "main": "trainer-populator-simple.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel"
+    ],
+    "provides": ["trainerPopulator"]
+  }
+}

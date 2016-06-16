@@ -1,127 +1,54 @@
-<div class="push-down">
-    <!-- alerts, show all alerts active for profile page -->
-    <!-- profile container -->
-    <div class="clearfix" ng-if="trainerFactory.trainer.name">
+    <div ng-if="trainerFactory.trainer.name">
         <div class="top-masthead clearfix">
-            <div class="main-push trainer-profile profile-style">
-                <div alerts ng-if="isMe()"></div>
-                <form name="profilePictureForm" profile-picture class="trainer-card-wrapper">
-                    <div class="trainer-card wide clearfix">
-                        <div class="profile-picture-container" ng-class="{'info-editing' : basicInfo.visible}">
-                            <!-- profile picture -->
-                            <div id="profile-picture" class="profile-picture"
-                                 bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}"
-                                 ng-style="{'
-                                 background-image' :
-                                 'url({{trainerFactory.trainer.profile_picture.thumbnail.url}})'
-                                 }"
-                                 ng-if="trainerFactory.trainer.profile_picture" >
-                            </div>
-                            <!--<input type="file" -->
-                            <!--id="upload_input" -->
-                            <!--name="upload" -->
-                            <!--style=""/>-->
-                            <!-- ng-file-select="onFileSelect($files)" accept="image/*"
-                                   ng-accept="'image/*'|validate($file)"-->
-                            <!-- profile picture update button -->
-                            <!--<div ng-click="toggleChoseFile(profilePictureForm)">-->
-
-                            <!--<div ng-messages="form.email.$error" class="md-auto-hide">-->
-                            <!--<div ng-message="mongoose">{{errors.email}}</div>-->
-                            <!--</div>-->
-                            <a ng-if="isMe()"
-                               class="upload-button"
-                               ngf-select
-                               ng-model="fileModel.file"
-                               ngf-change="fileChanged(profilePictureForm, $files, $file)"
-                               ngf-model-invalid="profilePictureErrors"
-                               ngf-accept="'image/*'"
-                               name="file">
-                                <i class="fa fa-camera"></i>
-                                <p>Update Profile Picture</p>
-                            </a>
-                            <!--</div>-->
-                        </div>
-                        <div trainer-basic-info trainer="trainer"></div>
-                        <!-- favorite star -->
-                        <div class="favorite" ng-if="!isMe()">
-                            <i class="fa fa-star-o"></i>
-                        </div>
+            <div class="main-push trainer-profile">
+                <trainer-profile-contact-button>
+                </trainer-profile-contact-button>
+                <div flex layout="row"
+                     layout-wrap
+                     layout-align="center center"
+                     class="trainer-card wide clearfix">
+                    <!-- Profile Picture -->
+                    <trainer-profile-picture></trainer-profile-picture>
+                    <!-- Basic Info -->
+                    <trainer-basic-info
+                            flex="66"
+                            flex-xs="80"
+                            class="flex-xxs-100"
+                            trainer="trainer"
+                            editable="{{isMe()}}">
+                    </trainer-basic-info>
+                    <!-- favorite star -->
+                    <div class="favorite" ng-if="!isMe()">
+                        <i class="fa fa-star-o"></i>
                     </div>
-                    <!-- overlay for profile picture updating -->
-                    <div class="overlay" ng-controller="InfoOverlayController" ng-show="isActive()">
-                        <div class="table-wrapper">
-                            <div class="table-cell">
-                                <div class="table-contents capitalize">
-                                    <i class="fa fa-spinner fa-spin"></i>
-                                    {{getMessage()}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-        <div class="trainer-profile profile-style">
-            <div>
-                <section class="map">
-                    <div class="title">
-                        Locations
-                    </div>
-                    <trainer-map mapseditable="{{isMe()}}"></trainer-map>
-                    <trainer-map-locations mapseditable="{{isMe()}}"></trainer-map-locations>
-                </section>
-                <section class="specialties">
-                    <div class="title">
-                        Specialties
-                    </div>
-                    <div specialties editable="isMe()"></div>
-                </section>
-                <section rates class="profile-style-1" editable="isMe()"></section>
-                <!--<section class="contact">-->
-                <!--<div class="title">-->
-                <!--Contact-->
-                <!--</div>-->
-                <!--<form class="form contact-form">-->
-                <!--<textarea class="form-control no-border" rows="3" ng-attr-placeholder="Send a message to {{trainerFactory.trainer.name.first}}" ng-model="trainerContactMessage"></textarea>-->
-                <!--<div class="btn btn-default btn-block btn-square btn-success btn-lg" ng-if="trainerContactMessage"><i class="fa fa-send"></i> Send</div>-->
-                <!--</form>-->
-                <!--</section>-->
-                <section>
-                    <div class="title">
-                        Certifications
-                        <a ng-if="isMe()" ui-sref="main.trainer.account.certifications" class="edit-button small">
-                            <div class="edit"><i class="fa fa-edit"></i></div>
-                        </a>
-                    </div>
-                    <certifications-list></certifications-list>
-                </section>
-                <!--<section class="trainer-reviews">-->
-                <!--<div class="title">-->
-                <!--Reviews-->
-                <!--</div>-->
-                <!--<div class="review clearfix">-->
-                <!--<div class="profile-picture-container">-->
-                <!--<div class="profile-picture" bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}" ng-if="trainerFactory.trainer.profile_picture" >-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--<div class="review-stars">-->
-                <!--<i class="fa fa-star"></i>-->
-                <!--<i class="fa fa-star"></i>-->
-                <!--<i class="fa fa-star"></i>-->
-                <!--<i class="fa fa-star"></i>-->
-                <!--<i class="fa fa-star-half"></i>-->
-                <!--</div>-->
-                <!--<div class="review-text">-->
-                <!--I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt-->
-                <!--like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</section>-->
+        <div id="profile-body"
+             layout="row"
+             layout-align="center center">
+            <div class="flex-column">
+                <trainer-map-card editable="{{isMe()}}"></trainer-map-card>
+                <specialties editable="{{isMe()}}"></specialties>
+                <rates editable="{{isMe()}}"></rates>
+                <certifications-card editable="{{isMe()}}"></certifications-card>
             </div>
         </div>
+        <!--</div>-->
+        <!--<div class="review-stars">-->
+        <!--<i class="fa fa-star"></i>-->
+        <!--<i class="fa fa-star"></i>-->
+        <!--<i class="fa fa-star"></i>-->
+        <!--<i class="fa fa-star"></i>-->
+        <!--<i class="fa fa-star-half"></i>-->
+        <!--</div>-->
+        <!--<div class="review-text">-->
+        <!--I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt-->
+        <!--like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</section>-->
     </div>
     <div class="404 text-center" ng-if="noTrainer">
         <h1>Sorry, but the page you are looking for does not exist.  <a ui-sref="{{previousState ? previousState : 'main.home'}}">go {{previousState ? 'back' : 'home'}}</a></h1>
     </div>
-</div>

@@ -4,7 +4,10 @@
   "main": "auth-local.passport.js",
   "private": true,
   "plugin": {
-    "consumes": ["trainerModel"],
+    "consumes": [
+      "trainerModel",
+      "userModel"
+    ],
     "provides": ["authLocalPassport"]
   }
 }

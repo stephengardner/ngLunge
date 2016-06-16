@@ -97,6 +97,7 @@
                         <ag-floating-label class="md-block" flex>
                             <label>Age</label>
                             <select ng-model="trainerFactory.trainerEditing.age.value">
+                                <option value="-">-</option>
                                 <option ng-repeat="age in ageRange" value="{{age}}">
                                     {{age}}
                                 </option>
@@ -118,6 +119,7 @@
                         <ag-floating-label class="md-block" flex>
                             <label>Years of experience</label>
                             <select ng-model="trainerFactory.trainerEditing.years_of_experience.value">
+                                <option value="-">-</option>
                                 <option ng-repeat="value in yearsOfExperienceRange" value="{{value}}">
                                     {{value}}
                                 </option>

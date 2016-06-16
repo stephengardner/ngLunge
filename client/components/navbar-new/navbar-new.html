@@ -1,41 +1,104 @@
-<div>
-    <div class="container relative">
-        <div class="brand">
+<md-toolbar id="navbar" class="md-whiteframe-z3" >
+    <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
+        <span flex="33">
+            <md-button class="md-icon-button" ng-click="toggleMenu()">
+                <i class="material-icons">menu</i>
+            </md-button>
+        </span>
+        <h2 flex="33" layout="row" layout-align="center center">
             <a ui-sref="main.home">
                 <!--<i class="fa fa-google-wallet"></i>-->
-                <span class="logo-l-square">
-                    <img src="/assets/images/logo-L-square_70x70.png"/>
-                </span>
+                <!--<span class="logo-l-square">-->
+                <!--<img src="/assets/images/logo-L-square_70x70.png"/>-->
+                <!--</span>-->
                 <span class="brand-text">Lunge</span>
             </a>
-        </div>
-        <div class="buttons" ng-class="{'scrolled' : scrolled}">
-            <a ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.login" class="btn btn-login">
-                Log in
-            </a>
-            <a ng-show="!isLoggedIn()"
-                 ui-sref-active="active"
-               href="/sign-up"
-                 class="btn btn-signup">
-                Sign up
-            </a>
-            <a ui-sref="main.admin" ng-show="isAdmin()" ui-sref-active="active" ng-class="{active: isOnAdminPage}" class="btn btn-info">
-                Admin
-            </a>
-            <div class="btn btn-share" id="share-popover" ng-show="showShareButton()">
-                <i class="fa fa-share-alt"></i>
-            </div>
-            <a ng-if="getCurrentType() == 'user'" ui-sref="main.dashboard" ng-show="isLoggedIn()" class="btn btn-username">
-                {{getCurrentUser().name.first ? getCurrentUser().name.first : getCurrentUser().name}}
-            </a>
-            <a ng-if="getCurrentType() == 'trainer'" ui-sref="profilePage({urlName : getCurrentUser().urlName})"
-               ng-show="isLoggedIn()" ui-sref-active="active" class="profile-picture-nav-button">
-                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
-            </a>
-            <span ng-click="toggle()" ng-show="isLoggedIn()" ng-controller="MenuButtonController" class="menu-button">
-                <i class="fa fa-bars"></i>
+        </h2>
+        <span flex="33"
+              layout="row"
+              layout-align="end center">
+            <span hide-gt-xxs
+                  hide-gt-xs
+                  flex
+                  layout="row"
+                  layout-align="end center"
+                  ng-show="!isLoggedIn()">
+                <md-button class="md-icon-button"
+                           ui-sref-active="active"
+                           ui-sref="main.login">
+                    <i class="material-icons">exit_to_app</i>
+                </md-button>
             </span>
-        </div>
-
+            <span flex
+                  hide-xxs
+                  layout="row"
+                  layout-align="end center"
+                  ng-show="!isLoggedIn()">
+                <md-button ui-sref="main.login" ui-sref-active="active">
+                        Log in
+                </md-button>
+                <md-button href="/signup" ui-sref-active="active">
+                        Sign up
+                </md-button>
+            </span>
+            <md-button ng-show="isAdmin()" >
+                <a ui-sref="main.admin"
+                   ui-sref-active="active"
+                   ng-class="{active: isOnAdminPage}"
+                   class="btn btn-info">
+                    Admin
+                </a>
+            </md-button>
+            <md-button class="md-icon-button"
+                       ng-show="showShareButton()">
+                <div id="share-popover">
+                    <i class="material-icons">share</i>
+                </div>
+            </md-button>
+            <!--<md-button class="md-icon-button">-->
+            <!--<a ng-if="getCurrentType() == 'user'" -->
+            <!--ui-sref="main.dashboard" -->
+            <!--ng-show="isLoggedIn()" -->
+            <!--class="btn btn-username">-->
+            <!--{{getCurrentUser().name.first ? getCurrentUser().name.first : getCurrentUser().name}}-->
+            <!--</a>-->
+            <!--</md-button>-->
+            <md-button class="md-icon-button nopadding"
+                       ng-show="isLoggedIn()">
+                <a ng-if="getCurrentType() == 'trainer'"
+                   ui-sref="profilePage({urlName : getCurrentUser().urlName})"
+                   ui-sref-active="active"
+                   class="profile-picture-nav-button">
+                    <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
+                </a>
+            </md-button>
+        </span>
+        <!--<div class="buttons" ng-class="{'scrolled' : scrolled}">-->
+        <!--<a ng-show="!isLoggedIn()" ui-sref-active="active" ui-sref="main.login" class="btn btn-login">-->
+        <!--Log in-->
+        <!--</a>-->
+        <!--<a ng-show="!isLoggedIn()"-->
+        <!--ui-sref-active="active"-->
+        <!--href="/sign-up"-->
+        <!--class="btn btn-signup">-->
+        <!--Sign up-->
+        <!--</a>-->
+        <!--<a ui-sref="main.admin" ng-show="isAdmin()" ui-sref-active="active" ng-class="{active: isOnAdminPage}" class="btn btn-info">-->
+        <!--Admin-->
+        <!--</a>-->
+        <!--<div class="btn btn-share" id="share-popover" ng-show="showShareButton()">-->
+        <!--<i class="fa fa-share-alt"></i>-->
+        <!--</div>-->
+        <!--<a ng-if="getCurrentType() == 'user'" ui-sref="main.dashboard" ng-show="isLoggedIn()" class="btn btn-username">-->
+        <!--{{getCurrentUser().name.first ? getCurrentUser().name.first : getCurrentUser().name}}-->
+        <!--</a>-->
+        <!--<a ng-if="getCurrentType() == 'trainer'" ui-sref="profilePage({urlName : getCurrentUser().urlName})"-->
+        <!--ng-show="isLoggedIn()" ui-sref-active="active" class="profile-picture-nav-button">-->
+        <!--<i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>-->
+        <!--</a>-->
+        <!--<span ng-click="toggle()" ng-show="isLoggedIn()" ng-controller="MenuButtonController" class="menu-button">-->
+        <!--<i class="fa fa-bars"></i>-->
+        <!--</span>-->
+        <!--</div>-->
     </div>
-</div>
+</md-toolbar>

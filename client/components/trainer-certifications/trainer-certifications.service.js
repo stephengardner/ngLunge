@@ -16,7 +16,7 @@ angular.module('ngLungeFullStack2App')
 			params.query = query;
 		}
 
-		function trainerHasCertificaiton(trainer, certification) {
+		function trainerHasCertification(trainer, certification) {
 			// note when the trainer is populated we can use the certifications_v2_map, but I guess that's not
 			// guaranteed to be populated? hm...
 			if(trainer.certifications_v2) {
@@ -34,23 +34,34 @@ angular.module('ngLungeFullStack2App')
 				return false;
 			}
 		}
+		// dont reset the query
+		function empty() {
+			TrainerCertifications.params.nextMaxId = undefined;
+			TrainerCertifications.certificationOrganizations = [];
+			TrainerCertifications.certificationCountMapByTrainer = {};
+		}
 		function reset() {
-			params.nextMaxId = undefined;
+			TrainerCertifications.params.nextMaxId = undefined;
 			ajax.busy = false;
 			ajax.loading = false;
 			ajax.complete = false;
 			TrainerCertifications.certificationOrganizations = [];
 			TrainerCertifications.certificationCountMapByTrainer = {};
-			TrainerCertifications.setQuery('');
+			TrainerCertifications.params.query = '';
+		}
+		
+		function doQuery() {
+			TrainerCertifications.empty();
+			TrainerCertifications.getPage();
 		}
 		function getPage() {
 			return new $q(function(resolve, reject){
-				if(!ajax.loading && !ajax.complete) {
+				if(!ajax.loading /*&& !ajax.complete*/) {
 					ajax.loading = true;
 					$http({
 						method : 'GET',
 						url : '/api/certification-organizations/page',
-						params : params})
+						params : TrainerCertifications.params})
 						.success(onSuccess)
 						.error(onError);
 				}
@@ -60,8 +71,8 @@ angular.module('ngLungeFullStack2App')
 				}
 				function onSuccess(certifications, status, headers) {
 					ajax.loading = false;
-					params.lastMaxId = params.nextMaxId;
-					params.nextMaxId = headers('X-Next-Max-Id');
+					TrainerCertifications.params.lastMaxId = TrainerCertifications.params.nextMaxId;
+					TrainerCertifications.params.nextMaxId = headers('X-Next-Max-Id');
 					TrainerCertifications.ajax = ajax;
 					TrainerCertifications.certificationOrganizations
 						= TrainerCertifications.certificationOrganizations.concat(certifications);
@@ -79,22 +90,27 @@ angular.module('ngLungeFullStack2App')
 		}
 
 		function refreshCurrentPage() {
-			params.nextMaxId = params.lastMaxId;
+			TrainerCertifications.params.nextMaxId = TrainerCertifications.params.lastMaxId;
 			return getPage();
 		}
 
 		var TrainerCertifications = {
+			params : {
+				query : ''
+			},
 			certificationOrganizations : [],
 			certificationCountMapByTrainer : {},
 			ajax : ajax,
+			empty : empty,
 			// The meat of the service, get the page
 			getPage : getPage,
+			doQuery : doQuery,
 			// Refresh the page, for example, if we get a socket notice that a cert updated, refresh them
 			refresh : refreshCurrentPage,
 			reset : reset,
 			setQuery : setQuery,
 			// If a trainer has a specific certification, another simple lookup
-			trainerHasCertificaiton : trainerHasCertificaiton
+			trainerHasCertification : trainerHasCertification
 		};
 		return TrainerCertifications;
 	}])

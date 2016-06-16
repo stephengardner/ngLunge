@@ -31,8 +31,23 @@ module.exports = function setup(options, imports, register){
 		auth.isTrainerAuthenticated(),
 		auth.isTrainerMe(),
 		controller.uploadProfilePictureS3);
+	// returns the trainer during password resetting so the angular app has that trainer in its state for submission
+	router.get('/password-reset/authenticate/:authenticationHash', controller.passwordResetAuthenticate);
+
 	router.post('/', controller.create);
-	router.post('/contact', bruteforce.global.prevent, controller.sendEmail);
+	router.post('/register', controller.create);
+	
+	// password reset routes
+	// bruteforce built-in controller
+	router.post('/password-reset/submit', controller.passwordResetSubmit);
+	// todo authenticate this route, maybe add :id in front
+	router.post('/password-reset/confirm', controller.passwordResetConfirm);
+	
+	// contact inquiry from profile page
+	// bruteforce built-in controller
+	router.post('/:id/contact-inquiries', controller.sendEmail);
+
+	
 	router.get('/send_email/:email', bruteforce.global.prevent, controller.sendEmail);
 	router.put('/:id/changeEmail', auth.isTrainerAuthenticated(), auth.isTrainerMe(), controller.changeEmail);
 	router.put('/:id/addLocation', auth.isTrainerAuthenticated(), auth.isTrainerMe(), controller.addLocation);

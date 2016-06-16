@@ -1,3 +1,4 @@
+
 .trainer-verify-certifications {
 	.instructions {
 		.top {
@@ -21,7 +22,87 @@
 		}
 	}
 }
+#trainer-certifications-list {
+	#empty {
+		text-align: center;
+		h2 {
+			margin-bottom: 20px;
+		}
+	}
+	#view-my-certifications-wrapper {
+		text-align: right;
+	}
+	md-progress-circular {
+		margin: 0 auto;
+	}
+	#search-module {
+		margin-top: 30px;
+		ag-floating-label {
+			padding-left: 40px;
+			ag-icon {
+				top: 5px;
+			}
+			i {
+				font-size: 30px;
+			}
+			font-size: 20px;
+		}
+	}
+
+}
+
+#trainer-certifications, #trainer-certifications-list {
+	header {
+		margin-bottom: 0!important;
+	}
+	h1 {
+		i, span {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		i {
+			font-size: 35px;
+		}
+		text-align:center;
+		margin-bottom:1rem!important;
+	}
+	.load-more {
+		button {
+			display: block;
+			padding: 10px;
+			width: 100%;
+			margin: 0 0 20px 0;
+		}
+	}
+}
 #trainer-certifications {
+	#instructions {
+		padding: 0 1em;
+		border-left: 4px solid pink;
+		margin-top: 3em;
+	}
+	md-card {
+		position: relative;
+		div.name {
+			position: relative;
+		}
+		.panel-heading {
+			padding: 0;
+			.panel-title {
+				> a {
+					display: block;
+					padding: 10px 15px;
+				}
+			}
+			background: white;
+			&:hover {
+				background: #eee;
+			}
+		}
+	}
+	#md-fab-container {
+		text-align: right;
+	}
 	.add-certification {
 		margin-top:0;
 		margin-bottom:2rem;
@@ -30,9 +111,5 @@
 			text-align:left;
 			float:none!important;
 		}
-	}
-	h1 {
-		text-align:center;
-		margin-bottom:1rem!important;
 	}
 }

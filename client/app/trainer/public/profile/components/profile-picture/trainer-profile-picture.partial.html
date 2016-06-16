@@ -1,0 +1,24 @@
+<div flex="33"
+     flex-xs="80"
+     class="flex-xxs-100 profile-picture-container">
+    <form name="profilePictureForm">
+        <!-- profile picture -->
+        <div id="profile-picture" class="profile-picture"
+             bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}"
+             ng-if="trainerFactory.trainer.profile_picture">
+        </div>
+        <a ng-if="isMe()"
+           id="profilePictureUploadButton"
+           class="upload-button"
+           ng-click="saveClickEventForModal($event)"
+           ngf-select
+           ng-model="fileModel.file"
+           ngf-change="fileChanged(profilePictureForm, $files, $file)"
+           ngf-model-invalid="profilePictureErrors"
+           ngf-accept="'image/*'"
+           name="file">
+            <i class="material-icons">camera_enhance</i>
+            <p>Update Profile Picture</p>
+        </a>
+    </form>
+</div>

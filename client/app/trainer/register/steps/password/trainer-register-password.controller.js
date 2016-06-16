@@ -1,5 +1,15 @@
-lungeApp.controller("TrainerRegisterPasswordController", function($location, Auth, $cookieStore, $state, Trainer, Registration, $stateParams, resolvedTrainerResource, $scope, $http){
-	console.log("RESOURCE: ", resolvedTrainerResource);
+lungeApp.controller("TrainerRegisterPasswordController", function($location, Auth,
+                                                                  $cookieStore,
+                                                                  $state,
+                                                                  Trainer,
+                                                                  Registration,
+                                                                  $stateParams,
+                                                                  resolvedTrainerResource,
+                                                                  $scope,
+                                                                  $http,
+                                                                  FormControl,
+                                                                  AlertMessage
+){
 	$scope.resolvedTrainerResource = resolvedTrainerResource;
 	$scope.password = "";
 	$scope.password2 = "";
@@ -7,46 +17,31 @@ lungeApp.controller("TrainerRegisterPasswordController", function($location, Aut
 	$scope.password = {
 		password1 : "",
 		password2 : ""
-	}
+	};
 
 	// reset errors, called on keypress in form
 	$scope.resetErrors = function(){
 		$scope.errors = {};
 	};
 
+	$scope.removePasswordErrors = function(form) {
+		form.password.$setValidity('mongoose', true);
+		form.password2.$setValidity('mongoose', true);
+	};
+
 	// submit password, check errors, check validation errors returned by mongoose on pre-saving hooks
 	$scope.submitPassword = function(form){
-		form['password'].$setValidity('mongoose', true);
-		if(!$scope.password.password1.length){
-			$scope.errors.password = "Password cannot be blank.";
+		if(form.$invalid) {
+			return false;
 		}
-		else if($scope.password.password1 == $scope.password.password2){
-			if(form.$valid){
-				$scope.submitted = true;
-				$scope.sending = true;
-				Auth.register(resolvedTrainerResource, $scope.password.password1, $scope.password.password2).then(function(response){
-					$scope.sending = false;
-					$location.url("/" + response.urlName);//.go("main.profilePage", {urlName : response.urlName});
-				}).catch(function(err) {
-					err = err.data;
-					$scope.sending = false;
-					$scope.errors = {};
-
-					// Update validity of form fields that match the mongoose errors
-					angular.forEach(err.errors, function(error, field) {
-						form[field].$setValidity('mongoose', false);
-						$scope.errors[field] = error.message;
-					});
-				});
-			}
-			else {
-				$scope.errors.password = "Try a different password";
-			}
-		}
-		else {
-			//console.log("'" + $scope.password + "' != '" + $scope.password2 + "'");
-			form['password'].$setValidity('mongoose', false);
-			$scope.errors.password = "Passwords must match";
-		}
+		$scope.cgBusy = Auth.register(resolvedTrainerResource, $scope.password.password1, $scope.password.password2)
+			.then(function(response){
+			$scope.sending = false;
+			Auth.setCurrentUser(response);
+			AlertMessage.success('Your profile has been created!');
+			$state.go('profile');
+		}).catch(function(err) {
+			FormControl.parseValidationErrors(form, err);
+		});
 	}
 });

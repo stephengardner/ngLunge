@@ -1,0 +1,23 @@
+#material-menu {
+	#menu-items {
+		md-button, a {
+			transition: all .5s;
+			border-radius:0!important;
+		}
+		.active {
+			background: $brand-primary;
+			color: white;
+			i, a, md-icon {
+				color:white!important;
+			}
+		}
+		md-button, a {
+			padding:10px;
+			margin:0;
+			md-icon {
+				margin-left:0;
+				text-align:right;
+			}
+		}
+	}
+}

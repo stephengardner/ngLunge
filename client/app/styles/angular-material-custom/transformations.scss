@@ -1,0 +1,7 @@
+.expand_more {
+	transition: all 0.5s ease-in-out;
+
+	&.rotate-up {
+		transform: rotateZ(180deg);
+	}
+}

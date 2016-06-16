@@ -9,36 +9,33 @@ module.exports = function setup(options, imports, register) {
 	var auth = imports.auth,
 		bruteforce = imports.bruteforce,
 		router = express.Router(),
-		trainerModel = imports.trainerModel
+		trainerModel = imports.trainerModel,
+		twitterSatellizer = imports.twitterSatellizer,
+		twitterSatellizerSync = imports.twitterSatellizerSync,
+		twitterSatellizerRegister = imports.twitterSatellizerRegister,
+		twitterSatellizerLogin = imports.twitterSatellizerLogin
 		;
-
-	router
-		.get('/trainer-sync', auth.isTrainerMe(), passport.authenticate('twitterTrainerSync', {
-			scope: ['email', 'user_about_me'],
-			session: false,
-			callbackURL: config.twitter.callbackTrainerURL
-		}));
-
-	router
-		.get('/callback-trainer-sync', passport.authenticate('twitterTrainerSync', {
-			scope: ['email', 'user_about_me'],
-			failureRedirect: '/no2',
-			session: false,
-			callbackURL: config.twitter.callbackTrainerURL
-		}), function(req, res, next) {
-			if(req.session.trainer) {
-				var trainer = req.session.trainer,
-					twitter = req.user._json;
-				trainerModel.findById(trainer._id, function(err, trainer){
-					trainer.twitter = twitter;
-					trainer.twitter.link = "http://twitter.com/" + trainer.twitter.screen_name;
-					trainer.save(function(err, saved) {
-						return res.redirect("/trainer/info");
-					});
+	router.post('/', twitterSatellizer,
+		function (req, res, next) {
+			if (req.body.type == 'trainer-register') {
+				return twitterSatellizerRegister(req, res, next);
+			}
+			else if (req.body.type == 'trainer-login') {
+				return twitterSatellizerLogin(req, res, next);
+			}
+			else if (req.body.type == 'trainer-sync') {
+				auth.authenticate()(req, res, function(){
+					return twitterSatellizerSync(req, res, next);
+				})
+			}
+			else {
+				console.log("req.body:", req.body);
+				res.status(404).send({
+					message: 'No thanks'
 				});
 			}
-		});
-
+		}
+	);
 	register(null, {
 		authTwitterRouter : router
 	});

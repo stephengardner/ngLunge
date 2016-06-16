@@ -7,7 +7,12 @@
     "consumes": [
       "trainerModel",
       "bruteforce",
-      "auth"],
+      "auth",
+      "facebookSatellizerRegister",
+      "facebookSatellizerLogin",
+      "facebookSatellizer",
+      "facebookSatellizerSync"
+    ],
     "provides": ["authFacebookRouter"]
   }
 }

@@ -1,54 +1,46 @@
-<div class="module flat-white larger-style-1" ng-controller="TrainerInfoSectionEmailController">
-    <div cg-busy="{promise : cgBusy}">
-        <div md-content>
-            <form novalidate id="form" class="form update-email" ng-submit="changeEmail(form)" name="form">
-                <header>
-                    <h1>Email</h1>
-                    <div edit-button ng-click="toggleEditing(form)"></div>
-                </header>
-                <fieldset ng-disabled="ajax.busy">
-                    <div class="group has-margin">
-                        <div ng-show="!editing" ng-class="{'form-group' : emailUpdating}">
-                            <div class="row">
-                                <div class="col-xxs-16">
-                                    {{trainerFactory.trainer.email}}
-                                </div>
-                            </div>
-                        </div>
-                        <div ng-show="editing">
-                            <md-input-container class="md-block">
-                                <label>Email</label>
-                                <input name="email"
-                                       ng-model="trainerFactory.trainerEditing.email"
-                                       ng-change="removeMongooseError(form, 'email')"
-                                        >
-                                <div ng-messages="form.email.$error" class="md-auto-hide">
-                                    <div ng-message="mongoose">{{errors.email}}</div>
-                                </div>
-                            </md-input-container>
-                            <!--<div class="form-error" ng-show="form.email.$error.mongoose"><span>{{errors.email}}</span></div>-->
-                            <!--<div class="form-group">-->
-                            <!--<input ng-keypress="removeMongooseError(form, 'email')" id="email" ng-model="trainerFactory.trainerEditing.email" name="email" class="form-control" type="text" placeholder="New email"/>-->
-                            <!--<div class="form-error" ng-show="form.email.$error.mongoose"><span>{{errors.email}}</span></div>-->
-                            <!--</div>-->
-                        </div>
-                    </div>
-                    <div class="row" ng-if="editing">
-                        <div class="action-buttons">
-                            <button type="submit"
-                                    class="btn-action btn btn-primary"
-                                    ng-class="{ready : !ajax.busy, ajax : ajax.busy}">
-                                <i ng-show="ajax.busy"
-                                   class="fa fa-spin fa-spinner">
-                                </i> {{ !ajax.busy ? 'Save' : 'Saving' }}
-                            </button>
-                            <div class="btn-action btn btn-danger" ng-click="toggleEditing(form)">
-                                Cancel
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+<md-card>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Email</span>
+            </h2>
+            <span flex></span>
+            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing()">
+                <i  class="material-icons">mode_edit</i>
+            </md-button>
         </div>
-    </div>
-</div>
+    </md-toolbar>
+    <form id="form"
+          ng-submit="changeEmail(form)"
+          name="form">
+        <md-card-content cg-busy="{promise : cgBusy}">
+            <div ng-if="!editing">
+                <div class="info-row">
+                    <div class="name" flex="50">
+                        Email
+                    </div>
+                    <div class="value" flex=40>
+                        {{trainerFactory.trainer.email}}
+                    </div>
+                </div>
+            </div>
+            <div ng-if="editing">
+                <ag-floating-label>
+                    <label>
+                        Email
+                    </label>
+                    <input name="email"
+                           ng-model="trainerFactory.trainerEditing.email"
+                           ng-change="removeMongooseError(form, 'email')"/>
+                    <div ng-messages="form.email.$error" class="md-auto-hide">
+                        <div ng-message="mongoose">{{errors.email}}</div>
+                    </div>
+                </ag-floating-label>
+            </div>
+        </md-card-content>
+        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+            <md-button type="submit">Save</md-button>
+            <md-button ng-click="toggleEditing()">Cancel</md-button>
+        </md-card-actions>
+    </form>
+</md-card>

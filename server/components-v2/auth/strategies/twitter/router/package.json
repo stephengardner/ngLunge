@@ -7,7 +7,12 @@
     "consumes": [
       "trainerModel",
       "bruteforce",
-      "auth"],
+      "twitterSatellizer",
+      "twitterSatellizerSync",
+      "twitterSatellizerLogin",
+      "twitterSatellizerRegister",
+      "auth"
+    ],
     "provides": ["authTwitterRouter"]
   }
 }

@@ -6,6 +6,10 @@ EventEmitter = require('events').EventEmitter;
 
 
 module.exports = function setup(options, imports, register) {
+	String.prototype.capitalize = function() {
+		return this.charAt(0).toUpperCase() + this.slice(1);
+	};
+	
 	var connectionDatabase = imports.connectionDatabase,
 		config = options.config,
 		bus = imports.eventbus,

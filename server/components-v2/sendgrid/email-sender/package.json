@@ -1,0 +1,11 @@
+{
+  "name": "sendgridEmailSender",
+  "version": "0.0.1",
+  "main": "sendgrid-email-sender.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+    ],
+    "provides": ["sendgridEmailSender"]
+  }
+}

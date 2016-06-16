@@ -1,0 +1,13 @@
+{
+  "name": "facebookSatellizerSync",
+  "version": "0.0.1",
+  "main": "facebook-satellizer-sync.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "auth"
+    ],
+    "provides": ["facebookSatellizerSync"]
+  }
+}

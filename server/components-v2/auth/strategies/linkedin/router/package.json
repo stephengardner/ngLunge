@@ -7,7 +7,12 @@
     "consumes": [
       "trainerModel",
       "bruteforce",
-      "auth"],
+      "linkedinSatellizer",
+      "linkedinSatellizerSync",
+      "linkedinSatellizerRegister",
+      "linkedinSatellizerLogin",
+      "auth"
+    ],
     "provides": ["authLinkedinRouter"]
   }
 }

@@ -1,14 +1,8 @@
 // I fixed this controller, separated it into a TrainerCertifications Service on 1.26.16
 // It is actually quite lean now, lookups operate on hash tables (objects).  Using ng-infinite-scroll as well.
-lungeApp.controller("TrainerCertificationsListController", function(ngDialog, TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage,
-                                                         /*socket,*/ Auth, Certification, $http, $scope, $timeout){
+lungeApp.controller("TrainerCertificationsListController", function(ngDialog, TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth, Certification, $http, $scope, $timeout){
+	$scope.trainerCertifications = TrainerCertifications;
 	$scope.ajax = TrainerCertifications.ajax;
-	$scope.certificationOrganizations = [];
-	$scope.query = '';
-
-	// TrainerFactory is already set for all account routes
-	TrainerFactory.setSyncCallback(function(){
-	});
 
 	$scope.certificationTypeInfoModal = function(certificationType) {
 		$scope.certificationType = certificationType;
@@ -18,7 +12,9 @@ lungeApp.controller("TrainerCertificationsListController", function(ngDialog, Tr
 			className: 'ngdialog-theme-default large',
 			controller: "CertificationTypeModalInfoController"
 		});
-	}
+	};
+
+	$scope.trainerCertifications.getPage();
 
 	// This is set as a virtual on the trainer if the trainer is populated, which it is.
 	$scope.getCertificationOrganizationCount = function(certificationOrganization){
@@ -29,33 +25,9 @@ lungeApp.controller("TrainerCertificationsListController", function(ngDialog, Tr
 		return undefined;
 	}
 
-	// after getting the certifications, apply these results.  The certifications are stored in the
-	// "TrainerCertifications" service.  A small service to get/set certs.
-	function apply() {
-		console.log("Gotem...");
-		$scope.certificationOrganizations = TrainerCertifications.certificationOrganizations;
-		$scope.ajax = TrainerCertifications.ajax;
-	}
-
-	$scope.reset = function() {
-		$scope.certificationOrganizations = [];
-		TrainerCertifications.reset();
-	}
-
-	// Get the next page, then apply.
-	$scope.getCertifications = function(){
-		console.log("Getting");
-		TrainerCertifications.setQuery($scope.query);
-		TrainerCertifications.getPage().then(apply).catch(function(err){
-			console.log(err);
-		});
-	};
 	// If we need to re-get the same page.
 	$scope.refreshCertifications = function() {
-		TrainerCertifications.setQuery($scope.query);
-		TrainerCertifications.refresh().then(apply).catch(function(err){
-			console.log(err);
-		});
+		TrainerCertifications.refresh();
 	};
 
 	$scope.addOrRemoveCertification = function(type, certification) {
@@ -84,22 +56,9 @@ lungeApp.controller("TrainerCertificationsListController", function(ngDialog, Tr
 
 	// scope check if a trainer can Add or Remove a given cert
 	$scope.trainerHasCertification = function(certification) {
-		return TrainerCertifications.trainerHasCertificaiton(TrainerFactory.trainer, certification);
+		return TrainerCertifications.trainerHasCertification(TrainerFactory.trainer, certification);
 	};
 
-	$scope.clear = function() {
-		$scope.reset();
-		$scope.query = '';
-		TrainerCertifications.setQuery('');
-		$scope.getCertifications();
-	}
-	$scope.queryCertifications = function() {
-		$scope.reset();
-		TrainerCertifications.setQuery($scope.query);
-		$scope.getCertifications();
-	};
-
-	$scope.getCertifications();
 
 	FullMetalSocket.certification.syncUnauth(function(event, msg){
 		$scope.refreshCertifications();

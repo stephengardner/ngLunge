@@ -1,0 +1,13 @@
+{
+  "name": "instagramSatellizer",
+  "version": "0.0.1",
+  "main": "instagram-satellizer.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "auth"
+    ],
+    "provides": ["instagramSatellizer"]
+  }
+}

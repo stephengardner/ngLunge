@@ -1,35 +1,87 @@
 var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
-	'ui.router',
-	'ngCookies',
-	'ngResource',
-	'ngSanitize',
-	'ngMessages',
-	'btford.socket-io',
-	'ui.bootstrap.tabs',
-	'ui.bootstrap.tpls',
-	'ui.bootstrap.accordion',
-	'ui.bootstrap.typeahead',
-	'ngAnimate',
-	'mgcrea.ngStrap',
-	'ui.utils',
-	//'xeditable',
-	'geolocation',
-	'uiGmapgoogle-maps',
-	//'angularFileUpload',
-	'duScroll',
-	'abcBirthdayPicker',
-	'ngDialog',
-	'ngLodash',
-	'infinite-scroll',
-	'ngFileUpload', // using this as new upload service
-	'cgBusy',
-	'angularValidator',
-	'cgBusy',
-	'ngMaterial',
-	'focus-if',
-	'agFloatingLabel'
-])
+		'ui.router',
+		'ngCookies',
+		'ngResource',
+		'ngSanitize',
+		'ngMessages',
+		'btford.socket-io',
+		'ui.bootstrap.tabs',
+		'ui.bootstrap.tpls',
+		'ui.bootstrap.accordion',
+		'ui.bootstrap.typeahead',
+		'ngAnimate',
+		'mgcrea.ngStrap',
+		'ui.utils',
+		//'xeditable',
+		'geolocation',
+		'uiGmapgoogle-maps',
+		//'angularFileUpload',
+		'duScroll',
+		'abcBirthdayPicker',
+		'ngDialog',
+		'ngLodash',
+		'infinite-scroll',
+		'ngFileUpload', // using this as new upload service
+		'cgBusy',
+		'angularValidator',
+		'cgBusy',
+		'ngMaterial',
+		'focus-if',
+		'agFloatingLabel',
+		'ngMaterial',
+		'ngMdIcons',
+		'satellizer'
+	])
 
+	.config(function($authProvider) {
+		$authProvider.httpInterceptor = function(data) {
+			// console.log(data);
+			//alert("Got some crap");
+			return true;
+		};
+		$authProvider.facebookLogin = $authProvider.facebook;
+
+		$authProvider.oauth2({
+			name: 'facebookLogin',
+			url: null,
+			clientId: null,
+			redirectUri: null,
+			authorizationEndpoint: null,
+			defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
+			requiredUrlParams: null,
+			optionalUrlParams: null,
+			scope : ['email', 'public_profile', 'user_birthday', 'user_photos'],
+			scopePrefix: null,
+			scopeDelimiter: null,
+			state: null,
+			type: null,
+			popupOptions: null,
+			responseType: 'code',
+			responseParams: {
+				code: 'code',
+				clientId: 'clientId',
+				redirectUri: 'redirectUri'
+			}
+		});
+		$authProvider.facebook({
+			url : '/auth/facebook',
+			clientId: '302242913297749',
+			scope : ['email', 'public_profile', 'user_birthday', 'user_photos']
+		});
+		$authProvider.linkedin({
+			url : '/auth/linkedin',
+			scope : ['r_emailaddress'],
+			clientId: '78c2key7ro837d'
+		});
+		$authProvider.twitter({
+			url : '/auth/twitter',
+			clientId: 'pRsQ5Mak7fxpnjZcajszHj8Qm'
+		});
+		$authProvider.instagram({
+			url : '/auth/instagram',
+			clientId: 'f8c38d7e17f3400694bfd43a11f8ae25'
+		});
+	})
 	.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 		$urlRouterProvider
 			.otherwise('/');
@@ -82,7 +134,7 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 
 		_.mixin({ 'deepExtend': deepExtend });
 	})
-	.factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
+	.factory('authInterceptor', function (AlertMessage, $rootScope, $q, $cookieStore, $location) {
 		//console.log("cookiestore:", $cookieStore.get("token"));
 		return {
 			// Add authorization token to headers
@@ -96,6 +148,10 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 
 			// Intercept 401s and redirect you to login
 			responseError: function(response) {
+				if(response.status === 429) {
+					AlertMessage.error('You\'ve submitted this request too many times.  Please wait 10 minutes and' +
+						' then try again');
+				}
 				if(response.status === 401) {
 					$location.path('/login');
 					// remove any stale tokens
@@ -126,6 +182,8 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 				Auth.asyncLoginByToken();
 			}
 		});
+
+		// Shows a busy modal for the whole page.
 		$rootScope.globalAjax = {
 			busy : false
 		}

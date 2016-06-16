@@ -4,6 +4,14 @@ lungeApp.controller("TrainerProfileController", function($timeout, $rootScope, T
                                                          $stateParams){
 	$scope.trainerFactory = TrainerFactory;
 
+	$scope.$on('$stateChangeStart', function(){
+		// This is inside stateChangeStart because when going from the profile to the edit info, the syncing happens
+		// after the info page has synced, thereby unsyncing...
+		// This is because this state is higher than that one.  We may be able to get by with just syncing once
+		// for all main.trainer.... Look into that!
+		TrainerFactory.unsyncModel();
+	});
+	
 	var url = $stateParams.urlName ? '/api/trainers/byUrlName/' + $stateParams.urlName
 			: '/api/trainers/' + $stateParams.id,
 		httpGetTrainer = {
@@ -21,7 +29,6 @@ lungeApp.controller("TrainerProfileController", function($timeout, $rootScope, T
 					}
 				});
 				*/
-
 			TrainerFactory.init(trainer);
 		},
 		onGetTrainerError = function(error){
@@ -33,19 +40,18 @@ lungeApp.controller("TrainerProfileController", function($timeout, $rootScope, T
 			});
 		};
 
-	var cleanUpEvent = $rootScope.$on('asyncLoginByToken', function(event){
-		$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
-	});
-	$scope.$on('$destroy', function() {
-		cleanUpEvent();
-	});
+	// var cleanUpEvent = $rootScope.$on('asyncLoginByToken', function(event){
+	// 	$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
+	// });
+	// $scope.$on('$destroy', function() {
+	// 	cleanUpEvent();
+	// });
 
 	$scope.$state = $state;
 
 	// Check if the trainer is logged in, get their info, populate the page
 	Auth.isLoggedInAsync(function(){
 		//socket.socket.emit('authenticate', {token : Auth.getToken()});
-
 		$scope.popovers = {
 			helpTemplate : {
 				templateUrl : 'app/popovers/help.tpl.html'
@@ -72,9 +78,5 @@ lungeApp.controller("TrainerProfileController", function($timeout, $rootScope, T
 			//console.log("***************** calling isme and the response is:" + TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id));
 			return TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id);
 		}
-
-		$scope.$on('$destroy', function () {
-			TrainerFactory.unsyncModel();
-		});
 	});
 });

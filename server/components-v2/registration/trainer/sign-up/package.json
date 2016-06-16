@@ -6,7 +6,8 @@
   "plugin": {
     "consumes": [
       "customMandrillSender",
-      "logger"
+      "logger",
+      "sendgridEmailSender"
     ],
     "provides": ["registrationTrainerSignUp"]
   }

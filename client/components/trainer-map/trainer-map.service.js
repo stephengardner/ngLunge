@@ -1,14 +1,103 @@
-myApp.factory('trainerMap', function($compile, $timeout, $q){
+myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope){
+	Array.prototype.diff = function(a) {
+		return this.filter(function(i) {return a.indexOf(i) < 0;});
+	};
+	Array.prototype.differenceOfLocations = function(a) {
+		return this.filter(function (i) {
+			var found = false;
+			console.log("A is:", a, " i is: ", i);
+			for (var k = 0; k < a.length; k++) {
+				var _id = a[k]._id;
+				console.log("Checking if id:", i._id, " == ", _id);
+				if (i._id == _id) found = true;
+				// for (var j = 0; j < i.length; j++) {
+				// 	console.log("Checking if id:", i[j]._id, " == ", _id);
+				// 	if (i[j]._id == _id) found = true;
+				// }
+			}
+			return !found;
+		});
+	};
+
 	var TrainerMap = {
 		map : {
-			control : {}
+			control : {},
+			markers : [],
+			window : {
+				control : {},
+				options : {
+					// Don't delete this comment
+					// use boxClass to make this an INFOBOX not InfoWindow.
+					// Infoboxes are more stylable, we will have to set a dynamic pixel offset and
+					// calculate the width of this this, though.  I did it before... Just don't really care right now.
+					//boxClass : 'infobox',
+					boxStyle: {
+						backgroundColor: "#CCC",
+						border: "1px solid red",
+						borderRadius: "5px",
+						width: "60px",
+						height: "60px"
+					},
+					pixelOffset : new google.maps.Size(0, -35, 'px', 'px')
+				},
+				// templateParameter : 'location',
+				templateUrl : 'components/trainer-map/trainer-map-info-window.partial.html',
+				closeClick: function() {
+					this.show = false;
+				},
+				model : {
+					test : 'nothing'
+				}
+			},
+			markersEvents: {
+				click: function(marker, eventName, model) {
+					console.log("Got Model:",model);
+					TrainerMap.map.window.model = model;
+					TrainerMap.map.window.show = true;
+				}
+			},
+			zoom : 10,
+			// markersOptions : {
+			// 	animation : google.maps.Animation.DROP
+			// },
+			bounds: {
+				northeast : null,
+				northwest : null
+			},
+			events : {
+				resize : function(){
+					console.log("RESIZED");
+					// TrainerMap.onResize();
+				}
+			}
 		},
 		infoWindow : {},
 		googleMapLoaded : false,
 		trainer : {},
 		selectedMarker : {},
-		markers : [],
+		uniqueMarkerId : 0,
 
+		// Not sure if necessary
+		reset : function () {
+			this.map = {};
+		},
+
+		// When we click a location row, we show the marker for that location using this function.
+		// All the markers were created to map to locations, but we need to set the model to a specific
+		// marker instance.  So use this function
+		showWindowForLocationModel : function(location) {
+			console.log("checking location:", location);
+			for(var i = 0; i < TrainerMap.map.markers.length; i++) {
+				var marker = TrainerMap.map.markers[i];
+				console.log("Against marker:", marker);
+				if(marker._id == location._id) {
+					TrainerMap.map.window.model = marker;
+					TrainerMap.map.window.show = true;
+					return true;
+				}
+			}
+			return false;
+		},
 		/**
 		 *
 		 * @param trainer
@@ -19,22 +108,23 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 			this.googleMapLoaded = false;
 			this.infoWindow = {};
 			this.selectedMarkerLocation = {};
-			this.map = {
-				control : {}
-			};
+			if(!trainer.location || !trainer.location.coords) {
+				return this;
+			}
+			this.map = angular.extend(this.map,
+				{
+					center: {
+						latitude: trainer.location.coords.lat,
+						longitude: trainer.location.coords.lon
+					}
+				});
+			// }
 			this.trainer = trainer;
 			if(trainer.location && trainer.location.coords) {
-				this.map = angular.extend(this.map,
-					{ center:
-					{latitude: trainer.location.coords.lat, longitude: trainer.location.coords.lon },
-						zoom: 10,
-						bounds: {
-							northeast : null,
-							northwest : null
-						}
-					});
+				this.setMarkers();
 			}
 			else {
+				alert("Empty trainer");
 				// if a new trainer adds a location where there previously was no location, the location is added and we want to reflect that on an already generated map.
 				// so we generate the map on a blank lat/lon before populating it with the trainer's new data.
 				// i know this seems a lottle fuzzy, but it's the precedent of angular operations right now.
@@ -44,13 +134,84 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 						northeast : null,
 						northwest : null
 					},
+					markers : [],
 					control : {}
 				};
 			}
-			//console.log("-------------\n-------------\n setting map : ", this.map, " ------------\n--------------\n");
+			console.log("After initting, this map is:", this.map);
 			return this;
 		},
 
+		setMarkers : function() {
+			var currentMarkers = this.map.markers || [], returnArray = [], marker, location, i;
+			var differenceBetweenTrainerLocationsAndMapMarkers =
+				this.trainer.locations.differenceOfLocations(currentMarkers);
+			console.log("Diff1:", differenceBetweenTrainerLocationsAndMapMarkers);
+			var differenceBetweenMapMarkersAndTrainerLocations =
+				currentMarkers.differenceOfLocations(this.trainer.locations);
+			console.log("Diff2:", differenceBetweenMapMarkersAndTrainerLocations);
+			if(!this.map.markers) {
+				console.log("---- was no this.map.markers ----");
+				this.map.markers = [];
+			}
+			var markersToAdd = [];
+			for(i = 0; i < differenceBetweenTrainerLocationsAndMapMarkers.length; i++) {
+				location = differenceBetweenTrainerLocationsAndMapMarkers[i];
+				var newMarker = {
+					_id : location._id,
+					id : ++this.uniqueMarkerId,
+					coords : {
+						latitude : location.coords.lat,
+						longitude : location.coords.lon
+					},
+					options : {
+						animation : google.maps.Animation.DROP
+					},
+					trainerLocationModel : location
+				};
+				markersToAdd.push(newMarker);
+			}
+			for(i = 0; i < differenceBetweenMapMarkersAndTrainerLocations.length; i++) {
+				location = differenceBetweenMapMarkersAndTrainerLocations[i];
+				for(var j = 0; j < this.map.markers.length; j++) {
+					marker = this.map.markers[j];
+					if(marker._id == location._id) {
+						// marker.setMap(null);
+						this.map.markers.splice(j, 1);
+						j--;
+					}
+				}
+			}
+			for(i = 0; i < markersToAdd.length; i++) {
+				addMarkerWithTimeout.call(this, markersToAdd[i], i * 200);
+			}
+
+			function addMarkerWithTimeout(marker, timeout) {
+				// Don't Delete
+				// We're omitting this for now, but we may implement this in the future.
+				// The reason it didn't work is because A) the map takes a second to load, and these have already fired
+				// and B) this needs to return a promise, otherwise the scope won't update.
+				// window.setTimeout(function() {
+					this.map.markers.push(marker);
+				// }.bind(this), timeout);
+			}
+			return this.map.markers;
+		},
+		setGoogleMapCenter : function() {
+			if(this.map.control.getGMap) {
+				var map = this.map.control.getGMap();
+				map.setCenter({
+					lat: TrainerMap.map.center.latitude,
+					lng: TrainerMap.map.center.longitude
+				});
+			}
+		},
+		triggerResize : function() {
+			if(this.map.control.getGMap) {
+				var map = this.map.control.getGMap();
+				google.maps.event.trigger(map, "resize");
+			}
+		},
 
 		closeInfoWindow : function() {
 			if(this.infoWindow && this.infoWindow.close)
@@ -118,9 +279,13 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 		 * @returns {TrainerMap}
 		 */
 		updateLocations : function(trainer) {
-			if(trainer)
-				this._setTrainer(trainer);
-			return this.closeInfoWindow()._removeInvalidMarkers()._addNewMarkers();
+			// if(trainer)
+			// 	this._setTrainer(trainer);
+			// if(trainer) {
+			// 	this.init(trainer);
+			// }
+			return this;
+			// return this.closeInfoWindow()._removeInvalidMarkers()._addNewMarkers();
 		},
 
 		/**
@@ -162,9 +327,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 		 * @private
 		 */
 		_triggerMarkerClick : function(location) {
-			//console.log("TrainerMap TriggerMarkerClick for location:",location);
 			var id = location._id;
-			//console.log("Trainer map markers:", TrainerMap.markers);
 			for(var i = 0; i < TrainerMap.markers.length; i++) {
 				var marker = TrainerMap.markers[i];
 				if(marker.id == id) {
@@ -186,15 +349,15 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 				var address_line_1 = location.address_line_1 ?"<div class='address_line_1'>" + location.address_line_1 + "</div>"  : "";
 				var zipcode = location.zipcode ? "<div class='zipcode'>" + location.zipcode + "</div>" : "";
 				marker.content = "" +
-				"<div class='infoWindow' id='infoWindow'>" +
-				"<div class='close' ng-click='closeInfoWindow()'><i class='fa fa-times'></i></div>" +
-				"<div class='title'>" + contentTitle  + "</div>"+
-				"<div class='content'>" +
-				address_line_1 +
-				"<div class='city-state'>" + location.city + ", " + location.state + "</div>" +
-				zipcode +
-				"</div>" +
-				"</div>";
+					"<div class='infoWindow' id='infoWindow'>" +
+					"<div class='close' ng-click='closeInfoWindow()'><i class='fa fa-times'></i></div>" +
+					"<div class='title'>" + contentTitle  + "</div>"+
+					"<div class='content'>" +
+					address_line_1 +
+					"<div class='city-state'>" + location.city + ", " + location.state + "</div>" +
+					zipcode +
+					"</div>" +
+					"</div>";
 				// if the marker is already on the scope, it means we're updating it, not creating it
 				// this is an issue when we want to set the marker content after calling changeTitle()
 				for(var i = 0; i < this.markers.length; i++) {
@@ -247,10 +410,10 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 			// I have to $compile the html inside the window once the window is ready
 			function onload(){
 				/*
-				$scope.$apply(function(){
-					$compile(document.getElementById("infoWindow"))($scope)
-				});
-				*/
+				 $scope.$apply(function(){
+				 $compile(document.getElementById("infoWindow"))($scope)
+				 });
+				 */
 				$timeout(function(){
 					$compile(document.getElementById("infoWindow"))($scope)
 				})
@@ -259,7 +422,6 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 			google.maps.event.addListener(TrainerMap.infoWindow, 'domready', function(a,b,c,d) {
 				onload();
 			});
-			//console.log("++++++++++ Bound Info Window:", this.infoWindow);
 			this.googleMapLoaded = true;
 			return this;
 		},
@@ -298,6 +460,7 @@ myApp.factory('trainerMap', function($compile, $timeout, $q){
 			}
 			else {
 				console.log("The map was unavailable and hence we could not create the marker");
+				deferred.reject("The map was unavailable and hence we could not create the marker");
 			}
 			return deferred.promise;
 		}

@@ -24,6 +24,43 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 	}
 }
 
+// used to style the infowindow WITHOUT using infobox.
+// limited, though.
+.gm-style-iw {
+	//width:auto!important;
+	//left:0!important;
+	//right:0!important;
+	//height:auto!important;
+	//top:0!important;
+	h2 {
+		margin-bottom:5px;
+		color:$brand-primary;
+	}
+}
+.info-box {
+	background:white;
+	h2 {
+		background:red;
+		padding:1rem;
+	}
+	> img {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: auto;
+	}
+}
+.no-errors-spacer {
+	.ag-errors-spacer {
+		display:none;
+	}
+}
+
+body.md-toast-animating { overflow: auto !important; }
+
+.nopadding {
+	padding: 0!important;
+}
 // On pages with multiple sections, every section AFTER the angular google map would have a slight alteration:
 // The overflow:hidden on the section item wouldn't render quite right for when the buttons are overflowing and we
 // wanted to cut their corners off.
@@ -81,6 +118,7 @@ body, html {
 
 // Component styles are injected through grunt
 // injector
+@import 'account/login/login.scss';
 @import 'admin/admin.scss';
 @import 'admin/trainers/list/admin-trainers-list.scss';
 @import 'animations.scss';
@@ -97,8 +135,13 @@ body, html {
 @import 'styles/_modals.scss';
 @import 'styles/_variables.scss';
 @import 'styles/alerts.scss';
+@import 'styles/angular-material-custom/buttons.scss';
+@import 'styles/angular-material-custom/layouts.scss';
 @import 'styles/angular-material-custom/main.scss';
+@import 'styles/angular-material-custom/menu.scss';
+@import 'styles/angular-material-custom/navbar.scss';
 @import 'styles/angular-material-custom/trainer-info.scss';
+@import 'styles/angular-material-custom/transformations.scss';
 @import 'styles/angular-material-input.scss';
 @import 'styles/angular-material.scss';
 @import 'styles/bootstrap-overrides.scss';
@@ -132,6 +175,7 @@ body, html {
 @import 'trainer/register/register.scss';
 @import 'alert-message/alert-message.scss';
 @import 'angular-busy/templates/fullscreen-loader-partial.scss';
+@import 'material-menu/menu.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';
@@ -139,4 +183,5 @@ body, html {
 @import 'trainer-map/add-location/trainer-map-add-location.scss';
 @import 'trainer-map/locations.scss';
 @import 'trainer-map/manual-location/trainer-manual-location.scss';
+@import 'trainer-map/trainer-map.scss';
 // endinjector

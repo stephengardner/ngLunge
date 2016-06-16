@@ -1,0 +1,31 @@
+<md-sidenav id="material-menu" class="md-sidenav-left md-whiteframe-z1"
+            md-component-id="left"
+            md-is-locked-open="$mdMedia('gt-lg')"
+            flex>
+    <md-toolbar md-scroll-shrink>
+        <div class="md-toolbar-tools">
+            <h3>
+                <span>Lunge Menu</span>
+            </h3>
+        </div>
+    </md-toolbar>
+    <!--<ul class="side-menu">-->
+    <!--<li ng-repeat="section in Menu.sections" class="parent-list-item"-->
+    <!--ng-class="{'parentActive' : Menu.isSectionSelected(section)}">-->
+    <!--<h2 class="menu-heading" ng-if="section.type === 'heading'"-->
+    <!--id="createHeadingId(section)">-->
+    <!--{{section}}-->
+    <!--</h2>-->
+    <!--<menu-link section="section" ng-if="section.type === 'link'"></menu-link>-->
+    <!--<menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <div id="menu-items" ng-repeat="section in Menu.sections">
+        <h2 ng-if="section.type == 'heading'">
+            {{section}}
+        </h2>
+        <menu-link section="section"
+                   ng-if="section.type == 'link'">
+        </menu-link>
+    </div>
+</md-sidenav>

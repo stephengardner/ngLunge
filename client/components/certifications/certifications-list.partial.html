@@ -12,7 +12,14 @@
                              in trainerFactory.trainer.certifications_v2_coagulated">
             <accordion-heading class="heading">
                 <span class="name">{{certificationOrganization.name}} </span>
-                <span class="count-bubble">{{certificationOrganization.types.length}}</span>
+                <span class="count-bubble">
+                    <md-tooltip md-direction="top">
+                        {{certificationOrganization.types.length}}
+                        {{certificationOrganization.name}} {{certificationOrganization.types.length > 1 ?
+                        'certifications' : 'certification'}}
+                    </md-tooltip>
+                    {{certificationOrganization.types.length}}
+                </span>
             </accordion-heading>
             <ul class="child-cert" stop-event>
                 <li ng-repeat="type in certificationOrganization.types">
@@ -20,13 +27,13 @@
                         {{$index + 1}}) {{type.name}}
                     </span>
                  <span class="status pending"
-                       ng-if="type.verification.status == 'Pending'"
-                       title="Pending verification">
+                       ng-if="type.verification.status == 'Pending'">
+                     <md-tooltip md-direction="top">Pending verification</md-tooltip>
                      <i class="fa fa-warning"></i>
                  </span>
                  <span class="status verified"
-                       ng-if="type.verification.status == 'Verified'"
-                       title="Verified by Lunge">
+                       ng-if="type.verification.status == 'Verified'">
+                     <md-tooltip md-direction="top">Verified by Lunge</md-tooltip>
                      <i class="fa fa-check-circle"></i>
                  </span>
                 </li>

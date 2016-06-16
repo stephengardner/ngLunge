@@ -1,0 +1,13 @@
+{
+  "name": "twitterSatellizerSync",
+  "version": "0.0.1",
+  "main": "twitter-satellizer-sync.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "auth"
+    ],
+    "provides": ["twitterSatellizerSync"]
+  }
+}

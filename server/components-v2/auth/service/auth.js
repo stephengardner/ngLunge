@@ -17,6 +17,7 @@ module.exports = function setup(options, imports, register) {
 	exports.hasRole = hasRole;
 	exports.signToken = signToken;
 	exports.setTokenCookie = setTokenCookie;
+	exports.setTrainerTokenAndRespond = setTrainerTokenAndRespond;
 	exports.isTrainerMe = isTrainerMe;
 	exports.isValidRegistration = isValidRegistration;
 	exports.attachCorrectTrainerById = attachCorrectTrainerById;
@@ -48,43 +49,15 @@ function isValidRegistration(){
 			});
 		});
 }
-/* // not sure if i should delete this or not?
- function isUserAuthenticated() {
- return compose()
- // Validate jwt
- .use(function(req, res, next) {
- console.log("!!!!!!!!!!CHEKCING AUTH.SERVICE IS AUTH()!!!!!!!!!!!!!!!!!!");
- // allow access_token to be passed through query parameter as well
- if(req.query && req.query.hasOwnProperty('access_token')) {
- req.headers.authorization = 'Bearer ' + req.query.access_token;
- }
- validateJwt(req, res, next); // THIS is where req.user gets added!
- })
- // Attach user to request
- .use(function(req, res, next) {
- Trainer.findById(req.user._id, function (err, trainer) {
- if (err) return next(err);
- if (!trainer) {
- User.findById(req.user._id, function (err, user) {
- if(!user) return res.send(401);
- req.user = user;
- next();
- });
- }
- else {
- req.trainer = trainer;
- next();
- }
- });
- });
- }
- */
 
+// for some reason this is populating req.user._id as the whole req.user....
 var authenticate = function(){
+	console.log("auth.authenticate");
 	return compose()
 		// Validate jwt
 		.use(function(req, res, next) {
-			console.log("!!!!!!!!!!CHEKCING AUTH.SERVICE IS AUTH()!!!!!!!!!!!!!!!!!!");
+			req.user = req.user || {};
+			console.log("Req.user is...? ( should be empty ) : ", req.user);
 			// allow access_token to be passed through query parameter as well
 			if(req.query && req.query.hasOwnProperty('access_token')) {
 				req.headers.authorization = 'Bearer ' + req.query.access_token;
@@ -93,76 +66,86 @@ var authenticate = function(){
 		})
 		// Attach user to request
 		.use(function(req, res, next) {
+			console.log("1...");
+			console.log("Attach user");
+			req.user = req.user || {};
 			Trainer.findById(req.user._id, function (err, trainer) {
 				if (err) return next(err);
 				if (!trainer) {
+					console.log("NO TRAINER FOUND");
 					User.findById(req.user._id, function (err, user) {
 						if(!user) return res.send(401);
 						req.user = user;
+						console.log("ATTACHED USER:", req.user);
 						next();
 					});
 				}
 				else {
+					console.log("Found trainer:", trainer.name);
 					req.trainer = trainer;
 					req.session.trainer = trainer;
 					next();
 				}
 			});
 		});
-}
+};
+
 var attachCorrectTrainerById = function() {
 	return compose()
 		// Attach user to request
 		.use(function(req, res, next) {
-			if(req.params && req.params.id) {
-				console.log("The request params id is:", req.params.id);
-			}
-			// The admin is updating a user but the user is NOT the admin user.
-			// So basically, we attached a trainer to the request but it wasn't the one we're looking to update
-			// so now, attach the right one.
-			console.log("*\n*\n*\nThe request user is:", req.user, "\n*\n*\n");
-
-			// it's a normal user updating themselves
-			if(req.user._id == req.params.id) {
-				console.log("Someone is updating themselves");
-				Trainer.findById(req.params.id, function (err, trainer) {
-					if (err) return next(err);
-					else {
-						req.trainer = trainer;
-
-						// IMPORTANT, FOR LINKING SOCIAL URLS
-						// for passport facebook linking, we log in using passport but we lose the trainer object
-						// so set the trainer object in the session, for this case
-						req.session.trainer = trainer;
-
-						next();
-					}
-				});
-			}
-			else {
-				// it's an admin updating someone else
-				console.log("An admin is updating someone else");
-				Trainer.findById(req.user._id, function(err, trainer){
-					if(err) return next(err);
-					if(trainer.email == 'opensourceaugie@gmail.com') {
-						Trainer.findById(req.params.id, function(err, otherTrainer){
-							if(err) return next(err);
-							req.trainer = otherTrainer;
-
-							// IMPORTANT, FOR LINKING SOCIAL URLS
-							// for passport facebook linking, we log in using passport but we lose the trainer object
-							// so set the trainer object in the session, for this case
-							req.session.trainer = otherTrainer;
-							next();
-						})
-					}
-					else {
-						next(new Error("Unauthorized token in auth service"));
-					}
-				})
-			}
+			// if(req.params && req.params.id) {
+			// 	console.log("The request params id is:", req.params.id);
+			// }
+			// // The admin is updating a user but the user is NOT the admin user.
+			// // So basically, we attached a trainer to the request but it wasn't the one we're looking to update
+			// // so now, attach the right one.
+			// console.log("*\n*\n*\nThe request user is:", req.user, "\n*\n*\n");
+			//
+			// // it's a normal user updating themselves
+			// if(req.user._id == req.params.id) {
+			// 	console.log("Someone is updating themselves");
+			// 	Trainer.findById(req.params.id, function (err, trainer) {
+			// 		if (err) return next(err);
+			// 		else {
+			// 			req.trainer = trainer;
+			//
+			// 			// IMPORTANT, FOR LINKING SOCIAL URLS
+			// 			// for passport facebook linking, we log in using passport but we lose the trainer object
+			// 			// so set the trainer object in the session, for this case
+			// 			req.session.trainer = trainer;
+			//
+			// 			next();
+			// 		}
+			// 	});
+			// }
+			// else {
+			// 	console.log("The req.user.id was :", req.user.id, " but the req params id was: ", req.params.id);
+			// 	// it's an admin updating someone else
+			// 	console.log("An admin is updating someone else");
+			// 	Trainer.findById(req.user._id, function(err, trainer){
+			// 		if(err) return next(err);
+			// 		if(trainer.email == 'opensourceaugie@gmail.com') {
+			// 			Trainer.findById(req.params.id, function(err, otherTrainer){
+			// 				if(err) return next(err);
+			// 				req.trainer = otherTrainer;
+			//
+			// 				// IMPORTANT, FOR LINKING SOCIAL URLS
+			// 				// for passport facebook linking, we log in using passport but we lose the trainer object
+			// 				// so set the trainer object in the session, for this case
+			// 				req.session.trainer = otherTrainer;
+			// 				next();
+			// 			})
+			// 		}
+			// 		else {
+			// 			next(new Error("Unauthorized token in auth service"));
+			// 		}
+			// 	})
+			// }
+			next();
 		});
-}
+};
+
 // an almost complete replica of express-jwt which mimics what the jwt verification is doing EXCEPT it doesn't throw any errors
 // so, on an api endpoint, when we call isTrainerMe() we can check the JWT and set the user.  If there is no JWT aka
 // no one is logged in, then that's fine.  But if there is a JWT, we will get the current user, and then when pinging the
@@ -317,11 +300,12 @@ function isAuthenticated() {
 				});
 			}
 			else {
-				User.findById(req.user._id, function (err, user) {
-					if(!user) return res.send(401);
-					req.user = user;
-					next();
-				});
+				next();
+				// User.findById(req.user._id, function (err, user) {
+				// 	if(!user) return res.send(401);
+				// 	req.user = user;
+				// 	next();
+				// });
 			}
 		});
 }
@@ -362,4 +346,16 @@ function setTokenCookie(req, res) {
 	var type = req.user.type ? req.user.type : "user";
 	res.cookie('type', JSON.stringify(type));
 	res.redirect('/');
+}
+
+function setTrainerTokenAndRespond(req, res) {
+	var type = "user";
+	console.log("Req user is:", req.user);
+	var token = signToken(req.user._id, type);
+	console.log("token is:", JSON.stringify(token));
+	res.cookie('token', JSON.stringify(token));
+	res.cookie('type', JSON.stringify(type));
+	console.log("Redirecting to /trainer/info");
+	res.redirect('/');
+	// res.json({token: token, type : req.body.type});
 }

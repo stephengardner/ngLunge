@@ -1,0 +1,13 @@
+{
+  "name": "linkedinSatellizerRegister",
+  "version": "0.0.1",
+  "main": "linkedin-satellizer-register.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "auth"
+    ],
+    "provides": ["linkedinSatellizerRegister"]
+  }
+}

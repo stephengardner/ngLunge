@@ -51,16 +51,16 @@ myApp.controller('TrainerMapAddLocationDialogController', function($timeout,
 				AlertMessage.error('Please address the erros listed before continuing');
 				return reject(new Error('Please address the errors listed before continuing'));
 			}
-			// if(!$scope.location || !$scope.location.city) {
-			// 	AlertMessage.error('Please select a location from the dropdown list');
-			// 	return reject(new Error('Please select a location from the dropdown list'));
-			// }
+			if(!$scope.location || !$scope.location.city) {
+				AlertMessage.error('Please select a location from the dropdown list');
+				return reject(new Error('Please select a location from the dropdown list'));
+			}
 			$scope.location.title = $scope.title.text;
 			$scope.cgBusy = trainerMapLocations.submitLocation($scope.location)
 				.then(function(response){
 					$scope.addingLocation = false;
 					$scope.reset(form);
-					//$scope.done();
+					$scope.done();
 					AlertMessage.success("Location added to your account");
 				}).catch(function(err){
 					if(err.message) {

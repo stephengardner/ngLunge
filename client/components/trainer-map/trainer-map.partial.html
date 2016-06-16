@@ -1,32 +1,67 @@
-<div class="google-map"  ng-class="{'empty-loading' : !googleMapLoaded, 'empty' : googleMapLoaded
+<div class="google-map"
+     ng-class="{'empty-loading' : !googleMapLoaded, 'empty' : googleMapLoaded
 && !trainerFactory.trainer.location.state, 'loaded' : googleMapLoaded
 && trainerFactory.trainer.location.state}">
-    <div ng-show="!trainerFactory.trainer.location.state" class="no-main-location">
-        <div ng-if="!trainerFactory.trainer">
+    <div layout="row"
+         layout-align="center center"
+         style="height:100%"
+         ng-if="!trainerFactory.trainer || !trainerFactory.trainer.location.state">
+        <h2 ng-if="!trainerFactory.trainer">
             Loading...
-        </div>
-        <div ng-if="trainerFactory.trainer">
-            <div>
-                <span ui-sref-active="ng-hide">
-                    No locations have been added yet.
-                </span>
-            </div>
-            <md-button class="md-fab add-location" ng-show="mapseditable" ng-click="locationDialog($event)">
-                <md-icon>
-                    <i class="material-icons">add</i>
-                </md-icon>
-            </md-button>
-        </div>
+        </h2>
+        <h2 ng-show="!trainerFactory.trainer.location.state" class="no-main-location">
+            No locations have been added yet.
+        </h2>
     </div>
-    <div ng-if="trainerFactory.trainer.location.state" id="google-map" class="google-map">
+    <div ng-if="trainerFactory.trainer.location.state"
+         id="google-map"
+         class="google-map">
         <div ng-show="map.center.latitude && map.bounds">
-            <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="gmapOptions" bounds="map.bounds" control="map.control">
+            <ui-gmap-google-map
+                    center="map.center"
+                    zoom="map.zoom"
+                    draggable="true"
+                    options="gmapOptions"
+                    bounds="map.bounds"
+                    events="map.events"
+                    control="map.control">
+                <ui-gmap-markers
+                        models="map.markers"
+                        coords="'coords'"
+                        options="'options'",
+                        events="map.markersEvents">
+                </ui-gmap-markers>
+                <ui-gmap-window
+                        options="map.window.options"
+                        control="map.window.control"
+                        show="map.window.show"
+                        coords="map.window.model.coords"
+                        closeClick="map.window.closeClick()">
+                    <div id="info-window">
+                        <h2>
+                            {{map.window.model.trainerLocationModel.title || 'Untitled Location'}}
+                        </h2>
+                        <div>
+                            {{map.window.model.trainerLocationModel.address_line_1}}
+                        </div>
+                        <div>
+                            {{map.window.model.trainerLocationModel.city + ', '
+                            + map.window.model.trainerLocationModel.state}}
+                        </div>
+                        <div>
+                            {{map.window.model.trainerLocationModel.zipcode}}
+                        </div>
+                    </div>
+                </ui-gmap-window>
             </ui-gmap-google-map>
-            <md-button class="md-fab add-location" ng-show="mapseditable" ng-click="locationDialog($event)">
-                <md-icon>
-                    <i class="material-icons">add</i>
-                </md-icon>
-            </md-button>
+            <!--<ui-gmap-marker id="'1'" idKey="'2'" coords="map.markers[0].coords"-->
+            <!--options="map.markers[0].options"></ui-gmap-marker>-->
+            <!-- Removed the FAB to only have one fab per screen... Put add icon in the top bar-->
+            <!--<md-button class="md-fab add-location" ng-show="editable" ng-click="locationDialog($event)">-->
+            <!--<md-icon>-->
+            <!--<i class="material-icons">add</i>-->
+            <!--</md-icon>-->
+            <!--</md-button>-->
         </div>
     </div>
 </div>

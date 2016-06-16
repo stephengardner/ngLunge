@@ -5,7 +5,8 @@
   "private": true,
   "plugin": {
     "consumes": [
-      "trainerModel"
+      "trainerModel",
+      "bruteforce"
     ],
     "provides": ["trainerContactEmail"]
   }

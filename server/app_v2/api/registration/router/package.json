@@ -6,7 +6,8 @@
   "plugin": {
     "consumes": [
       "apiRegistrationController",
-      "auth"
+      "auth",
+      "bruteforce"
     ],
     "provides": ["apiRegistrationRouter"]
   }

@@ -1,35 +1,154 @@
-<div id="trainer-certifications-list" class="certifications container main-push" class="container">
-    <header>
-        <h1>Certifications</h1>
-        <div class="search-module">
-            <form class="form-inline" ng-submit="queryCertifications()">
-                <label class="sr-only" for="search">Search</label>
-                <div class="input-group">
-                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                    <input type="text" class="form-control"
-                           id="search"
-                           placeholder="Search by organization"
-                           ng-model="query">
-                    <div class="input-group-addon-inner" ng-if="query && certificationOrganizations.length" ng-click="clear()" title="Clear query results"><i class="fa fa-times-circle-o"></i></div>
+<!--<div id="trainer-certifications-list" class="certifications container main-push" class="container">-->
+<!--<header>-->
+<!--<h1>Certifications!</h1>-->
+<!--<div class="search-module">-->
+<!--<form class="form-inline" ng-submit="queryCertifications()">-->
+<!--<label class="sr-only" for="search">Search</label>-->
+<!--<div class="input-group">-->
+<!--<div class="input-group-addon"><i class="fa fa-search"></i></div>-->
+<!--<input type="text" class="form-control"-->
+<!--id="search"-->
+<!--placeholder="Search by organization"-->
+<!--ng-model="query">-->
+<!--<div class="input-group-addon-inner" ng-if="query && certificationOrganizations.length" ng-click="clear()" title="Clear query results"><i class="fa fa-times-circle-o"></i></div>-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
+<!--</header>-->
+<!--<div class="empty search-empty text-center" ng-if="ajax.complete && !certificationOrganizations.length">-->
+<!--<h2>No certifications match that query.</h2>-->
+<!--<br/>-->
+<!--<div class="btn btn-lg btn-info" ng-click="clear()">Clear</div>-->
+<!--</div>-->
+<!--
+<section class="certifications">
+<div class="my-certifications-link">
+    <a ng-if="trainerFactory.trainer" class="btn-text" ui-sref="main.trainer.account.certifications">
+        View My Certifications
+    </a>
+</div>
+<accordion close-others="true">
+    <accordion-group is-open="certificationOrganization.isOpen"
+                     class="certification-organization"
+                     ng-repeat="certificationOrganization in certificationOrganizations">
+        <accordion-heading>
+            <div class="name">
+                <h2>
+                    {{certificationOrganization.name}}
+                </h2>
+            </div>
+            <div class="count" ng-if="getCertificationOrganizationCount(certificationOrganization)">
+                <span class="count-added"
+                      ng-attr-title="{{getCertificationOrganizationCount(certificationOrganization)}} {{certificationOrganization.name}} certifications added">
+                    {{getCertificationOrganizationCount(certificationOrganization)}}
+                </span>
+            </div>
+        </accordion-heading>
+        <div class="certification panel-item padded"
+             ng-repeat="certification in certificationOrganization.certifications">
+            <div class="inner">
+                <div class="name">
+                    {{certification.name}}
                 </div>
+                <form class="buttons">
+                    <fieldset ng-disabled="certification.busy">
+                        <div class="btn btn-sm btn-square btn-primary"
+                             ng-if="!trainerHasCertification(certification)"
+                             ng-click="addOrRemoveCertification('add', certification)">
+                            <span ng-if="!certification.busy">
+                                <i class="fa fa-plus"></i>
+                            </span>
+                            <span ng-if="certification.busy">
+                                <i class="fa fa-spin fa-spinner"></i>
+                            </span>
+                        </div>
+                        <div class="btn btn-sm btn-square btn-danger"
+                             ng-if="trainerHasCertification(certification)"
+                             ng-click="addOrRemoveCertification('remove', certification)">
+                            <span ng-if="!certification.busy">
+                                <i class="fa fa-minus"></i>
+                            </span>
+                            <span ng-if="certification.busy">
+                                <i class="fa fa-spin fa-spinner"></i>
+                            </span>
+                        </div>
+                        <div class="btn btn-sm btn-square btn-default"
+                             ng-click="certificationTypeInfoModal(certification)">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </accordion-group>
+</accordion>
+<div infinite-scroll="getCertifications()" infinite-scroll-distance="1"></div>
+<div class="load-more" ng-if="!ajax.complete">
+    <div ng-click="getCertifications()" ng-disabled="ajax.busy" class="btn btn-lg btn-block btn-default">
+        {{ ajax.busy ? 'Loading...' : 'Load More' }}
+    </div>
+</div>
+</section>
+-->
+<!--</div>-->
+
+<div id="trainer-certifications-list"
+     class="main-push">
+    <header>
+        <h1>
+            <i class="material-icons">pages</i>
+            <span>
+            Certifications
+            </span>
+        </h1>
+        <div id="search-module">
+            <form ng-submit="trainerCertifications.doQuery()">
+                <ag-floating-label>
+                    <label>Search By Organization</label>
+                    <ag-icon>
+                        <i class="material-icons">search</i>
+                    </ag-icon>
+                    <input type="text"
+                           id="search"
+                           ng-model="trainerCertifications.params.query">
+
+                </ag-floating-label>
+                <!--<div class="input-group">-->
+                <!--<div class="input-group-addon"><i class="fa fa-search"></i></div>-->
+                <!--<input type="text" class="form-control"-->
+                <!--id="search"-->
+                <!--placeholder="Search by organization"-->
+                <!--ng-model="query">-->
+                <!--<div class="input-group-addon-inner" ng-if="query && certificationOrganizations.length" ng-click="clear()" title="Clear query results"><i class="fa fa-times-circle-o"></i></div>-->
+                <!--</div>-->
             </form>
         </div>
     </header>
-    <div class="empty search-empty text-center" ng-if="ajax.complete && !certificationOrganizations.length">
-        <h2>No certifications match that query.</h2>
-        <br/>
-        <div class="btn btn-lg btn-info" ng-click="clear()">Clear</div>
+    <div id="view-my-certifications-wrapper">
+        <md-button class="md-raised"
+                   ng-if="trainerFactory.trainer"
+                   ui-sref="main.trainer.account.certifications">
+            <md-icon>
+                <i class="material-icons">remove_red_eye</i>
+            </md-icon>
+            View My Certifications
+        </md-button>
     </div>
-    <section class="certifications">
-        <div class="my-certifications-link">
-            <a ng-if="trainerFactory.trainer" class="btn-text" ui-sref="main.trainer.account.certifications">
-                View My Certifications
-            </a>
-        </div>
-        <accordion close-others="true">
+    <md-progress-circular ng-if="ajax.loading"
+                          md-diameter="120"
+                          md-mode='indeterminate'>
+    </md-progress-circular>
+    <div id="empty" ng-if="ajax.complete && !trainerCertifications.certificationOrganizations.length">
+        <h2>No certifications match that query</h2>
+        <md-button ng-click="trainerCertifications.reset(); trainerCertifications.getPage()">
+            Clear
+        </md-button>
+    </div>
+    <accordion close-others="true">
+        <md-card
+                ng-repeat="certificationOrganization in trainerCertifications.certificationOrganizations">
             <accordion-group is-open="certificationOrganization.isOpen"
-                             class="certification-organization"
-                             ng-repeat="certificationOrganization in certificationOrganizations">
+                             class="certification-organization">
                 <accordion-heading>
                     <div class="name">
                         <h2>
@@ -37,12 +156,19 @@
                         </h2>
                     </div>
                     <div class="count" ng-if="getCertificationOrganizationCount(certificationOrganization)">
-                        <span class="count-added"
-                              ng-attr-title="{{getCertificationOrganizationCount(certificationOrganization)}} {{certificationOrganization.name}} certifications added">
-                            {{getCertificationOrganizationCount(certificationOrganization)}}
-                        </span>
+                <span class="count-added">
+                    <md-tooltip md-direction="top">
+                        {{getCertificationOrganizationCount(certificationOrganization)}}
+                        {{certificationOrganization.name}} certifications added
+                    </md-tooltip>
+                    {{getCertificationOrganizationCount(certificationOrganization)}}
+                </span>
                     </div>
                 </accordion-heading>
+                <div ng-if="!certificationOrganization.certifications.length"
+                     class="certification panel-item padded">
+                    <h4>Sorry, no certifications available</h4>
+                </div>
                 <div class="certification panel-item padded"
                      ng-repeat="certification in certificationOrganization.certifications">
                     <div class="inner">
@@ -54,22 +180,22 @@
                                 <div class="btn btn-sm btn-square btn-primary"
                                      ng-if="!trainerHasCertification(certification)"
                                      ng-click="addOrRemoveCertification('add', certification)">
-                                    <span ng-if="!certification.busy">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    <span ng-if="certification.busy">
-                                        <i class="fa fa-spin fa-spinner"></i>
-                                    </span>
+                            <span ng-if="!certification.busy">
+                                <i class="fa fa-plus"></i>
+                            </span>
+                            <span ng-if="certification.busy">
+                                <i class="fa fa-spin fa-spinner"></i>
+                            </span>
                                 </div>
                                 <div class="btn btn-sm btn-square btn-danger"
                                      ng-if="trainerHasCertification(certification)"
                                      ng-click="addOrRemoveCertification('remove', certification)">
-                                    <span ng-if="!certification.busy">
-                                        <i class="fa fa-minus"></i>
-                                    </span>
-                                    <span ng-if="certification.busy">
-                                        <i class="fa fa-spin fa-spinner"></i>
-                                    </span>
+                            <span ng-if="!certification.busy">
+                                <i class="fa fa-minus"></i>
+                            </span>
+                            <span ng-if="certification.busy">
+                                <i class="fa fa-spin fa-spinner"></i>
+                            </span>
                                 </div>
                                 <div class="btn btn-sm btn-square btn-default"
                                      ng-click="certificationTypeInfoModal(certification)">
@@ -80,12 +206,19 @@
                     </div>
                 </div>
             </accordion-group>
-        </accordion>
-        <div infinite-scroll="getCertifications()" infinite-scroll-distance="1"></div>
-        <div class="load-more" ng-if="!ajax.complete">
-            <div ng-click="getCertifications()" ng-disabled="ajax.busy" class="btn btn-lg btn-block btn-default">
-                {{ ajax.busy ? 'Loading...' : 'Load More' }}
-            </div>
-        </div>
-    </section>
+        </md-card>
+    </accordion>
+    <!-- do not delete -->
+    <!-- infinite scroll not exactly working on current layout... investigate -->
+    <!--<div-->
+    <!--ng-if="trainerCertifications.certificationOrganizations.length"-->
+    <!--infinite-scroll="trainerCertifications.getPage()"-->
+    <!--infinite-scroll-distance="1">-->
+    <!--</div>-->
+    <div class="load-more" ng-if="!ajax.complete">
+        <md-button ng-click="trainerCertifications.getPage()"
+                   ng-disabled="ajax.busy">
+            {{ ajax.busy ? 'Loading...' : 'Load More' }}
+        </md-button>
+    </div>
 </div>

@@ -1,0 +1,13 @@
+{
+  "name": "linkedinSatellizerLogin",
+  "version": "0.0.1",
+  "main": "linkedin-satellizer-login.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "auth"
+    ],
+    "provides": ["linkedinSatellizerLogin"]
+  }
+}
