@@ -1,4 +1,4 @@
-<md-card>
+<md-card id="specialties">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -13,46 +13,55 @@
         </div>
     </md-toolbar>
     <md-card-content cg-busy="{promise : cgBusy}">
-        <md-list>
+        <md-list class="specialty-list">
             <md-list-item ng-repeat="specialty in trainerFactory.trainerEditing.specialties">
-                <p ng-if="!specialty.removing">{{specialty.name}}</p>
-                <md-button class="md-secondary md-icon-button"
-                           ng-if="editable">
-                    <md-icon ng-if="!specialty.removing">
-                        <i class="material-icons"
-                           ng-click="toggleRemoveSpecialty(specialty)">
-                            delete
-                        </i>
-                    </md-icon>
-                </md-button>
-                <p ng-if="specialty.removing">
-                    Are you sure you want to remove the <strong>{{specialty.name}}</strong> specialty?
-                </p>
-
-                <div hide-xs ng-if="specialty.removing" layout="row" layout-align="center right">
-                    <md-button ng-click="removeSpecialty(specialty)">
-                        Yes
-                    </md-button>
-                    <md-button ng-click="toggleRemoveSpecialty(specialty)">
-                        Cancel
-                    </md-button>
-                </div>
-                <div hide-gt-xs ng-if="specialty.removing" layout="row" layout-align="center right">
-                    <md-button class="md-icon-button" ng-click="removeSpecialty(specialty)">
-                        <i class="material-icons">check</i>
-                    </md-button>
-                    <md-button class="md-icon-button" ng-click="toggleRemoveSpecialty(specialty)">
-                        <i class="material-icons">cancel</i>
-                    </md-button>
+                <div class="md-list-item-animation-container">
+                    <div flex
+                         class="list-item-default"
+                         ng-if="!specialty.removing"
+                         layout="row"
+                         layout-align="space-between center">
+                        <p>
+                            {{specialty.name}}
+                        </p>
+                        <md-button class="md-secondary md-icon-button"
+                                   ng-if="editable">
+                            <md-icon ng-click="toggleRemoveSpecialty(specialty)">
+                                <i class="material-icons">
+                                    delete
+                                </i>
+                            </md-icon>
+                        </md-button>
+                    </div>
+                    <div flex
+                         class="list-item-removing"
+                         ng-if="specialty.removing"
+                         layout="row"
+                         layout-align="space-between center">
+                        <p flex>
+                            Are you sure you want to remove the <strong>{{specialty.name}}</strong> specialty?
+                        </p>
+                        <div class="md-secondary" flex="nogrow" hide-xs>
+                            <md-button ng-click="removeSpecialty(specialty)">
+                                Yes
+                            </md-button>
+                            <md-button ng-click="toggleRemoveSpecialty(specialty)">
+                                Cancel
+                            </md-button>
+                        </div>
+                        <div class="md-secondary" flex hide-gt-xs layout="row" layout-align="center right">
+                            <md-button class="md-icon-button" ng-click="removeSpecialty(specialty)">
+                                <i class="material-icons">check</i>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="toggleRemoveSpecialty(specialty)">
+                                <i class="material-icons">cancel</i>
+                            </md-button>
+                        </div>
+                    </div>
                 </div>
             </md-list-item>
-            <div ng-if="!trainerFactory.trainerEditing.specialties.length" class="none">
-                <div ng-if="isMe()">
-                    You don't have any specialties listed yet.
-                </div>
-                <div ng-if="!isMe()">
-                    {{trainerFactory.trainer.name.first}} doesn't have any specialties listed yet.
-                </div>
+            <div ng-if="!trainerFactory.trainerEditing.specialties.length" class="empty">
+                {{trainerFactory.trainer.name.first}} doesn't have any specialties listed yet.
             </div>
         </md-list>
     </md-card-content>

@@ -1,0 +1,63 @@
+
+<div class="md-secondary" layout="row">
+    <span class="added count-bubble"
+          ng-if="countAdded && showAdded">
+        <md-tooltip md-direction="top">
+            {{countAdded}}
+            {{certificationOrganization.name}}
+            {{countAdded > 1 ? 'certifications' : 'certification'}}
+            added
+        </md-tooltip>
+        {{countAdded}}
+    </span>
+    <span class="verified count-bubble"
+          ng-if="countVerified">
+        <md-tooltip md-direction="top">
+            {{countVerified}}
+            {{certificationOrganization.name}}
+            {{countAll > 1 ? 'certifications' : 'certification'}}
+            verified by Lunge
+        </md-tooltip>
+        {{countVerified}}
+    </span>
+    <span class="pending count-bubble"
+          ng-if="countPending">
+        <md-tooltip md-direction="top">
+            {{countPending}}
+            {{certificationOrganization.name}}
+            {{countPending > 1 ? 'certifications' : 'certification'}}
+            pending approval
+        </md-tooltip>
+        {{countPending}}
+    </span>
+    <span class="unverified count-bubble"
+          ng-if="countUnverified">
+        <md-tooltip md-direction="top">
+            {{countUnverified}}
+            {{certificationOrganization.name}}
+            {{countUnverified > 1 ? 'certifications require' : 'certification requires'}}
+            more verification
+        </md-tooltip>
+        {{countUnverified}}
+    </span>
+    <span class="rejected count-bubble"
+          ng-if="countRejected">
+        <md-tooltip md-direction="top">
+            {{countRejected}}
+            {{certificationOrganization.name}}
+            {{countUnverified > 1 ? 'certifications' : 'certification'}}
+            rejected
+        </md-tooltip>
+        {{countRejected}}
+    </span>
+    <span class="count-bubble total-certifications" ng-if="showTotal">
+        <md-tooltip md-direction="top">
+            {{certificationOrganization.certifications.length}}
+            {{certificationOrganization.certifications.length > 1
+            ? 'certifications'
+            : 'certification'}}
+            available
+        </md-tooltip>
+        {{certificationOrganization.certifications.length}}
+    </span>
+</div>

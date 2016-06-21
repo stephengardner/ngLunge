@@ -1,54 +1,40 @@
-    <div ng-if="trainerFactory.trainer.name">
-        <div class="top-masthead clearfix">
-            <div class="main-push trainer-profile">
-                <trainer-profile-contact-button>
-                </trainer-profile-contact-button>
-                <div flex layout="row"
-                     layout-wrap
-                     layout-align="center center"
-                     class="trainer-card wide clearfix">
-                    <!-- Profile Picture -->
-                    <trainer-profile-picture></trainer-profile-picture>
-                    <!-- Basic Info -->
-                    <trainer-basic-info
-                            flex="66"
-                            flex-xs="80"
-                            class="flex-xxs-100"
-                            trainer="trainer"
-                            editable="{{isMe()}}">
-                    </trainer-basic-info>
-                    <!-- favorite star -->
-                    <div class="favorite" ng-if="!isMe()">
-                        <i class="fa fa-star-o"></i>
-                    </div>
+<div ng-if="trainerFactory.trainer.name" id="profile">
+    <div class="top-masthead clearfix">
+        <div class="main-push trainer-profile">
+            <trainer-profile-contact-button>
+            </trainer-profile-contact-button>
+            <div flex layout="row"
+                 layout-wrap
+                 layout-align="center center"
+                 class="trainer-card wide clearfix">
+                <!-- Profile Picture -->
+                <trainer-profile-picture></trainer-profile-picture>
+                <!-- Basic Info -->
+                <trainer-basic-info
+                        flex="66"
+                        flex-xs="80"
+                        class="flex-xxs-100"
+                        trainer="trainer"
+                        editable="{{isMe()}}">
+                </trainer-basic-info>
+                <!-- favorite star -->
+                <div class="favorite" ng-if="!isMe()">
+                    <i class="fa fa-star-o"></i>
                 </div>
             </div>
         </div>
-        <div id="profile-body"
-             layout="row"
-             layout-align="center center">
-            <div class="flex-column">
-                <trainer-map-card editable="{{isMe()}}"></trainer-map-card>
-                <specialties editable="{{isMe()}}"></specialties>
-                <rates editable="{{isMe()}}"></rates>
-                <certifications-card editable="{{isMe()}}"></certifications-card>
-            </div>
+    </div>
+    <div id="profile-body"
+         layout="row"
+         layout-align="center center">
+        <div class="flex-column">
+            <trainer-map-card editable="{{isMe()}}"></trainer-map-card>
+            <specialties editable="{{isMe()}}"></specialties>
+            <rates editable="{{isMe()}}"></rates>
+            <certifications-card editable="{{isMe()}}"></certifications-card>
         </div>
-        <!--</div>-->
-        <!--<div class="review-stars">-->
-        <!--<i class="fa fa-star"></i>-->
-        <!--<i class="fa fa-star"></i>-->
-        <!--<i class="fa fa-star"></i>-->
-        <!--<i class="fa fa-star"></i>-->
-        <!--<i class="fa fa-star-half"></i>-->
-        <!--</div>-->
-        <!--<div class="review-text">-->
-        <!--I absolutely loved this trainer.  We did a 30 minute warm-up of high intensity interval training (which I'd never done before), and by the end of the workout I felt-->
-        <!--like I could conquer the world.  His method of training is very fast paced and I love it!  Repeat customer!-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</section>-->
     </div>
-    <div class="404 text-center" ng-if="noTrainer">
-        <h1>Sorry, but the page you are looking for does not exist.  <a ui-sref="{{previousState ? previousState : 'main.home'}}">go {{previousState ? 'back' : 'home'}}</a></h1>
-    </div>
+</div>
+<div class="404 text-center" ng-if="noTrainer">
+    <h1>Sorry, but the page you are looking for does not exist.  <a ui-sref="{{previousState ? previousState : 'main.home'}}">go {{previousState ? 'back' : 'home'}}</a></h1>
+</div>

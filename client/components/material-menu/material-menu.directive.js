@@ -25,6 +25,20 @@ myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, 
 					return $state.href(state, options);
 				}
 			};
+
+			$scope.$watch(function(){
+				return Auth.isLoggedIn();
+			}, function(newValue, oldValue) {
+				console.log("newValueL:", newValue);
+				console.log("oldvbaluie:", oldValue);
+				// if(changedFromLoggedInToLoggedOut || changedFromLoggedOutToLoggedIn) {
+					// alert('logout');
+					Menu.refreshLinks();
+				// }
+			});
+			$scope.$on('logout', function(){
+				alert('material menu directive caught logout');
+			})
 			$scope.getSref = this.getSref = function(state, options){
 				// console.log("getSref()...");
 				if(!state) return $state.current.name || '-';

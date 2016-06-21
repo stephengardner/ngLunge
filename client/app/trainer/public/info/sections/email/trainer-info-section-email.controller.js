@@ -23,9 +23,7 @@ myApp.controller("TrainerInfoSectionEmailController", function(FormControl, Aler
 			$scope.toggleEditing();// = false;
 		}).catch(function(err){
 			$scope.ajax.busy = false;
-			form.$setPristine();
 			FormControl.parseValidationErrors(form, err);
-			$scope.errors = FormControl.errors;
 		})
 	}
 })

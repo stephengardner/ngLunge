@@ -17,22 +17,19 @@ angular.module('ngLungeFullStack2App')
 		}
 
 		function trainerHasCertification(trainer, certification) {
+			if(!trainer.certifications_v2) return false;
+			var inputCertificationID = certification._id ? certification._id : certification;
 			// note when the trainer is populated we can use the certifications_v2_map, but I guess that's not
 			// guaranteed to be populated? hm...
-			if(trainer.certifications_v2) {
-				for(var i = 0; i < trainer.certifications_v2.length; i++){
-					var certificationV2 = trainer.certifications_v2[i];
-					if(certificationV2.active === false) continue;
-					var certification_type = certificationV2.certification_type;
-					var id = certification._id
-						? certification._id
-						: certification;
-					if(id == certification_type._id) {
-						return true;
-					}
+			for(var i = 0; i < trainer.certifications_v2.length; i++) {
+				var certificationV2 = trainer.certifications_v2[i];
+				if(certificationV2.active === false) continue;
+				var certification_type = certificationV2.certification_type;
+				if(inputCertificationID == certification_type._id) {
+					return true;
 				}
-				return false;
 			}
+			return false;
 		}
 		// dont reset the query
 		function empty() {
@@ -49,7 +46,7 @@ angular.module('ngLungeFullStack2App')
 			TrainerCertifications.certificationCountMapByTrainer = {};
 			TrainerCertifications.params.query = '';
 		}
-		
+
 		function doQuery() {
 			TrainerCertifications.empty();
 			TrainerCertifications.getPage();

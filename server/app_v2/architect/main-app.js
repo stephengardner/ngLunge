@@ -1,18 +1,13 @@
 module.exports = function(config) {
+	console.log("\n ---- architect main-app.js config.handleServer is: ", config.handleServer, " ----\n");
 	var architect = require("architect");
 	var appConfig = [
 		{
-			packagePath : '../../app_v2',
-			config : config,
-			handleQueues : config.handleQueues,
-			server : config.handleServer
+			packagePath : "../../plugins/app/v1",
+			config : config
 		},
 		"../../plugins/connector/v1",
 		"../../components-v2/logger",
-		//{
-		//	packagePath : "../../plugins/connections/v1",
-		//	config : config
-		//},
 		{
 			packagePath : "../../plugins/connections/v1/database",
 			config : config
@@ -182,7 +177,10 @@ module.exports = function(config) {
 
 		"../../components-v2/password-reset/sender",
 		
-		"../../components-v2/sendgrid/email-sender"
+		"../../components-v2/sendgrid/email-sender",
+
+
+		"../../components-v2/certifications-meta/updater"
 
 	];
 	var tree = architect.resolveConfig(appConfig, __dirname);

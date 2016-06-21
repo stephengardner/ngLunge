@@ -8,7 +8,8 @@ var jwt = require('jsonwebtoken'),
 module.exports = function setup(options, imports, register){
 	var linkedinSatellizer = function(req, res, next) {
 		var accessTokenUrl = 'https://www.linkedin.com/uas/oauth2/accessToken';
-		var peopleApiUrl = 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,email-address,picture-url)';
+		var peopleApiUrl = 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,email-address,picture-url,' +
+			'public-profile-url)';
 		var params = {
 			code: req.body.code,
 			client_id: req.body.clientId,
@@ -37,7 +38,8 @@ module.exports = function setup(options, imports, register){
 					format: 'json'
 				};
 				request.get({ url: peopleApiUrl, qs: params, json: true }, function(err, response, profile) {
-					profile.link = "http://www.linkedin.com/profile/view?id=" + profile.id;
+					console.log("The profile is:", profile);
+					profile.link = profile.publicProfileUrl;
 					req.profile = profile;
 					callback();
 				});

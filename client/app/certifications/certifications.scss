@@ -35,10 +35,10 @@
 	cursor:pointer;
 	width:100%;
 	&:hover {
-		&:not(.active) {
-			background:$body-bg;
-			color:#333;
-		}
+		//&:not(.active) {
+		//	background:$body-bg;
+		//	color:#333;
+		//}
 	}
 	&.active {
 		.name {
@@ -56,13 +56,14 @@
 			position:relative;
 			display:inline-block;
 			.count-bubble {
-				background: darken($body-bg, 15%);
 				font-size: .8em;
-				padding: .1rem .4rem;
+				background: #eee;
 				position: absolute;
 				border-radius: 5px;
 				right: -1.25em;
 				top: -.8em;
+				width: 20px;
+				height: 20px;
 			}
 		}
 	}
@@ -105,7 +106,7 @@
 }
 .cert {
 	&:nth-of-type(odd) {
-		background:#f8f9fa;
+		//background:#f8f9fa;
 	}
 	.panel-body {
 		padding-bottom:4px;

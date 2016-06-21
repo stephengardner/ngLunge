@@ -1,16 +1,29 @@
 
 lungeApp.controller("TrainerCertificationsController",
 	function(TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth,
-	         Certification, $http, $scope, ngDialog){
+	         Certification, $http, $scope, ngDialog, $mdDialog){
 
-		$scope.verifyCertificationPopup = function(certificationV2) {
+		$scope.openMenu = function($mdOpenMenu, ev) {
+			originatorEv = ev;
+			$mdOpenMenu(ev);
+		};
+		$scope.verifyCertificationPopup = function(certificationV2, ev) {
 			$scope.certificationV2 = certificationV2;
-			$scope.modal = ngDialog.open({
-				template: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
-				scope: $scope,
-				className: 'ngdialog-theme-default large',
-				controller: "TrainerAccountVerifyCertificationsModalController"
+			$mdDialog.show({
+				templateUrl: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
+				controller : 'TrainerAccountVerifyCertificationsModalController',
+				locals : {
+					certificationV2 : certificationV2
+				},
+				clickOutsideToClose : true,
+				targetEvent : ev
 			});
+			// $scope.modal = ngDialog.open({
+			// 	template: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
+			// 	scope: $scope,
+			// 	className: 'ngdialog-theme-default large',
+			// 	controller: "TrainerAccountVerifyCertificationsModalController"
+			// });
 		};
 
 		$scope.getTrainerModelCertificationType = function(certificationType) {

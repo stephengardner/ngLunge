@@ -12,6 +12,8 @@
     <meta name="viewport" content="width=device-width">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
+    <!-- Roboto - Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,300italic,400italic,500,700,500italic,700italic' rel='stylesheet' type='text/css'>
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
     <!-- bower:css -->
@@ -24,6 +26,7 @@
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <link rel="stylesheet" href="bower_components/ag-floating-label/dist/floating-label.css" />
     <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css" />
+    <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -39,15 +42,6 @@
 </head>
 <body ng-app="ngLungeFullStack2App"">
 <div class="cg-remove-style" cg-busy="{promise:globalAjax.busy, wrapperClass: '', templateUrl:'/components/angular-busy/templates/fullscreen.partial.html'}"></div>
-<!--<div class="cg-busy-fullscreen-wrapper">-->
-    <!--<table class="cg-busy-fullscreen-table">-->
-        <!--<td class="cg-busy-fullscreen-cell">-->
-            <!--<div class="cg-busy-fullscreen-text">-->
-                <!--<div class='loader uil-squares-css' style='transform:scale(0.36);'><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>-->
-            <!--</div>-->
-        <!--</td>-->
-    <!--</table>-->
-<!--</div>-->
 <!--[if lt IE 7]>
 
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -81,6 +75,11 @@
 <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="bower_components/angularjs-geolocation/src/geolocation.js"></script>
 <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
+<script src="bower_components/markerclustererplus/src/markerclusterer.js"></script>
+<script src="bower_components/google-maps-utility-library-v3-markerwithlabel/dist/markerwithlabel.js"></script>
+<script src="bower_components/google-maps-utility-library-v3-infobox/dist/infobox.js"></script>
+<script src="bower_components/google-maps-utility-library-v3-keydragzoom/dist/keydragzoom.js"></script>
+<script src="bower_components/js-rich-marker/src/richmarker.js"></script>
 <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
@@ -103,6 +102,7 @@
 <script src="bower_components/ag-floating-label/dist/floating-label.js"></script>
 <script src="bower_components/angular-material-icons/angular-material-icons.min.js"></script>
 <script src="bower_components/satellizer/satellizer.js"></script>
+<script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>
 <!-- endbower -->
 <script src="socket.io-client/socket.io.js"></script>
 <!-- endbuild -->
@@ -226,6 +226,8 @@
 <script src="components/specialties/specialties.directive.js"></script>
 <script src="components/specialties/specialties.tpl.js"></script>
 <script src="components/sync/sync.service.js"></script>
+<script src="components/trainer-certification-status-count-bubbles/trainer-certification-status-count-bubbles.directive.js"></script>
+<script src="components/trainer-certification-status/trainer-certification-status.directive.js"></script>
 <script src="components/trainer-certifications/trainer-certifications.service.js"></script>
 <script src="components/trainer-factory/trainer.factory.js"></script>
 <script src="components/trainer-map/add-location/dialog/trainer-map-add-location-dialog.controller.js"></script>

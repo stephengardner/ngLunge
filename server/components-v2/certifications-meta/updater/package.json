@@ -1,0 +1,12 @@
+{
+  "name": "certificationsMetaUpdater",
+  "version": "0.0.1",
+  "main": "certifications-meta-updater.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "certificationMapCreator"
+    ],
+    "provides": ["certificationsMetaUpdater"]
+  }
+}

@@ -1,3 +1,112 @@
+<md-dialog class="flexible-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                {{certificationType.name}}
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon>
+                    <i class="material-icons">
+                        close
+                    </i>
+                </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content nopadding-horizontal">
+            <div class="info-row">
+                <div>
+                    Description
+                </div>
+                <div>
+                    {{certificationType.description || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Course Price
+                </div>
+                <div>
+                    {{'$' + certificationType.courseMaterialPrice || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Exam Price
+                </div>
+                <div>
+                    {{'$' + certificationType.examPrice || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Exam Delivery Method
+                </div>
+                <div>
+                    {{certificationType.description || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Exam Delivery Method
+                </div>
+                <div>
+                    {{certificationType.examDeliveryMethod || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Practical Exam Required
+                </div>
+                <div>
+                    {{certificationType.practicalExamRequired || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Prerequisite
+                </div>
+                <div>
+                    {{certificationType.prerequisite || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Renewal Period
+                </div>
+                <div>
+                    {{certificationType.renewalPeriod || '-'}}
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div class="info-row">
+                <div>
+                    Category
+                </div>
+                <div>
+                    <ul class="list-unstyled">
+                        <li ng-if="!certificationType.category.length">
+                            -
+                        </li>
+                        <li ng-repeat="category in certificationType.category" class="category">
+                            {{category}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>
+<!--
 <div class="modal-content certification-type-modal-info">
     <div class="modal-header">
         <div class="button-block" ng-click="closeThisDialog(false)">
@@ -122,3 +231,4 @@
         </div>
     </form>
 </div>
+-->

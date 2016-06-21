@@ -1,0 +1,18 @@
+<div class="verified-status" flex="nogrow">
+    <md-icon ng-if="status == 'Unverified'">
+        <md-tooltip md-direction="top">Unverified</md-tooltip>
+        <i class="material-icons">error_outline</i>
+    </md-icon>
+    <md-icon ng-if="status == 'Pending'">
+        <md-tooltip md-direction="top">Pending verification</md-tooltip>
+        <i class="material-icons">warning</i>
+    </md-icon>
+    <md-icon ng-if="status == 'Verified'">
+        <md-tooltip md-direction="top">Verified by Lunge</md-tooltip>
+        <i class="material-icons">check</i>
+    </md-icon>
+    <md-icon ng-if="status == 'Rejected'">
+        <md-tooltip md-direction="top">Certification rejected by Lunge</md-tooltip>
+        <i class="material-icons">error</i>
+    </md-icon>
+</div>

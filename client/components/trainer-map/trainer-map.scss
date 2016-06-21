@@ -2,3 +2,17 @@
 	height:400px;
 	position:relative;
 }
+#info-window {
+	h2 {
+		font-size: 22px;
+	}
+}
+trainer-map {
+	.google-map.empty-loading {
+		h1 {
+			font-size: 26px;
+			padding: 20px;
+			text-align: center;
+		}
+	}
+}

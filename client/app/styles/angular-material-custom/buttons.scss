@@ -8,12 +8,15 @@
 		}
 	}
 	ng-md-icon {
-		display:flex;
+		display: flex;
 	}
 }
 md-button, a {
 	&.social-button {
 		color: white;
+		&:hover {
+			color: white!important;
+		}
 		padding: 0 20px 0 15px;
 		ng-md-icon, i {
 			color: white;

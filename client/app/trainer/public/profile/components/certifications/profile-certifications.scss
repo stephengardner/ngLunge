@@ -61,32 +61,35 @@ $cert-padding : 1.5rem;
 		position: relative;
 	}
 	.panel-title, .panel-body {
-		border-left: 2px solid transparent;
+		//border-left: 2px solid transparent;
 	}
 	.panel-title {
 		//padding:1rem;
-		a {
-			font-weight: bold;
-			text-decoration: none;
-			&:hover {
-				background: darken($body-bg, 4%);
-				color: #333;
-				text-decoration: none;
-			}
-			padding: $cert-padding;
-			display: block;
-			.name {
-				position: relative;
-			}
-		}
+		//a {
+		//	font-weight: bold;
+		//	text-decoration: none;
+		//	//&:hover {
+		//	//	background: #f8f8f8;//darken($body-bg, 4%);
+		//	//	color: #333;
+		//	//	text-decoration: none;
+		//	//}
+		//	padding: $cert-padding;
+		//	display: block;
+		//	.name {
+		//		position: relative;
+		//	}
+		//}
 		.count-bubble {
 			background: darken($body-bg, 15%);
 			font-size: .8em;
 			padding: .1rem .4rem;
 			position: absolute;
-			border-radius: 5px;
+			border-radius: 20px;
+			background: #eee;
 			right: .7em;
 			top: .3em;
+			width: 20px;
+			height: 20px;
 		}
 	}
 }

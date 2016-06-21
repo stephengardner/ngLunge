@@ -5,7 +5,6 @@
     "angular": "~1.5.*",
     "json3": "~3.3.2",
     "es5-shim": "~4.5.7",
-    "jquery": "~2.2.1",
     "bootstrap-sass-official": "~3.1.1",
     "bootstrap": "~3.3.6",
     "angular-resource": "~1.5.*",
@@ -39,7 +38,8 @@
     "ng-focus-if": "^1.0.5",
     "ag-floating-label": "^0.0.20",
     "angular-material-icons": "^0.7.0",
-    "satellizer": "^0.14.0"
+    "satellizer": "^0.14.0",
+    "angular-material-data-table": "^0.10.9"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
@@ -47,7 +47,6 @@
   },
   "resolutions": {
     "angular": "~1.5.0",
-    "jquery": ">= 1.9.0",
     "angular-bootstrap": "~0.13.0",
     "es5-shim": ">=3.4.0",
     "ng-file-upload": "~11.2.3",

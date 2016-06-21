@@ -16,43 +16,35 @@
         <md-card-content cg-busy="{promise : cgBusy}" ng-if="ready">
             <div ng-if="!editing">
                 <div class="info-row">
-                    <div class="name" flex="50">
+                    <div class="name">
                         Name:
                     </div>
-                    <div class="value" flex="40">
+                    <div class="value">
                         {{trainerFactory.trainer.name.full}}
                     </div>
-                    <div flex>
-                    </div>
                 </div>
                 <div class="info-row">
-                    <div class="name" flex="50">
+                    <div class="name">
                         Gender:
                     </div>
-                    <div class="value" flex="40">
+                    <div class="value">
                         {{trainerFactory.trainer.gender.value || '-'}}
                     </div>
-                    <div flex>
-                    </div>
                 </div>
                 <div class="info-row">
-                    <div class="name" flex="50">
+                    <div class="name">
                         Age:
                     </div>
-                    <div class="value" flex="40">
+                    <div class="value">
                         {{trainerFactory.trainer.age.value || '-'}}
-                    </div>
-                    <div flex>
                     </div>
                 </div>
                 <div class="info-row">
-                    <div class="name" flex="50">
+                    <div class="name">
                         Years of Experience:
                     </div>
-                    <div class="value" flex="40">
+                    <div class="value">
                         {{trainerFactory.trainer.years_of_experience.value || '-'}}
-                    </div>
-                    <div flex>
                     </div>
                 </div>
             </div>

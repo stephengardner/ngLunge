@@ -81,35 +81,7 @@
 		border-left: 4px solid pink;
 		margin-top: 3em;
 	}
-	md-card {
-		position: relative;
-		div.name {
-			position: relative;
-		}
-		.panel-heading {
-			padding: 0;
-			.panel-title {
-				> a {
-					display: block;
-					padding: 10px 15px;
-				}
-			}
-			background: white;
-			&:hover {
-				background: #eee;
-			}
-		}
-	}
 	#md-fab-container {
 		text-align: right;
-	}
-	.add-certification {
-		margin-top:0;
-		margin-bottom:2rem;
-		text-align:left;
-		h1 {
-			text-align:left;
-			float:none!important;
-		}
 	}
 }

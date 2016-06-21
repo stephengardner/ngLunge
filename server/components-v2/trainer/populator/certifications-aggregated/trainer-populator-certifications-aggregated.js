@@ -62,7 +62,7 @@ module.exports = function setup(options, imports, register) {
 						})
 					},
 					function populateTrainer(trainer, callback) {
-						console.log("Trainer i s:", trainer);
+						// console.log("Trainer i s:", trainer);
 						trainer.certifications_v2 = aggregated.certifications_v2;
 						trainer
 							.populate('certifications_v2.certification_type specialties',

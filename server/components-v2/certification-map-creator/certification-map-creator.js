@@ -1,5 +1,6 @@
 var Promise = require('promise'),
-	async = require('async')
+	async = require('async'),
+	_ = require('lodash')
 ;
 module.exports = function setup(options, imports, register){
 	var certificationOrganizationModel = imports.certificationOrganizationModel;
@@ -28,7 +29,7 @@ module.exports = function setup(options, imports, register){
 		},
 		// used in the trainer virtual.  If the trainer is populated, this will be invoked!
 		createWithoutPopulating : parseAfterPopulation
-	}
+	};
 
 	function parseAfterPopulation(populatedTrainer){
 		var map = {};
@@ -62,13 +63,24 @@ module.exports = function setup(options, imports, register){
 			}
 		}
 
+		function getCertificationStatus(certification_v2) {
+			return certification_v2.verification.status;
+		}
 		function addStatusCountForCertificationToMapKey(mapKey, certification_v2) {
-			map[mapKey].count++;
-			if(certification_v2.verification.status == 'Pending') {
-				map[mapKey].count_pending++;
+			var organizationTypes = map[mapKey].types;
+			var certificationStatus = getCertificationStatus(certification_v2);
+			organizationTypes.count_all++;
+			if(certificationStatus == 'Unverified') {
+				organizationTypes.count_unverified++;
 			}
-			if(certification_v2.verification.status == 'Verified') {
-				map[mapKey].count_verified++;
+			if(certificationStatus == 'Pending') {
+				organizationTypes.count_pending++;
+			}
+			if(certificationStatus == 'Verified') {
+				organizationTypes.count_verified++;
+			}
+			if(certificationStatus == 'Rejected') {
+				organizationTypes.count_rejected++;
 			}
 		}
 
@@ -77,15 +89,28 @@ module.exports = function setup(options, imports, register){
 			pushCertificationV2ToMapKey(mapKey, certification_v2);
 		}
 		function pushCertificationV2ToMapKey(key, certification_v2) {
-			if(certification_v2.status == 'Pending') {
-				map[key].count_pending++;
+			var organizationTypes = map[key].types;
+			var certificationStatus = getCertificationStatus(certification_v2);
+			var verification = certification_v2.verification.toObject();
+			var copyOfCertification = _.merge({}, certification_v2.toObject());
+			copyOfCertification.verification = verification;//_.merge({}, verification);
+
+			// console.log("CopyOfCertification.verification.files:", copyOfCertification.verification.files);
+			if(certificationStatus == 'Unverified') {
+				organizationTypes.unverified.push(copyOfCertification);
 			}
-			if(certification_v2.status == 'Verified') {
-				map[key].count_verified++;
+			if(certificationStatus == 'Pending') {
+				organizationTypes.pending.push(copyOfCertification);
+			}
+			if(certificationStatus == 'Verified') {
+				organizationTypes.verified.push(copyOfCertification);
+			}
+			if(certificationStatus == 'Rejected') {
+				organizationTypes.rejected.push(copyOfCertification);
 			}
 			// note - if you want to delete something from the certification_v2_certification_type you must clone it.
 			// somehow it's immutable.  I guess mongo does that.
-			map[key].certification_v2s.push(certification_v2);
+			organizationTypes.all.push(copyOfCertification);
 			//map[key].certification_types.push(certification_v2_certification_type);
 		}
 		function checkIfMapKeyExists(key) {
@@ -93,13 +118,27 @@ module.exports = function setup(options, imports, register){
 		}
 		function createMapKeyForCertificationOrganization(organization){
 			map[organization._id] = {
+				_id : organization._id,
 				name : organization.name,
-				count : 0,
-				count_verified : 0,
-				count_pending : 0,
-				certification_types : [],
-				certification_v2s : []
-			}
+				types : {
+					all : [],
+					unverified : [],
+					pending : [],
+					approved : [],
+					rejected : [],
+					count_all : 0,
+					count_unverified : 0,
+					count_pending : 0,
+					count_verified : 0,
+					count_rejected : 0
+				}
+				// name : organization.name,
+				// count : 0,
+				// count_verified : 0,
+				// count_pending : 0,
+				// certification_types : [],
+				// certification_v2s : []
+			};
 			return true;
 		}
 		return map;
@@ -107,4 +146,4 @@ module.exports = function setup(options, imports, register){
 	register(null, {
 		certificationMapCreator : certificationMapCreator
 	})
-}
+};

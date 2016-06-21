@@ -4,7 +4,12 @@
   "main": "app.js",
   "private": true,
   "plugin": {
-    "consumes": ["connectionDatabase", "redis", "eventbus"],
+    "consumes": [
+      "connectionDatabase",
+      "redis",
+      "eventbus",
+      "routes"
+    ],
     "provides": ["app"]
   }
 }

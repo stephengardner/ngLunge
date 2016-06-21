@@ -47,79 +47,138 @@
                 </md-card-title-text>
             </md-card-title>
         </md-card>
-        <md-card
-                ng-repeat="mappedOrganization
-                                     in trainerFactory.trainer.certifications_v2_map">
-            <!--<md-card-content>-->
-                <accordion close-others="true">
-                    <accordion-group is-open="certificationOrganization.isOpen"
+        <md-card ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
+            <accordion close-others="true">
+                <md-list>
+                    <accordion-group is-open="mappedOrganization.isOpen"
                                      class="certification-organization">
                         <accordion-heading>
-                            <div class="name">
-                                <h2>{{mappedOrganization.name}}</h2>
-                                <div class="count">
-                                    <!--<span class="count-added">{{mappedOrganization.count}}</span>-->
-                                    <span ng-if="mappedOrganization.count_pending"
-                                          class="count-pending">
-                                        <md-tooltip md-direction="top">{{mappedOrganization.count_pending}}
-                                            {{mappedOrganization.count_pending > 1
-                                            ? 'certifications'
-                                            : 'certification'}} pending verification</md-tooltip>
-                                        {{mappedOrganization.count_pending}}
-                                    </span>
-                                    <span ng-if="mappedOrganization.count_verified"
-                                          class="count-verified">
+                            <md-list-item md-ink-ripple>
+                                <span layout="row" layout-align="start end"
+                                      class="name">
+                                    <span class="count-unbubble total-certifications">
                                         <md-tooltip md-direction="top">
-                                            {{mappedOrganization.count_pending}}
-                                            {{mappedOrganization.count_verified > 1
+                                            {{mappedOrganization.types.count_all}}
+                                            {{mappedOrganization.types.count_all > 1
                                             ? 'certifications'
-                                            : 'certification'}} verified
+                                            : 'certification'}}
+                                            added
                                         </md-tooltip>
-                                        {{mappedOrganization.count_verified}}
+                                        {{mappedOrganization.types.count_all}}
                                     </span>
+                                    {{mappedOrganization.name}}
+                                </span>
+                                <div class="md-secondary" flex="nogrow" layout="row" layout-align="center center">
+                                    <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
+                                                                                certification-organization="mappedOrganization">
+                                    </trainer-certification-status-count-bubbles>
                                 </div>
-                            </div>
+                            </md-list-item>
                         </accordion-heading>
-                        <form ng-repeat="certificationV2 in mappedOrganization.certification_v2s">
-                            <fieldset ng-disabled="certificationV2.removing">
-                                <ul class="certification panel-item padded list-unstyled">
-                                    <li class="inner">
-                                        <div ng-if="!certificationV2.removalConfirmation" class="certification-visible clearfix">
-                                            <div class="name">
-                                                {{certificationV2.certification_type.name}}
-                                            </div>
-                                            <div class="actions">
-                                                <div class="btn btn-default btn-xs"
-                                                     ng-click="verifyCertificationPopup(certificationV2)">
-                                                    <i class="fa fa-upload"></i> Upload proof
-                                                </div>
-                                                <div class="btn btn-danger btn-xs"
-                                                     ng-click="toggleDeleteCertification(certificationV2)">
-                                                    <i class="fa fa-trash"></i> Remove
-                                                </div>
-                                            </div>
+                        <md-list>
+                            <md-list-item ng-repeat="certificationV2 in mappedOrganization.types.all"
+                                          class="secondary-button-padding">
+                                <div flex class="md-list-item-animation-container">
+                                    <div flex
+                                         class="list-item-default"
+                                         ng-if="!certificationV2.removalConfirmation"
+                                         layout="row"
+                                         layout-align="space-between center">
+                                        <trainer-certification-status trainer="trainerFactory.trainer"
+                                                                      certification="certificationV2.certification_type">
+                                        </trainer-certification-status>
+                                        <p class="md-list-item-text" flex>
+                                            {{certificationV2.certification_type.name}}
+                                        </p>
+                                        <div class="md-secondary"
+                                             layout="row"
+                                             layout-align="end center"
+                                             flex="nogrow">
+                                            <md-menu md-position-mode="target-right target">
+                                                <md-button class="md-icon-button"
+                                                           ng-click="openMenu($mdOpenMenu, $event)">
+                                                    <i md-menu-origin
+                                                       class="material-icons">
+                                                        more_vert
+                                                    </i>
+                                                </md-button>
+                                                <md-menu-content width="3">
+                                                    <md-menu-item>
+                                                        <md-button ng-click="verifyCertificationPopup(certificationV2, $event)">
+                                                            <div layout="row" flex>
+                                                                <p flex>
+                                                                    Upload
+                                                                </p>
+                                                                <md-button class="md-icon-button">
+                                                                    <i md-menu-align-target class="material-icons">
+                                                                        file_upload
+                                                                    </i>
+                                                                </md-button>
+                                                            </div>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="toggleDeleteCertification(certificationV2)">
+                                                            <div layout="row" flex>
+                                                                <p flex>
+                                                                    Remove
+                                                                </p>
+                                                                <md-button class="md-icon-button">
+                                                                    <i class="material-icons">
+                                                                        delete
+                                                                    </i>
+                                                                </md-button>
+                                                            </div>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
                                         </div>
-                                        <div ng-if="certificationV2.removalConfirmation" class="certification-removing">
-                                            <h1 class="h4">
-                                                Are you sure you want to remove the
+                                    </div>
+                                    <div flex
+                                         class="list-item-removing"
+                                         ng-if="certificationV2.removalConfirmation"
+                                         layout="row"
+                                         layout-align="space-between center">
+                                        <p flex>
+                                            Are you sure you want to remove the
+                                            <strong>
                                                 {{certificationV2.certification_type.name}}
-                                                certification?
-                                            </h1>
-                                            <div class="btn btn-danger" ng-click="deleteCertification(certificationV2)">
-                                                <span ng-if="!certificationV2.removing">Delete</span>
-                                        <span ng-if="certificationV2.removing">
-                                            <i class="fa fa-spin fa-spinner"></i>
-                                        </span>
-                                            </div>
-                                            <div class="btn btn-default" ng-click="toggleDeleteCertification(certificationV2)">Cancel</div>
+                                            </strong>
+                                            specialty?
+                                        </p>
+                                        <div class="md-secondary"
+                                             flex hide-xs hide-xxs
+                                             layout="row"
+                                             layout-align="center end">
+                                            <md-button ng-click="deleteCertification(certificationV2)">
+                                                Yes
+                                            </md-button>
+                                            <md-button ng-click="toggleDeleteCertification(certificationV2)">
+                                                Cancel
+                                            </md-button>
                                         </div>
-                                    </li>
-                                </ul>
-                            </fieldset>
-                        </form>
+                                        <div class="md-secondary"
+                                             flex hide-gt-xs
+                                             layout="row"
+                                             layout-align="center end">
+                                            <md-button class="md-icon-button"
+                                                       ng-click="deleteCertification(certificationV2)">
+                                                <i class="material-icons">check</i>
+                                            </md-button>
+                                            <md-button class="md-icon-button"
+                                                       ng-click="toggleDeleteCertification(certificationV2)">
+                                                <i class="material-icons">cancel</i>
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </md-list-item>
+                        </md-list>
                     </accordion-group>
-                </accordion>
-            <!--</md-card-content>-->
+                </md-list>
+            </accordion>
         </md-card>
     </section>
 </div>

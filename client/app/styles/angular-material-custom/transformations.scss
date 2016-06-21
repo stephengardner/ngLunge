@@ -5,3 +5,110 @@
 		transform: rotateZ(180deg);
 	}
 }
+
+md-list-item ._md-list-item-inner ._md-secondary-container .md-button:last-of-type, md-list-item ._md-list-item-inner ._md-secondary-container .md-icon-button:last-of-type, md-list-item ._md-secondary-container .md-button:last-of-type, md-list-item ._md-secondary-container .md-icon-button:last-of-type {
+	margin-right: 0;
+}
+
+.list-item-default, .list-item-removing, .list-item-default-alternate {
+	-webkit-transition: all .275s ease-in-out;
+	width: 100%;
+	min-height: $list-item-height;
+}
+
+// Needed when there's extra padding on a list item.
+// This is because the position: absolute clings to the edge of the padding isntantly before moving.
+// Adding this container means we don't ahve to fiddle with right: 16px etc etc.
+.md-list-item-animation-container {
+	position: relative;
+	width: 100%;
+	min-height: $list-item-height;
+}
+
+.list-item-default {
+	min-height: $list-item-height;
+	right: 0;
+	top: 0;
+	&.ng-enter {
+		position: absolute;
+		right: -120%;
+	}
+	&.ng-enter-active {
+		position: absolute;
+		right: 0;
+	}
+	&.ng-leave {
+		position: absolute;
+		right: 0;
+	}
+	&.ng-leave-active {
+		position: absolute;
+		right: -120%;
+	}
+}
+.list-item-default-alternate {
+	&.ng-enter {
+		transform: scale(0, 0);
+		opacity: 0;
+	}
+	&.ng-enter-active {
+		transform: scale(1, 1);
+		opacity: 1;
+	}
+	&.ng-leave {
+		height: 0!important;
+		min-height: 0!important;
+		overflow: visible;
+		transform: scale(1, 1);
+		opacity: 1;
+	}
+	&.ng-leave-active {
+		height: 0!important;
+		min-height: 0!important;
+		overflow: visible;
+		transform: scale(0, 0);
+		opacity: 0;
+	}
+}
+.list-item-removing-alternate {
+	&.ng-enter {
+		transform: scale(0, 0);
+		opacity: 0;
+	}
+	&.ng-enter-active {
+		transform: scale(1, 1);
+		opacity: 1;
+	}
+	&.ng-leave {
+		transform: scale(1, 1);
+		opacity: 1;
+	}
+	&.ng-leave-active {
+		transform: scale(0, 0);
+		opacity: 0;
+	}
+}
+.list-item-removing {
+	min-height: $list-item-height;
+	padding: 0; // sometimes md-list-items may have a padding, it messes with transformation
+	transform: translate3d(0%,0,0);
+	top: 0;
+	text-align: center;
+	p {
+		text-align: left;
+	}
+	&.ng-enter {
+		transform: translate3d(-100%,0,0);
+	}
+	&.ng-enter-active {
+		transform: translate3d(0%,0,0);
+	}
+	&.ng-leave {
+		position: absolute;
+		transform: translate3d(0%,0,0);
+	}
+	&.ng-leave-active {
+		position: absolute;
+		transform: translate3d(-100%,0,0);
+	}
+}

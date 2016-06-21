@@ -30,7 +30,8 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		'agFloatingLabel',
 		'ngMaterial',
 		'ngMdIcons',
-		'satellizer'
+		'satellizer',
+		'md.data.table'
 	])
 
 	.config(function($authProvider) {
@@ -186,7 +187,7 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		// Shows a busy modal for the whole page.
 		$rootScope.globalAjax = {
 			busy : false
-		}
+		};
 
 		$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
 			$rootScope.previousState = from.name;

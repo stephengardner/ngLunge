@@ -4,12 +4,127 @@
 	@extend .flex-md-75;
 	@extend .flex-gt-md-50;
 	md-card {
-		margin-bottom:30px;
+		//margin-bottom:30px;
+	}
+}
+
+a.md-button {
+	&:hover {
+		color: inherit;
+	}
+}
+
+tbody {
+	tr.md-row {
+		border-top: 1px rgba(0, 0, 0, 0.12) solid!important;
+		td {
+			border-top: none!important;
+		}
+	}
+}
+tr.md-row {
+	.download, .delete {
+		text-align: right!important;
+	}
+}
+.flexible-dialog {
+	@extend .flex-90;
+	@extend .flex-gt-sm-50;
+	@extend .flex-gt-lg-30;
+}
+#profile, #account {
+	md-card {
+		margin-bottom: 30px;
+	}
+}
+
+md-dialog-content {
+	.md-dialog-content {
+		&.nopadding-horizontal {
+			padding-left: 0!important;
+			padding-right: 0!important;
+		}
+		> .info-row {
+			line-height: 1.6;
+			div:first-of-type {
+				font-weight: 500;
+			}
+			div:nth-of-type(2) {
+				font-weight: 300;
+			}
+			padding: 0 24px 12px 24px;
+			margin: 0!important;
+			~ .info-row {
+				padding-top: 12px;
+			}
+		}
+	}
+}
+.info-row {
+	@extend .layout-row;
+	@extend .layout-align-space-between-center;
+	text-align: left;
+	> div {
+		&:first-of-type {
+			margin-right: 20px;
+			width: 100px;
+			min-width: 100px;
+		}
+		@extend .flex-nogrow;
+	}
+	.name {
+		padding-right: 20px;
+		//font-weight:bold;
+		@extend .flex-nogrow;
+	}
+	.value {
+		text-align: right;
+		@extend .flex-nogrow;
+	}
+	~ .info-row {
+		margin-top:1.5rem;
+	}
+}
+
+h1 {
+	i.material-icons {
+		font-size: 1em;
+		vertical-align: middle;
+	}
+	span {
+		vertical-align: middle;
+	}
+}
+md-list {
+	p {
+		margin-bottom: 0;
+	}
+	overflow: hidden;
+}
+button {
+	i.material-icons {
+		vertical-align: middle;
+		margin-right: 5px;
+	}
+}
+ag-floating-label {
+	padding: 0 2px;
+	&.ag-has-icon {
+		margin-left: 2px;
+		margin-right: 2px;
 	}
 }
 
 md-tooltip {
 	font-size: 12px!important;
+}
+
+.md-secondary, button.md-secondary {
+	margin-right: 0!important;
+	button:last-of-type {
+		margin-right: 0;
+	}
+	right: 0!important;
 }
 
 md-card {

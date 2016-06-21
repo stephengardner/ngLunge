@@ -163,6 +163,7 @@ body, html {
 @import 'styles/popovers.scss';
 @import 'styles/tables.scss';
 @import 'styles/xeditable.scss';
+@import 'trainer/account/certifications/faq/trainer-certifications-faq.scss';
 @import 'trainer/account/certifications/trainer-account-certifications.scss';
 @import 'trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.scss';
 @import 'trainer/account/trainer-account.scss';
@@ -175,6 +176,7 @@ body, html {
 @import 'trainer/register/register.scss';
 @import 'alert-message/alert-message.scss';
 @import 'angular-busy/templates/fullscreen-loader-partial.scss';
+@import 'certifications/certifications.scss';
 @import 'material-menu/menu.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';

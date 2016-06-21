@@ -1,7 +1,24 @@
 
 lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
-	function(TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth,
-	         Certification, $http, $scope, ngDialog, Upload, $timeout, FormControl, Trainer){
+	function($mdDialog,
+	         TrainerCertifications,
+	         FullMetalSocket,
+	         CertificationOrganization,
+	         TrainerFactory,
+	         AlertMessage,
+	         Auth,
+	         Certification,
+	         $http,
+	         $scope,
+	         ngDialog,
+	         Upload,
+	         $timeout,
+	         $rootScope,
+	         FormControl,
+	         certificationV2){
+		$scope.trainerFactory = TrainerFactory;
+		$scope.certificationV2 = certificationV2;
+		$scope.cancel = $mdDialog.cancel;
 		$scope.formControl = FormControl;
 		$scope.fileModel ={};
 		$scope.errorFiles = [];
@@ -19,36 +36,62 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 				$scope.fileModel.name = file.name;
 			}
 		};
+		
 		$scope.fileSelected = function(form, files, file) {
 			console.log("I SELECTED ONE!", file);
 			$scope.fileModel.file = file;
 			$scope.fileModel.name = file.name;
 		};
+		
 		$scope.toggleDeleteFile = function(file) {
 			file.deleting = !file.deleting;
 		};
 
+		$scope.numActiveFiles = function() {
+			return $scope.getActiveFiles().length;	
+		};
+		
+		$scope.getActiveFiles = function() {
+			console.log("----- getActiveFiles -----", $scope.certificationV2);
+			var certificationV2 = $scope.certificationV2, 
+				i, 
+				returnArray = [],
+				certificationV2AtIndex, 
+				isActive
+				;
+			for(i = 0; i < certificationV2.verification.files.length; i++) {
+				certificationV2AtIndex = certificationV2.verification.files[i];
+				isActive = certificationV2AtIndex.active;
+				if(isActive) {
+					returnArray.push(certificationV2AtIndex);
+				}
+			}
+			console.log("activefiles:", returnArray);
+			return returnArray;
+		};
+		
 		$scope.deleteFile = function(form, file) {
 			var httpParams = {
 				method : 'DELETE',
 				url : '/api/trainers/' + $scope.trainerFactory.trainer._id + '/certification-file/' + file._id
-			}
-			$scope.globalAjax.busy = $http(httpParams).then(function(response, headers){
+			};
+			$rootScope.globalAjax.busy = $http(httpParams).then(function(response, headers){
 				FormControl.removeMongooseError(form, 'file');
 				AlertMessage.success("\"" + file.user_desired_name + "\" removed successfully.");
 				console.log("THE RESPONSE:", response);
-				$scope.certification = response.data;
+				$scope.certificationV2 = response.data;
 				$scope.toggleDeleteFile(file);
 			}).catch(function(err){
 				AlertMessage.error('Woops, something went wrong.  Please try again later.');
 				FormControl.removeMongooseError(form, 'file');
 				console.log("Got error:", err);
 				$scope.toggleDeleteFile(file);
-			})
-		}
+			});
+		};
 
 		$scope.submitNewCertification = function(form) {
 			if(!form.$valid) {
+				console.log("invalid form:", form);
 				return false;
 			}
 			var file = $scope.fileModel.file;
@@ -59,7 +102,7 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 				file: file
 			};
 			console.log("Sending data:", data);
-			$scope.globalAjax.busy = file.upload = Upload.upload({
+			$rootScope.globalAjax.busy = file.upload = Upload.upload({
 				url: 'api/certification-types/verify',
 				method : 'POST',
 				data : data

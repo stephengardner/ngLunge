@@ -1,0 +1,29 @@
+#faq {
+	.faqs {
+		.item {
+			padding-bottom: 20px;
+			.question {
+				font-size: 22px;
+				margin-bottom: 5px;
+			}
+			.answer {
+				ul {
+					padding-left: 30px;
+				}
+				padding-left: 40px;
+			}
+			~ .item {
+				padding-top: 20px;
+			}
+		}
+	}
+	.still-have-questions {
+		margin-top: 20px;
+		.item {
+			.question {
+				line-height: 1.5em;
+				font-size: 20px;
+			}
+		}
+	}
+}

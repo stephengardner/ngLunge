@@ -1,22 +1,56 @@
 #material-menu {
 	#menu-items {
-		md-button, a {
+		md-button, a, button {
 			transition: all .5s;
 			border-radius:0!important;
-		}
-		.active {
-			background: $brand-primary;
-			color: white;
-			i, a, md-icon {
-				color:white!important;
-			}
-		}
-		md-button, a {
-			padding:10px;
-			margin:0;
+			width: 100%;
+			padding: 10px;
+			margin: 0;
 			md-icon {
 				margin-left:0;
 				text-align:right;
+			}
+			&.active {
+				background: $brand-primary;
+				color: white;
+				i, a, md-icon {
+					color:white!important;
+				}
+			}
+		}
+	}
+	.menu-toggle-section {
+		ul {
+			transition: all .4s ease-in-out;
+			transform-origin: 0 0;
+			&.ng-enter {
+				max-height: 0;
+				transform: scale(1, 0);
+			}
+			&.ng-enter-active {
+				max-height: 250px;
+				transform: scale(1, 1);
+			}
+			&.ng-leave {
+				max-height: 250px;
+				transform: scale(1, 1);
+			}
+			&.ng-leave-active {
+				max-height: 0;
+				transform: scale(1, 0);
+			}
+			@extend .md-whiteframe-z2;
+			md-button, a, button {
+				&.active {
+					background: lighten($brand-primary, 40%)!important;
+					color: #333!important;
+				}
+			}
+			//background: #eee;
+		}
+		menu-link {
+			md-icon {
+				padding-left: 20px;
 			}
 		}
 	}

@@ -5,39 +5,11 @@ myApp.factory('Menu', [
 	'$timeout',
 	'Auth',
 	'$log',
-	function($location, $rootScope, $mdSidenav, $timeout, Auth, $log){
+	'$state',
+	function($location, $rootScope, $mdSidenav, $timeout, Auth, $log, $state){
 		var sections = [];
-		// working example
-		// {
-		// 	name: 'Beers',
-		// 		type: 'toggle',
-		// 	pages: [{
-		// 	name: 'IPAs',
-		// 	type: 'link',
-		// 	state: 'beers.ipas',
-		// 	icon: 'fa fa-group'
-		// }, {
-		// 	name: 'Porters',
-		// 	state: 'home.toollist',
-		// 	type: 'link',
-		// 	icon: 'fa fa-map-marker'
-		// },
-		// 	{
-		// 		name: 'Wheat',
-		// 		state: 'home.createTool',
-		// 		type: 'link',
-		// 		icon: 'fa fa-plus'
-		// 	}]
-		// },
-		sections.push(
-			{
-				name : 'Log In',
-				type : 'link',
-				state : 'main.login',
-				icon : 'ext_to_app'
-			}
-		);
-		Auth.isLoggedInAsync(function(){
+		function setLoggedInLinks() {
+			sections = [];
 			sections.splice(0, 1,
 				{
 					name : Auth.getCurrentUser().name ? Auth.getCurrentUser().name.first : 'Profile',
@@ -57,22 +29,86 @@ myApp.factory('Menu', [
 				},
 				{
 					name : 'Certifications',
-					type : 'link',
-					icon : 'pages',
-					state : 'main.trainer.account.certifications'
+					type : 'toggle',
+					state : 'main.trainer.account.certifications',
+					pages : [
+						{
+							name : 'My Certifications',
+							type : 'link',
+							state : 'main.trainer.account.certifications.show'
+						},
+						{
+							name : 'Add Certifications',
+							type : 'link',
+							state : 'main.trainer.account.certifications.list'
+						},
+						{
+							name : 'faq',
+							type : 'link',
+							state : 'main.trainer.account.certifications.faq'
+						}
+					],
+					icon : 'pages'
 				},
 				{
 					name : 'Logout',
 					type : 'link',
-					state : 'main.trainer.account.certifications',
+					state : 'main.login',
 					icon : 'power_settings_new',
 					action : 'logout()' // from the rootscope
 				}
 			);
-		});
+		}
+
+		function setLoggedOutLinks() {
+			sections = [];
+			sections.push(
+				{
+					name : 'Sign up',
+					type : 'link',
+					state : 'main.signup',
+					icon : 'person_add'
+				},
+				{
+					name : 'Login',
+					type : 'link',
+					state : 'main.login',
+					icon : 'person'
+				},
+				{
+					name : 'Certifications',
+					type : 'toggle',
+					pages : [
+						{
+							name : 'Browse Certifications',
+							type : 'link',
+							state : 'main.trainer.account.certifications.list'
+						},
+						{
+							name : 'faq',
+							type : 'link',
+							state : 'main.trainer.account.certifications.faq'
+						}
+					],
+					icon : 'pages'
+				}
+			);
+		}
+		function setLinks() {
+			Auth.isLoggedInAsync(function(isLoggedIn){
+				if(isLoggedIn) {
+					setLoggedInLinks();
+				}
+				else {
+					setLoggedOutLinks();
+				}
+				console.log("Set sections as:", sections);
+				Menu.sections = sections;
+			});
+		}
 		var Menu = {
 			sections: sections,
-
+			refreshLinks : setLinks,
 			toggleSelectSection: function (section) {
 				Menu.openedSection = (Menu.openedSection === section ? null : section);
 			},
@@ -124,5 +160,6 @@ myApp.factory('Menu', [
 					});
 			}
 		}
+		setLinks();
 		return Menu;
 	}]);

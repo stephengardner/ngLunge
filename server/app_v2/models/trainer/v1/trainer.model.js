@@ -131,6 +131,28 @@ var TrainerSchema = new Schema(
 				home : Array
 			}
 		},
+		certifications_meta : {
+			organization_map : {
+				// 'organization_id' : {
+				// name : String,
+				// types : {
+					// all : [],
+					// unverified : [],
+					// pending : [],
+					// approved : [],
+					// rejected : []
+				//}
+				// }
+			},
+			types_by_organization : [{
+				organization : {type : Schema.Types.ObjectId, ref : 'CertificationOrganization'},
+				all : [],
+				unverified : [],
+				pending : [],
+				approved : [],
+				rejected : []
+			}]
+		},
 		certifications_v2 : [{
 			certification_type : { type : Schema.Types.ObjectId, ref : 'CertificationType' },
 			// When someone removes a cert, we can save their info by just deactivating it.
@@ -151,7 +173,13 @@ var TrainerSchema = new Schema(
 					active : { type : Boolean, default : true },
 					status : { type : String, default : 'Pending', enum : ['Pending', 'Approved', 'Rejected']}
 				}],
-				status : { type : String, default : 'Pending', enum : ['Pending', 'Approved', 'Rejected']},
+				status : { type : String, default : 'Unverified',
+					enum : [
+						'Unverified',
+						'Pending',
+						'Approved',
+						'Rejected'
+					]},
 				verified : { type : Boolean, default : false }
 			}
 		}],
@@ -334,6 +362,7 @@ TrainerSchema
 				});
 	});
 
+
 TrainerSchema.pre('save', function(next){
 	if(this.rate && this.rate.general) {
 		if(this.rate.general.price) {
@@ -378,35 +407,35 @@ TrainerSchema
 	.validate(function(inquiries) {
 		var inquiryLength = inquiries.length,
 			lastInquiry = inquiries[inquiries.length - 1]
-		;
+			;
 		if(!inquiryLength || !lastInquiry) return;
 		// for(var i = 0; i < inquiries.length; i++) {
-			var inquiry = lastInquiry;//inquiries[i];
-			// First Name
-			console.log("inquiry is new?", inquiry.isNew);
-			if(!inquiry.user.name.first) {
-				this.invalidate('firstName', 'The email inquiry requires a first name');
-			}
-			else if(!validator.isAlphanumeric(inquiry.user.name.first)) {
-				this.invalidate('firstName', 'Invalid first name');
-			}
-			else if(inquiry.user.name.first.length > 30) {
-				this.invalidate('firstName', 'Please use a name shorter than 30 characters');
-			}
-			// Email
-			if(!inquiry.user.email) {
-				this.invalidate('email', 'Please input an email address');
-			}
-			else if(!validator.isEmail(inquiry.user.email)) {
-				this.invalidate('email', 'Please use a valid email address');
-			}
-			// Message
-			if(!inquiry.message) {
-				this.invalidate('message', 'Please add a message');
-			}
-			else if(!validator.isLength(inquiry.message, {max : 1000})) {
-				this.invalidate('message', 'Please limit your message to 1000 characters');
-			}
+		var inquiry = lastInquiry;//inquiries[i];
+		// First Name
+		console.log("inquiry is new?", inquiry.isNew);
+		if(!inquiry.user.name.first) {
+			this.invalidate('firstName', 'The email inquiry requires a first name');
+		}
+		else if(!validator.isAlphanumeric(inquiry.user.name.first)) {
+			this.invalidate('firstName', 'Invalid first name');
+		}
+		else if(inquiry.user.name.first.length > 30) {
+			this.invalidate('firstName', 'Please use a name shorter than 30 characters');
+		}
+		// Email
+		if(!inquiry.user.email) {
+			this.invalidate('email', 'Please input an email address');
+		}
+		else if(!validator.isEmail(inquiry.user.email)) {
+			this.invalidate('email', 'Please use a valid email address');
+		}
+		// Message
+		if(!inquiry.message) {
+			this.invalidate('message', 'Please add a message');
+		}
+		else if(!validator.isLength(inquiry.message, {max : 1000})) {
+			this.invalidate('message', 'Please limit your message to 1000 characters');
+		}
 		// }
 	}, 'Lunge Email Inquiry Error');
 
@@ -432,6 +461,7 @@ TrainerSchema
 var async = require("async");
 
 // deprecated
+/*
 TrainerSchema.virtual('certifications_v2_coagulated')
 	.get(function(){
 		var trainer = this;
@@ -465,6 +495,7 @@ TrainerSchema.virtual('certifications_v2_coagulated')
 						if(!objectProp){
 							certificationsCoagulated[organizationName] = {
 								types : [],
+								unverified : [],
 								pending : [],
 								verified : []
 							};
@@ -476,6 +507,9 @@ TrainerSchema.virtual('certifications_v2_coagulated')
 							verification : certification_v2.verification
 						};
 						certificationsCoagulated[organizationName].types.push(certTypeObj);
+						if(certification_v2.verification.status == 'Unverified') {
+							certificationsCoagulated[organizationName].unverified.push(certTypeObj);
+						}
 						if(certification_v2.verification.status == 'Pending') {
 							certificationsCoagulated[organizationName].pending.push(certTypeObj);
 						}
@@ -495,7 +529,7 @@ TrainerSchema.virtual('certifications_v2_coagulated')
 		}
 		return returnArray;
 	});
-
+*/
 TrainerSchema
 	.virtual('password')
 	.set(function(password) {
@@ -779,6 +813,15 @@ var methods = {
 module.exports = function setup(options, imports, register) {
 	var certificationMapCreator = imports.certificationMapCreator;
 
+	TrainerSchema.pre('save', function(next){
+		imports.certificationsMetaUpdater.update(this).then(function(){
+			console.log("this.certifications_meta ===== ", this.certifications_meta.types_by_organization);
+			this.markModified('certifications_meta');
+			this.markModified('certifications_meta.types_by_organization');
+			next();
+		}.bind(this)).catch(next);
+	});
+
 	TrainerSchema.virtual('certifications_v2_map').get(function(){
 		var trainer = this;
 		if(trainer.certifications_v2 && trainer.certifications_v2.length) {
@@ -806,5 +849,5 @@ module.exports = function setup(options, imports, register) {
 	TrainerSchema.plugin(autoIncrement.plugin, { model: 'Trainer', field: 'id' });
 	register(null, {
 		trainerModel : Model
-	})
+	});
 };

@@ -1,18 +1,38 @@
 // I fixed this controller, separated it into a TrainerCertifications Service on 1.26.16
 // It is actually quite lean now, lookups operate on hash tables (objects).  Using ng-infinite-scroll as well.
-lungeApp.controller("TrainerCertificationsListController", function(ngDialog, TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth, Certification, $http, $scope, $timeout){
+lungeApp.controller("TrainerCertificationsListController", function(ngDialog, TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth, Certification, $http, $scope, $mdDialog){
 	$scope.trainerCertifications = TrainerCertifications;
 	$scope.ajax = TrainerCertifications.ajax;
-
-	$scope.certificationTypeInfoModal = function(certificationType) {
-		$scope.certificationType = certificationType;
-		$scope.modal = ngDialog.open({
-			template: "app/certifications/certification-type/modal-info/certification-type-modal-info.modal.html",
-			scope: $scope,
-			className: 'ngdialog-theme-default large',
-			controller: "CertificationTypeModalInfoController"
-		});
+	$scope.trainerFactory = TrainerFactory;
+	
+	$scope.openMenu = function($mdOpenMenu, ev) {
+		originatorEv = ev;
+		$mdOpenMenu(ev);
 	};
+	
+	$scope.certificationTypeInfoModal = function(certificationType, ev) {
+		console.log("CERT:", certificationType);
+		$mdDialog.show({
+			controller : ['$scope', function($scope){
+				console.log("OK:", certificationType);
+				$scope.certificationType = certificationType;
+				$scope.cancel = $mdDialog.cancel;
+			}],
+			templateUrl : "app/certifications/certification-type/modal-info/certification-type-modal-info.modal.html",
+			targetEvent : ev,
+			clickOutsideToClose : true
+		})
+	};
+	//
+	// 	function(certificationType) {
+	// 	$scope.certificationType = certificationType;
+	// 	$scope.modal = ngDialog.open({
+	// 		template: "app/certifications/certification-type/modal-info/certification-type-modal-info.modal.html",
+	// 		scope: $scope,
+	// 		className: 'ngdialog-theme-default large',
+	// 		controller: "CertificationTypeModalInfoController"
+	// 	});
+	// };
 
 	$scope.trainerCertifications.getPage();
 

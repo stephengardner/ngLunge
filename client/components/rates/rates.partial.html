@@ -16,25 +16,23 @@
         <md-card-content cg-busy="{promise : cgBusy}">
             <div ng-if="!editing">
                 <div class="info-row">
-                    <div class="name" flex="50">
-                        Rate / Hour:
+                    <div class="name">
+                        Hourly rate
                     </div>
-                    <div class="value" flex="40">
-                    <span ng-if="trainerFactory.trainer.rate.general.price">
-                        ${{trainerFactory.trainer.rate.general.price}} / hr
-                    </span>
-                    <span ng-if="!trainerFactory.trainer.rate.general.price">
-                        None set
-                    </span>
-                    </div>
-                    <div flex>
+                    <div class="value">
+                        <span ng-if="trainerFactory.trainer.rate.general.price">
+                            ${{trainerFactory.trainer.rate.general.price}} / hr
+                        </span>
+                        <span ng-if="!trainerFactory.trainer.rate.general.price">
+                            None set
+                        </span>
                     </div>
                 </div>
                 <div class="info-row">
-                    <div class="name" flex="50">
+                    <div class="name">
                         Comments:
                     </div>
-                    <div class="value" flex="40">
+                    <div class="value">
                         {{trainerFactory.trainer.rate.general.comments}}
                     </div>
                 </div>

@@ -1,7 +1,22 @@
-.verify-certificaiton-modal {
-	.delete {
-		&:hover {
-			color:$brand-danger;
+.verify-certification-modal {
+	input#file {
+		position: absolute;
+		left: -9000px;
+		opacity: 0;
+	}
+	table {
+		//table-layout: fixed;
+		// make it look like the header is centered over the icon
+		th.delete {
+			padding-right: 34px!important;
+		}
+	}
+	// overwrite large padding right
+	th {
+		~ th {
+			@include respond-to(sm) {
+				padding: 0 16px 0 0;
+			}
 		}
 	}
 	.modal-content {

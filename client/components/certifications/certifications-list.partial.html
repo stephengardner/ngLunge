@@ -6,38 +6,43 @@
         <div ng-if="!isMe()">{{trainerFactory.trainer.name.first}} does not have any active certifications</div>
     </div>
     <accordion close-others="true">
-        <accordion-group is-open="certificationOrganization.isOpen"
-                         class="profile-page-cert cert"
-                         ng-repeat="certificationOrganization
-                             in trainerFactory.trainer.certifications_v2_coagulated">
-            <accordion-heading class="heading">
-                <span class="name">{{certificationOrganization.name}} </span>
-                <span class="count-bubble">
-                    <md-tooltip md-direction="top">
-                        {{certificationOrganization.types.length}}
-                        {{certificationOrganization.name}} {{certificationOrganization.types.length > 1 ?
-                        'certifications' : 'certification'}}
-                    </md-tooltip>
-                    {{certificationOrganization.types.length}}
-                </span>
-            </accordion-heading>
-            <ul class="child-cert" stop-event>
-                <li ng-repeat="type in certificationOrganization.types">
-                    <span class="name">
-                        {{$index + 1}}) {{type.name}}
-                    </span>
-                 <span class="status pending"
-                       ng-if="type.verification.status == 'Pending'">
-                     <md-tooltip md-direction="top">Pending verification</md-tooltip>
-                     <i class="fa fa-warning"></i>
-                 </span>
-                 <span class="status verified"
-                       ng-if="type.verification.status == 'Verified'">
-                     <md-tooltip md-direction="top">Verified by Lunge</md-tooltip>
-                     <i class="fa fa-check-circle"></i>
-                 </span>
-                </li>
-            </ul>
-        </accordion-group>
+        <md-list>
+            <accordion-group is-open="mappedOrganization.isOpen"
+                             class="certification-organization"
+                             ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
+                <accordion-heading>
+                    <md-list-item md-ink-ripple>
+                                <span class="name">
+                                    {{mappedOrganization.name}}
+                                </span>
+                        <div class="md-secondary" flex="nogrow" layout="row" layout-align="center center">
+                            <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
+                                                                        certification-organization="mappedOrganization">
+                            </trainer-certification-status-count-bubbles>
+                        </div>
+                    </md-list-item>
+                </accordion-heading>
+                <md-list>
+                    <md-list-item ng-repeat="certificationV2 in mappedOrganization.types.all"
+                                  class="secondary-button-padding">
+                        <div flex class="md-list-item-animation-container">
+                            <div flex
+                                 class="list-item-default"
+                                 ng-if="!certificationV2.removalConfirmation"
+                                 layout="row"
+                                 layout-align="space-between center">
+                                <trainer-certification-status trainer="trainerFactory.trainer"
+                                                              certification="certificationV2.certification_type">
+                                </trainer-certification-status>
+                                <p class="md-list-item-text" flex>
+                                    {{certificationV2.certification_type.name}}
+                                </p>
+                            </div>
+                        </div>
+
+                    </md-list-item>
+                </md-list>
+            </accordion-group>
+        </md-list>
     </accordion>
 </div>

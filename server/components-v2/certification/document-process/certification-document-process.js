@@ -99,6 +99,7 @@ module.exports = function setup(options, imports, register) {
 	}
 	function process(req, res) {
 		return new Promise(function(resolve, reject){
+			var updated_certification_v2;
 			expect(req.trainer).to.exist;
 			async.waterfall([
 				function uploadLocally(callback) {
@@ -118,11 +119,16 @@ module.exports = function setup(options, imports, register) {
 				},
 				function addFileToTrainer(callback){
 					certificationDocumentAddToTrainer.add(req.trainer, req.file)
-						.then(function(updated_certification_v2){
-							callback(null, updated_certification_v2);
+						.then(function(response){
+							updated_certification_v2 = response;
+							callback(null);
 						}).catch(callback);
+				},
+				// todo implement
+				function determineCertificationV2Status(callback) {
+					callback();
 				}
-			], function(err, updated_certification_v2){
+			], function(err){
 				if(err) return reject(err);
 				return resolve({ req : req, certification_v2 : updated_certification_v2});
 			})

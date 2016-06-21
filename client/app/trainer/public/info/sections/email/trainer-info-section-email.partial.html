@@ -16,10 +16,10 @@
         <md-card-content cg-busy="{promise : cgBusy}">
             <div ng-if="!editing">
                 <div class="info-row">
-                    <div class="name" flex="50">
+                    <div class="name">
                         Email
                     </div>
-                    <div class="value" flex=40>
+                    <div class="value">
                         {{trainerFactory.trainer.email}}
                     </div>
                 </div>
@@ -30,10 +30,10 @@
                         Email
                     </label>
                     <input name="email"
-                           ng-model="trainerFactory.trainerEditing.email"
-                           ng-change="removeMongooseError(form, 'email')"/>
-                    <div ng-messages="form.email.$error" class="md-auto-hide">
-                        <div ng-message="mongoose">{{errors.email}}</div>
+                           server-error
+                           ng-model="trainerFactory.trainerEditing.email"/>
+                    <div ng-messages="form.email.$error">
+                        <div ng-message="mongoose">{{form.email.$error.mongoose}}</div>
                     </div>
                 </ag-floating-label>
             </div>

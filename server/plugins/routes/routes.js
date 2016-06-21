@@ -5,7 +5,7 @@ module.exports = function setup(options, imports, register) {
 	var web = imports.express;
 	var routes = {
 		attach : function() {
-
+			console.log(" \n ---- attaching routes ---- \n");
 			web.use('/api/trainers', imports.apiTrainerRouter);
 			web.use('/api/certifications', imports.apiCertificationRouter);
 			web.use('/api/certification-types', imports.apiCertificationTypeRouter);
@@ -26,7 +26,7 @@ module.exports = function setup(options, imports, register) {
 			// which redirects all routes to index.html
 			web.use(compression());
 		}
-	}
+	};
 	register(null, {
 		routes : routes
 	})

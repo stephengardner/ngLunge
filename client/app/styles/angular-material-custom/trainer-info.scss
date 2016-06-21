@@ -1,23 +1,10 @@
 #profile-body, #account-body {
 	md-card {
-		text-align:left;
-		font-size:1.5rem;
+		text-align: left;
+		font-size: 1.5rem;
 		md-toolbar {
 			//background: $brand-primary;
 			//@include depth(3);
-		}
-		.info-row {
-			@extend .layout-row;
-			text-align:left;
-			.name {
-				font-weight:bold;
-			}
-			.value {
-				text-align:right;
-			}
-			~ .info-row {
-				margin-top:1.5rem;
-			}
 		}
 		.privacy-column {
 			text-align:right;
