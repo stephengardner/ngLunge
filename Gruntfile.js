@@ -462,7 +462,7 @@ module.exports = function (grunt) {
 				// 'svgmin'
 				'sass',
 				'copy:styles',
-				'imagemin',
+				// 'imagemin',
 				'svgmin'
 			]
 		},

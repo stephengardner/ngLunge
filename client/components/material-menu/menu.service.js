@@ -58,7 +58,7 @@ myApp.factory('Menu', [
 					action : 'logout()' // from the rootscope
 				}
 			);
-		}
+		} 
 
 		function setLoggedOutLinks() {
 			sections = [];
