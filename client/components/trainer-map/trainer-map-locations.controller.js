@@ -7,12 +7,22 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
                                                               Auth,
                                                               $document,
                                                               Geocoder,
-                                                              $q
+                                                              $q,
+                                                              $mdDialog
 ){
 	$scope.ajax = {
 		busy : false,
 		promise : false
 	};
+
+	$scope.events = {
+		manu : undefined
+	};
+	$scope.openMenu = function($mdOpenMenu, ev) {
+		$scope.events.menu = ev;
+		$mdOpenMenu(ev);
+	};
+
 	$scope.errors = FormControl.errors;
 	$scope.removeMongooseError = FormControl.removeMongooseError;
 	$scope.trainerFactory = TrainerFactory;
@@ -31,9 +41,37 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 		})
 	};
 	// changing the title of a location from the ng-repeat of all locations
-	$scope.toggleChangeTitle = function(location) {
-		location.editingTitle = !location.editingTitle;
-		TrainerFactory.resetEditing('locations');
+	$scope.toggleChangeTitle = function(location, ev) {
+		location.editingTitle = true;
+		$mdDialog.show({
+			templateUrl : 'components/trainer-map/change-title/dialog/' +
+			'trainer-map-change-title-dialog.partial.html',
+			targetEvent : $scope.events.menu,
+			clickOutsideToClose : true,
+			locals : {
+				location : location
+			},
+			focusOnOpen : false,
+			controller : ['$mdDialog', function($mdDialog) {
+				var vm = this;
+				vm.location = $scope.trainerFactory.trainerEditing.locations
+					[$scope.trainerFactory.trainer.locations.indexOf(location)];
+				vm.confirm = function(form){
+					TrainerFactory.save().then(function(response){
+						AlertMessage.success("Location title changed successfully");
+						$mdDialog.hide();
+					}).catch(function(err){
+						FormControl.parseValidationErrors(form, err);
+						AlertMessage.error("Location title change failed");
+					});
+				};
+				vm.cancel = $mdDialog.cancel;
+			}],
+			controllerAs : 'vm'
+		}).then(function(response){
+		}, function(response) {
+		});
+		// TrainerFactory.resetEditing('locations');
 	};
 	$scope.$on('trainerUpdated', function() {
 		//alert("Updated");

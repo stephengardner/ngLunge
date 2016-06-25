@@ -15,7 +15,6 @@ var crypto = require('crypto');
 var Q = require('q');
 var jwt = require('jsonwebtoken');
 var config = require('../../config/environment');
-var Promise = require("promise");
 var logger = require("../../components/logger")();
 var __ = require("lodash");
 

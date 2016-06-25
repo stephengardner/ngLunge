@@ -1,0 +1,37 @@
+<md-dialog id="certification-status-dialog"
+           flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
+    <form name="changeTitleForm"
+          ng-submit="vm.confirm(changeTitleForm)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Status: <strong ng-class="{{vm.status}}">{{vm.status}}</strong></h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="vm.cancel(false)">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div ng-if="vm.status == 'Unverified'">
+                    This certification has not been verified by Lunge.
+                </div>
+                <div ng-if="vm.status == 'Pending'">
+                    This certification is under review by Lunge.  This may take 5 to 10 business
+                    days to complete.
+                </div>
+                <div ng-if="vm.status == 'Approved'">
+                    This certificatino has been verified by Lunge
+                </div>
+                <div ng-if="vm.status == 'Rejected'">
+
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="vm.cancel()">
+                Okay
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

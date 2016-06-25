@@ -1,0 +1,132 @@
+<md-dialog id="certification-status-dialog"
+           flex-lg="40" flex-md="50" flex-xs="90" flex-xxs="100">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                {{vm.trainer.name.first + '\'s'}} {{vm.certificationOrganization.name}} certifications
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="vm.cancel(false)">
+                <md-icon aria-label="Close dialog">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <!--<div class="md-dialog-content">-->
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                        <tr md-row>
+                            <th md-column>
+                                Badge
+                            </th>
+                            <th md-column>
+                                Type
+                            </th>
+                            <th md-column>
+                                Count
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-if="vm.countAll" >
+                            <td md-cell>
+                                <i class="material-icons">
+                                    chevron_right
+                                </i>
+                            </td>
+                            <td md-cell>
+                                Certifications added
+                            </td>
+                            <td md-cell>
+                                {{vm.countAll}}
+                            </td>
+                        </tr>
+                        <tr md-row>
+                            <td md-cell>
+                                <i class="material-icons">
+                                    verified_user
+                                </i>
+                            </td>
+                            <td md-cell>
+                                Certifications verified by Lunge
+                            </td>
+                            <td md-cell>
+                                {{vm.countVerified}}
+                            </td>
+                        </tr>
+                        <tr md-row ng-if="vm.countUnverified">
+                            <td md-cell>
+                                <i class="material-icons">
+                                    error_outline
+                                </i>
+                            </td>
+                            <td md-cell>
+                                Certifications unverified
+                            </td>
+                            <td md-cell>
+                                {{vm.countUnverified}}
+                            </td>
+                        </tr>
+                        <tr md-row ng-if="vm.countPending">
+                            <td md-cell>
+                                <i class="material-icons">
+                                    warning
+                                </i>
+                            </td>
+                            <td md-cell>
+                                Certifications pending verification
+                            </td>
+                            <td md-cell>
+                                {{vm.countPending}}
+                            </td>
+                        </tr>
+                        <tr md-row ng-if="vm.countRejected">
+                            <td md-cell>
+                                <i class="material-icons">
+                                    error
+                                </i>
+                            </td>
+                            <td md-cell>
+                                Certifications rejected
+                            </td>
+                            <td md-cell>
+                                {{vm.countRejected}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <!--
+            <div layout="row" layout-align="space-between center">
+                <div>
+                </div>
+                <div>
+                    {{vm.countAll}}
+                </div>
+            </div>
+            <div ng-if="vm.countUnverified" layout="row" layout-align="start center">
+                <div>
+                    Certififications :
+                </div>
+                <div>
+                    {{vm.countUnverified}}
+                </div>
+            </div>
+            <div ng-if="vm.countPending" layout="row" layout-align="start center">
+                <div>
+                    Certififications pending verification:
+                </div>
+                <div>
+                    {{vm.countPending}}
+                </div>
+            </div>
+            -->
+        <!--</div>-->
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button ng-click="vm.cancel()">
+            Okay
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

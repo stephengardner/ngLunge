@@ -5,7 +5,6 @@ var config = require('../../../config/environment'),
 	maxFileMegabytes = 2, //MB. Set this value, the maxFileSize will be inferred
 	maxFileSize = maxFileMegabytes * 1000000,
 	fs = require('fs'),
-	Promise = require('promise'),
 	validationError = function(res, err) {
 		return res.json(422, err);
 	};

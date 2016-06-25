@@ -3,16 +3,18 @@
 	width: 100%!important;
 	position: absolute!important;
 }
-
+#google-map {
+	height: 100%;
+}
 .google-map {
 	position:relative;
-	height:400px;
+	//height:400px;
 }
 
 .trainer-profile {
 	.google-map {
 		&.empty {
-			height:250px;
+			//height:250px;
 		}
 	}
 }

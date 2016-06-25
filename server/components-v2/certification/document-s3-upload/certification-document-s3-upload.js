@@ -1,5 +1,4 @@
 var config = require("../../../config/environment"),
-	Promise = require('promise'),
 	gm,
 	appRoot = require('app-root-path'),
 	path = require('path'),

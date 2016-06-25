@@ -20,6 +20,17 @@
 		}
 	}
 	.menu-toggle-section {
+		.menu-toggle-list {
+			position: relative;
+			.sideline {
+				position: absolute;
+				left: 21px;
+				width: 2px;
+				top: 20px;
+				bottom: 20px;
+				background: #e4e4e4;
+			}
+		}
 		ul {
 			transition: all .4s ease-in-out;
 			transform-origin: 0 0;

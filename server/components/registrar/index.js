@@ -1,4 +1,3 @@
-var Promise = require("promise");
 var nodemailer = require('nodemailer');
 var logger = require("../logger")();
 module.exports = function(app) {

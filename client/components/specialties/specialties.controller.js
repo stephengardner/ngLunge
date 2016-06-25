@@ -19,8 +19,9 @@ myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory,
 		// to prevent interaction outside of dialog
 		$mdDialog.show(
 			{
+				focusOnOpen : false,
 				controller: 'SpecialtiesDialogController',
-				templateUrl: '/components/specialties/dialog/specialties-dialog.partial.html',
+				templateUrl: 'components/specialties/dialog/specialties-dialog.partial.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				clickOutsideToClose:true
@@ -34,14 +35,13 @@ myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory,
 
 	$scope.toggleRemoveSpecialty = function(specialty){
 		specialty.removing = !specialty.removing;
-	}
-	//$scope.reset();
+	};
 
 	$scope.removeSpecialty = function(specialty) {
 		$scope.ajax.busy = true;
 		$scope.cgBusy = TrainerFactory.removeSpecialty(specialty)
 			.save()
-			.then(function(response){
+			.then(function(){
 				$scope.toggleRemoveSpecialty(specialty);
 				$scope.resetSpecialty();
 				AlertMessage.success(specialty.name + ' specialty removed');

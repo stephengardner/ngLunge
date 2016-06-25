@@ -1,5 +1,4 @@
-var Promise = require('promise'),
-	async = require('async'),
+var async = require('async'),
 	expect = require('chai').expect
 ;
 module.exports = function setup(options, imports, register){

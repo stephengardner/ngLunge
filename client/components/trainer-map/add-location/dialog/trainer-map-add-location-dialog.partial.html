@@ -17,8 +17,8 @@
                 <h3>Search using the Google Places API</h3>
                 <div cg-busy="{promise : cgBusy}">
                     <places-autocomplete ng-model="location"
-                                         ng-change="removeMongooseError(googlePlacesForm, 'location')"
-                    ></places-autocomplete>
+                                         ng-change="removeMongooseError(googlePlacesForm, 'location')">
+                    </places-autocomplete>
                     <br/>
                     <ag-floating-label>
                         <label>

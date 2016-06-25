@@ -3,7 +3,7 @@ myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, 
 		restrict : 'E',
 		replace : true, // necessary
 		templateUrl : 'components/material-menu/menu.partial.html',
-		controller : function($scope) {
+		controller : ['$scope', function($scope) {
 			$scope.Menu = Menu;
 			$scope.createHeadingId = function(name){
 				return 'heading_' + name;
@@ -36,9 +36,6 @@ myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, 
 					Menu.refreshLinks();
 				// }
 			});
-			$scope.$on('logout', function(){
-				alert('material menu directive caught logout');
-			})
 			$scope.getSref = this.getSref = function(state, options){
 				// console.log("getSref()...");
 				if(!state) return $state.current.name || '-';
@@ -49,6 +46,6 @@ myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, 
 					return state;
 				}
 			};
-		}
+		}]
 	}
 }]);

@@ -1,4 +1,4 @@
-<md-card>
+<md-card ag-editable-container trainer-factory-section="'email'">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -14,28 +14,30 @@
           ng-submit="changeEmail(form)"
           name="form">
         <md-card-content cg-busy="{promise : cgBusy}">
-            <div ng-if="!editing">
-                <div class="info-row">
-                    <div class="name">
-                        Email
-                    </div>
-                    <div class="value">
-                        {{trainerFactory.trainer.email}}
+            <div class="ag-editable-container">
+                <div class="ag-editable-default">
+                    <div class="info-row">
+                        <div class="name">
+                            Email
+                        </div>
+                        <div class="value">
+                            {{trainerFactory.trainer.email}}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div ng-if="editing">
-                <ag-floating-label>
-                    <label>
-                        Email
-                    </label>
-                    <input name="email"
-                           server-error
-                           ng-model="trainerFactory.trainerEditing.email"/>
-                    <div ng-messages="form.email.$error">
-                        <div ng-message="mongoose">{{form.email.$error.mongoose}}</div>
-                    </div>
-                </ag-floating-label>
+                <div class="ag-editable-editing">
+                    <ag-floating-label>
+                        <label>
+                            Email
+                        </label>
+                        <input name="email"
+                               server-error
+                               ng-model="trainerFactory.trainerEditing.email"/>
+                        <div ng-messages="form.email.$error">
+                            <div ng-message="mongoose">{{form.email.$error.mongoose}}</div>
+                        </div>
+                    </ag-floating-label>
+                </div>
             </div>
         </md-card-content>
         <md-card-actions ng-if="editing" layout="row" layout-align="end center">

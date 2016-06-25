@@ -124,7 +124,7 @@ myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope
 				this.setMarkers();
 			}
 			else {
-				alert("Empty trainer");
+				alert("Empty Error");
 				// if a new trainer adds a location where there previously was no location, the location is added and we want to reflect that on an already generated map.
 				// so we generate the map on a blank lat/lon before populating it with the trainer's new data.
 				// i know this seems a lottle fuzzy, but it's the precedent of angular operations right now.

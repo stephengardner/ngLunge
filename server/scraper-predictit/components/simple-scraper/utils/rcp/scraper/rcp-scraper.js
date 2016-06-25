@@ -1,5 +1,4 @@
 var inherits = require('util').inherits,
-	Promise = require('promise'),
 	expect = require('chai').expect,
 	Xray = require('x-ray'),
 	x = Xray(),

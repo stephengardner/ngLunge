@@ -21,9 +21,6 @@ lungeApp.controller("TrainerMapController", function(TrainerFactory, Sync, $docu
 		styles: snazzyStyleBlue,
 		disableDefaultUI: true, // <-- see this line,
 		events : {
-			tilesloaded : function(){
-				alert("!!!");
-			}
 		}
 	};
 	

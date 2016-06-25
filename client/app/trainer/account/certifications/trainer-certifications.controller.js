@@ -7,6 +7,7 @@ lungeApp.controller("TrainerCertificationsController",
 			originatorEv = ev;
 			$mdOpenMenu(ev);
 		};
+		
 		$scope.verifyCertificationPopup = function(certificationV2, ev) {
 			$scope.certificationV2 = certificationV2;
 			$mdDialog.show({

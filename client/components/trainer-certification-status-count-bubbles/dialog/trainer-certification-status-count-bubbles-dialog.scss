@@ -1,0 +1,28 @@
+#certification-status-dialog {
+	md-table-container {
+		padding: 0;
+		font-size: 14px;
+		letter-spacing: 1px;
+		margin-bottom: 20px;
+		th {
+			&:first-of-type {
+				//width: 70px;
+			}
+		}
+		td, th {
+			font-size: 14px;
+		}
+		tbody {
+			tr {
+				td:nth-of-type(2) {
+					padding-top: 10px;
+					padding-bottom: 10px;
+				}
+				td:last-of-type {
+					font-weight: 600;
+					padding-left: 14px;
+				}
+			}
+		}
+	}
+}

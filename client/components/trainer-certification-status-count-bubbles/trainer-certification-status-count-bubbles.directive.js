@@ -1,4 +1,4 @@
-myApp.directive('trainerCertificationStatusCountBubbles', function(){
+myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function($mdDialog){
 	return {
 		restrict : 'AE',
 		replace : true,
@@ -9,6 +9,25 @@ myApp.directive('trainerCertificationStatusCountBubbles', function(){
 		},
 		templateUrl : 'components/trainer-certification-status-count-bubbles/trainer-certification-status-count-bubbles.partial.html',
 		link : function(scope, elem, attrs){
+			scope.openDialog = function(certificationOrganization, ev) {
+				$mdDialog.show({
+					templateUrl : 'components/trainer-certification-status-count-bubbles/dialog/trainer-certification-status-count-bubbles-dialog.partial.html',
+					targetEvent : ev,
+					clickOutsideToClose : true,
+					controller : [function(){
+						var vm = this;
+						vm.certificationOrganization = certificationOrganization;
+						vm.countAdded = scope.countAdded;
+						vm.countPending = scope.countPending;
+						vm.countVerified = scope.countVerified;
+						vm.countUnverified = scope.countUnverified;
+						vm.countRejected = scope.countRejected;
+						vm.cancel = $mdDialog.hide;
+						vm.trainer = scope.trainer;
+					}],
+					controllerAs : 'vm'
+				})
+			};
 			console.log(scope.trainer.certifications_meta.organization_map);
 			function getCount(type) {
 				if(scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id])
@@ -36,4 +55,4 @@ myApp.directive('trainerCertificationStatusCountBubbles', function(){
 			}, true)
 		}
 	}
-})
+}]);

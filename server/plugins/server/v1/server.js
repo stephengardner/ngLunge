@@ -1,7 +1,6 @@
 var express = require("express");
 var logger = require("../../../components/logger")();
 var http = require("http");
-var Promise = require("promise");
 var config = require("../../../config/environment");
 
 module.exports = function setup(options, imports, register){

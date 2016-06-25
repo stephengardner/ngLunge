@@ -1,7 +1,6 @@
 var async = require("async");
 var logger = require("../../../../components/logger")();
 var osmosis = require("osmosis");
-var Promise = require("promise");
 var Xray = require('x-ray');
 var x = Xray();
 

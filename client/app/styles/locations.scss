@@ -22,9 +22,9 @@
 	outline: none;
 }
 
-.location:hover {
-	@include depth(1);
-}
+//.location:hover {
+//	@include depth(1);
+//}
 .location:focus {
 	@include depth(2);
 	outline: none!important;
@@ -33,7 +33,7 @@
 .locations .location{
 	position:relative;
 	cursor:pointer;
-	border-bottom:1px solid #f2f5f5
+	//border-bottom:1px solid #f2f5f5
 }
 .locations .location .location-title .btn-text{
 	margin-top:.2rem
@@ -49,12 +49,12 @@
 	font-style:italic;
 	z-index:1
 }
-.locations .panel:nth-of-type(even){
-	background:#fff;
-}
-.locations .panel:nth-of-type(odd){
-	background:#f8f9fa;
-}
+//.locations .panel:nth-of-type(even){
+//	background:#fff;
+//}
+//.locations .panel:nth-of-type(odd){
+//	background:#f8f9fa;
+//}
 .locations .empty{
 	padding-bottom:1rem
 }
@@ -62,7 +62,7 @@ form .buttons{
 	margin-top:.5rem
 }
 .google-map.empty,.google-map.empty-loading{
-	height:400px;
+	//height:400px;
 	background:#f1f1f1;
 	position:relative
 }
@@ -81,7 +81,7 @@ form .buttons{
 }
 @media only screen and (max-width:479px){
 	.google-map .angular-google-map-container{
-		height:250px
+		//height:250px
 	}
 }
 .infoWindow{
@@ -97,7 +97,7 @@ form .buttons{
 	overflow:hidden;
 	background:#4183D7;
 	font-size:18px!important;
-	border-bottom:1px solid #666;
+	//border-bottom:1px solid #666;
 	padding:.8rem 2rem!important
 }
 .infoWindow .close{

@@ -33,34 +33,34 @@
                     {{trainerFactory.trainer.bio ? trainerFactory.trainer.bio : 'No bio yet' }}
                 </div>
                 <div class="social-links item">
-                    <a ng-if="trainerFactory.trainer.facebook"
-                       class="sync-icon sync-facebook active"
-                       target="_blank"
-                       ng-attr-title="{{trainerFactory.trainer.name.first}}'s Facebook page"
-                       ng-href="{{trainerFactory.trainer.facebook.link}}">
-                        <i class="fa fa-facebook-square"></i>
-                    </a>
-                    <a ng-if="trainerFactory.trainer.twitter"
-                       class="sync-icon sync-twitter active"
-                       target="_blank"
-                       ng-attr-title="{{trainerFactory.trainer.name.first}}'s Twitter page"
-                       ng-href="{{trainerFactory.trainer.twitter.link}}">
-                        <i class="fa fa-twitter-square"></i>
-                    </a>
-                    <a ng-if="trainerFactory.trainer.linkedin"
-                       class="sync-icon sync-linkedin active"
-                       target="_blank"
-                       ng-attr-title="{{trainerFactory.trainer.name.first}}'s LinkedIn page"
-                       ng-href="{{trainerFactory.trainer.linkedin.link}}">
-                        <i class="fa fa-linkedin-square"></i>
-                    </a>
-                    <a ng-if="trainerFactory.trainer.instagram"
-                       class="sync-icon sync-instagram active"
-                       target="_blank"
-                       ng-attr-title="{{trainerFactory.trainer.name.first}}'s Instagram page"
-                       ng-href="{{trainerFactory.trainer.instagram.link}}">
-                        <i class="fa fa-instagram-square"></i>
-                    </a>
+                    <md-button ng-if="trainerFactory.trainer.facebook"
+                               class="md-icon-button sync-icon active sync-facebook"
+                               target="_blank"
+                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s Facebook page"
+                               ng-href="{{trainerFactory.trainer.facebook.link}}">
+                        <ng-md-icon icon="facebook"></ng-md-icon>
+                    </md-button>
+                    <md-button ng-if="trainerFactory.trainer.instagram"
+                               class="md-icon-button sync-icon active sync-linkedin"
+                               target="_blank"
+                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s LinkedIn page"
+                               ng-href="{{trainerFactory.trainer.linkedin.link}}">
+                        <ng-md-icon icon="linkedin"></ng-md-icon>
+                    </md-button>
+                    <md-button ng-if="trainerFactory.trainer.instagram"
+                               class="md-icon-button sync-icon active sync-instagram"
+                               target="_blank"
+                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s Instagram page"
+                               ng-href="{{trainerFactory.trainer.instagram.link}}">
+                        <i class="fa fa-instagram"></i>
+                    </md-button>
+                    <md-button ng-if="trainerFactory.trainer.twitter"
+                               class="md-icon-button sync-icon active sync-twitter"
+                               target="_blank"
+                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s Twitter page"
+                               ng-href="{{trainerFactory.trainer.twitter.link}}">
+                        <ng-md-icon icon="twitter"></ng-md-icon>
+                    </md-button>
                 </div>
 
             </div>

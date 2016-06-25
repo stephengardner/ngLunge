@@ -2,7 +2,6 @@
 var config = require('../../../../config/environment'),
 	mandrill = require('node-mandrill')(config.mandrill.API_KEY),
 	async = require("async"),
-	Promise = require("promise"),
 	_ = require("lodash"),
 	logger = require("../../../../components/logger")(),
 	expect = require("chai").expect;

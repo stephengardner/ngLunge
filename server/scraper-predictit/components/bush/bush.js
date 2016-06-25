@@ -1,7 +1,6 @@
 var async = require("async");
 var logger = require("../../../components/logger")();
 var osmosis = require("osmosis");
-var Promise = require("promise"),
 	config = require('../../../config/environment'),
 	mandrill = require('node-mandrill')(config.mandrill.API_KEY),
 	expect = require('chai').expect,

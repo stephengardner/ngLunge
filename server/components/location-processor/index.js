@@ -1,7 +1,6 @@
 var $q = require('q');
 var GoogleMapApi = require('googlemaps');
 var geocoder = require('../geocoder')($q, GoogleMapApi);
-var Promise = require("promise");
 var _ = require("lodash");
 var async = require("async");
 var logger = require("../logger")();

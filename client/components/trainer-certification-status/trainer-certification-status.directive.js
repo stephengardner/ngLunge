@@ -1,4 +1,4 @@
-myApp.directive('trainerCertificationStatus', function(){
+myApp.directive('trainerCertificationStatus', ['$mdDialog', function($mdDialog){
 	return {
 		restrict : 'AE',
 		replace : true,
@@ -12,6 +12,19 @@ myApp.directive('trainerCertificationStatus', function(){
 		}],
 		link : function($scope, $elem, $attrs) {
 			/// get the status of a certification if the trainer has it in its certification_v2 array
+			$scope.openDialog = function(status, ev) {
+				$mdDialog.show({
+					templateUrl : 'components/trainer-certification-status/dialog/' +
+					'trainer-certification-status-dialog.partial.html',
+					targetEvent : ev,
+					controller : [function(){
+						var vm = this;
+						vm.status = status;
+						vm.cancel = $mdDialog.cancel;
+					}],
+					controllerAs : 'vm'
+				});
+			}
 			$scope.getStatus = function() {
 				var trainer = $scope.trainer,
 					certification = $scope.certification
@@ -47,4 +60,4 @@ myApp.directive('trainerCertificationStatus', function(){
 			}, true)
 		}
 	}
-})
+}])

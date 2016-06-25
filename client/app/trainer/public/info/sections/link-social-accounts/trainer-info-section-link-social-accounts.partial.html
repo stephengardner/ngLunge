@@ -1,11 +1,11 @@
-<md-card>
+<md-card ag-editable-container trainer-factory-section="'social'" on-editable-hide="reset()">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
-                <span>Link Social Accounts</span>
+                <span ng-click="wtf()">Link Social Accounts</span>
             </h2>
             <span flex></span>
-            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing(basicInfo)">
+            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing()">
                 <i  class="material-icons">mode_edit</i>
             </md-button>
         </div>
@@ -14,75 +14,128 @@
           name="linkSocial"
           ng-submit="submit()">
         <md-card-content cg-busy="{promise : cgBusy}">
-            <div layout="row" layout-align="start space-between">
-                <div layout="column" layout-align="start center">
-                    <md-button ng-class="{'active' : trainerHasSocial('facebook')}"
-                               class="facebook md-icon-button"
-                               target="_self"
-                               ng-click="syncOAuth('facebook')"
-                               ng-attr-title="{{getButtonTitle('Facebook')}}">
-                        <md-icon>
-                            <ng-md-icon icon="facebook"></ng-md-icon>
-                        </md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button"
-                               title="Remove your Facebook account from your profile"
-                               ng-if="editing && trainerHasSocial('facebook')"
-                               ng-click="removeSocial('facebook')">
-                        <i class="material-icons">delete</i>
-                    </md-button>
+            <div class="ag-editable-container">
+                <div class="ag-editable-default">
+                    <div layout="row" layout-align="start space-between">
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('facebook')}"
+                                       class="facebook md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('facebook')"
+                                       ng-attr-title="{{getButtonTitle('Facebook')}}">
+                                <md-icon>
+                                    <ng-md-icon icon="facebook"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('linkedin')}"
+                                       class="linkedin md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('linkedin')"
+                                       ng-attr-title="{{getButtonTitle('LinkedIn')}}">
+                                <md-icon>
+                                    <ng-md-icon icon="linkedin"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('instagram')}"
+                                       class="instagram md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('instagram')"
+                                       ng-attr-title="{{getButtonTitle('Instagram')}}">
+                                <md-icon>
+                                    <i class="fa fa-instagram"></i>
+                                </md-icon>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('twitter')}"
+                                       class="twitter md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('twitter')"
+                                       ng-attr-title="{{getButtonTitle('Twitter')}}">
+                                <md-icon>
+                                    <ng-md-icon icon="twitter"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                        </div>
+                    </div>
                 </div>
-                <div layout="column" layout-align="start center">
-                    <md-button ng-class="{'active' : trainerHasSocial('linkedin')}"
-                               class="linkedin md-icon-button"
-                               target="_self"
-                               ng-click="syncOAuth('linkedin')"
-                               ng-attr-title="{{getButtonTitle('LinkedIn')}}">
-                        <md-icon>
-                            <ng-md-icon icon="linkedin"></ng-md-icon>
-                        </md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button"
-                               title="Remove your LinkedIn account from your profile"
-                               ng-if="editing && trainerHasSocial('linkedin')"
-                               ng-click="removeSocial('linkedin')">
-                        <i class="material-icons">delete</i>
-                    </md-button>
+                <div class="ag-editable-editing">
+                    <div layout="row" layout-align="start space-between">
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('facebook')}"
+                                       class="facebook md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('facebook')"
+                                       ng-attr-title="{{getButtonTitle('Facebook')}}">
+                                <md-icon>
+                                    <ng-md-icon icon="facebook"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button"
+                                       title="Remove your Facebook account from your profile"
+                                       ng-disabled="!trainerHasSocial('facebook')"
+                                       ng-click="removeSocial('facebook')">
+                                <i class="material-icons">delete</i>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('linkedin')}"
+                                       class="linkedin md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('linkedin')"
+                                       ng-attr-title="{{getButtonTitle('LinkedIn')}}">
+                                <md-icon>
+                                    <ng-md-icon icon="linkedin"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button"
+                                       title="Remove your LinkedIn account from your profile"
+                                       ng-disabled="!trainerHasSocial('linkedin')"
+                                       ng-click="removeSocial('linkedin')">
+                                <i class="material-icons">delete</i>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('instagram')}"
+                                       class="instagram md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('instagram')"
+                                       ng-attr-title="{{getButtonTitle('Instagram')}}">
+                                <md-icon>
+                                    <i class="fa fa-instagram"></i>
+                                </md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button"
+                                       title="Remove your Instagram account from your profile"
+                                       ng-disabled="!trainerHasSocial('instagram')"
+                                       ng-click="removeSocial('instagram')">
+                                <i class="material-icons">delete</i>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasSocial('twitter')}"
+                                       class="twitter md-icon-button"
+                                       target="_self"
+                                       ng-click="syncOAuth('twitter')"
+                                       ng-attr-title="{{getButtonTitle('Twitter')}}">
+                                <md-icon>
+                                    <ng-md-icon icon="twitter"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button"
+                                       title="Remove your Twitter account from your profile"
+                                       ng-disabled="!trainerHasSocial('twitter')"
+                                       ng-click="removeSocial('twitter')">
+                                <i class="material-icons">delete</i>
+                            </md-button>
+                        </div>
+                    </div>
                 </div>
-                <div layout="column" layout-align="start center">
-                    <md-button ng-class="{'active' : trainerHasSocial('instagram')}"
-                               class="instagram md-icon-button"
-                               target="_self"
-                               ng-click="syncOAuth('instagram')"
-                               ng-attr-title="{{getButtonTitle('Instagram')}}">
-                        <md-icon>
-                            <i class="fa fa-instagram"></i>
-                        </md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button"
-                               title="Remove your Instagram account from your profile"
-                               ng-if="editing && trainerHasSocial('instagram')"
-                               ng-click="removeSocial('instagram')">
-                        <i class="material-icons">delete</i>
-                    </md-button>
-                </div>
-                <div layout="column" layout-align="start center">
-                    <md-button ng-class="{'active' : trainerHasSocial('twitter')}"
-                               class="twitter md-icon-button"
-                               target="_self"
-                               ng-click="syncOAuth('twitter')"
-                               ng-attr-title="{{getButtonTitle('Twitter')}}">
-                        <md-icon>
-                            <ng-md-icon icon="twitter"></ng-md-icon>
-                        </md-icon>
-                    </md-button>
-                    <md-button class="md-icon-button"
-                               title="Remove your Twitter account from your profile"
-                               ng-if="editing && trainerHasSocial('twitter')"
-                               ng-click="removeSocial('twitter')">
-                        <i class="material-icons">delete</i>
-                    </md-button>
-                </div>
+
             </div>
         </md-card-content>
         <md-card-actions ng-if="editing" layout="row" layout-align="end center">

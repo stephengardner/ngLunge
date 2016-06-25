@@ -10,6 +10,7 @@ lungeApp.directive("trainerInfoSectionBasicInfo", function(){
 		},
 		link : {
 			post : function(scope, elem, attrs) {
+				// this is so that the flash of unstyled content doesn't happen, maybe redo this?
 				scope.ready = true;
 				console.log("Scope is:", scope);
 			}

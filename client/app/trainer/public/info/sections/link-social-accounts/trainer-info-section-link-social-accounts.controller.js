@@ -8,11 +8,11 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 	$auth,
     $mdToast
 ){
-	$scope.toggleEditing = function(opt_force_bool) {
-		$scope.editing = opt_force_bool !== undefined ? opt_force_bool : !$scope.editing;
-		if(!$scope.editing) $scope.reset(form);
-		TrainerFactory.setEditingOf('social', $scope.editing);
-	};
+	// $scope.toggleEditing = function(opt_force_bool) {
+	// 	$scope.editing = opt_force_bool !== undefined ? opt_force_bool : !$scope.editing;
+	// 	if(!$scope.editing) $scope.reset(form);
+	// 	TrainerFactory.setEditingOf('social', $scope.editing);
+	// };
 
 	$scope.syncOAuth = function(provider) {
 		if($scope.editing){
@@ -67,6 +67,8 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 	};
 
 	$scope.reset = function() {
+		alert("!");
+		console.log("RESETEDITING");
 		TrainerFactory.resetEditing('social');
 	};
 

@@ -1,5 +1,4 @@
-var Promise = require('promise'),
-	async = require('async'),
+var async = require('async'),
 	mocha = require('mocha'),
 	chai = require('chai'),
 	expect = chai.expect,

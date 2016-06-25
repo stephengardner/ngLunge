@@ -2,6 +2,7 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		'ui.router',
 		'ngCookies',
 		'ngResource',
+		'focus-if',
 		'ngSanitize',
 		'ngMessages',
 		'btford.socket-io',

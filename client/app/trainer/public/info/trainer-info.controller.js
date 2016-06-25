@@ -17,33 +17,4 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 		TrainerFactory.unsyncModel();
 	});
 	// END controller syncing
-	/*
-	$scope.$on("privacy-change", function(event, value){
-		if($scope.editingPrivacyFor) {
-			$scope.trainerFactory.trainerEditing[$scope.editingPrivacyFor].privacy = value;
-			privacyPopover.$promise.then(privacyPopover.toggle);
-			$scope.editingPrivacyFor = false;
-		}
-	});
-
-	$scope.togglePopover = function(event, modelToEdit){
-		if(modelToEdit == $scope.editingPrivacyFor) {
-			privacyPopover.$promise.then(privacyPopover.hide);
-			$scope.editingPrivacyFor = false;
-		}
-		else {
-			$scope.editingPrivacyFor = modelToEdit;
-			console.log("ModelToEdit:", $scope.editingPrivacyFor);
-			privacyPopover = $popover(angular.element(event.currentTarget), {
-				contentTemplate: 'app/popovers/profile/info/privacy/popover.tpl.html',
-				html: true,
-				trigger: 'manual',
-				animation : 'am-flip-x',
-				placement : 'left',
-				autoClose: true
-			});
-			privacyPopover.$promise.then(privacyPopover.toggle);
-		}
-	};
-	*/
 })

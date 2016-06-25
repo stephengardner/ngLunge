@@ -9,7 +9,6 @@ var EventEmitter = require('events').EventEmitter;
 var console = process.console;
 var _ = require("lodash");
 var emailLogger = require('winston').loggers.get('emailSending');
-var Promise = require("promise");
 
 
 d1.on('error', function(err){

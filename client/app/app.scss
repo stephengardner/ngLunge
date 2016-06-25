@@ -129,6 +129,7 @@ body, html {
 @import 'main/partials/jumbotron/jumbotron.scss';
 @import 'main/partials/trainers-home/category-home.scss';
 @import 'popovers/profile/info/privacy/privacy-popover.scss';
+@import 'privacy/privacy.scss';
 @import 'register/register.scss';
 @import 'styles/_buttons.scss';
 @import 'styles/_grid.scss';
@@ -182,6 +183,7 @@ body, html {
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';
 @import 'specialties/specialties.scss';
+@import 'trainer-certification-status-count-bubbles/dialog/trainer-certification-status-count-bubbles-dialog.scss';
 @import 'trainer-map/add-location/trainer-map-add-location.scss';
 @import 'trainer-map/locations.scss';
 @import 'trainer-map/manual-location/trainer-manual-location.scss';

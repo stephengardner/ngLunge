@@ -18,9 +18,11 @@ var mongoose = require('mongoose');
 module.exports = function setup(options, imports, register) {
 
 	var web = express();
-	web.use(require('connect-livereload')());
 	var env = web.get('env');
-
+	
+	if('test' === env) {
+		web.use(require('connect-livereload')());
+	}
 
 	if ('production' === env) {
 		web.use(favicon(path.join(config.root, 'public', 'favicon.ico')));

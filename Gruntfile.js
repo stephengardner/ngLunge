@@ -426,6 +426,8 @@ module.exports = function (grunt) {
 			},
 			heroku: {
 				options: {
+					shallowFetch : true,
+					force : true,
 					remote: 'heroku',
 					branch: 'master'
 				}

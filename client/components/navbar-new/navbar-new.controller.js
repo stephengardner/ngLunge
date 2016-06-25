@@ -95,7 +95,7 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory',
 		};
 
 		$scope.$on("$destroy", function(){
-			alert("destroying the navbar scope");
+			// alert("destroying the navbar scope");
 			//socket.unsync.user("trainer", Auth.getCurrentUser());
 		});
 

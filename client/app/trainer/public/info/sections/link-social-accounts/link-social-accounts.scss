@@ -1,4 +1,5 @@
 .sync-icon {
+	margin: 0!important;
 	color:#ccc;
 	font-size: 25px;
 	text-decoration: none;
@@ -17,10 +18,13 @@
 		border-bottom-right-radius: 4px;
 		background:$brand-danger;
 	}
-	i.fa {
-		display: inline-block;
-		vertical-align: middle;
+	i, ng-md-icon {
+		display: block;
 	}
+	//i.fa {
+	//	display: inline-block;
+	//	vertical-align: middle;
+	//}
 	&.active {
 		&.sync-facebook {
 			color : $facebook;

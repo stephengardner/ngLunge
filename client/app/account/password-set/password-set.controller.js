@@ -41,7 +41,6 @@ lungeApp.controller("PasswordSetController", function( $location,
 			$scope.password.password2)
 			.then(function(response){
 				$scope.sending = false;
-				alert("DONE");
 				Auth.setCurrentUser(response);
 				AlertMessage.success('Your profile has been created!');
 				$state.go('profile');

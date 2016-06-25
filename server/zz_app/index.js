@@ -4,7 +4,6 @@ var connections = require("./connections"),
 	EventEmitter = require('events').EventEmitter,
 	_ = require('lodash'),
 	logger = require("../components/logger")();
-var Promise = require("promise");
 
 // load extra prototype functions for all of JS
 //require('./extra-object-functions');

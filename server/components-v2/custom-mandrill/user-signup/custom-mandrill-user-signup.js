@@ -1,5 +1,4 @@
 var async = require("async"),
-	Promise = require("promise"),
 	_ = require("lodash"),
 	logger = require("../../../components/logger")(),
 	config = require("../../../config/environment"),

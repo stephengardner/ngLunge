@@ -2,11 +2,11 @@ myApp.controller("RatesController", function(FormControl, AlertMessage, TrainerF
 	$scope.editing = false;
 	$scope.trainerFactory = TrainerFactory;
 
-	$scope.toggleEditing = function(form){
-		$scope.editing = !$scope.editing;
-		if(!$scope.editing) $scope.reset(form);//TrainerFactory.resetEditing('about');
-		TrainerFactory.setEditingOf('rate', $scope.editing);
-	}
+	// $scope.toggleEditing = function(form){
+	// 	$scope.editing = !$scope.editing;
+	// 	if(!$scope.editing) $scope.reset(form);//TrainerFactory.resetEditing('about');
+	// 	TrainerFactory.setEditingOf('rate', $scope.editing);
+	// }
 
 	$scope.reset = function(form) {
 		FormControl.removeAllMongooseErrors(form);

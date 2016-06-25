@@ -1,5 +1,4 @@
-var Promise = require('promise'),
-	async = require('async'),
+var async = require('async'),
 	_ = require('lodash')
 ;
 module.exports = function setup(options, imports, register){

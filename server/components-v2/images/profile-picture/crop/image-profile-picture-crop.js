@@ -1,6 +1,5 @@
 
 var config = require("../../../../config/environment"),
-	Promise = require('promise'),
 	gm,
 	mainPublicDirectory = config.env === 'production' ? "/public" : "/client",
 	appRoot = require('app-root-path'),

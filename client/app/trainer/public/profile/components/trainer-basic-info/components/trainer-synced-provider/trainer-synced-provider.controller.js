@@ -14,7 +14,8 @@ lungeApp.controller("TrainerSyncedProviderController", function(TrainerFactory, 
 			linkedin : "LinkedIn",
 			google : "Google+",
 			twitter : "Twitter",
-			facebook : "Facebook"
+			facebook : "Facebook",
+			instagram : "Instagram"
 		}
 		return asString[provider];
 	}
@@ -26,7 +27,7 @@ lungeApp.controller("TrainerSyncedProviderController", function(TrainerFactory, 
 		else {
 			key = "link";
 		}
-		return TrainerFactory.trainer[provider][key];
+		return TrainerFactory.trainer[provider]['link'];
 	}
 	$scope.unlink = function(provider) {
 		TrainerFactory.trainerEditing[provider] = {};

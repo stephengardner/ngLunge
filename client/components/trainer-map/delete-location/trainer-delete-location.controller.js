@@ -21,13 +21,13 @@ lungeApp.controller("TrainerDeleteLocationController", function($mdDialog,
 			templateUrl : 'components/trainer-map/delete-location/dialog/' +
 			'trainer-map-delete-location-dialog.partial.html',
 			parent : angular.element(document.body),
-			targetEvent : ev,
+			targetEvent : $scope.events.menu, // inherited from parent scope
 			clickOutsideToClose : true,
-			controller : function($mdDialog) {
+			controller : ['$mdDialog', function($mdDialog) {
 				var vm = this;
 				vm.confirm = $mdDialog.hide;
 				vm.cancel = $mdDialog.cancel;
-			},
+			}],
 			controllerAs : 'vm'
 		}).then(function(response){
 			location.removing = true;

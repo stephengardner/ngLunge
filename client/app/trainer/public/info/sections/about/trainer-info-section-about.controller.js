@@ -4,11 +4,6 @@ myApp.controller("TrainerInfoSectionAboutController", function(TrainerFactory, A
 	$scope.trainerFactory = TrainerFactory;
 	$scope.ajax = {};
 
-	$scope.toggleEditing = function(form){
-		$scope.editing = !$scope.editing;
-		if(!$scope.editing) $scope.reset(form);//TrainerFactory.resetEditing('about');
-		TrainerFactory.setEditingOf('about', $scope.editing);
-	}
 
 	$scope.textareaRows = 5;
 	$scope.reset = function(form) {

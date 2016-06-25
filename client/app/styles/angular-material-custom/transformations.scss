@@ -1,3 +1,55 @@
+
+[ag-editable-container] {
+	md-card-actions {
+		transition: all .5s;
+		overflow: hidden;
+		&.ng-enter {
+			margin-top: 0;
+			margin-bottom: 0;
+			max-height: 0;
+		}
+		&.ng-enter-active {
+			margin-top: 8px;
+			margin-bottom: 8px;
+			max-height: 100px;
+		}
+		&.ng-leave {
+			margin-top: 8px;
+			margin-bottom: 8px;
+			max-height: 100px;
+		}
+		&.ng-leave-active {
+			margin-top: 0;
+			margin-bottom: 0;
+			max-height: 0;
+		}
+	}
+	md-card-container {
+		overflow: hidden;
+	}
+	.ag-editable-container {
+		position: relative;
+		.ag-editable-editing {
+			&.ag-editable-showing {
+				transition: all 0s;
+				position: absolute;
+				right: 0;
+				left: 0;
+				top: 0;
+			}
+			&.ag-editable-preparing {
+				transition: all 0s;
+				position: absolute;
+				right: 9000px;
+				width: 100%; // this is important, otherwise it may flex and take up a smaller space
+			}
+		}
+		.ag-editable-default {
+			position: relative;
+		}
+	}
+}
+
 .expand_more {
 	transition: all 0.5s ease-in-out;
 

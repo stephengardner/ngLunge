@@ -1,5 +1,4 @@
-var Promise = require('promise'),
-	async = require('async'),
+var async = require('async'),
 	mongoose = require('mongoose')
 ;
 module.exports = function setup(options, imports, register) {

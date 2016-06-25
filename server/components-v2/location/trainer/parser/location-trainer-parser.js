@@ -1,4 +1,3 @@
-var Promise = require("promise");
 var SmartyStreets = require('machinepack-smartystreets');
 var async = require("async");
 var config = require("../../../../config/environment")

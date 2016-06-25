@@ -19,11 +19,7 @@ myApp
 				// 	alert("new val:"+ newVal);
 				// });
 			},
-			controller: function($scope, $q) {
-				console.log("Scope form is:", $scope.form);
-				$scope.test = function(){
-					alert();
-				}
+			controller: ['$scope', '$q', function($scope, $q) {
 				if (!google || !google.maps) {
 					throw new Error('Google Maps JS library is not loaded!');
 				} else if (!google.maps.places) {
@@ -113,6 +109,6 @@ myApp
 						$scope.ngModel = lungeLocation;
 					});
 				}
-			}
+			}]
 		};
 	}]);

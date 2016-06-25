@@ -1,8 +1,9 @@
-myApp.controller('TrainerProfileContactButtonController', function(Trainer, Auth, $scope, $mdDialog) {
+myApp.controller('TrainerProfileContactButtonController', function($timeout, Trainer, Auth, $scope, $mdDialog) {
 	$scope.showDialog = function(ev){
 		$mdDialog.show(
 			{
-				controller: function($http, AlertMessage, FormControl){
+				controller: ['$http', 'AlertMessage', 'FormControl', 
+					function($http, AlertMessage, FormControl){
 					var vm = this;
 					vm.inquiry = {
 						comment : '',
@@ -41,7 +42,8 @@ myApp.controller('TrainerProfileContactButtonController', function(Trainer, Auth
 							}
 						)
 					}
-				},
+				}],
+				focusOnOpen : false,
 				locals : {
 					trainerFactory : $scope.trainerFactory,
 					close : $mdDialog.hide

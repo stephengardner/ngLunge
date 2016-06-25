@@ -1,6 +1,5 @@
 var logger = require("../../../components/logger")(),
 	osmosis = require("osmosis"),
-	Promise = require("promise"),
 	config = require('../../../config/environment'),
 	mandrill = require('node-mandrill')(config.mandrill.API_KEY),
 	expect = require('chai').expect,

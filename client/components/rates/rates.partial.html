@@ -1,92 +1,96 @@
 <md-card>
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>
-                <span>Cost</span>
-            </h2>
-            <span flex></span>
-            <md-button ng-if="editable"
-                       md-ink-ripple class="md-icon-button"
-                       ng-click="toggleEditing()">
-                <i class="material-icons">mode_edit</i>
-            </md-button>
-        </div>
-    </md-toolbar>
-    <form name="rateForm" ng-submit="submit(rateForm)">
-        <md-card-content cg-busy="{promise : cgBusy}">
-            <div ng-if="!editing">
-                <div class="info-row">
-                    <div class="name">
-                        Hourly rate
-                    </div>
-                    <div class="value">
+    <div ag-editable-container trainer-factory-section="'rate'">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>Cost</span>
+                </h2>
+                <span flex></span>
+                <md-button ng-if="editable"
+                           md-ink-ripple class="md-icon-button"
+                           ng-click="toggleEditing()">
+                    <i class="material-icons">mode_edit</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <form name="rateForm" ng-submit="submit(rateForm)">
+            <md-card-content cg-busy="{promise : cgBusy}">
+                <div class="ag-editable-container">
+                    <div class="ag-editable-default">
+                        <div class="info-row">
+                            <div class="name">
+                                Hourly rate
+                            </div>
+                            <div class="value">
                         <span ng-if="trainerFactory.trainer.rate.general.price">
                             ${{trainerFactory.trainer.rate.general.price}} / hr
                         </span>
                         <span ng-if="!trainerFactory.trainer.rate.general.price">
                             None set
                         </span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="name">
-                        Comments:
-                    </div>
-                    <div class="value">
-                        {{trainerFactory.trainer.rate.general.comments}}
-                    </div>
-                </div>
-            </div>
-            <div ng-if="editing">
-                <ag-floating-label>
-                    <label>
-                        Rate / Hour:
-                    </label>
-                    <ag-icon>
-                        <i class="material-icons">attach_money</i>
-                    </ag-icon>
-                    <input  server-error
-                            type="text"
-                            name="rateGeneralPrice"
-                            id="rateGeneralPrice"
-                            ng-model="trainerFactory.trainerEditing.rate.general.price"/>
-                    <ag-hints>
-                        <ag-hint>
-                            Enter dollar amount
-                        </ag-hint>
-                    </ag-hints>
-                    <div ng-messages="rateForm.rateGeneralPrice.$error">
-                        <div ng-message="mongoose">
-                            {{rateForm.rateGeneralPrice.$error.mongoose}}
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="name">
+                                Comments:
+                            </div>
+                            <div class="value">
+                                {{trainerFactory.trainer.rate.general.comments}}
+                            </div>
                         </div>
                     </div>
-                </ag-floating-label>
-                <ag-floating-label>
-                    <label for="rateGeneralComments">
-                        Comments:
-                    </label>
+                    <div class="ag-editable-editing">
+                        <ag-floating-label>
+                            <label>
+                                Rate / Hour:
+                            </label>
+                            <ag-icon>
+                                <i class="material-icons">attach_money</i>
+                            </ag-icon>
+                            <input  server-error
+                                    type="text"
+                                    name="rateGeneralPrice"
+                                    id="rateGeneralPrice"
+                                    ng-model="trainerFactory.trainerEditing.rate.general.price"/>
+                            <ag-hints>
+                                <ag-hint>
+                                    Enter dollar amount
+                                </ag-hint>
+                            </ag-hints>
+                            <div ng-messages="rateForm.rateGeneralPrice.$error">
+                                <div ng-message="mongoose">
+                                    {{rateForm.rateGeneralPrice.$error.mongoose}}
+                                </div>
+                            </div>
+                        </ag-floating-label>
+                        <ag-floating-label>
+                            <label for="rateGeneralComments">
+                                Comments:
+                            </label>
                 <textarea ng-change="removeMongooseError(rateForm, 'rateGeneralComments')"
                           name="rateGeneralComments"
                           id="rateGeneralComments"
                           rows="4"
                           ag-no-autogrow
                           ng-model="trainerFactory.trainerEditing.rate.general.comments"></textarea>
-                    <div ng-messages="rateForm.rateGeneralComments.$error">
-                        <div ng-message="mongoose">
-                            {{rateForm.rateGeneralComments.$error.mongoose}}
-                        </div>
+                            <div ng-messages="rateForm.rateGeneralComments.$error">
+                                <div ng-message="mongoose">
+                                    {{rateForm.rateGeneralComments.$error.mongoose}}
+                                </div>
+                            </div>
+                            <ag-hints>
+                                <ag-hint>
+                                    Add some extra notes about your rates
+                                </ag-hint>
+                            </ag-hints>
+                        </ag-floating-label>
                     </div>
-                    <ag-hints>
-                        <ag-hint>
-                            Add some extra notes about your rates
-                        </ag-hint>
-                    </ag-hints>
-                </ag-floating-label>
-            </div>
-        </md-card-content>
-        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-            <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing()">Cancel</md-button>
-        </md-card-actions>
-    </form>
+                </div>
+            </md-card-content>
+            <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+                <md-button type="submit">Save</md-button>
+                <md-button ng-click="toggleEditing()">Cancel</md-button>
+            </md-card-actions>
+        </form>
+    </div>
 </md-card>
