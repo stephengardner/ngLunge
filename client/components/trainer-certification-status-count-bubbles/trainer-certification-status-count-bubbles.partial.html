@@ -3,7 +3,6 @@
           ng-if="countAdded && showAdded">
         <md-tooltip md-direction="top">
             {{countAdded}}
-            {{certificationOrganization.name}}
             {{countAdded > 1 ? 'certifications' : 'certification'}}
             added
         </md-tooltip>
@@ -13,7 +12,6 @@
           ng-if="countVerified">
         <md-tooltip md-direction="top">
             {{countVerified}}
-            {{certificationOrganization.name}}
             {{countAll > 1 ? 'certifications' : 'certification'}}
             verified by Lunge
         </md-tooltip>
@@ -23,7 +21,6 @@
           ng-if="countPending">
         <md-tooltip md-direction="top">
             {{countPending}}
-            {{certificationOrganization.name}}
             {{countPending > 1 ? 'certifications' : 'certification'}}
             pending approval
         </md-tooltip>
@@ -33,7 +30,6 @@
           ng-if="countUnverified">
         <md-tooltip md-direction="top">
             {{countUnverified}}
-            {{certificationOrganization.name}}
             {{countUnverified > 1 ? 'certifications require' : 'certification requires'}}
             more verification
         </md-tooltip>
@@ -43,7 +39,6 @@
           ng-if="countRejected">
         <md-tooltip md-direction="top">
             {{countRejected}}
-            {{certificationOrganization.name}}
             {{countUnverified > 1 ? 'certifications' : 'certification'}}
             rejected
         </md-tooltip>

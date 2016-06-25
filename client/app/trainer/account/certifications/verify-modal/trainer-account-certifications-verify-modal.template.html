@@ -1,4 +1,4 @@
-<md-dialog class="flexible-dialog" class="verify-certification-modal">
+<md-dialog class="flexible-dialog-small">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -91,11 +91,11 @@
                             <tr ng-if="file.deleting">
                                 <td colspan="4" md-cell>
                                     <md-list>
-                                        <md-list-item>
+                                        <md-list-item layout="row" layout-align="center center">
                                             <p>
                                                 Are you sure you want to delete this file?
                                             </p>
-                                            <div class="md-secondary">
+                                            <div>
                                                 <md-button ng-click="deleteFile(uploadDocumentForm, file)">
                                                     Yes
                                                 </md-button>

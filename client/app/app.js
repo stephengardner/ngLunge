@@ -34,7 +34,6 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		'satellizer',
 		'md.data.table'
 	])
-
 	.config(function($authProvider) {
 		$authProvider.httpInterceptor = function(data) {
 			// console.log(data);
@@ -174,6 +173,11 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		});
 	}])
 	.run(function ($timeout, $state, FullMetalSocket, TrainerFactory, $rootScope, $templateCache, $location, Auth/*, editableOptions*/) {
+
+		$rootScope.$on('$stateChangeSuccess', function() {
+			angular.element('#main-view').scrollTop(0);
+		});
+
 		// works, will login or logout the user if their token changes, this is not for sockets, socket auth
 		// is handled within auth.
 		$rootScope.$watch(function(){

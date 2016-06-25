@@ -47,7 +47,7 @@ specialties {
 		padding: 0;
 		background: none;
 		.md-secondary {
-			right: 16px!important;
+			//right: 16px!important;
 			md-icon {
 				margin: 0;
 				i {
@@ -74,7 +74,8 @@ specialties {
 			@extend .flex;
 			.md-secondary {
 				@extend .flex-nogrow;
-				position: static;
+				position: relative;
+				right: 0!important;
 				transform: none;
 			}
 			cursor: pointer;

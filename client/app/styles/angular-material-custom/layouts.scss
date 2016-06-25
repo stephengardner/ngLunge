@@ -8,6 +8,24 @@
 	}
 }
 
+md-dialog {
+	md-toolbar {
+		height: auto;
+		@extend .layout-row; // angular material has this set to column
+		.md-toolbar-tools {
+			height: auto;
+			max-height: 100px;
+			padding-top: 4px;
+			padding-bottom: 4px;
+			//padding: 4px 0;
+		}
+	}
+}
+.flexible-dialog-small {
+	@extend .flex-100;
+	@extend .flex-gt-sm-75;
+	@extend .flex-gt-lg-50;
+}
 a.md-button {
 	&:hover {
 		color: inherit;

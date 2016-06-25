@@ -1,5 +1,4 @@
-<md-dialog id="certification-status-dialog"
-           flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
+<md-dialog id="certification-status-dialog" class="flexible-dialog-small">
     <form name="changeTitleForm"
           ng-submit="vm.confirm(changeTitleForm)">
         <md-toolbar>
@@ -14,7 +13,7 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <div ng-if="vm.status == 'Unverified'">
-                    This certification has not been verified by Lunge.
+                    This certification has not yet been verified by Lunge.
                 </div>
                 <div ng-if="vm.status == 'Pending'">
                     This certification is under review by Lunge.  This may take 5 to 10 business

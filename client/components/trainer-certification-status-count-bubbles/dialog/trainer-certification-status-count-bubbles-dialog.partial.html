@@ -1,5 +1,4 @@
-<md-dialog id="certification-status-dialog"
-           flex-lg="40" flex-md="50" flex-xs="90" flex-xxs="100">
+<md-dialog id="certification-status-dialog" class="flexible-dialog-small">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -21,7 +20,7 @@
                                 Badge
                             </th>
                             <th md-column>
-                                Type
+                                Status
                             </th>
                             <th md-column>
                                 Count
@@ -36,7 +35,7 @@
                                 </i>
                             </td>
                             <td md-cell>
-                                Certifications added
+                                Total
                             </td>
                             <td md-cell>
                                 {{vm.countAll}}
@@ -49,7 +48,7 @@
                                 </i>
                             </td>
                             <td md-cell>
-                                Certifications verified by Lunge
+                                Verified
                             </td>
                             <td md-cell>
                                 {{vm.countVerified}}
@@ -62,7 +61,7 @@
                                 </i>
                             </td>
                             <td md-cell>
-                                Certifications unverified
+                                Unverified
                             </td>
                             <td md-cell>
                                 {{vm.countUnverified}}
@@ -75,7 +74,7 @@
                                 </i>
                             </td>
                             <td md-cell>
-                                Certifications pending verification
+                                Pending verification
                             </td>
                             <td md-cell>
                                 {{vm.countPending}}
@@ -88,7 +87,7 @@
                                 </i>
                             </td>
                             <td md-cell>
-                                Certifications rejected
+                                Rejected
                             </td>
                             <td md-cell>
                                 {{vm.countRejected}}

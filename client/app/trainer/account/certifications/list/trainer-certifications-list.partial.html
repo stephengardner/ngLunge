@@ -161,7 +161,7 @@
     <div class="load-more" ng-if="!ajax.complete">
         <md-button ng-click="trainerCertifications.getPage()"
                    ng-disabled="ajax.busy">
-            {{ ajax.busy ? 'Loading...' : 'Load More' }}
+            {{ ajax.loading ? 'Loading...' : 'Load More' }}
         </md-button>
     </div>
 </div>
