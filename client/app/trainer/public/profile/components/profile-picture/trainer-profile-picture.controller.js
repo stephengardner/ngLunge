@@ -9,7 +9,8 @@ lungeApp.controller("TrainerProfilePictureController", function(ScrollLock,
                                                          $window,
                                                          Upload,
                                                          $mdDialog,
-                                                         $q
+                                                         $q,
+                                                                $mdMedia
 ){
 
 	$scope.ProfilePicture = ProfilePicture;

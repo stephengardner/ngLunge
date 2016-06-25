@@ -1,6 +1,13 @@
 //CSS pertaining to profile pictures for trainers, reviews of trainers, and all the CSS associated with cropping an
 // image and how that's displayed
 
+#profile-picture-dialog {
+	margin: 0 auto;
+	@include respond-to(xxs) {
+		width: 100%;
+		max-width: 100%; // override angular material
+	}
+}
 .registration-specific-image-placeholder {
 	position:absolute;
 	top:0;

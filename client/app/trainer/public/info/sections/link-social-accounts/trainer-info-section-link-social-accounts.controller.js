@@ -67,8 +67,6 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 	};
 
 	$scope.reset = function() {
-		alert("!");
-		console.log("RESETEDITING");
 		TrainerFactory.resetEditing('social');
 	};
 
