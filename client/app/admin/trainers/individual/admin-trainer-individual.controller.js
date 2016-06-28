@@ -1,4 +1,4 @@
-myApp.controller("AdminTrainerIndividualController", function($popover, TrainerFactory, $stateParams, Trainer,
+myApp.controller("AdminTrainerIndividualController", function(TrainerFactory, $stateParams, Trainer,
                                                               $http, $scope){
 	$scope.editing = false;
 	$scope.adminPerformingAction = true;
@@ -30,15 +30,15 @@ myApp.controller("AdminTrainerIndividualController", function($popover, TrainerF
 		}
 		else {
 			$scope.editingPrivacyFor = modelToEdit;
-			privacyPopover = $popover(angular.element(event.currentTarget), {
-				contentTemplate: 'app/popovers/profile/info/privacy/popover.tpl.html',
-				html: true,
-				trigger: 'manual',
-				animation : 'am-flip-x',
-				placement : 'left',
-				autoClose: true
-			});
-			privacyPopover.$promise.then(privacyPopover.toggle);
+			// privacyPopover = $popover(angular.element(event.currentTarget), {
+			// 	contentTemplate: 'app/popovers/profile/info/privacy/popover.tpl.html',
+			// 	html: true,
+			// 	trigger: 'manual',
+			// 	animation : 'am-flip-x',
+			// 	placement : 'left',
+			// 	autoClose: true
+			// });
+			// privacyPopover.$promise.then(privacyPopover.toggle);
 		}
 	};
 

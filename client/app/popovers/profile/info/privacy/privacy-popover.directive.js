@@ -1,4 +1,4 @@
-myApp.directive("privacyPopover", function($popover){
+myApp.directive("privacyPopover", function(){
 	return {
 		restrict :'AE',
 		link : function(scope, elem, attrs) {

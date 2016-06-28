@@ -6,12 +6,7 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		'ngSanitize',
 		'ngMessages',
 		'btford.socket-io',
-		'ui.bootstrap.tabs',
-		'ui.bootstrap.tpls',
-		'ui.bootstrap.accordion',
-		'ui.bootstrap.typeahead',
 		'ngAnimate',
-		'mgcrea.ngStrap',
 		'ui.utils',
 		//'xeditable',
 		'geolocation',
@@ -19,7 +14,6 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		//'angularFileUpload',
 		'duScroll',
 		'abcBirthdayPicker',
-		'ngDialog',
 		'ngLodash',
 		'infinite-scroll',
 		'ngFileUpload', // using this as new upload service
@@ -218,7 +212,7 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		});
 
 		$timeout(function(){
-			console.log("Fastclick is attached");
-			FastClick.attach(document.body);
+			// console.log("Fastclick is attached");
+			// FastClick.attach(document.body);
 		});
 	});

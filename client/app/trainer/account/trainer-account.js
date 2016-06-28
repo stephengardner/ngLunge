@@ -9,29 +9,13 @@ angular.module('ngLungeFullStack2App')
 				controller: 'DashboardController',
 				authenticate: true
 			})
-			//.state('main.account', {
-			//	url : '/account',
-			//	templateUrl : 'app/trainer/account/trainer-account.partial.html',
-			//	controller : 'AccountController',
-			//	authenticate : true
-			//})
-			//.state('main.account.main', {
-			//	url : '/main',
-			//	views : {
-			//		'@main.account' : {
-			//			templateUrl : 'app/trainer/account/main/trainer-account-main.partial.html',
-			//			controller : 'AccountMainController'
-			//		}
-			//	}
-			//})
-
 			.state('main.trainer.account', {
 				url: '',
 				abstract : true,
 				views : {
 					'@main' : {
 						templateUrl : 'app/trainer/account/trainer-account.partial.html',
-						controller : 'AccountController'
+						controller : 'TrainerAccountController'
 					}
 				},
 				authenticate : true

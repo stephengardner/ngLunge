@@ -170,7 +170,8 @@ angular.module('ngLungeFullStack2App')
 				parent: 'main',
 				url: '^/:urlName',
 				controller: "TrainerProfileController",
-				templateUrl: "app/trainer/public/profile/profile.html"
+				template : '<profile></profile>'
+				// templateUrl: "app/trainer/public/profile/profile.html"
 			});
 		;
 	});

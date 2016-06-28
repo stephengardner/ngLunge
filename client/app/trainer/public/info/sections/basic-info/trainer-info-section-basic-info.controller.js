@@ -1,4 +1,8 @@
-myApp.controller("TrainerInfoSectionBasicInfoController", function(lodash, AlertMessage, TrainerFactory, FormControl, $scope){
+myApp.controller("TrainerInfoSectionBasicInfoController", function(lodash,
+                                                                   AlertMessage,
+                                                                   TrainerFactory,
+                                                                   FormControl, 
+                                                                   $scope){
 	$scope.editing = false;
 	$scope.trainerFactory = TrainerFactory;
 	$scope.toggleEditing = function(form) {

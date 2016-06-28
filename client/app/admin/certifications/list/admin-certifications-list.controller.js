@@ -1,7 +1,11 @@
 
-lungeApp.controller("AdminCertificationsListController", function(FormControl, CertificationType, $timeout,
-                                                                  CertificationOrganization, ngDialog,
-                                                                  AlertMessage, $http, $scope){
+lungeApp.controller("AdminCertificationsListController", function(FormControl, 
+                                                                  CertificationType, 
+                                                                  $timeout,
+                                                                  CertificationOrganization,
+                                                                  AlertMessage, 
+                                                                  $http, 
+                                                                  $scope){
 	// Creating a new certification Organization
 	$scope.newCertificationOrganization = {
 		editing : false
@@ -84,11 +88,11 @@ lungeApp.controller("AdminCertificationsListController", function(FormControl, C
 		$scope.newCertification = {
 			organization : issuingOrganization._id
 		}
-		$scope.modal = ngDialog.open({
-			template: "app/modals/admin/certifications/admin-certification-add-modal.template.html",
-			scope: $scope,
-			controller: "AdminCertificationAddModalController"
-		});
+		// $scope.modal = ngDialog.open({
+		// 	template: "app/modals/admin/certifications/admin-certification-add-modal.template.html",
+		// 	scope: $scope,
+		// 	controller: "AdminCertificationAddModalController"
+		// });
 	};
 
 	$scope.isCertificationOrganizationOpen = function(certificationOrganization) {

@@ -1,4 +1,5 @@
 myApp.factory('Menu', [
+	'$q',
 	'$location',
 	'$rootScope',
 	'$mdSidenav',
@@ -6,7 +7,7 @@ myApp.factory('Menu', [
 	'Auth',
 	'$log',
 	'$state',
-	function($location, $rootScope, $mdSidenav, $timeout, Auth, $log, $state){
+	function($q, $location, $rootScope, $mdSidenav, $timeout, Auth, $log, $state){
 		var sections = [];
 		function setLoggedInLinks() {
 			sections = [];
@@ -116,6 +117,7 @@ myApp.factory('Menu', [
 			isSectionSelected: function (section) {
 				return Menu.openedSection === section;
 			},
+			togglePromise : false,
 			toggleLeft : buildDelayedToggler('left'),
 			toggleRight : buildToggler('right'),
 			selectPage: function (section, page) {
@@ -123,6 +125,8 @@ myApp.factory('Menu', [
 				Menu.currentSection = section;
 				Menu.currentPage = page;
 			},
+			isClosedLeftPromise : false,
+			isOpenLeft : false,
 			isOpenRight : function(){
 				return $mdSidenav('right').isOpen();
 			}
@@ -148,6 +152,8 @@ myApp.factory('Menu', [
 				$mdSidenav(navID)
 					.toggle()
 					.then(function () {
+						var isOpen = $mdSidenav('left').isOpen() ? true : false;
+						Menu.isOpenLeft = isOpen;
 						$log.debug("toggle " + navID + " is done");
 					});
 			}, 10);

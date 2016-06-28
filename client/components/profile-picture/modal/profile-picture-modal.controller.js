@@ -2,7 +2,6 @@ myApp.controller("ProfilePictureModalController", function($interval,
                                                            ScrollLock, 
                                                            AlertMessage, 
                                                            $timeout, 
-                                                           ngDialog, 
                                                            ProfilePicture, 
                                                            $mdDialog,
                                                            $scope){

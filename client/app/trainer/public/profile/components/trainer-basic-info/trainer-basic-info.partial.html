@@ -2,30 +2,11 @@
       ng-submit="updateBasicInfo(form)"
       name="form"
       novalidate>
-
-    <!-- Begin Loading -->
-    <!--<div ng-if="!trainerFactory.trainer"
-         class="loading"
-         flex
-         flex-xs="100"
-         flex-xxs="100">
-        <div layout-padding>
-            <div id="loading-name"></div>
-            <div id="loading-address-unstyled">
-                <div id="loading-address-1">
-                </div>
-                <div id="loading-address-2">
-                </div>
-                <div id="loading-address-3">
-                </div>
-            </div>
-            <div id="loading-bio"></div>
-        </div>
-    </div>
-    <!-- End Loading -->
-    <div id="basic-info" ng-if="trainerFactory.trainer" class="section-animate-in">
+    <div id="basic-info"
+         ng-if="trainerFactory.trainer.name"
+         class="section-animate-in">
         <!-- Basic Info, Not Editing -->
-        <div class="basic-info-inner" ng-show="!basicInfo.visible" ng-if="trainerFactory.trainer">
+        <div class="basic-info-inner">
             <a ui-sref="main.trainer.account.edit-profile"
                ng-if="editable"
                md-button

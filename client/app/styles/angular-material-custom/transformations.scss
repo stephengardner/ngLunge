@@ -1,7 +1,7 @@
 
 .section-animate-in {
-	transition: all .5s ease-in-out;
 	&.ng-enter {
+		transition: all .5s ease-in-out;
 		opacity: 0;
 		transform: translate3d(0, -10px, 0);
 	}

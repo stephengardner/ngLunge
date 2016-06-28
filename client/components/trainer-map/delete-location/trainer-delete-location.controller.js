@@ -5,8 +5,7 @@ lungeApp.controller("TrainerDeleteLocationController", function($mdDialog,
                                                                 trainerMap,
                                                                 AlertMessage,
                                                                 Auth,
-                                                                $scope,
-                                                                ngDialog){
+                                                                $scope){
 
 
 	// when clicking the "Remove" button from the ng-repeat of all locations

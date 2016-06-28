@@ -1,7 +1,7 @@
 // I fixed this controller, separated it into a TrainerCertifications Service on 1.26.16
 // It is actually quite lean now, lookups operate on hash tables (objects).  Using ng-infinite-scroll as well.
 lungeApp.controller("TrainerCertificationsListController", function($document,
-                                                                    ngDialog, TrainerCertifications,
+                                                                    TrainerCertifications,
                                                                     $timeout,
                                                                     FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth, Certification, $http, $scope, $mdDialog){
 	$scope.trainerCertifications = TrainerCertifications;

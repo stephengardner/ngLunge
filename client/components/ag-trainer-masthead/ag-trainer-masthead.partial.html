@@ -9,16 +9,12 @@
             <!-- Profile Picture -->
             <trainer-profile-picture></trainer-profile-picture>
             <!-- Basic Info -->
-            <trainer-basic-info
-                    flex="66"
+            <div flex="66"
                     flex-xs="80"
                     class="flex-xxs-100"
-                    trainer="trainer"
-                    editable="{{isMe()}}">
-            </trainer-basic-info>
-            <!-- favorite star -->
-            <div class="favorite" ng-if="!isMe()">
-                <i class="fa fa-star-o"></i>
+                    trainer="trainer">
+                <trainer-basic-info editable="{{isMe()}}">
+                </trainer-basic-info>
             </div>
         </div>
         <!-- End Trainer Masthead loaded -->

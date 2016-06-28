@@ -1,7 +1,9 @@
-myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage, /*socket,*/ FormControl,
-                                                   $popover, Sync, $scope, Auth){
+myApp.controller("TrainerInfoController", function(TrainerFactory,
+                                                   $scope,
+                                                   $timeout,
+                                                   Auth){
 
-	$scope.editingPrivacyFor = false;
+	TrainerFactory.unset();
 
 	$scope.trainerFactory = TrainerFactory;
 
@@ -9,12 +11,16 @@ myApp.controller("TrainerInfoController", function(TrainerFactory, AlertMessage,
 		return TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id);
 	};
 
+	// we DONT NEED TO DO THIS, ITS ALREADY DONE IN THE ACCOUNT CONTROLLER
 	// Sync the user up. and we're good to go!
-	Auth.isLoggedInAsync(function(){
-		TrainerFactory.init(Auth.getCurrentUser(), { sync : true });
-	});
-	$scope.$on('$destroy', function(){
-		TrainerFactory.unsyncModel();
-	});
+	// $timeout(function(){
+	// 	Auth.isLoggedInAsync(function(){
+	// 		TrainerFactory.init(Auth.getCurrentUser(), { sync : true });
+	// 	});
+	// }, 50);
+	
+	// $scope.$on('$destroy', function(){
+	// 	TrainerFactory.unsyncModel();
+	// });
 	// END controller syncing
 })

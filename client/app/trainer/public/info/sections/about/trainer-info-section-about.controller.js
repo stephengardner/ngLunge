@@ -1,5 +1,7 @@
 myApp.controller("TrainerInfoSectionAboutController", function(TrainerFactory, AlertMessage, /*socket,*/
-                                                               FormControl, $popover, Sync, $scope, Auth) {
+                                                               FormControl, 
+                                                               Sync, 
+                                                               $scope) {
 	$scope.editing = false;
 	$scope.trainerFactory = TrainerFactory;
 	$scope.ajax = {};

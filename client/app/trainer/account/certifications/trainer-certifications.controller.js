@@ -1,7 +1,15 @@
 
 lungeApp.controller("TrainerCertificationsController",
-	function(TrainerCertifications, FullMetalSocket, CertificationOrganization, TrainerFactory, AlertMessage, Auth,
-	         Certification, $http, $scope, ngDialog, $mdDialog){
+	function(TrainerCertifications, 
+	         FullMetalSocket, 
+	         CertificationOrganization, 
+	         TrainerFactory, 
+	         AlertMessage, 
+	         Auth,
+	         Certification, 
+	         $http, 
+	         $scope, 
+	         $mdDialog){
 
 		$scope.openMenu = function($mdOpenMenu, ev) {
 			originatorEv = ev;

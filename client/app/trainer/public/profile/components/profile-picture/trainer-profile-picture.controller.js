@@ -1,6 +1,4 @@
-lungeApp.controller("TrainerProfilePictureController", function(ScrollLock,
-                                                         ngDialog,
-                                                         FormControl,
+lungeApp.controller("TrainerProfilePictureController", function(FormControl,
                                                          AlertMessage,
                                                          ProfilePicture,
                                                          $scope,
