@@ -1,4 +1,9 @@
-<md-card ag-editable-container trainer-factory-section="'social'" on-editable-hide="reset()">
+<div ng-if="!trainerFactory.trainer" class="loading-block-xs"></div>
+<md-card ag-editable-container
+         trainer-factory-section="'social'"
+         on-editable-hide="reset()"
+         class="section-animate-in"
+         ng-if="trainerFactory.trainer">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -21,8 +26,10 @@
                             <md-button ng-class="{'active' : trainerHasSocial('facebook')}"
                                        class="facebook md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('facebook')"
-                                       ng-attr-title="{{getButtonTitle('Facebook')}}">
+                                       ng-click="syncOAuth('facebook')">
+                                <md-tooltip md-direction="top" ng-if="getButtonTitle('Facebook')">
+                                    {{getButtonTitle('Facebook')}}
+                                </md-tooltip>
                                 <md-icon>
                                     <ng-md-icon icon="facebook"></ng-md-icon>
                                 </md-icon>
@@ -32,8 +39,10 @@
                             <md-button ng-class="{'active' : trainerHasSocial('linkedin')}"
                                        class="linkedin md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('linkedin')"
-                                       ng-attr-title="{{getButtonTitle('LinkedIn')}}">
+                                       ng-click="syncOAuth('linkedin')">
+                                <md-tooltip md-direction="top" ng-if="getButtonTitle('LinkedIn')">
+                                    {{getButtonTitle('LinkedIn')}}
+                                </md-tooltip>
                                 <md-icon>
                                     <ng-md-icon icon="linkedin"></ng-md-icon>
                                 </md-icon>
@@ -43,8 +52,10 @@
                             <md-button ng-class="{'active' : trainerHasSocial('instagram')}"
                                        class="instagram md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('instagram')"
-                                       ng-attr-title="{{getButtonTitle('Instagram')}}">
+                                       ng-click="syncOAuth('instagram')">
+                                <md-tooltip md-direction="top" ng-if="getButtonTitle('Instagram')">
+                                    {{getButtonTitle('Instagram')}}
+                                </md-tooltip>
                                 <md-icon>
                                     <i class="fa fa-instagram"></i>
                                 </md-icon>
@@ -54,10 +65,25 @@
                             <md-button ng-class="{'active' : trainerHasSocial('twitter')}"
                                        class="twitter md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('twitter')"
-                                       ng-attr-title="{{getButtonTitle('Twitter')}}">
+                                       ng-click="syncOAuth('twitter')">
+                                <md-tooltip md-direction="top" ng-if="getButtonTitle('Twitter')">
+                                    {{getButtonTitle('Twitter')}}
+                                </md-tooltip>
                                 <md-icon>
                                     <ng-md-icon icon="twitter"></ng-md-icon>
+                                </md-icon>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasWebsite()}"
+                                       class="md-icon-button"
+                                       ng-click="personalLinkDialog($event)"
+                                       ng-attr-title="{{getButtonTitle('website')}}">
+                                <md-tooltip md-direction="top" ng-if="getButtonTitle('website')">
+                                    {{getButtonTitle('website')}}
+                                </md-tooltip>
+                                <md-icon>
+                                    <i class="material-icons">link</i>
                                 </md-icon>
                             </md-button>
                         </div>
@@ -69,8 +95,7 @@
                             <md-button ng-class="{'active' : trainerHasSocial('facebook')}"
                                        class="facebook md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('facebook')"
-                                       ng-attr-title="{{getButtonTitle('Facebook')}}">
+                                       ng-click="syncOAuth('facebook')">
                                 <md-icon>
                                     <ng-md-icon icon="facebook"></ng-md-icon>
                                 </md-icon>
@@ -86,8 +111,7 @@
                             <md-button ng-class="{'active' : trainerHasSocial('linkedin')}"
                                        class="linkedin md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('linkedin')"
-                                       ng-attr-title="{{getButtonTitle('LinkedIn')}}">
+                                       ng-click="syncOAuth('linkedin')">
                                 <md-icon>
                                     <ng-md-icon icon="linkedin"></ng-md-icon>
                                 </md-icon>
@@ -103,8 +127,7 @@
                             <md-button ng-class="{'active' : trainerHasSocial('instagram')}"
                                        class="instagram md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('instagram')"
-                                       ng-attr-title="{{getButtonTitle('Instagram')}}">
+                                       ng-click="syncOAuth('instagram')">
                                 <md-icon>
                                     <i class="fa fa-instagram"></i>
                                 </md-icon>
@@ -120,8 +143,7 @@
                             <md-button ng-class="{'active' : trainerHasSocial('twitter')}"
                                        class="twitter md-icon-button"
                                        target="_self"
-                                       ng-click="syncOAuth('twitter')"
-                                       ng-attr-title="{{getButtonTitle('Twitter')}}">
+                                       ng-click="syncOAuth('twitter')">
                                 <md-icon>
                                     <ng-md-icon icon="twitter"></ng-md-icon>
                                 </md-icon>
@@ -130,6 +152,21 @@
                                        title="Remove your Twitter account from your profile"
                                        ng-disabled="!trainerHasSocial('twitter')"
                                        ng-click="removeSocial('twitter')">
+                                <i class="material-icons">delete</i>
+                            </md-button>
+                        </div>
+                        <div layout="column" layout-align="start center">
+                            <md-button ng-class="{'active' : trainerHasWebsite()}"
+                                       class="md-icon-button"
+                                       ng-click="personalLinkPopup()">
+                                <md-icon>
+                                    <i class="material-icons">link</i>
+                                </md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button"
+                                       title="Remove your website from your profile"
+                                       ng-disabled="!trainerHasWebsite()"
+                                       ng-click="removeWebsite()">
                                 <i class="material-icons">delete</i>
                             </md-button>
                         </div>

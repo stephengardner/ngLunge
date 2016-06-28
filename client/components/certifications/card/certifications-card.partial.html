@@ -1,4 +1,6 @@
-<md-card>
+<div ng-if="!trainerFactory.trainer" class="loading-block-sm"></div>
+<md-card class="section-animate-in"
+         ng-if="trainerFactory.trainer">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>

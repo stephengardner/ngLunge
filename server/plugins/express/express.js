@@ -19,10 +19,8 @@ module.exports = function setup(options, imports, register) {
 
 	var web = express();
 	var env = web.get('env');
-	
-	if('test' === env) {
-		web.use(require('connect-livereload')());
-	}
+
+	console.log("env!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", env);
 
 	if ('production' === env) {
 		web.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
@@ -32,6 +30,7 @@ module.exports = function setup(options, imports, register) {
 	}
 
 	if ('development' === env || 'test' === env) {
+		web.use(require('connect-livereload')());
 		web.use(express.static(path.join(config.root, '.tmp')));
 		web.use(express.static(path.join(config.root, 'client')));
 		web.set('appPath', 'client');

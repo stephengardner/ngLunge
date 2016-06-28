@@ -114,6 +114,7 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 					mergeObject.instagram = this.trainerEditing.instagram;
 					mergeObject.twitter = this.trainerEditing.twitter;
 					mergeObject.linkedin = this.trainerEditing.linkedin;
+					mergeObject.website = this.trainerEditing.website;
 					break;
 				default :
 					break;
@@ -193,15 +194,13 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			return this;
 		},
 		addCertification : function(certification) {
-			var found = false;
+			if(!this.trainerEditing.certifications_v2) {
+				this.trainerEditing.certifications_v2 = [];
+			}
 			if(this.trainerEditing.certifications_v2) {
 				pushUniqueCertification(this.trainerEditing.certifications_v2, certification)
 			}
-			console.log("The trainer editing after adding a cert:", this.trainerEditing);
-			//if(lodash.findWhere)
-			//if(certification) {
-			//	this.trainerEditing.certifications_v2.pushUnique(certification);
-			//}
+			console.log("after adding a certification to the trainer factory, the trainerEditing is:", this.trainerEditing);
 			return this;
 		},
 		removeCertification : function(certification) {
@@ -261,6 +260,7 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 						this.trainerEditing.instagram = angular.copy(this.trainer.instagram);
 						this.trainerEditing.twitter = angular.copy(this.trainer.twitter);
 						this.trainerEditing.linkedin = angular.copy(this.trainer.linkedin);
+						this.trainerEditing.website = angular.copy(this.trainer.website);
 						break;
 					default :
 						break;

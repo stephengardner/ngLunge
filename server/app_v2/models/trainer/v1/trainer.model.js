@@ -14,6 +14,7 @@ var TrainerSchema = new Schema(
 	{
 		id : { type : Number },
 		email : { type : String, unique : true },
+		website : String,
 		name : {
 			first : {
 				type : String, required : false

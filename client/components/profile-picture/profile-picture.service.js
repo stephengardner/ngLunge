@@ -112,11 +112,13 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 			w = $(window).width() - 40;
 			h = $(window).height() - 110;
 
-			var maxWidth = 500;
+			// max width will either be 500, or the size of the window, which could be less
+			var maxWidth = 500 < w ? 500 : w;
 			var maxHeight = h;
 			console.log("w:", w, " h: ", h);
 			// max width 500px
-			w = w > maxWidth ? maxWidth : w;
+			w = maxWidth < w ? maxWidth : w;
+
 			console.log("w:", w, " h: ", h);
 			// note the lesser dimension
 			var windowLesserDimension = w > h ? h : w;

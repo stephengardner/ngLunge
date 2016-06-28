@@ -1,0 +1,92 @@
+$loading-bg-dark: #ccc;
+$loading-bg-light: #eee;
+.profile-picture {
+	.loading {
+	}
+}
+.loading-bg {
+	background: $loading-bg-dark;
+}
+
+.loading-fill {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: $loading-bg-dark;
+}
+
+*[id^='loading-'], *[class^='loading-']  {
+	background: $loading-bg-dark;
+}
+[id^="loading-"][id$="unstyled"] {
+	background: none;
+}
+[class^="loading-"][class$="xs"] {
+	height: 5px;
+}
+[class^="loading-"][class$="sm"] {
+	height: 10px;
+}
+[class^="loading-"][class$="md"] {
+	height: 20px;
+}
+[class^="loading-noheader"] {
+	background: none;
+	border: 2px solid;
+	&[class*="-md"] {
+		height: 350px;
+	}
+}
+[class^="loading-block"] {
+	//@extend .md-card;
+	margin: 8px;
+	@extend .layout-column;
+	//border-radius: 2px;
+	overflow: hidden;
+	&[class*="-md"] {
+		height: 350px;
+	}
+	&[class*="sm"] {
+		height: 200px;
+	}
+	&[class*="xs"] {
+		height: 130px;
+	}
+	.header {
+		height: 60px;
+		@include respond-to(xxs) {
+			height: 40px;
+		}
+		background: darken($loading-bg-light, 6%);
+	}
+
+	&:before {
+		height: 55px;
+		background: darken($loading-bg-light, 6%);
+		content : '';
+		display: flex;
+	}
+	&:after {
+		content : '';
+		display: flex;
+	}
+
+	background: $loading-bg-light;
+	margin-bottom: 40px;
+}
+#loading-name {
+	height: 20px;
+	width: 100%;
+}
+#loading-address-unstyled {
+	> * {
+		height: 10px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+}
+#loading-bio {
+	height: 75px;
+}

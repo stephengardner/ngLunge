@@ -1,134 +1,142 @@
-<md-card ag-editable-container trainer-factory-section="'basicInfo'">
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>
-                <span>Basic Info</span>
-            </h2>
-            <span flex></span>
-            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing(basicInfo)">
-                <i  class="material-icons">mode_edit</i>
-            </md-button>
-        </div>
-    </md-toolbar>
-    <form id="basicInfo"
-          name="basicInfo"
-          ng-submit="submit(basicInfo)">
-        <md-card-content cg-busy="{promise : cgBusy}" ng-if="ready">
-            <div class="ag-editable-container">
-                <div class="ag-editable-default">
-                    <div class="info-row">
-                        <div class="name">
-                            Name:
-                        </div>
-                        <div class="value">
-                            {{trainerFactory.trainer.name.full}}
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="name">
-                            Gender:
-                        </div>
-                        <div class="value">
-                            {{trainerFactory.trainer.gender.value || '-'}}
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="name">
-                            Age:
-                        </div>
-                        <div class="value">
-                            {{trainerFactory.trainer.age.value || '-'}}
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="name">
-                            Years of Experience:
-                        </div>
-                        <div class="value">
-                            {{trainerFactory.trainer.years_of_experience.value || '-'}}
-                        </div>
-                    </div>
-                </div>
-                <div class="ag-editable-editing">
-                    <fieldset ng-disabled="ajax.busy">
-                        <ag-floating-label>
-                            <label>
-                                Name
-                            </label>
-                            <input name="name"
-                                   ng-change="removeMongooseError(basicInfo, 'name')"
-                                   ng-model="trainerFactory.trainerEditing.name.full"
-                                   required>
-                            <div ng-messages="basicInfo.name.$error" class="md-auto-hide">
-                                <div ng-message="required">Your name cannot be empty</div>
-                                <div ng-message="mongoose">{{basicInfo.name.$error.mongoose}}</div>
+<div>
+    <div ng-if="!trainerFactory.trainer"
+         class="loading-block-sm">
+    </div>
+    <md-card class="section-animate-in"
+             ng-if="trainerFactory.trainer"
+             ag-editable-container
+             trainer-factory-section="'basicInfo'">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>Basic Info</span>
+                </h2>
+                <span flex></span>
+                <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing(basicInfo)">
+                    <i  class="material-icons">mode_edit</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <form id="basicInfo"
+              name="basicInfo"
+              ng-submit="submit(basicInfo)">
+            <md-card-content cg-busy="{promise : cgBusy}" ng-if="ready">
+                <div class="ag-editable-container">
+                    <div class="ag-editable-default">
+                        <div class="info-row">
+                            <div class="name">
+                                Name:
                             </div>
-                        </ag-floating-label>
-                        <input type="hidden" name="gender"/>
-                        <div layout="row">
-                            <ag-floating-label class="md-block" flex>
-                                <label>Gender</label>
-                                <select ng-model="trainerFactory.trainerEditing.gender.value">
-                                    <option value="none">None specified</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
-                                <div ng-messages="basicInfo.gender.$error" class="md-auto-hide">
-                                    <div ng-message="mongoose">{{form.gender.$error.mongoose}}</div>
+                            <div class="value">
+                                {{trainerFactory.trainer.name.full}}
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="name">
+                                Gender:
+                            </div>
+                            <div class="value">
+                                {{trainerFactory.trainer.gender.value || '-'}}
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="name">
+                                Age:
+                            </div>
+                            <div class="value">
+                                {{trainerFactory.trainer.age.value || '-'}}
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="name">
+                                Years of Experience:
+                            </div>
+                            <div class="value">
+                                {{trainerFactory.trainer.years_of_experience.value || '-'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ag-editable-editing">
+                        <fieldset ng-disabled="ajax.busy">
+                            <ag-floating-label>
+                                <label>
+                                    Name
+                                </label>
+                                <input name="name"
+                                       ng-change="removeMongooseError(basicInfo, 'name')"
+                                       ng-model="trainerFactory.trainerEditing.name.full"
+                                       required>
+                                <div ng-messages="basicInfo.name.$error" class="md-auto-hide">
+                                    <div ng-message="required">Your name cannot be empty</div>
+                                    <div ng-message="mongoose">{{basicInfo.name.$error.mongoose}}</div>
                                 </div>
                             </ag-floating-label>
-                            <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="gender">
-                                <i class="fa"
-                                   ng-class="{
+                            <input type="hidden" name="gender"/>
+                            <div layout="row">
+                                <ag-floating-label class="md-block" flex>
+                                    <label>Gender</label>
+                                    <select ng-model="trainerFactory.trainerEditing.gender.value">
+                                        <option value="none">None specified</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                    <div ng-messages="basicInfo.gender.$error" class="md-auto-hide">
+                                        <div ng-message="mongoose">{{form.gender.$error.mongoose}}</div>
+                                    </div>
+                                </ag-floating-label>
+                                <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="gender">
+                                    <i class="fa"
+                                       ng-class="{
                                 'fa-globe' : trainerFactory.trainerEditing.gender.privacy == 'public',
                                 'fa-lock' : trainerFactory.trainerEditing.gender.privacy == 'private'
                                }"></i>
-                            </div>
-                        </div>
-                        <div layout="row">
-                            <input type="hidden" name="age"/>
-                            <ag-floating-label class="md-block" flex>
-                                <label>Age</label>
-                                <select ng-model="trainerFactory.trainerEditing.age.value">
-                                    <option value="-">-</option>
-                                    <option ng-repeat="age in ageRange" value="{{age}}">
-                                        {{age}}
-                                    </option>
-                                </select>
-                                <div ng-messages="basicInfo.age.$error" class="md-auto-hide">
-                                    <div ng-message="mongoose">{{form.age.$error.mongoose}}</div>
                                 </div>
-                            </ag-floating-label>
-                            <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="age">
-                                <i class="fa"
-                                   ng-class="{
+                            </div>
+                            <div layout="row">
+                                <input type="hidden" name="age"/>
+                                <ag-floating-label class="md-block" flex>
+                                    <label>Age</label>
+                                    <select ng-model="trainerFactory.trainerEditing.age.value">
+                                        <option value="-">-</option>
+                                        <option ng-repeat="age in ageRange" value="{{age}}">
+                                            {{age}}
+                                        </option>
+                                    </select>
+                                    <div ng-messages="basicInfo.age.$error" class="md-auto-hide">
+                                        <div ng-message="mongoose">{{form.age.$error.mongoose}}</div>
+                                    </div>
+                                </ag-floating-label>
+                                <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="age">
+                                    <i class="fa"
+                                       ng-class="{
                                 'fa-globe' : trainerFactory.trainerEditing.age.privacy == 'public',
                                 'fa-lock' : trainerFactory.trainerEditing.age.privacy == 'private'
                                }"></i>
-                            </div>
-                        </div>
-                        <div layout="row" layout-align="start center">
-                            <input type="hidden" name="yearsOfExperience"/>
-                            <ag-floating-label class="md-block" flex>
-                                <label>Years of experience</label>
-                                <select ng-model="trainerFactory.trainerEditing.years_of_experience.value">
-                                    <option value="-">-</option>
-                                    <option ng-repeat="value in yearsOfExperienceRange" value="{{value}}">
-                                        {{value}}
-                                    </option>
-                                </select>
-                                <div ng-messages="basicInfo.yearsOfExperience.$error" class="md-auto-hide">
-                                    <div ng-message="mongoose">{{form.yearsOfExperience.$error.mongoose}}</div>
                                 </div>
-                            </ag-floating-label>
-                        </div>
-                    </fieldset>
+                            </div>
+                            <div layout="row" layout-align="start center">
+                                <input type="hidden" name="yearsOfExperience"/>
+                                <ag-floating-label class="md-block" flex>
+                                    <label>Years of experience</label>
+                                    <select ng-model="trainerFactory.trainerEditing.years_of_experience.value">
+                                        <option value="-">-</option>
+                                        <option ng-repeat="value in yearsOfExperienceRange" value="{{value}}">
+                                            {{value}}
+                                        </option>
+                                    </select>
+                                    <div ng-messages="basicInfo.yearsOfExperience.$error" class="md-auto-hide">
+                                        <div ng-message="mongoose">{{form.yearsOfExperience.$error.mongoose}}</div>
+                                    </div>
+                                </ag-floating-label>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
-            </div>
-        </md-card-content>
-        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-            <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing(basicInfo)">Cancel</md-button>
-        </md-card-actions>
-    </form>
-</md-card>
+            </md-card-content>
+            <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+                <md-button type="submit">Save</md-button>
+                <md-button ng-click="toggleEditing(basicInfo)">Cancel</md-button>
+            </md-card-actions>
+        </form>
+    </md-card>
+</div>

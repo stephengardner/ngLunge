@@ -1,4 +1,51 @@
 
+.section-animate-in {
+	transition: all .5s ease-in-out;
+	&.ng-enter {
+		opacity: 0;
+		transform: translate3d(0, -10px, 0);
+	}
+	&.ng-enter-active {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, -10px, 0);
+	}
+	100% {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+$default-animation-delay: .3s;
+[class*="fade-in"] {
+	opacity: 0;
+	animation: fadeIn;
+	animation-timing-function: ease-in;
+	animation-fill-mode: forwards;
+	animation-duration: .5s;
+	animation-iteration-count: 1;
+	animation-delay: $default-animation-delay;
+	&[class*="200"] {
+		animation-delay: $default-animation-delay + .2;
+	}
+	&[class*="300"] {
+		animation-delay: $default-animation-delay + .3;
+	}
+	&[class*="400"] {
+		animation-delay: $default-animation-delay + .4;
+	}
+	&[class*="500"] {
+		animation-delay: $default-animation-delay + .5;
+	}
+}
+
+
 [ag-editable-container] {
 	md-card-actions {
 		transition: all .5s;

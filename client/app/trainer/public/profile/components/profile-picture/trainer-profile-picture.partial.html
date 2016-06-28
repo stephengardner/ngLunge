@@ -4,8 +4,8 @@
     <form name="profilePictureForm">
         <!-- profile picture -->
         <div id="profile-picture" class="profile-picture"
-             bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}"
-             ng-if="trainerFactory.trainer.profile_picture">
+             ng-if="trainerFactory.trainer"
+             bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}">
         </div>
         <a ng-if="isMe()"
            id="profilePictureUploadButton"

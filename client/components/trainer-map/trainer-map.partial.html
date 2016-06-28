@@ -7,9 +7,11 @@
          style="height:100%"
          ng-if="!trainerFactory.trainer || !trainerFactory.trainer.location.state">
         <h1 ng-if="!trainerFactory.trainer">
-            Loading...
+            <md-progress-circular md-diameter="100"></md-progress-circular>
         </h1>
-        <h1 ng-show="!trainerFactory.trainer.location.state" class="no-main-location">
+        <h1 ng-if="trainerFactory.trainer &&
+                    !trainerFactory.trainer.location.state"
+            class="no-main-location">
             No locations have been added yet.
         </h1>
     </div>

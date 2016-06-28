@@ -1,4 +1,5 @@
 .navbar-new {
+	background: $brand-primary;
 	position:fixed;
 	top:0;
 	left:0;
@@ -8,6 +9,20 @@
 	a {
 		text-decoration:none;
 		color:inherit;
+	}
+	#navbar-buttons {
+		a {
+			&.profile-picture-nav-button {
+				border-radius: 100px;
+				display: inline-block;
+				@extend .md-raised;
+			}
+			transition: all .4s;
+			&.active {
+				@extend .md-raised;
+				//color: black;
+			}
+		}
 	}
 	.brand {
 		float:left;
@@ -51,34 +66,9 @@
 			}
 		}
 	}
-	&:not(.scrolled) {
-		background:transparent;
-		color:white;
-	}
-	&.scrolled {
-		background:white;
-		color:#333;
-		[class*='btn-'] {
-			color:#333;
-		}
-		.popover {
-			[class*='btn-'] {
-				color:white;
-			}
-		}
-	}
 	.profile-picture-nav-button {
 		display:inline-block;
 		vertical-align:middle;
-	}
-	.profile-picture-nav {
-		background-size: 30px!important;
-		background-position: center;
-		background-repeat: no-repeat;
-		width: 30px;
-		height: 30px;
-		border-radius: 1000px;
-		display: block;
 	}
 	@include respond-to(xxs) {
 		.brand-text {

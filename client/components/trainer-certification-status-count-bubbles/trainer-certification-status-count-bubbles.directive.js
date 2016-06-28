@@ -28,9 +28,10 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 					controllerAs : 'vm'
 				})
 			};
-			console.log(scope.trainer.certifications_meta.organization_map);
+			console.log(' The scope trainer certifications organization meta map is:', scope.trainer.certifications_meta.organization_map);
 			function getCount(type) {
-				if(scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id])
+				if(scope.trainer.certifications_meta.organization_map &&
+					scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id])
 					return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
 						.types[type];
 				return 0;

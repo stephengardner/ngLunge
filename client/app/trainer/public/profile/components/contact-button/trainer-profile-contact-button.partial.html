@@ -1,4 +1,6 @@
 <md-button class="md-fab"
+           disabled="{{!trainerFactory.trainer}}"
+           ng-disabled="!trainerFactory.trainer"
            ng-attr-title="contact {{trainerFactory.trainer.name.first}}"
            ng-click="showDialog($event)">
     <md-tooltip md-direction="top">

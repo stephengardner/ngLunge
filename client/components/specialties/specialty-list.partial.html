@@ -1,4 +1,6 @@
-<md-card id="specialties">
+<div ng-if="!trainerFactory.trainer" class="loading-block-xs"></div>
+<md-card class="section-animate-in"
+         ng-if="trainerFactory.trainer">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -60,7 +62,12 @@
                     </div>
                 </div>
             </md-list-item>
-            <div ng-if="!trainerFactory.trainerEditing.specialties.length" class="empty">
+            <div ng-if="!trainerFactory.trainer" layout="row" layout-align="center center">
+                <md-progress-circular md-diameter="50"></md-progress-circular>
+            </div>
+            <div ng-if="trainerFactory.trainer &&
+                           !trainerFactory.trainerEditing.specialties.length"
+                 class="empty">
                 {{trainerFactory.trainer.name.first}} doesn't have any specialties listed yet.
             </div>
         </md-list>

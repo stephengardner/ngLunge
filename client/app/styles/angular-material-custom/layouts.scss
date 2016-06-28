@@ -8,6 +8,21 @@
 	}
 }
 
+#main-view {
+	// this fixes the fixed div covering the scrollbars on an md-content
+	overflow: auto;
+	overflow: initial;
+}
+
+.profile-picture-nav, .profile-picture-thumb {
+	background-size: 100% !important;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
 md-dialog {
 	md-toolbar {
 		height: auto;
@@ -20,6 +35,12 @@ md-dialog {
 			//padding: 4px 0;
 		}
 	}
+}
+
+.flexible-dialog-medium {
+	@extend .flex-100;
+	@extend .flex-gt-sm-50;
+	@extend .flex-gt-lg-30;
 }
 .flexible-dialog-small {
 	@extend .flex-100;

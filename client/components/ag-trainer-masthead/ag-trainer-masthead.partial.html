@@ -1,0 +1,55 @@
+<div class="top-masthead clearfix">
+    <div class="main-push trainer-profile">
+        <!-- Begin Trainer Masthead Loaded -->
+        <div flex layout="row"
+             layout-wrap
+             layout-align="center center"
+             class="trainer-card wide clearfix">
+            <trainer-profile-contact-button></trainer-profile-contact-button>
+            <!-- Profile Picture -->
+            <trainer-profile-picture></trainer-profile-picture>
+            <!-- Basic Info -->
+            <trainer-basic-info
+                    flex="66"
+                    flex-xs="80"
+                    class="flex-xxs-100"
+                    trainer="trainer"
+                    editable="{{isMe()}}">
+            </trainer-basic-info>
+            <!-- favorite star -->
+            <div class="favorite" ng-if="!isMe()">
+                <i class="fa fa-star-o"></i>
+            </div>
+        </div>
+        <!-- End Trainer Masthead loaded -->
+        <!-- BEGIN LOADING -->
+        <div flex layout="row"
+             layout-wrap
+             layout-align="center center"
+             class="trainer-card wide clearfix"
+             ng-if="!trainerFactory.trainer">
+            <div flex="33"
+                 flex-xs="80"
+                 class="flex-xxs-100 profile-picture-container">
+                <div class="profile-picture">
+                    <div class="loading-fill"></div>
+                </div>
+            </div>
+            <div class="loading" flex flex-xs="100" flex-xxs="100">
+                <div layout-padding>
+                    <div id="loading-name"></div>
+                    <div id="loading-address-unstyled">
+                        <div id="loading-address-1">
+                        </div>
+                        <div id="loading-address-2">
+                        </div>
+                        <div id="loading-address-3">
+                        </div>
+                    </div>
+                    <div id="loading-bio"></div>
+                </div>
+            </div>
+        </div>
+        <!-- END LOADING -->
+    </div>
+</div>

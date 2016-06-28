@@ -1,4 +1,4 @@
-myApp.directive('menuLink', function () {
+myApp.directive('menuLink', function (Auth) {
 	return {
 		require : '^materialMenu',
 		scope: {
@@ -8,6 +8,7 @@ myApp.directive('menuLink', function () {
 		link: {
 			pre : function (scope, element, attrs, materialMenu) {
 				var controller = element.parent().controller();
+				scope.auth = Auth;
 				scope.getHref = materialMenu.getHref;
 				scope.getSref = materialMenu.getSref;
 				scope.onAction = materialMenu.onAction;

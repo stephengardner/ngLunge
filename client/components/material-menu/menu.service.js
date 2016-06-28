@@ -17,7 +17,8 @@ myApp.factory('Menu', [
 					state : 'profilePage',
 					stateOptions : {urlName : Auth.getCurrentUser().urlName },
 					action : 'goToProfile()',
-					icon : 'person'
+					icon : 'person',
+					profile : true
 				}
 			);
 			sections.push(

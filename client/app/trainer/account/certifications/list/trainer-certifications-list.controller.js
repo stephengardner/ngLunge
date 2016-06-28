@@ -58,6 +58,7 @@ lungeApp.controller("TrainerCertificationsListController", function($document,
 		$scope.ajax.busy = true;
 		if(type == 'add') {
 			messageToSend = "Added a " + certification.name + " certification to your profile";
+			console.log("Adding certification:", certification, " from trainercertificationslistcontroller");
 			TrainerFactory.addCertification(certification).save().then(onSuccess).catch(onError);
 		}
 		else if(type == 'remove') {

@@ -1,124 +1,129 @@
-#account-body {
-	.privacy {
-		margin-bottom: 22px;
-		//	padding: 7px 12px;
-		width:35px;
-		text-align:center;
-		padding-top:9px;
-		height:35px;
-		border-radius: 6px;
-		cursor:pointer;
-		&:hover, &:active {
-			background:#eee;
-		}
-	}
-
-	.module {
-		overflow:hidden;
-	}
-	&.profile-style {
-		@include respond-to(xxs){
-			padding-left:0;
-			padding-right:0;
-		}
-	}
+#account {
 	header {
-		margin-bottom:3rem;
-		text-align:left;
-
-		.edit-button {
-			i {
-				padding: .2em;
-				font-size: 1.8em;
-			}
-		}
-	}
-
-	textarea[name="bio"] {
-		background:#F9F9F9;
-		padding:.6rem 1rem;
-		border-top-left-radius: 5px;
-		border-top-right-radius: 5px;
-	}
-
-	.gender {
-		text-transform: capitalize;
-	}
-	form {
-		.form-group {
-			position:relative;
-			@include respond-to(xxs) {
-				.form-control {
-					font-size:1.4rem;
-					padding:5px 7px;
-				}
-			}
-			.birthday-picker {
-				select {
-					@extend .form-control;
-					@extend .col-xxs-8;
-					@include respond-to(xxs) {
-						padding:0!important;
-					}
-				}
-			}
-			.btn-action {
-				//width:auto;
-				@extend .col-xxs-12;
-			}
-			.info-horizontal-label {
-				@extend .col-xxs-8;
-				text-align:left;
-				@include respond-to(xxs) {
-					text-align:left;
-					font-size:1em;
-					width:25%;
-				}
-			}
-			.info-horizontal-value {
-				@extend .col-xxs-16;
-				text-align:center;
-				@include respond-to(xs) {
-					text-align:right;
-				}
-				@include respond-to(xxs) {
-					width:75%;
-				}
-			}
-			.info-horizontal-aside {
-				position:absolute;
-				right:$grid-gutter-width / 2;
-				top:0;
-				width:40px;
-				text-align:right;
-				color:#c5c5c5;
-			}
-			&.has-aside {
-				/*
-				.info-horizontal-label {
-					@include respond-to(xxs) {
-						text-align:left;
-					}
-					@extend .col-xxs-7;
-				}
-				.info-horizontal-value {
-					@extend .col-xxs-15;
-				}
-				.info-horizontal-edit {
-					@extend .col-xxs-2;
-				}
-				*/
-				.info-horizontal-value {
-					padding-right:60px;
-				}
-			}
-		}
-		&.editing {
-			.info-horizontal-aside {
-				padding:.5em;
-				color:#333;
-				cursor: pointer;
-			}
-		}
+		margin-bottom: 40px;
 	}
 }
+//account-body#account-body {
+//	.privacy {
+//		margin-bottom: 22px;
+//		//	padding: 7px 12px;
+//		width:35px;
+//		text-align:center;
+//		padding-top:9px;
+//		height:35px;
+//		border-radius: 6px;
+//		cursor:pointer;
+//		&:hover, &:active {
+//			background:#eee;
+//		}
+//	}
+//
+//	.module {
+//		overflow:hidden;
+//	}
+//	&.profile-style {
+//		@include respond-to(xxs){
+//			padding-left:0;
+//			padding-right:0;
+//		}
+//	}
+//	header {
+//		margin-bottom:3rem;
+//		text-align:left;
+//
+//		.edit-button {
+//			i {
+//				padding: .2em;
+//				font-size: 1.8em;
+//			}
+//		}
+//	}
+//
+//	textarea[name="bio"] {
+//		background:#F9F9F9;
+//		padding:.6rem 1rem;
+//		border-top-left-radius: 5px;
+//		border-top-right-radius: 5px;
+//	}
+//
+//	.gender {
+//		text-transform: capitalize;
+//	}
+//	form {
+//		.form-group {
+//			position:relative;
+//			@include respond-to(xxs) {
+//				.form-control {
+//					font-size:1.4rem;
+//					padding:5px 7px;
+//				}
+//			}
+//			.birthday-picker {
+//				select {
+//					@extend .form-control;
+//					@extend .col-xxs-8;
+//					@include respond-to(xxs) {
+//						padding:0!important;
+//					}
+//				}
+//			}
+//			.btn-action {
+//				//width:auto;
+//				@extend .col-xxs-12;
+//			}
+//			.info-horizontal-label {
+//				@extend .col-xxs-8;
+//				text-align:left;
+//				@include respond-to(xxs) {
+//					text-align:left;
+//					font-size:1em;
+//					width:25%;
+//				}
+//			}
+//			.info-horizontal-value {
+//				@extend .col-xxs-16;
+//				text-align:center;
+//				@include respond-to(xs) {
+//					text-align:right;
+//				}
+//				@include respond-to(xxs) {
+//					width:75%;
+//				}
+//			}
+//			.info-horizontal-aside {
+//				position:absolute;
+//				right:$grid-gutter-width / 2;
+//				top:0;
+//				width:40px;
+//				text-align:right;
+//				color:#c5c5c5;
+//			}
+//			&.has-aside {
+//				/*
+//				.info-horizontal-label {
+//					@include respond-to(xxs) {
+//						text-align:left;
+//					}
+//					@extend .col-xxs-7;
+//				}
+//				.info-horizontal-value {
+//					@extend .col-xxs-15;
+//				}
+//				.info-horizontal-edit {
+//					@extend .col-xxs-2;
+//				}
+//				*/
+//				.info-horizontal-value {
+//					padding-right:60px;
+//				}
+//			}
+//		}
+//		&.editing {
+//			.info-horizontal-aside {
+//				padding:.5em;
+//				color:#333;
+//				cursor: pointer;
+//			}
+//		}
+//	}
+//}

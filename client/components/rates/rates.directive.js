@@ -6,8 +6,8 @@ myApp.directive('rates', function(){
 			editable : '@'
 		},
 		templateUrl : 'components/rates/rates.partial.html',
-		translcude : true,
-		replace : true,
+		// translcude : true,
+		// replace : true,
 		link : function(scope, element, attrs){
 
 		}

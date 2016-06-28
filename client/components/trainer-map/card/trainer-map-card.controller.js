@@ -27,7 +27,7 @@ lungeApp.controller("TrainerMapCardController", function(TrainerFactory,
 			{
 				focusOnOpen : false,
 				controller: 'TrainerMapAddLocationDialogController',
-				templateUrl: '/components/trainer-map/add-location/dialog/trainer-map-add-location-dialog.partial.html',
+				templateUrl: 'components/trainer-map/add-location/dialog/trainer-map-add-location-dialog.partial.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				clickOutsideToClose:true

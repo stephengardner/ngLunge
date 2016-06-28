@@ -9,7 +9,7 @@ lungeApp.directive('agEditableEditing', function(){
 	}
 });
 
-lungeApp.directive("agEditableContainer", ['$animateCss', 'TrainerFactory', function($animateCss, TrainerFactory){
+lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'TrainerFactory', function($animate, $q, $animateCss, TrainerFactory){
 	return {
 		restrict : "AE",
 		link : function(scope, element, attrs) {
@@ -62,6 +62,9 @@ lungeApp.directive("agEditableContainer", ['$animateCss', 'TrainerFactory', func
 				setEditingHeight();
 				console.log("Animating from " + containerHeightDefault + "px to " + containerHeightEditing + "px");
 				console.log("EditingSectition", containerHeightEditing);
+				editingContainer.removeClass('ng-hide');
+				// $animate.removeClass(editingContainer, 'ng-hide');
+				console.log("Editing container is:", editingContainer);
 				var containerAnimation = $animateCss(container, {
 					easing: easing,
 					from: {
@@ -84,27 +87,31 @@ lungeApp.directive("agEditableContainer", ['$animateCss', 'TrainerFactory', func
 					},
 					duration : duration
 				});
-				var editingSectionAniamtion = $animateCss(editingContainer, {
+				var editingSectionAnimation = $animateCss(editingContainer, {
 					easing: easing,
 					from: {
+						pointerEvents : 'none',
 						opacity : 0,
 						marginTop: -20 + 'px'
 					},
 					to: {
+						pointerEvents : 'all',
 						opacity : 1,
 						marginTop : 0 + "px"
 					},
 					duration : duration
 				});
 				animators = [];
-				animators.push(containerAnimation, defaultSectionAnimation, editingSectionAniamtion);
-				for(var i = 0; i < animators.length; i++) {
-					animators[i].start();
-				}
+				animators.push(
+					containerAnimation.start(),
+					defaultSectionAnimation.start(),
+					editingSectionAnimation.start()
+				);
+				$q.all(animators).then(function(){});
 			}
 
 			function hideEditingAnimation() {
-				// setEditingHeight();
+				editingContainer.blur(); // blur the element if you're on a phone and something hides this
 				var containerAnimation = $animateCss(container, {
 					addClass: 'hide-editing',
 					removeClass : 'show-editing',
@@ -129,23 +136,29 @@ lungeApp.directive("agEditableContainer", ['$animateCss', 'TrainerFactory', func
 					},
 					duration : duration
 				});
-				var editingSectionAniamtion = $animateCss(editingContainer, {
+				var editingSectionAnimation = $animateCss(editingContainer, {
 					easing: easing,
 					from: {
+						pointerEvents : 'none',
 						marginTop : 0 + "px",
 						opacity : 1
 					},
 					to: {
+						pointerEvents : 'none',
 						marginTop: -20 + 'px',
 						opacity : 0
 					},
 					duration : duration
 				});
 				animators = [];
-				animators.push(containerAnimation, defaultSectionAnimation, editingSectionAniamtion);
-				for(var i = 0; i < animators.length; i++) {
-					animators[i].start();
-				}
+				animators.push(
+					containerAnimation.start(),
+					defaultSectionAnimation.start(),
+					editingSectionAnimation.start()
+				);
+				$q.all(animators).then(function(){
+					editingContainer.addClass('ng-hide');
+				});
 			}
 			editingContainer.addClass('ng-hide');
 			scope.toggleEditing = function(form){

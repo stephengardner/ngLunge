@@ -1,4 +1,8 @@
-<md-card ag-editable-container trainer-factory-section="'email'">
+<div class="loading-block-xs" ng-if="!trainerFactory.trainer"></div>
+<md-card class="section-animate-in"
+         ng-if="trainerFactory.trainer"
+         ag-editable-container
+         trainer-factory-section="'email'">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>

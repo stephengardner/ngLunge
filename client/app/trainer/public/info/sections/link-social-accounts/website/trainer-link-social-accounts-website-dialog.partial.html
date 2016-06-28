@@ -1,0 +1,46 @@
+<md-dialog class="flexible-dialog-medium">
+    <form name="websiteForm"
+          ng-submit="submit(websiteForm)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Website</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content cg-busy="{'promise' : cgBusy}">
+            <div md-content layout-padding>
+                <h3>Add a link to your website, blog, or online portfolio</h3>
+                <ag-floating-label>
+                    <label>
+                        http://example.com
+                    </label>
+                    <input id="website"
+                           type="text"
+                           name="website"
+                           ng-model="trainerFactory.trainerEditing.website"
+                           ng-minlength="4"
+                           ng-maxlength="60"
+                           required
+                    />
+                    <div ng-messages="websiteForm.title.$error">
+                        <div ng-message="required">Website url is required</div>
+                        <div ng-message="mongoose">{{websiteForm.errors.title}}</div>
+                        <div ng-message="maxlength">Please limit the url to 60 characters</div>
+                        <div ng-message="minlength">Url is too short</div>
+                    </div>
+                </ag-floating-label>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button type="submit">
+                Add
+            </md-button>
+            <md-button ng-click="close()">
+                Cancel
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

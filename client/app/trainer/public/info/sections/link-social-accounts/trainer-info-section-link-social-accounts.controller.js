@@ -6,7 +6,8 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 	$scope,
 	$http,
 	$auth,
-    $mdToast
+    $mdToast,
+    $mdDialog
 ){
 	// $scope.toggleEditing = function(opt_force_bool) {
 	// 	$scope.editing = opt_force_bool !== undefined ? opt_force_bool : !$scope.editing;
@@ -53,10 +54,18 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 		var hasProvider = $scope.trainerHasSocial(provider.toLowerCase()),
 			editing = $scope.editing;
 		if(hasProvider) {
+			if(provider == 'website') {
+				return $scope.trainerFactory.trainer.website;
+			}
 			return $scope.trainerFactory.trainer.name.first + '\'s ' + provider + ' profile';
 		}
 		else {
-			return 'Sync your ' + provider + ' account with Lunge';
+			if(!editing) {
+				if(provider == 'website') {
+					return 'Add a link to your website';
+				}
+				return 'Sync your ' + provider + ' account with Lunge';
+			}
 		}
 	};
 
@@ -70,12 +79,39 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 		TrainerFactory.resetEditing('social');
 	};
 
+	$scope.personalLinkDialog = function(ev) {
+		$mdDialog.show({
+			templateUrl : 'app/trainer/public/info/sections/link-social-accounts/website/trainer-link-social-accounts-website-dialog.partial.html',
+			clickOutsideToClose : true,
+			targetEvent : ev,
+			controller : ['$scope', function($scope) {
+				$scope.trainerFactory = TrainerFactory;
+				$scope.close = function(){
+					TrainerFactory.resetEditing('social');
+					$mdDialog.hide();
+				};
+				$scope.submit = function(form){
+					if(form.$invalid) return false;
+					$scope.cgBusy = TrainerFactory.save().then(function(response) {
+						$mdDialog.hide();
+					}).catch(function(err) {
+						AlertMessage.error('Something went wrong when updating your website');
+						logger.error('err:', err);
+					});
+				}
+			}]
+		})
+	};
+
 	$scope.trainerHasSocial = function(strategy) {
-		var trainer = TrainerFactory.trainerEditing;
-		// console.log("Checking trainerHasSocial for :", strategy, " trainer is:", trainer);
-		if(trainer[strategy]) {
-			return true;
-		}
-		return false;
+		// console.log("TrainerEditing:", TrainerFactory.trainerEditing, " checking for strat: ", strategy, " = ", TrainerFactory.trainerEditing[strategy]);
+		return TrainerFactory.trainerEditing[strategy];
+	};
+
+	$scope.removeWebsite = function(){
+		TrainerFactory.removeSocial('website');
+	};
+	$scope.trainerHasWebsite = function() {
+		return TrainerFactory.trainerEditing.website;
 	}
-})
+});

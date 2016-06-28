@@ -3,8 +3,16 @@
            ng-click="onAction(section.action)"
            layout="row"
            layout-align="space-between center">
-        <md-icon>
-            <i class="material-icons">{{section.icon}}</i>
+    <md-button class="md-icon-button" ng-if="section.profile">
+        <i class="profile-picture-thumb"
+                bg-image="{{auth.getCurrentUser().profile_picture.thumbnail.url}}">
+        </i>
+    </md-button>
+    <span></span>
+        <md-icon ng-if="!section.profile">
+            <i class="material-icons">
+                {{section.icon}}
+            </i>
         </md-icon>
         <span>
             {{section.name}}

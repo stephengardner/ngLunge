@@ -67,7 +67,10 @@ lungeApp.controller("TrainerProfileController", function($timeout, $rootScope, T
 			{value: 3, text: 'VA'}
 		];
 
-		$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
+		// $timeout(function(){
+			$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
+		// }, 500000);
+
 
 		// ajax is an object that tells us if something is running (show ajax spinner, or disable a button, etc)
 		$scope.ajax = {};

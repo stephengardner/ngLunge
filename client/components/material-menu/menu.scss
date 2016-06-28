@@ -1,9 +1,13 @@
 #material-menu {
 	#menu-items {
-		md-button, a, button {
+		a.md-button, .md-button-toggle {
 			transition: all .5s;
 			border-radius:0!important;
 			width: 100%;
+			button {
+				@extend .nopadding;
+				@extend .nomargin;
+			}
 			padding: 10px;
 			margin: 0;
 			md-icon {

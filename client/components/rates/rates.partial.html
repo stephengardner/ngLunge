@@ -1,9 +1,11 @@
-<md-card>
+<div class="loading-block-sm" ng-if="!trainerFactory.trainer"></div>
+<md-card class="section-animate-in"
+         ng-if="trainerFactory.trainer">
     <div ag-editable-container trainer-factory-section="'rate'">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>
-                    <span>Cost</span>
+                    <span>Rates</span>
                 </h2>
                 <span flex></span>
                 <md-button ng-if="editable"

@@ -1,37 +1,38 @@
-<div ng-if="trainerFactory.trainer.name" id="profile">
-    <div class="top-masthead clearfix">
-        <div class="main-push trainer-profile">
-            <trainer-profile-contact-button>
-            </trainer-profile-contact-button>
-            <div flex layout="row"
-                 layout-wrap
-                 layout-align="center center"
-                 class="trainer-card wide clearfix">
-                <!-- Profile Picture -->
-                <trainer-profile-picture></trainer-profile-picture>
-                <!-- Basic Info -->
-                <trainer-basic-info
-                        flex="66"
-                        flex-xs="80"
-                        class="flex-xxs-100"
-                        trainer="trainer"
-                        editable="{{isMe()}}">
-                </trainer-basic-info>
-                <!-- favorite star -->
-                <div class="favorite" ng-if="!isMe()">
-                    <i class="fa fa-star-o"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="profile" ng-cloak> <!-- ng-cloak WORKS here, even when loading -->
+    <ag-trainer-masthead></ag-trainer-masthead>
     <div id="profile-body"
          layout="row"
          layout-align="center center">
         <div class="flex-column">
-            <trainer-map-card editable="{{isMe()}}"></trainer-map-card>
-            <specialties editable="{{isMe()}}"></specialties>
-            <rates editable="{{isMe()}}"></rates>
-            <certifications-card editable="{{isMe()}}"></certifications-card>
+            <div ng-if="!trainerFactory.trainer">
+                <div class="loading-block-md">
+                    <div class="header"></div>
+                    <div class="body"></div>
+                </div>
+                <div class="loading-block-sm">
+                    <div class="header"></div>
+                    <div class="body"></div>
+                </div>
+                <div class="loading-block-md">
+                    <div class="header"></div>
+                    <div class="body"></div>
+                </div>
+            </div>
+            <trainer-map-card editable="{{isMe()}}"
+                              class="section-animate-in">
+            </trainer-map-card>
+            <specialties ng-if="trainerFactory.trainer"
+                         editable="{{isMe()}}"
+                         class="section-animate-in">
+            </specialties>
+            <rates ng-if="trainerFactory.trainer"
+                   editable="{{isMe()}}"
+                   class="section-animate-in">
+            </rates>
+            <certifications-card ng-if="trainerFactory.trainer"
+                                 editable="{{isMe()}}"
+                                 class="section-animate-in">
+            </certifications-card>
         </div>
     </div>
 </div>
