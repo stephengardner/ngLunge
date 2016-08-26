@@ -131,12 +131,6 @@ module.exports = function setup(options, imports, register){
 					count_verified : 0,
 					count_rejected : 0
 				}
-				// name : organization.name,
-				// count : 0,
-				// count_verified : 0,
-				// count_pending : 0,
-				// certification_types : [],
-				// certification_v2s : []
 			};
 			return true;
 		}

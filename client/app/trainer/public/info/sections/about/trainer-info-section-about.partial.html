@@ -1,8 +1,8 @@
-<div ng-if="!trainerFactory.trainer" class="loading-block-xs"></div>
+<div ng-if="!trainerFactory.trainer.name" class="loading-block-xs"></div>
 <md-card ag-editable-container
          trainer-factory-section="'about'"
          class="section-animate-in"
-         ng-if="trainerFactory.trainer">
+         ng-if="trainerFactory.trainer.name">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -16,18 +16,16 @@
     </md-toolbar>
     <form id="aboutForm"
           name="aboutForm"
-          ng-submit="submit()">
+          ng-submit="submit(aboutForm)">
         <md-card-content cg-busy="{promise : cgBusy}"  >
             <div class="ag-editable-container">
-                <div class="ag-editable-default">
-                    {{trainerFactory.trainer.bio || 'Write something about yourself'}}
-                </div>
+                <div class="ag-editable-default" style="white-space: pre-line;">{{trainerFactory.trainer.bio || 'Write something about yourself'}}</div>
                 <div class="ag-editable-editing">
                     <ag-floating-label>
                         <label>Bio</label>
                         <textarea name="bio"
                                   ng-model="trainerFactory.trainerEditing.bio"
-                                  ng-change="removeMongooseError(about, 'bio')"
+                                  server-error
                                   rows="{{textareaRows}}"
                                   md-select-on-focus
                         ></textarea>
@@ -35,12 +33,12 @@
                             <div ng-message="mongoose">{{errors.bio}}</div>
                         </div>
                     </ag-floating-label>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button type="submit">Save</md-button>
+                        <md-button ng-click="toggleEditing()">Cancel</md-button>
+                    </md-card-actions>
                 </div>
             </div>
         </md-card-content>
-        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-            <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing()">Cancel</md-button>
-        </md-card-actions>
     </form>
 </md-card>

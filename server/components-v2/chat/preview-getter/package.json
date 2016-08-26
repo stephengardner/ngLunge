@@ -1,0 +1,15 @@
+{
+  "name": "chatPreviewGetter",
+  "version": "0.0.1",
+  "main": "chat-preview-getter.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel",
+      "userPopulator",
+      "chatModel",
+      "logger"
+    ],
+    "provides": ["chatPreviewGetter"]
+  }
+}

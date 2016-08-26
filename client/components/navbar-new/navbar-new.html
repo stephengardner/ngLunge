@@ -1,11 +1,22 @@
 <md-toolbar id="navbar" class="md-whiteframe-z3 navbar-new">
     <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
-        <span flex="33">
+        <span flex>
             <md-button class="md-icon-button" ng-click="toggleMenu()">
                 <i class="material-icons">menu</i>
             </md-button>
+            <md-button ng-if="isLoggedIn()"
+                       class="md-icon-button"
+                       ng-click="toggleMessagesMenu(); readChatNotifications()">
+                <i class="material-icons">message</i>
+                <span class="count-bubble"
+                      ng-if="getUnreadMessageCount()"
+                      layout="row"
+                      layout-align="center center">
+                    <span class="count">{{getUnreadMessageCount()}}</span>
+                </span>
+            </md-button>
         </span>
-        <h2 flex="33" layout="row" layout-align="center center">
+        <h2 flex="nogrow" layout="row" layout-align="center center">
             <a ui-sref="main.home">
                 <!--<i class="fa fa-google-wallet"></i>-->
                 <!--<span class="logo-l-square">-->
@@ -14,7 +25,7 @@
                 <span class="brand-text">Lunge</span>
             </a>
         </h2>
-        <span flex="33"
+        <span flex
               layout="row"
               id="navbar-buttons"
               layout-align="end center">
@@ -39,42 +50,40 @@
                   hide-xxs
                   layout="row"
                   layout-align="end center"
-                  ng-show="!isLoggedIn()">
+                  ng-if="!isLoggedIn()">
                 <md-button ui-sref="main.login" ui-sref-active="active">
                     Log in
                 </md-button>
-                <md-button href="/signup" ui-sref-active="active">
+                <md-button ui-sref="main.signup" ui-sref-active="active">
                     Sign up
                 </md-button>
             </span>
-            <md-button ng-show="isAdmin()" >
+            <md-button class="md-icon-button"
+                       ng-if="showShareButton">
+                <ag-profile-share-button></ag-profile-share-button>
+            </md-button>
+            <!-- trainer picture -->
+            <md-button class="md-icon-button nopadding profile-picture-nav-button"
+                       ng-if="isLoggedIn() && getCurrentType() == 'trainer'"
+                       ui-sref="profilePage({urlName : getCurrentUser().urlName})"
+                       ui-sref-active="active">
+                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
+            </md-button>
+            <!-- user picture -->
+            <md-button class="md-icon-button nopadding profile-picture-nav-button"
+                       ng-if="isLoggedIn() && getCurrentType() != 'trainer'"
+                       ui-sref="main.trainee.profilePage({urlName : getCurrentUser().urlName})"
+                       ui-sref-active="active">
+                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
+            </md-button>
+            <!-- admin -->
+            <md-button ng-if="isAdmin()" >
                 <a ui-sref="main.admin"
                    ui-sref-active="active"
                    ng-class="{active: isOnAdminPage}"
                    class="btn btn-info">
                     Admin
                 </a>
-            </md-button>
-            <md-button class="md-icon-button"
-                       ng-show="showShareButton()">
-                <div id="share-popover">
-                    <i class="material-icons">share</i>
-                </div>
-            </md-button>
-            <!--<md-button class="md-icon-button">-->
-            <!--<a ng-if="getCurrentType() == 'user'" -->
-            <!--ui-sref="main.dashboard" -->
-            <!--ng-show="isLoggedIn()" -->
-            <!--class="btn btn-username">-->
-            <!--{{getCurrentUser().name.first ? getCurrentUser().name.first : getCurrentUser().name}}-->
-            <!--</a>-->
-            <!--</md-button>-->
-            <md-button class="md-icon-button nopadding profile-picture-nav-button"
-                       ng-show="isLoggedIn()"
-                       ng-if="getCurrentType() == 'trainer'"
-                       ui-sref="profilePage({urlName : getCurrentUser().urlName})"
-                       ui-sref-active="active">
-                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
             </md-button>
         </span>
         <!--<div class="buttons" ng-class="{'scrolled' : scrolled}">-->
@@ -105,15 +114,15 @@
         <!--</span>-->
         <!--</div>-->
     </div>
-    <alert-message class="alert-message" ng-class="{'fixed' : isFixed()}">
+    <alert-message class="alert-message" ng-class="{'fixed' : isFixed()}" ng-cloak>
         <div ng-class="getType()" class="message" ng-show="isActive()">
-            <span class="close-table-position" ng-if="hasCloseButton()">
-            <div class="close-table-wrapper">
-                <div class="table-cell">
-                    <i class="fa fa-times" ng-click="hide()"></i>
+            <div class="close-table-position" ng-if="hasCloseButton()">
+                <div class="close-table-wrapper">
+                    <div class="table-cell">
+                        <i class="fa fa-times" ng-click="hide()"></i>
+                    </div>
                 </div>
             </div>
-            </span>
             {{getMessage()}}
         </div>
     </alert-message>

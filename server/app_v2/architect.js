@@ -25,7 +25,7 @@ module.exports = function(config) {
 		"./models/specialty/v1",
 		//"../plugins/models/v1",
 		{
-			packagePath : "../plugins/socket/v1",
+			packagePath : "../plugins/socket/v1",  
 			config : config
 		},
 		{

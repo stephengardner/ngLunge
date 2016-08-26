@@ -7,6 +7,19 @@ $profile-page-max-width: 750px;
 	margin-bottom:75px;
 }
 
+#contactTrainerDialog {
+	.loggedInAs {
+		padding: 15px;
+		background: #efefef;
+		font-size: 14px;
+		text-align: right;
+		strong {
+			font-weight: 400;
+			font-size: .9em;
+		}
+	}
+}
+
 .rating {
 	.fa-star, .fa-star-half {
 		color: #FECF0A;
@@ -21,6 +34,7 @@ $profile-page-max-width: 750px;
 		position: absolute;
 		right: 0;
 		bottom: -27px;
+		z-index: 1;
 	}
 	.google-map {
 		//height:300px;

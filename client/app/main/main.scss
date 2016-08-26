@@ -1,7 +1,17 @@
 .thing-form {
-    margin: 20px 0;
+	margin: 20px 0;
 }
 
+md-content {
+	height: calc(100vh);
+}
+footer {
+	@extend .md-whiteframe-z3;
+	.container {
+		height: 64px;
+	}
+	border-bottom: 2px solid purple;
+}
 .ready {
 	.fa-spinner {
 		display:none;
@@ -35,7 +45,14 @@ textarea {
 }
 
 .spaced {
-	padding-top: 60px;
+	padding-top: 64px;
+	@include respond-to(xs) {
+		padding-top: 48px;
+		// angular material changes this for portrait mode.
+		@media (orientation: portrait) {
+			padding-top: 56px;
+		}
+	}
 }
 
 ul {
@@ -60,31 +77,31 @@ li {
 }
 
 #banner {
-    border-bottom: none;
-    margin-top: -20px;
+	border-bottom: none;
+	margin-top: -20px;
 }
 
 #banner h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
+	font-size: 60px;
+	line-height: 1;
+	letter-spacing: -1px;
 }
 
 .hero-unit {
 	margin-top: -50px;
-    position: relative;
-    padding: 30px 15px;
-    color: #F5F5F5;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    background: #4393B9;
+	position: relative;
+	padding: 30px 15px;
+	color: #F5F5F5;
+	text-align: center;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	background: #4393B9;
 }
 
 .footer {
-    text-align: center;
-    padding: 30px 0;
-    margin-top: 70px;
-    border-top: 1px solid #E5E5E5;
+	text-align: center;
+	padding: 30px 0;
+	margin-top: 70px;
+	border-top: 1px solid #E5E5E5;
 }
 
 h1,h2,h3 {

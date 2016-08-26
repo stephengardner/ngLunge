@@ -1,6 +1,6 @@
-<div ng-if="!trainerFactory.trainer" class="loading-block-sm"></div>
+<div ng-if="!trainerFactory.trainer.name" class="loading-block-sm"></div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer">
+         ng-if="trainerFactory.trainer.name">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -10,7 +10,7 @@
             <a md-button
                ng-if="editable"
                class="md-icon-button"
-               ui-sref="main.trainer.account.certifications.show">
+               ui-sref="main.trainer.account.certifications">
                 <i class="material-icons">mode_edit</i>
             </a>
         </div>

@@ -8,9 +8,10 @@ var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var validateJwt = expressJwt({ secret: config.secrets.session });
 
-var Trainer, Registration;
+var Trainer, Registration, userModel;
 module.exports = function setup(options, imports, register) {
 	Trainer = imports.trainerModel;//.models.Trainer;
+	userModel = imports.userModel;
 	var exports = {};
 	exports.isAuthenticated = isAuthenticated;
 	exports.isTrainerAuthenticated = isTrainerAuthenticated;
@@ -33,7 +34,7 @@ module.exports = function setup(options, imports, register) {
  */
 function isValidRegistration(){
 	return compose()
-		// Attach user to request
+	// Attach user to request
 		.use(function(req, res, next) {
 			console.log("body id: ", req.params.id);
 			Trainer.findOne({'registration.authenticationHash' : req.params.id }, function (err, trainer) {
@@ -49,12 +50,11 @@ function isValidRegistration(){
 			});
 		});
 }
-
 // for some reason this is populating req.user._id as the whole req.user....
 var authenticate = function(){
 	console.log("auth.authenticate");
 	return compose()
-		// Validate jwt
+	// Validate jwt
 		.use(function(req, res, next) {
 			req.user = req.user || {};
 			console.log("Req.user is...? ( should be empty ) : ", req.user);
@@ -64,16 +64,19 @@ var authenticate = function(){
 			}
 			validateJwt(req, res, next); // THIS is where req.user gets added!
 		})
-		// Attach user to request
+		// Attach trainer to request
+		// OTHERWISE it just adds the simple _id... NOT THE ACTUAL COMPLETE OBJECT
+		// Here we're checking both trainers and users.
 		.use(function(req, res, next) {
 			console.log("1...");
 			console.log("Attach user");
 			req.user = req.user || {};
+			console.log("Req user is:", req.user);
 			Trainer.findById(req.user._id, function (err, trainer) {
 				if (err) return next(err);
 				if (!trainer) {
-					console.log("NO TRAINER FOUND");
-					User.findById(req.user._id, function (err, user) {
+					console.log("NO TRAINER FOUND ON ITEM.");
+					userModel.findById(req.user._id, function (err, user) {
 						if(!user) return res.send(401);
 						req.user = user;
 						console.log("ATTACHED USER:", req.user);
@@ -92,7 +95,7 @@ var authenticate = function(){
 
 var attachCorrectTrainerById = function() {
 	return compose()
-		// Attach user to request
+	// Attach user to request
 		.use(function(req, res, next) {
 			// if(req.params && req.params.id) {
 			// 	console.log("The request params id is:", req.params.id);
@@ -197,13 +200,8 @@ var optionalJwt = function(options) {
 // used for profile
 function isTrainerMe() {
 	return compose()
-		// Validate jwt
+	// Validate jwt
 		.use(function(req, res, next) {
-			/*
-			 console.log("-------------BEGIN COOKIES isTrainerMe() .use()-----------------------");
-			 console.log(req.cookies);
-			 console.log("-------------END COOKIES-----------------------");
-			 */
 			// allow access_token to be passed through query parameter as well
 			if(req.params.accessToken) {
 				req.headers.authorization = 'Bearer ' + req.params.accessToken;
@@ -247,7 +245,7 @@ function isTrainerMe() {
 
 function isTrainerAuthenticated() {
 	return compose()
-		// Validate jwt
+	// Validate jwt
 		.use(function(req, res, next) {
 			// allow access_token to be passed through query parameter as well
 			if(req.query && req.query.hasOwnProperty('access_token')) {
@@ -279,7 +277,7 @@ function isTrainerAuthenticated() {
 
 function isAuthenticated() {
 	return compose()
-		// Validate jwt
+	// Validate jwt
 		.use(function(req, res, next) {
 			// allow access_token to be passed through query parameter as well
 			if(req.query && req.query.hasOwnProperty('access_token')) {

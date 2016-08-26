@@ -21,11 +21,13 @@ var customValidationError = function(res, errField, errMessage) {
 		type : 'custom'
 	};
 	return validationError(res, err);
-}
+};
+
 var validationError = function(res, err) {
 	logger.error(err);
 	return res.status(422).json(err);
 };
+
 module.exports = function setup(options, imports, register) {
 	var trainerModel = imports.trainerModel,
 		bruteforce = imports.bruteforce
@@ -41,7 +43,8 @@ module.exports = function setup(options, imports, register) {
 				return validationError(res, err);
 			})
 		}
-	}
+	};
+
 	function send(req, res) {
 		return new Promise(function(resolve, reject){
 			var trainerId = req.params.id;
@@ -51,31 +54,11 @@ module.exports = function setup(options, imports, register) {
 			expect(req.body.inquiry.user.name).to.exist;
 
 			var trainer, inquiryAddedIndex = false,
-				inquiry = req.body.inquiry
+				inquiry = req.body.inquiry,
+				user = req.body.user,
+				newEmailInquiry
 				;
 
-			function attachMandrillResponse(error, response) {
-				return new Promise(function(resolve, reject){
-					if(inquiryAddedIndex !== false) {
-						console.log("Trainer email inquiries are:", trainer.email_inquiries);
-						console.log("and the index is:", inquiryAddedIndex);
-						if(error) {
-							trainer.email_inquiries[inquiryAddedIndex].mandrill_error = error;
-						}
-						else {
-							trainer.email_inquiries[inquiryAddedIndex].sent++;
-							trainer.email_inquiries[inquiryAddedIndex].mandrill_success = response[0]
-						}
-						trainer.save(function(err, savedTrainer){
-							if(err) return reject(err);
-							return resolve(savedTrainer);
-						})
-					}
-					else {
-						return reject(false);
-					}
-				})
-			}
 			async.waterfall([
 				function getTrainer(callback) {
 					trainerModel.findById(trainerId).exec(function(err, foundTrainer){
@@ -85,10 +68,26 @@ module.exports = function setup(options, imports, register) {
 						callback(null);
 					})
 				},
+				function createEmailInquiry(callback) {
+					newEmailInquiry = {
+						user : {
+							reference : req.user._id,
+							name : _.merge({}, req.user.name),
+							email : req.user.email
+						},
+						message : req.body.inquiry.message
+					};
+					callback();
+				},
 				function validate(callback) {
-					var newEmailInquiry = _.merge({}, req.body.inquiry);
 					trainer.email_inquiries.push(newEmailInquiry);
 					trainer.validate(function(err, validatedTrainer){
+						if(err) return callback(err);
+					});
+				},
+				function validateUser(callback) {
+					req.user.email_inquiries.push(newEmailInquiry);
+					req.user.validate(function(err, validated){
 						if(err) return callback(err);
 						callback(null);
 					})
@@ -99,10 +98,16 @@ module.exports = function setup(options, imports, register) {
 				function bruteDaily(callback) {
 					bruteforce.trainerContactInquiryMaxDaily.prevent(req, res, callback);
 				},
-				function addEmailInquiry(callback) {
-					var newEmailInquiry = _.merge({}, req.body.inquiry);
-					trainer.email_inquiries.push(newEmailInquiry);
+				function addEmailInquiryToTrainer(callback) {
 					trainer.save(function(err, savedTrainer){
+						if(err) return callback(err);
+						trainer = savedTrainer;
+						inquiryAddedIndex = savedTrainer.email_inquiries.length -1;
+						callback(null);
+					})
+				},
+				function addEmailInquiryToUser(callback) {
+					req.user.save(function(err, savedTrainer){
 						if(err) return callback(err);
 						trainer = savedTrainer;
 						inquiryAddedIndex = savedTrainer.email_inquiries.length -1;
@@ -128,9 +133,9 @@ module.exports = function setup(options, imports, register) {
 									}
 								],
 								"substitutions" : {
-									"-name-" : inquiry.user.name.first + " " + inquiry.user.name.last,
-									"-email-" : inquiry.user.email,
-									"-message-" : inquiry.message,
+									"-name-" : newEmailInquiry.user.name.first + " " + newEmailInquiry.user.name.last,
+									"-email-" : newEmailInquiry.user.email,
+									"-message-" : newEmailInquiry.message,
 									"-domain-" : config.DOMAIN,
 									"-url_name-" : trainer.urlName
 								}
@@ -154,44 +159,6 @@ module.exports = function setup(options, imports, register) {
 						console.log(response.headers);
 						callback();
 					});
-					/*
-					rp({
-						method : 'POST',
-						uri : 'https://api.sendgrid.com/v3/mail/send',
-						headers: {
-							'Authorization' : 'Bearer ' + config.sendgrid.clientSecret,
-							'Content-Type' : 'application/json'
-						},
-						body : {
-							"personalizations": [
-								{
-									"to": [
-										{
-											"email": "opensourceaugie@gmail.com"
-										}
-									],
-									"subject": "Hello, World!"
-								}
-							],
-							"from": {
-								"email": "from_address@example.com"
-							},
-							"content": [
-								{
-									"type": "text",
-									"value": "Hello, World!"
-								}
-							]
-						},
-						json: true // Automatically parses the JSON string in the response
-					}).then(function(response){
-						console.log("Response:", response);
-						callback();
-					}).catch(function(err){
-						console.log("err:", err);
-						callback(err);
-					});
-					*/
 				}
 			], function(err, response){
 				if(err) return reject(err);

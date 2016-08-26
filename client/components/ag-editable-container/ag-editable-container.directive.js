@@ -14,7 +14,7 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 		restrict : "AE",
 		link : function(scope, element, attrs) {
 			var container = angular.element(element[0].querySelector('.ag-editable-container')),
-				containerHeightDefault = container.prop('offsetHeight'),
+				containerHeightDefault = $(container).outerHeight(true),//.prop('offsetHeight'),
 				containerHeightEditing,
 				editingContainer = angular.element(element[0].querySelector('.ag-editable-editing')),
 				defaultContainer = angular.element(element[0].querySelector('.ag-editable-default')),
@@ -25,46 +25,77 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 				;
 			function setContainers() {
 				container = angular.element(element[0].querySelector('.ag-editable-container')),
-				containerHeightDefault = container.prop('offsetHeight'),
+				containerHeightDefault = $(container).outerHeight(true);//.prop('offsetHeight'),
 				containerHeightEditing,
 				editingContainer = angular.element(element[0].querySelector('.ag-editable-editing')),
 				defaultContainer = angular.element(element[0].querySelector('.ag-editable-default'))
 			}
 
-			scope.trainerFactorySection = false;
-			scope.$watch(function(){
-				return attrs.trainerFactorySection;
-			}, function(newVal){
-				scope.trainerFactorySection = scope.$eval(newVal);
-			});
-			scope.$watch(function(){
-				return attrs.onEditableHide
-			}, function(newVal){
-				scope.onEditableHide = newVal;
-			});
-
 			function setDefaultHeight() {
-				containerHeightDefault = container.prop('offsetHeight');
+				containerHeightDefault = $(container).outerHeight(true);//.prop('offsetHeight');
 			}
 
 			function setEditingHeight() {
-				editingContainer.addClass('ag-editable-preparing');
+				// editingContainer.addClass('ag-editable-preparing');
 				editingContainer.removeClass('ng-hide');
-				editingContainerHeightDefault = editingContainer.prop('offsetHeight');
+				editingContainerHeightDefault = $(editingContainer).outerHeight(true);//.prop('offsetHeight');
 				containerHeightEditing = editingContainerHeightDefault;
+				// editingContainer.addClass('ag-editable-showing');
+				// editingContainer.removeClass('ag-editable-preparing');
+			}
+
+			function getHeightsOnOpen() {
+				defaultContainer.addClass('ag-set-absolute-to-get-height');
+				containerHeightDefault = $(defaultContainer).outerHeight(false);//.prop('offsetHeight');
+				defaultContainer.removeClass('ag-set-absolute-to-get-height');
+
+				defaultContainer.addClass('ag-editable-closing');
+
+				editingContainer.removeClass('ng-hide');
+
+				editingContainer.addClass('ag-set-absolute-to-get-height');
+				containerHeightEditing = $(editingContainer).outerHeight(false);//.prop('offsetHeight');
+				editingContainer.removeClass('ag-set-absolute-to-get-height');
+
 				editingContainer.addClass('ag-editable-showing');
-				editingContainer.removeClass('ag-editable-preparing');
+			}
+
+			function getHeightsOnClose2() {
+				defaultContainer.removeClass('ng-hide');
+
+				defaultContainer.addClass('ag-set-absolute-to-get-height');
+				containerHeightDefault = $(defaultContainer).outerHeight(false);//.prop('offsetHeight');
+				defaultContainer.removeClass('ag-set-absolute-to-get-height');
+
+				defaultContainer.addClass('ag-editable-showing');
+
+				editingContainer.addClass('ag-set-absolute-to-get-height');
+				containerHeightEditing = $(editingContainer).outerHeight(false);//.prop('offsetHeight');
+				editingContainer.removeClass('ag-set-absolute-to-get-height');
+
+				editingContainer.addClass('ag-editable-closing');
+			}
+
+			function getHeightsOnClose() {
+				defaultContainer.addClass('ag-editable-closing');
+				// editingContainer.removeClass('ag-editable-closing');
+				// editingContainer.addClass('ag-editable-closing');
+				containerHeightEditing = $(container).outerHeight(true);//.prop('offsetHeight');
+				// editingContainer.removeClass('ag-editable-closing');
+				// defaultContainer.addClass('ag-editable-closing');
+				containerHeightDefault = $(defaultContainer).outerHeight(true);//.prop('offsetHeight');
+				// defaultContainer.removeClass('ag-editable-closing');
+				// editingContainer.removeClass('ag-editable-closing');
 			}
 
 			function showEditingAnimation() {
-				setContainers();
-				setDefaultHeight();
-				setEditingHeight();
+				// setContainers();
+				// setDefaultHeight();
+				// setEditingHeight();
+				getHeightsOnOpen();
 				console.log("Animating from " + containerHeightDefault + "px to " + containerHeightEditing + "px");
-				console.log("EditingSectition", containerHeightEditing);
+				// return;
 				editingContainer.removeClass('ng-hide');
-				// $animate.removeClass(editingContainer, 'ng-hide');
-				console.log("Editing container is:", editingContainer);
 				var containerAnimation = $animateCss(container, {
 					easing: easing,
 					from: {
@@ -107,10 +138,23 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 					defaultSectionAnimation.start(),
 					editingSectionAnimation.start()
 				);
-				$q.all(animators).then(function(){});
+				$q.all(animators).then(function(){
+					if(scope.editing) {
+						$(container).css({height : 'auto'});
+						defaultContainer.addClass('ng-hide');
+						defaultContainer.removeClass('ag-editable-closing');
+						editingContainer.removeClass('ag-editable-showing');
+					}
+				});
 			}
 
 			function hideEditingAnimation() {
+				getHeightsOnClose2();
+				console.log("Animating from " + containerHeightEditing + "px to " + containerHeightDefault + "px");
+				defaultContainer.removeClass('ng-hide');
+				// return;
+				// $(defaultContainer).css({position : 'relative'});
+				// $(editingContainer).css({position : 'absolute'});
 				editingContainer.blur(); // blur the element if you're on a phone and something hides this
 				var containerAnimation = $animateCss(container, {
 					addClass: 'hide-editing',
@@ -157,10 +201,29 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 					editingSectionAnimation.start()
 				);
 				$q.all(animators).then(function(){
-					editingContainer.addClass('ng-hide');
+					if(!scope.editing) {
+						$(container).css({height : 'auto'});
+						editingContainer.addClass('ng-hide');
+						editingContainer.removeClass('ag-editable-closing');
+						defaultContainer.removeClass('ag-editable-showing');
+					}
 				});
 			}
 			editingContainer.addClass('ng-hide');
+
+			scope.trainerFactorySection = attrs.trainerFactorySection;
+			var section = scope.$eval(attrs.trainerFactorySection);
+			scope.$watch(function(){
+				return TrainerFactory.isEditing[section]
+			}, function(newValue, oldValue) {
+				// necessary to check if oldValue is undefined, it gets changed a little bit and this could cause
+				// too many animations firing
+				if(newValue != oldValue && oldValue !== undefined) {
+					console.log("editable container directive toggling from " + oldValue + " to: " + newValue);
+					scope.toggleEditing();
+				}
+			});
+
 			scope.toggleEditing = function(form){
 				editing = !editing;
 				scope.editing = editing;
@@ -181,16 +244,11 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 						scope.reset();
 					}
 				}
-				if(scope.trainerFactorySection) {
-					if(!editing) {
-						TrainerFactory.resetEditing(scope.trainerFactorySection);
-					}
-					TrainerFactory.setEditingOf(scope.trainerFactorySection, editing);
-				}
 			}
 		}
 	}
 }]);
+
 myApp.animation('.ag-editable-showing', function() {
 	return {
 		addClass : function(element, done) {

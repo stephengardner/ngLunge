@@ -4,7 +4,9 @@
   "main": "certification-document-add-to-trainer.js",
   "private": true,
   "plugin": {
-    "consumes": [],
+    "consumes": [
+      "certificationStatusSetter"
+    ],
     "provides": ["certificationDocumentAddToTrainer"]
   }
 }

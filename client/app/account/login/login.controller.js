@@ -10,8 +10,28 @@ angular.module('ngLungeFullStack2App')
 	                                         $auth,
 	                                         $http,
 	                                         AlertMessage,
+	                                         $cookieStore,
 	                                         FormControl,
+	                                         $mdDialog,
+	                                         $stateParams,
 	                                         $mdToast) {
+		$scope.type = $stateParams.tab;
+
+		$scope.cancel = $mdDialog.hide;
+		$scope.getSelectedTab = function() {
+			if($scope.type == 'trainer') {
+				$scope.selectedIndex = 1;
+			}
+			else {
+				$scope.selectedIndex = 0;
+			}
+		};
+
+		$scope.selectTab = function(tab) {
+			$scope.type = tab;
+		};
+
+		$scope.getSelectedTab();
 
 		$scope.user = {};
 		$scope.errors = {};
@@ -22,7 +42,8 @@ angular.module('ngLungeFullStack2App')
 			Trainer : {
 
 			}
-		}
+		};
+
 		$scope.login = function(form) {
 			$scope.submitted = true;
 			console.log("FORM:",form);
@@ -35,7 +56,7 @@ angular.module('ngLungeFullStack2App')
 						email : $scope.user.email,
 						password : $scope.user.password
 					}
-				}).success(function(response){
+				}).success(function(response) {
 					AlertMessage.success('Successfully logged in!');
 					console.log("Response:", response);
 					Auth.setCurrentUser(response.trainer);
@@ -43,26 +64,22 @@ angular.module('ngLungeFullStack2App')
 				}).error(function(err){
 					console.log("Err:", err);
 					FormControl.parseValidationErrors(form, err);
-				})
-				// Auth.login({
-				// 		email: $scope.user.email,
-				// 		password: $scope.user.password,
-				// 		type : "trainer"
-				// 	})
-				// 	.then( function() {
-				// 		// Logged in, redirect to home
-				// 		console.log("redirecting to profile state");
-				// 		$state.go('profile');
-				//
-				// 		return false;
-				// 	})
-				// 	.catch( function(err) {
-				// 		$scope.errors.other = err.message;
-				// 	});
+				});
 			}
 		};
 
 
+		$scope.loginOAuth = function(provider) {
+			var type = $scope.type;
+			$auth.authenticate(provider, {type : type + '-login'}).then(function(response){
+				$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));
+				Auth.setCurrentUser(response.data[type]);
+				$state.go('profile');
+			}).catch(function(err){
+				$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+				console.log("err", err);
+			});
+		};
 		$scope.trainerLoginOAuth = function(provider) {
 			$auth.authenticate(provider, {type : 'trainer-login'}).then(function(response){
 				$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));

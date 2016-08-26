@@ -1,0 +1,86 @@
+#what-is-lunge {
+	.container-sm {
+		max-width: 700px;
+		margin: 0 auto;
+	}
+	.underline {
+		border-bottom: 1px dashed;
+		vertical-align: top;
+		display: inline-block;
+	}
+	#head {
+		@include respond-to(xs) {
+			padding: 90px 0;
+			h1 {
+				font-size: 24px;
+			}
+		}
+		text-align: center;
+		background-color: #3B2F63;
+		background-image: -webkit-radial-gradient(50% top, circle, rgba(84,90,182,0.6) 0%, rgba(84,90,182,0) 75%),-webkit-radial-gradient(right top, circle, #794aa2 0%, rgba(121,74,162,0) 57%);
+		background-image: radial-gradient(50% top, circle, rgba(84,90,182,0.6) 0%, rgba(84,90,182,0) 75%),radial-gradient(right top, circle, #794aa2 0%, rgba(121,74,162,0) 57%);
+		background-repeat: no-repeat;
+		background-size: 100% 1000px;
+		padding: 90px;
+		color: #f1e8fb;
+		h1 {
+			line-height: 1.25em;
+		}
+	}
+	#description {
+		font-size: 18px;
+		padding: 60px 0;
+		line-height: 1.7em;
+		.container {
+			border-left: 2px solid rgb(136, 87, 226);
+		}
+	}
+	#description-2 {
+		background: #f7f4fb;
+		.item {
+			~ .item {
+				margin-top: 50px;
+			}
+		}
+		h2 {
+			margin-bottom: 15px;
+		}
+		.text {
+			line-height: 1.7em;
+			font-size: 16px;
+		}
+		text-align: center;
+		padding: 60px 0;
+	}
+	#description-3 {
+		position: relative;
+		.shade {
+			position: absolute;
+			left: 0;
+			 right: 0;
+			top: 0;
+			bottom: 0;
+			background:rgba(0,0,0,.5);
+		}
+		.container-sm {
+			position: relative;
+		}
+		background-image: url('/assets/images/lunge-running-bridge.jpg');
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center center;
+		background-attachment: fixed;
+		padding: 100px 0;
+		text-align: center;
+		color: white;
+		button, .md-button {
+			border: 1px dashed rgb(136, 87, 226);
+			padding: 6px 30px;
+		}
+		h2 {
+			font-size: 45px;
+			text-shadow: 2px 2px black;
+			margin-bottom: 75px;
+		}
+	}
+}

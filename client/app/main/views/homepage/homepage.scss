@@ -1,0 +1,208 @@
+#home {
+	#sign-up {
+		&:hover {
+			background: rgba(255,255,255,.25);
+		}
+	}
+	#description {
+		background: #3d069e;
+		background: -moz-linear-gradient(-45deg, #3d069e 0%, #6822ad 31%, #37b0ce 84%, #7db9e8 100%);
+		background: -webkit-linear-gradient(-45deg, #3d069e 0%,#6822ad 31%,#37b0ce 84%,#7db9e8 100%);
+		//background: linear-gradient(155deg, #3d069e 0%,#6822ad 31%,#37b0ce 84%,#7db9e8 100%);
+		background: linear-gradient(155deg, #3d069e 0%, #6822ad 31%, #37b0ce 95%, #7db9e8 100%);
+		color: white;
+		padding: 50px 0;
+		h2 {
+			font-size: 38px;
+			margin-bottom: 20px;
+		}
+		.subheader {
+			line-height: 1.7em;
+			font-size: 16px;
+		}
+		.icon {
+			font-size: 30px;
+			margin-bottom: 13px;
+		}
+		#description-icons {
+			> div {
+				line-height: 1.8em;
+				~ div ~ div {
+					margin-top: 90px;
+				}
+			}
+			@include respond-to(xs) {
+				> div {
+					~ div {
+						margin-top: 40px!important;
+					}
+				}
+			}
+			.headline {
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				font-size: 18px;
+				font-weight: 300;
+				margin-bottom: 10px;
+			}
+			.text {
+
+			}
+		}
+	}
+	#description-2 {
+		color: white;
+		position: relative;
+		.container {
+			position: relative;
+			z-index: 1;
+		}
+		-webkit-backface-visibility: hidden;
+		-webkit-perspective: 1000;
+		-webkit-transform: translate3d(0,0,0);
+		-webkit-transform: translateZ(0);
+		&:before {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+
+			display: block;
+			background-image: url('/assets/images/lunge-shoe-closeup-lace.jpg');
+			background-repeat: no-repeat;
+
+			background-position: center center;
+			background-size: cover;
+			background-attachment: fixed;
+			filter: blur(3px);
+			-webkit-filter: blur(3px);
+		}
+		//.container {
+		//	> div {
+		//		position: relative;
+		//	}
+		//}
+		.shade {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, .3);
+		}
+		padding: 60px 0 20px 0;
+		text-align: center;
+		h2 {
+			font-weight: 400;
+			margin-bottom: 40px;
+			text-shadow: 2px 2px black;
+		}
+		h3 {
+			margin-bottom: 190px;
+			@include respond-to(xs) {
+				margin-bottom: 100px;
+			}
+			text-shadow: 2px 2px black;
+		}
+		.headline {
+			font-size: 18px;
+			margin-bottom: 15px;
+		}
+		.icon {
+			padding: 5px 0;
+			font-size: 38px;
+		}
+		.separator {
+			width: 2px;
+			background: white;
+		}
+	}
+
+	#description-3 {
+		padding: 100px 0;
+		text-align: center;
+		background: rgb(254, 254, 254);//#e9e9ff;
+		background-image: url('/assets/images/lunge-man-standing.jpg');
+		//background-position: 90% 60%;
+		background-position: center center;
+		@include respond-to(xs) {
+			background-position: center center;
+		}
+		background-size: cover;
+		background-repeat: no-repeat;
+		position: relative;
+		.shade {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: rgba(255, 255, 255, .3);
+		}
+		ag-floating-label {
+			font-size: 24px;
+			ag-icon {
+				top: 8px;
+				i {
+					font-size: 30px;
+				}
+			}
+		}
+		h2 {
+			font-size: 40px;
+			margin-bottom: 60px;
+		}
+		.container-sm {
+			position: relative;
+			z-index: 1;
+			margin: 0 auto;
+			max-width: 600px;
+		}
+	}
+	#description-4 {
+		padding: 60px;
+		font-size: 20px;
+		background: rgba(55, 34, 173, 0.89);
+		color: #f8f8f8;
+		position: relative;
+		overflow: hidden;
+		line-height: 1.8em;
+		@include respond-to(xs) {
+			text-align: center;
+		}
+		.icon {
+			position: absolute;
+			left: 50px;
+			top: -20px;
+			font-size: 80px;
+			opacity: .3;
+		}
+		button, .button, .md-button {
+			&:hover {
+				color: #f8f8f8;
+			}
+			min-width: 0;
+			&:focus {
+				color: inherit;
+			}
+			font-size: 18px;
+			text-transform: none;
+			padding: 0 5px;
+			margin: 0;
+			border-bottom: 1px dashed;
+			vertical-align: middle;
+		}
+	}
+}
+#footer {
+	position: relative;
+	@extend .md-whiteframe-z3;
+	//box-shadow: 0 0 4px rgba(0, 0, 0, .5);
+	//padding: 20px 0;
+	#footer-copyright {
+		margin: 20px 0;
+		font-size: 18px;
+	}
+}

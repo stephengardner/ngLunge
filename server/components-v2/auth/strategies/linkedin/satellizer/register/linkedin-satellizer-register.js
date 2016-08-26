@@ -7,13 +7,25 @@ var jwt = require('jsonwebtoken'),
 module.exports = function setup(options, imports, register){
 	var trainerModel = imports.trainerModel,
 		auth = imports.auth,
+		userModel = imports.userModel,
 		createJWT = auth.signToken;
 	var linkedinSatellizerRegister = function(req, res) {
 		var profile = req.profile,
-			provider = 'linkedin'
-		;
-		console.log("profile:", profile);
-		trainerModel.findOne({ 'email' : profile.emailAddress }, function(err, existingUser) {
+			provider = 'linkedin',
+			type,
+			Model
+			;
+		if(req.body.type && req.body.type.indexOf('trainee') != -1) {
+			type = "trainee";
+			Model = userModel;
+		}
+		else {
+			type = "trainer";
+			Model = trainerModel;
+		}
+
+		console.log("linedinSatellizerRegister registering for type: " + type);
+		Model.findOne({ 'email' : profile.emailAddress }, function(err, existingUser) {
 			if (existingUser && existingUser.registration_providers[provider] == profile.id) {
 				return res.status(409).send({ 
 					message: 'There is already a ' +
@@ -22,46 +34,60 @@ module.exports = function setup(options, imports, register){
 				});
 			}
 			else if(existingUser) {
-				addRegistrationToExistingTrainer(existingUser);
+				addRegistrationToExistingDocument(existingUser);
 			}
 			else {
-				createNewTrainer();
+				createNewDocument();
 			}
 		});
-		function addRegistrationToExistingTrainer(trainer) {
-			trainer.registration_providers[provider] = profile.id;
-			trainer[provider] = JSON.parse(JSON.stringify(profile));
-			trainer.save(function(err, saved){
+		function addRegistrationToExistingDocument(document) {
+			document.registration_providers[provider] = profile.id;
+			document[provider] = JSON.parse(JSON.stringify(profile));
+			document.save(function(err, saved){
 				if(err) return res.status(500).send(err);
-				sendResponse(trainer);
+				sendResponse(document);
 			})
 		}
-		function createNewTrainer(){
-			var user = new trainerModel();
-			setTrainerDetails(user).then(function(response){
-				user.save(function(err, saved) {
+		function createNewDocument(){
+			var document = new Model();
+			setDocumentDetails(document).then(function(response){
+				document.save(function(err, saved) {
 					if(err) return res.status(500).send(err);
-					sendResponse(user);
+					sendResponse(document);
 				});
 			}).catch(function(err){
 				console.log(err);
 			});
 		}
-		function setTrainerDetails(trainer) {
+		function setDocumentDetails(document) {
 			return new Promise(function(resolve, reject){
-				trainer.registration_providers[provider] = profile.id;
-				trainer[provider] = JSON.parse(JSON.stringify(profile));
-				trainer.email = profile.emailAddress;
-				trainer.name.full = profile.firstName + " " + profile.lastName;
-				return resolve(trainer);
+				document.registration_providers[provider] = profile.id;
+				document[provider] = JSON.parse(JSON.stringify(profile));
+				document.email = profile.emailAddress;
+				document.name.full = profile.firstName + " " + profile.lastName;
+				setPicture(document);
+				return resolve(document);
 			});
 		}
-		function sendResponse(trainer) {
-			var token = createJWT(trainer);
-			console.log("CREATED USER\n\n");
+		function setPicture(document) {
+			if(type == "trainee") {
+				if(document.profile_picture && !document.profile_picture.thumbnail.url) {
+					console.log(profile);
+					document.profile_picture.thumbnail.url = profile.pictureUrl;
+				}
+			}
+		}
+		function sendResponse(user) {
+			var token = createJWT(user);
+			console.log("SENDING type: " + type + " \n\n");
 			res.cookie('token', JSON.stringify(token));
-			res.cookie('type', JSON.stringify('trainer'));
-			res.send({ token: token, type : 'trainer', trainer : trainer });
+			res.cookie('type', JSON.stringify(type));
+			var returnObject = {
+				token : token,
+				type : type
+			};
+			returnObject[type] = user;
+			res.send(returnObject);
 		}
 	};
 	register(null, {

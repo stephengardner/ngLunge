@@ -1,4 +1,4 @@
 lungeApp.controller("TrainerBasicInfoController", function($scope,
                                                            TrainerFactory){
-	$scope.trainerFactory = TrainerFactory;
+	// $scope.trainerFactory = TrainerFactory;
 });

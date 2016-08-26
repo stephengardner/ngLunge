@@ -1,0 +1,54 @@
+<md-sidenav id="material-messages-menu" class="md-sidenav-left md-whiteframe-z1"
+            md-component-id="messages"
+            flex>
+    <md-toolbar md-scroll-shrink>
+        <div class="md-toolbar-tools">
+            <h3>
+                <span>Messages</span>
+            </h3>
+        </div>
+    </md-toolbar>
+    <div id="menu-items">
+        <div layout="row" layout-align="center center" ng-if="chatService.busy">
+            <md-progress-circular md-diameter="35"></md-progress-circular>
+        </div>
+        <!--<md-list>-->
+            <!--<md-list-item ui-sref="main.messages.message({id : chat._id})"-->
+                          <!--class="md-3-line"-->
+                          <!--ng-repeat="chat in chatService.chats">-->
+                <div class="chat-row"
+                     md-ink-ripple
+                     ng-repeat="chat in chatService.chats"
+                     layout="row"
+                     ui-sref="main.messages.message({id : chat._id})"
+                     ng-click="toggleLeft()"
+                     layout-align="start start">
+                    <div class="profile-picture" layout="row" layout-align="center center">
+                        <img ng-src="{{chat.picture.thumbnail.url}}"/>
+                    </div>
+                    <div class="chat-text md-list-item-text" layout="column" flex>
+                        <div layout="row" layout-align="space-between center">
+                            <div class="name">
+                                {{chat.last_message_sender.name.first}}
+                                <span class="unread" ng-if="chat.unread_count">
+                                    ({{chat.unread_count}})
+                                </span>
+                            </div>
+                            <div class="time">
+                                {{chat.time}}
+                            </div>
+                        </div>
+                        <div class="last-message"
+                             layout="row"
+                             layout-align="start center">
+                            <span ng-if="chat.is_reply">
+                                <i class="material-icons">reply</i>
+                            </span>
+                            {{chat.last_message_text}}
+                        </div>
+                    </div>
+                </div>
+            <!--</md-list-item>-->
+        <!--</md-list>-->
+    </div>
+</md-sidenav>

@@ -1,25 +1,59 @@
 'use strict';
 
 angular.module('ngLungeFullStack2App')
-  .factory('User', function ($resource) {
-    return $resource('/api/users/:id/:controller', {
-      id: '@_id'
-    },
-    {
-      changePassword: {
-        method: 'PUT',
-        params: {
-          controller:'password'
-        }
-      },
-      get: {
-        method: 'GET',
-        params: {
-          id:'me'
-        }
-      }
-	  });
-  });
+	.factory('User', function ($resource) {
+		return $resource('/api/users/:id/:controller', {
+				id: '@_id'
+			},
+			{
+				changePassword: {
+					method: 'PUT',
+					params: {
+						controller:'password'
+					}
+				},
+				markMessageRead : {
+					method : 'POST',
+					url : '/api/users/:id/messages/:messageId/read',
+					params : {
+						id : '@id',
+						messageId : '@messageId'
+					}
+				},
+				readChatNotifications : {
+					method: 'GET',
+					url : '/api/users/:id/chat/notifications/read',
+					params: {
+						id:'me'
+					}
+				},
+				getChats : {
+					method: 'GET',
+					params: {
+						controller : 'chat'
+					},
+					isArray : true
+				},
+				sendChat : {
+					method : 'GET',
+					url : '/api/users/:id/chat/send'
+				},
+				// getChat : {
+				// 	method: 'GET',
+				// 	url : '/api/chats/:id/chat/notifications/read',
+				// 	params: {
+				// 		controller : 'chat'
+				// 	},
+				// 	isArray : true
+				// },
+				get: {
+					method: 'GET',
+					params: {
+						id:'me'
+					}
+				}
+			});
+	});
 
 angular.module('ngLungeFullStack2App')
 	.factory('Trainer', function ($resource) {
@@ -30,7 +64,13 @@ angular.module('ngLungeFullStack2App')
 				update : {
 					method : 'PUT'
 				},
-				changePassword: {
+				updateOverwrite : {
+					method : 'PUT',
+					params : {
+						controller : 'overwrite'
+					}
+				},
+				changePassword : {
 					method: 'PUT',
 					params: {
 						controller:'password'
@@ -43,13 +83,13 @@ angular.module('ngLungeFullStack2App')
 					}
 				},
 				/*
-				addCertification : {
-					method : 'PUT',
-					params : {
-						controller : 'certification'
-					}
-				},
-				*/
+				 addCertification : {
+				 method : 'PUT',
+				 params : {
+				 controller : 'certification'
+				 }
+				 },
+				 */
 				modifyCertification : {
 					method : 'PUT',
 					params : {
@@ -64,13 +104,13 @@ angular.module('ngLungeFullStack2App')
 					}
 				},
 				/*
-				removeCertification : {
-					method : 'DELETE',
-					params : {
-						controller : 'certification'
-					}
-				},
-				*/
+				 removeCertification : {
+				 method : 'DELETE',
+				 params : {
+				 controller : 'certification'
+				 }
+				 },
+				 */
 				get: {
 					method: 'GET',
 					params: {

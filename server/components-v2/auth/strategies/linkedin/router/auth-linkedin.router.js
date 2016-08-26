@@ -17,11 +17,11 @@ module.exports = function setup(options, imports, register) {
 		;
 	router.post('/', linkedinSatellizer,
 		function (req, res, next) {
-			if (req.body.type == 'trainer-register') {
+			if (req.body.type && req.body.type.indexOf('register') != -1) {
 				console.log("linkedinSatellizerRegister");
 				return linkedinSatellizerRegister(req, res, next);
 			}
-			else if (req.body.type == 'trainer-login') {
+			else if (req.body.type && req.body.type.indexOf('login') != -1) {
 				console.log("linkedinSatellizerLogin");
 				return linkedinSatellizerLogin(req, res, next);
 			}

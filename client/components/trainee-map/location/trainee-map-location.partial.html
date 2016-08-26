@@ -1,0 +1,48 @@
+
+<div class="locations" ng-if="userFactory.user.location.city" id="trainee-location">
+    <md-list>
+        <md-list-item>
+            <div class="md-list-item-animation-container location">
+                <div flex
+                     class="list-item-default"
+                     layout="row"
+                     ng-if="!userFactory.user.location.removing"
+                     layout-align="space-between center">
+                    <p>
+                        {{userFactory.user.location.city}}, {{userFactory.user.location.state}}
+                    </p>
+                    <md-button class="md-icon-button"
+                               ng-if="editable"
+                               ng-click="toggleRemovingLocation(userFactory.user.location)">
+                        <i class="material-icons">delete</i>
+                    </md-button>
+                </div>
+                <div class="list-item-removing"
+                     ng-if="userFactory.user.location.removing">
+                    <div layout="row"
+                            layout-align="space-between center">
+                        <p flex>
+                            Are you sure you want to remove this location?
+                        </p>
+                        <div flex="nogrow" hide-xs>
+                            <md-button ng-click="removeLocation()">
+                                Yes
+                            </md-button>
+                            <md-button ng-click="toggleRemovingLocation(userFactory.user.location)">
+                                Cancel
+                            </md-button>
+                        </div>
+                        <div flex hide-gt-xs layout="row" layout-align="center right">
+                            <md-button class="md-icon-button" ng-click="removeLocation()">
+                                <i class="material-icons">check</i>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="toggleRemovingLocation(userFactory.user.location)">
+                                <i class="material-icons">cancel</i>
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-list-item>
+    </md-list>
+</div>

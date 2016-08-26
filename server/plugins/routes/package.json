@@ -12,7 +12,8 @@
       "apiSpecialtyRouter",
       "authRoutes",
       "apiRegistrationRouter",
-      "apiUserRouter"
+      "apiUserRouter",
+      "apiChatRouter"
     ],
     "provides": ["routes"]
   }

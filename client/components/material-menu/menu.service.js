@@ -15,9 +15,7 @@ myApp.factory('Menu', [
 				{
 					name : Auth.getCurrentUser().name ? Auth.getCurrentUser().name.first : 'Profile',
 					type : 'link',
-					state : 'profilePage',
-					stateOptions : {urlName : Auth.getCurrentUser().urlName },
-					action : 'goToProfile()',
+					state : 'profile',
 					icon : 'person',
 					profile : true
 				}
@@ -26,13 +24,13 @@ myApp.factory('Menu', [
 				{
 					name : 'Account',
 					type : 'link',
-					state : 'main.trainer.account.edit-profile',
+					state : 'account',
 					icon : 'settings'
 				},
 				{
 					name : 'Certifications',
 					type : 'toggle',
-					state : 'main.trainer.account.certifications',
+					state : 'main.certifications',
 					pages : [
 						{
 							name : 'My Certifications',
@@ -42,12 +40,12 @@ myApp.factory('Menu', [
 						{
 							name : 'Add Certifications',
 							type : 'link',
-							state : 'main.trainer.account.certifications.list'
+							state : 'main.certifications.list'
 						},
 						{
 							name : 'faq',
 							type : 'link',
-							state : 'main.trainer.account.certifications.faq'
+							state : 'main.certifications.faq'
 						}
 					],
 					icon : 'pages'

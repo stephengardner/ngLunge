@@ -7,6 +7,7 @@ var _ = require('lodash'),
 module.exports = function setup(options, imports, register) {
 	var Registration = imports.registrationModel,
 		Trainer = imports.trainerModel,
+		userModel = imports.userModel,
 		registrationTrainerSignUp = imports.registrationTrainerSignUp,
 		trainerPopulator = imports.trainerPopulator,
 		bruteforce = imports.bruteforce
@@ -94,62 +95,66 @@ module.exports = function setup(options, imports, register) {
 		console.log("Req body: ", req.body);
 		req.body = req.body && req.body.email ? req.body : { email : ""};
 
-		Trainer.findOne({
-			email : req.body.email
-		}).exec(function(err, found) {
-			if(err) return handleError(res, err);
-			if(found && found.registration.email_verified) { // let it error out properly
-				createTrainer();
-			}
-			else if(!found) { // create the trainer
-				createTrainer();
-			}
-			else { // found and not authenticated yet, resend the email
-				found.registration.authenticationHash = crypto.randomBytes(20).toString('hex');
-				found.save(function(err, saved){
+		if(req.body.type == 'user') {
+			return res.json({user : {}});
+		}
+		else {
+			Trainer.findOne({
+				email : req.body.email
+			}).exec(function(err, found) {
+				if(err) return handleError(res, err);
+				if(found && found.registration.email_verified) { // let it error out properly
+					createTrainer();
+				}
+				else if(!found) { // create the trainer
+					createTrainer();
+				}
+				else { // found and not authenticated yet, resend the email
+					found.registration.authenticationHash = crypto.randomBytes(20).toString('hex');
+					found.save(function(err, saved){
+						if(err) return handleError(res, err);
+						sendEmail(saved);
+					});
+				}
+			});
+			function sendEmail(trainer) {
+				async.waterfall([
+					function brute(callback) {
+						bruteforce.trainerRegistration.prevent(req, res, callback);
+					},
+					function send(callback) {
+						registrationTrainerSignUp.sendEmail(trainer).then(function(){
+							callback(null);
+						}).catch(callback)
+					}
+
+				], function(err, response){
 					if(err) return handleError(res, err);
-					sendEmail(saved);
+					return res.json({trainer : trainer});
 				});
 			}
-		});
-		function sendEmail(trainer) {
-			async.waterfall([
-				function brute(callback) {
-					bruteforce.trainerRegistration.prevent(req, res, callback);
-				},
-				function send(callback) {
-					registrationTrainerSignUp.sendEmail(trainer).then(function(){
-						callback(null);
-					}).catch(callback)
-				}
-
-			], function(err, response){
-				if(err) return handleError(res, err);
-				return res.json({trainer : trainer});
-			});
-		}
-		function createTrainer() {
-			var createTrainerFrom = _.merge(
-				req.body,
-				{
-					registration: {
-						authenticationHash: crypto.randomBytes(20).toString('hex')
+			function createTrainer() {
+				var createTrainerFrom = _.merge(
+					req.body,
+					{
+						registration: {
+							authenticationHash: crypto.randomBytes(20).toString('hex')
+						}
 					}
-				}
-			);
-			var newTrainer = new Trainer(createTrainerFrom);
-			console.log("Created new trainer object:", newTrainer);
-			newTrainer.save(function(err, savedTrainer){
-				if(err) {
-					console.log("ERROR ON SAVE:", err);
-					return handleError(res, err);
-				}
-				else {
-					sendEmail(savedTrainer);
-				}
-			});
+				);
+				var newTrainer = new Trainer(createTrainerFrom);
+				console.log("Created new trainer object:", newTrainer);
+				newTrainer.save(function(err, savedTrainer){
+					if(err) {
+						console.log("ERROR ON SAVE:", err);
+						return handleError(res, err);
+					}
+					else {
+						sendEmail(savedTrainer);
+					}
+				});
+			}
 		}
-
 	};
 
 	exports.resendEmail = function(req, res) {

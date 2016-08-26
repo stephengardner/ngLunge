@@ -14,6 +14,8 @@ var throng = require('throng');
 var config = require('../config/environment');
 //var app = require('./app/index.js'); // I don't know why but this is requiring the full pathname to index.js
 var web = require('../web-server');
+var sendgrid = require("sendgrid");
+sendgrid.SendGrid("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");
 
 //require('longjohn');
 var phantom = require('x-ray-phantom');
@@ -47,12 +49,13 @@ var x = Xray().driver(phantom({webSecurity : false}));
 //http.globalAgent.maxSockets = Infinity;
 //
 //// spin up our workers...? ok
-throng(start, { workers: config.max_concurrency ? config.max_concurrency : 1 });
+throng({ start : start, workers: config.max_concurrency ? config.max_concurrency : 1 });
 
 //var instance;
 
 
 function start() {
+	var scrapeNumber = 0;
 	config.handleQueues = false;
 	config.handleServer = false;
 	var architect = require("architect");
@@ -229,6 +232,7 @@ function start() {
 			return message;
 		}
 		var testIndex = 0;
+
 		var republicanScraper = {
 			find : {
 				names : x('#polling-data-rcp tr.header', ['th']),
@@ -568,6 +572,80 @@ function start() {
 			}
 		}
 
+		var FECScrape = {
+			url : 'http://docquery.fec.gov/cgi-bin/forms/C00580100',
+			find : {
+				FEC : x('.tablebody tr')
+			},
+			preValidate : function(data) {
+				scrapeNumber++;
+				console.log("Data:", data);
+				if(!this.stats) {
+					this.stats = {
+						current : false,
+						previous : false,
+						changed : false
+					};
+				}
+				this.stats.previous = this.stats.current;
+				this.stats.current = data;
+
+
+				// var email = new sendgrid.Email();
+				//
+				// email.addTo("opensourceaugie@gmail.com");
+				// email.setFrom("ALERTAUGIE@ALERTAUGIE.COM");
+				// email.setSubject("BOOM!!!!!!!!!");
+				// email.setHtml("boom.");
+				//
+				// sendgrid.send(email);
+				if(this.stats.previous && this.stats.previous.FEC != this.stats.current.FEC
+					/*&& this.stats.previous !== false*/) {
+					var helper = require('sendgrid').mail
+					from_email = new helper.Email("BOOM@BOOM.COM")
+					to_email = new helper.Email("opensourceaugie@gmail.com")
+					subject = "BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM!"
+					content = new helper.Content("text/plain", "some text here")
+					mail = new helper.Mail(from_email, subject, to_email, content)
+					var requestBody = mail.toJSON()
+					var request = sendgrid.emptyRequest()
+					request.method = 'POST'
+					request.path = '/v3/mail/send'
+					request.body = requestBody
+					sendgrid.API(request, function (response) {
+						console.log(response.statusCode)
+						console.log(response.body)
+						console.log(response.headers)
+					})
+					console.log("BIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\n");
+					console.log("BIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\nBIIIIIIIIIIIIIIIIIIIIIIIG DEAL!!!!!!!!!!!!!!!\n");
+					// process.exit();
+					this.stats.changed = true;
+				}
+				else {
+					this.stats.changed = false;
+				}
+			},
+			postScrape : function() {
+				logger.info("after scraping... this.stats are:", this.stats);
+			},
+			conditions : [
+				{
+					description : 'Testing',
+					text : {},
+					active : true,
+					check : function() {
+						var changed = this.stats.changed;
+						if(changed)
+							return true;
+						return false
+					},
+					isMet : function() {
+						this.text.message = "AUGIE CHECK";
+					}
+				}
+			]
+		};
 		var gallup = {
 			url : 'http://www.gallup.com/poll/113980/gallup-daily-obama-job-approval.aspx?version=print',
 			find : {
@@ -870,17 +948,21 @@ function start() {
 		//	}).catch(logger.error);
 		//}, null, true, 'America/New_York');
 
+		var FECScraper = new simpleScraper(FECScrape);
 		// REALCLEARPOLITICS Obama Approval
 		new CronJob('0,2,5,7,10,12,15,17,20,22,25,27,30,32,35,33,40,42,45,47,50,53,55 * * * * *', function() {
-			obama.scrape().then(function(){
-				obama.busy = false;
+			FECScraper.scrape().then(function(){
+
 			}).catch(logger.error);
+			// obama.scrape().then(function(){
+			// 	obama.busy = false;
+			// }).catch(logger.error);
 		}, null, true, 'America/New_York');
 
 		new CronJob('0,2,5,7,10,12,15,17,20,22,25,27,30,32,35,33,40,42,45,47,50,53,55 * * * * *', function() {
-			congressionalJobApprovalRCPScraper.scrape().then(function(){
-				congressionalJobApprovalRCPScraper.busy = false;
-			}).catch(logger.error);
+			// congressionalJobApprovalRCPScraper.scrape().then(function(){
+			// 	congressionalJobApprovalRCPScraper.busy = false;
+			// }).catch(logger.error);
 		}, null, true, 'America/New_York');
 
 		//// REALCLEARPOLITICS Right Direction

@@ -52,6 +52,38 @@
 //	}
 //}
 .trainer-profile {
+	.sync-icon {
+		color: #333;
+	}
+	#headline {
+		font-weight: 400;
+		font-size: 16px;
+	}
+	#experience {
+		i, span {
+			vertical-align: middle;
+			display: inline-block;
+			color: #999;
+		}
+		span {
+			//color: #333;
+			color: #777;
+			margin-top: 2px;
+			font-style: italic;
+		}
+		i {
+			font-size: 16px;
+			margin-right: 3px;
+		}
+	}
+	#trainer-rating {
+		display: inline-block;
+		&.unrated {
+			i {
+				color: #aaa;
+			}
+		}
+	}
 	.basic-info-inner {
 		.edit {
 			position: absolute;

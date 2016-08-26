@@ -9,7 +9,8 @@
       "trainerModel",
       "registrationTrainerSignUp",
       "trainerPopulator",
-      "bruteforce"
+      "bruteforce",
+      "userModel"
     ],
     "provides": ["apiRegistrationController"]
   }

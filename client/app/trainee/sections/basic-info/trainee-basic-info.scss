@@ -1,0 +1,106 @@
+//.trainer-synced-account {
+//	cursor:pointer;
+//	~ .trainer-synced-account {
+//		margin-left:.5em;
+//	}
+//	.unlink {
+//		margin-right: .5em;
+//	}
+//	span {
+//		color:darken($body-bg, 30%);
+//	}
+//	.facebook {
+//		padding: 2px 7px 2px 7px;
+//	}
+//	.linkedin {
+//		padding: 2px 7px 2px 5px;
+//	}
+//	.twitter {
+//		padding: 2px 4px;
+//	}
+//	.google-plus {
+//		padding: 2px 4px;
+//	}
+//	span {
+//		&:hover {
+//			color:white;
+//			border-color:transparent;
+//		}
+//	}
+//	a {
+//		vertical-align: middle;
+//		&.facebook {
+//			background: #3a5795;
+//			border-radius: 4px;
+//			color: white;
+//		}
+//		&.linkedin {
+//			background:rgb(26, 133, 188);
+//			border-radius: 4px;
+//			color: white;
+//		}
+//		&.twitter {
+//			color: white;
+//			background: #0084B4;
+//			border-radius: 4px;
+//		}
+//		&.google-plus {
+//			color:white;
+//			background:#DD4B39;
+//			border-radius:4px;
+//		}
+//	}
+//}
+.trainer-profile {
+	#headline {
+		font-weight: 400;
+		font-size: 16px;
+	}
+	#trainer-rating {
+		display: inline-block;
+		&.unrated {
+			i {
+				vertical-align: middle;
+				color: #aaa;
+			}
+		}
+	}
+	.basic-info-inner {
+		.edit {
+			position: absolute;
+			right: 0;
+		}
+		position:relative; //the padding outside of this we don't want, so use a relative pos.
+	}
+	.name {
+		padding-right:80px;//to make room for the edit button
+	}
+	.link-cant-find-address {
+		margin-top:.5rem;
+		float:right;
+	}
+	.help {
+		font-size:1.3em;
+		cursor: pointer;
+		float:right;
+		&.active {
+			color:$brand-info;
+		}
+	}
+	form {
+		label {
+			display:block;
+			font-size:1.7rem;
+			&.heading {
+				border-bottom:2px solid white;
+				padding-bottom:1rem;
+				~ .form-group label {
+					font-size:1.4rem;
+				}
+			}
+			small {
+				display:block;
+			}
+		}
+	}
+}

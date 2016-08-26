@@ -1,6 +1,6 @@
-<div ng-if="!trainerFactory.trainer" class="loading-block-xs"></div>
+<div ng-if="!trainerFactory.trainer.name" class="loading-block-xs"></div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer">
+         ng-if="trainerFactory.trainer.name">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -26,7 +26,7 @@
                         <p>
                             {{specialty.name}}
                         </p>
-                        <md-button class="md-secondary md-icon-button"
+                        <md-button class="md-icon-button"
                                    ng-if="editable">
                             <md-icon ng-click="toggleRemoveSpecialty(specialty)">
                                 <i class="material-icons">
@@ -43,7 +43,7 @@
                         <p flex>
                             Are you sure you want to remove the <strong>{{specialty.name}}</strong> specialty?
                         </p>
-                        <div class="md-secondary" flex="nogrow" hide-xs>
+                        <div flex="nogrow" hide-xs>
                             <md-button ng-click="removeSpecialty(specialty)">
                                 Yes
                             </md-button>
@@ -51,7 +51,7 @@
                                 Cancel
                             </md-button>
                         </div>
-                        <div class="md-secondary" flex hide-gt-xs layout="row" layout-align="center right">
+                        <div flex hide-gt-xs layout="row" layout-align="center right">
                             <md-button class="md-icon-button" ng-click="removeSpecialty(specialty)">
                                 <i class="material-icons">check</i>
                             </md-button>

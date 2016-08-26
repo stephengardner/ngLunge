@@ -3,9 +3,9 @@ myApp.controller("TrainerInfoController", function(TrainerFactory,
                                                    $timeout,
                                                    Auth){
 
-	TrainerFactory.unset();
-
-	$scope.trainerFactory = TrainerFactory;
+	// TrainerFactory.unset();
+	//
+	// $scope.trainerFactory = TrainerFactory;
 
 	$scope.isMe = function(){
 		return TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id);

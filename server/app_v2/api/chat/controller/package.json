@@ -1,0 +1,17 @@
+{
+  "name": "api-chat.controller.js",
+  "version": "0.0.1",
+  "main": "api-chat.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "redis",
+      "chatModel",
+      "chatNotificationReader",
+      "chatPreviewGetter",
+      "logger",
+      "chatGetter"
+    ],
+    "provides": ["apiChatController"]
+  }
+}

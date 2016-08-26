@@ -17,21 +17,21 @@ angular.module('ngLungeFullStack2App')
 				console.log("Set socket to:",socket);
 				this.socket = socket;
 			},
-			setSocketFactory : function(socketFactory) {
-				this.socketFactory = socketFactory;
-			},
+			// setSocketFactory : function(socketFactory) {
+			// 	this.socketFactory = socketFactory;
+			// },
 			setFullMetalSocket : function(fullMetalSocket){
 				this.fullMetalSocket = fullMetalSocket;
 			},
-			syncAfterLogin : function () {
-				if(Auth.socketFactory && Auth.isLoggedIn() ) {
-					console.log("\n-\n-\n-\n-", currentUser);
-					Auth.socketFactory.sync.user('trainer', currentUser, function(event, user){
-						console.log("FROM THE AUTH FACTORY WERE SETTING THIS TRAINER: Setting...", user);
-						Auth.setCurrentUser(user);
-					});
-				}
-			},
+			// syncAfterLogin : function () {
+			// 	if(Auth.socketFactory && Auth.isLoggedIn() ) {
+			// 		console.log("\n-\n-\n-\n-", currentUser);
+			// 		Auth.socketFactory.sync.user('trainer', currentUser, function(event, user){
+			// 			console.log("FROM THE AUTH FACTORY WERE SETTING THIS TRAINER: Setting...", user);
+			// 			Auth.setCurrentUser(user);
+			// 		});
+			// 	}
+			// },
 			login: function(lunger, callback) {
 				var cb = callback || angular.noop;
 				var deferred = $q.defer();
@@ -55,19 +55,25 @@ angular.module('ngLungeFullStack2App')
 					//FullMetalSocket.init(Auth.getToken());
 					console.log("client side auth service checking the return json 'type' param og the login() " +
 						"response and then GETting whichever it should be");
-					if(lunger.type == "user") {
-						User.get(function(response){
-							currentUser = response;
-							deferred.resolve(data);
-						});
-					}
-					else {
-						Trainer.get(function(response){
-							currentUser = response;
-							$rootScope.$emit('trainerLogin');
-							deferred.resolve(data);
-						});
-					}
+					// if(lunger.type == "user") {
+					// 	User.get(function(response){
+					// 		currentUser = response;
+					// 		deferred.resolve(data);
+					// 	});
+					// }
+					// else {
+					// 	Trainer.get(function(response){
+					// 		currentUser = response;
+					// 		$rootScope.$emit('trainerLogin');
+					// 		deferred.resolve(data);
+					// 	});
+					// }
+
+					User.get(function(response){
+						currentUser = response;
+						// $rootScope.$emit('login');
+						deferred.resolve(data);
+					});
 				}).
 				error(function(err) {
 					deferred.reject(err);
@@ -76,6 +82,9 @@ angular.module('ngLungeFullStack2App')
 				return deferred.promise;
 			},
 
+			setCurrentType : function(type) {
+				currentType = type;
+			},
 			getCurrentType : function() {
 				return currentType;
 			},
@@ -90,7 +99,7 @@ angular.module('ngLungeFullStack2App')
 							password2: password2
 						}, function(response){
 							// token and type set on cookies by the server
-							currentUser = Trainer.get(function(response){
+							currentUser = User.get(function(response){
 								console.log("Auth server currentUser = Trainer.get success response: ", response);
 								resolve(response);
 							}, reject);
@@ -110,7 +119,7 @@ angular.module('ngLungeFullStack2App')
 							$cookieStore.put('token', response.token);
 							$cookieStore.put('type', 'trainer');
 
-							currentUser = Trainer.get(function(response){
+							currentUser = User.get(function(response){
 								console.log("Auth server currentUser = Trainer.get success response: ", response);
 								deferred.resolve(response);
 							}, function(err){
@@ -131,8 +140,10 @@ angular.module('ngLungeFullStack2App')
 			 * @param  {Function}
 			 */
 			logout: function() {
-				Auth.fullMetalSocket.trainer.logout(Auth.getCurrentUser());
-				Auth.fullMetalSocket.trainer.unsyncAuth();
+				// if(currentType == "trainer") {
+					Auth.fullMetalSocket.user.logout(Auth.getCurrentUser());
+					Auth.fullMetalSocket.user.unsyncAuth();
+				// }
 				$cookieStore.remove('token');
 				$cookieStore.remove('type');
 				currentUser = {};
@@ -141,7 +152,7 @@ angular.module('ngLungeFullStack2App')
 			// When the socket pushes a login event, don't push the socket event multiple times
 			logoutBySocket : function(){
 				console.log("Auth.logoutBySocket(); should only be called once.");
-				Auth.fullMetalSocket.trainer.unsyncAuth();
+				Auth.fullMetalSocket.user.unsyncAuth();
 				$cookieStore.remove('token');
 				$cookieStore.remove('type');
 				currentUser = {};
@@ -219,7 +230,7 @@ angular.module('ngLungeFullStack2App')
 					Model = this.type == "trainer" ? Trainer : User;
 
 				Model = Trainer;
-				return Model.changeProfilePicture({ id : currentUser._id}, {
+				return Model.changeProfilePicture({ id : currentUser._id }, {
 					filepath : data.filepath,
 					coords : data.coords
 					//profilePicture : ProfilePicture
@@ -248,6 +259,23 @@ angular.module('ngLungeFullStack2App')
 				console.log("updating inside the Auth service for Model type:", this.type);
 				//console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
 				return Model.update({ id: dataObject._id }, dataObject, function(user) {
+					// in the event where an admin updates a different user, we don't want to override the admin login
+					if(user._id == currentUser._id) {
+						currentUser = user;
+					}
+					return cb(user);
+				}, function(err) {
+					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
+					return cb(err);
+				}).$promise;
+			},
+			
+			updateOverwriteProfile : function(dataObject, callback) {
+				var cb = callback || angular.noop,
+					Model = this.type == "user" ? User : Trainer;
+				console.log("updating inside the Auth service for Model type:", this.type);
+				//console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
+				return Model.updateOverwrite({ id: dataObject._id }, dataObject, function(user) {
 					// in the event where an admin updates a different user, we don't want to override the admin login
 					if(user._id == currentUser._id) {
 						currentUser = user;
@@ -297,6 +325,7 @@ angular.module('ngLungeFullStack2App')
 						cb(false);
 					});
 				} else if(currentUser.hasOwnProperty('role')) {
+					console.log("auto isLoggedInAsync... potential for error?");
 					cb(true);
 				} else {
 					console.log("auth service isLoggedInAsync does not have own property: role");
@@ -347,14 +376,14 @@ angular.module('ngLungeFullStack2App')
 				return $q(function(resolve, reject){
 					var type = $cookieStore.get('type'),
 						token = $cookieStore.get('token'),
-						Model = type == 'trainer' ? Trainer : User;
+						Model = User
 					;
 					currentType = type;
-					// Trainer Type
-					Model.get(function(response, headers) {
+					currentUser = Model.get(function(response, headers) {
 						console.log("qLoginByToken Successful:", response);
 						currentUser = response;
-						Auth.fullMetalSocket.trainer.syncAuth(Auth.getToken());
+						// UserSyncer.syncAuth(Auth.getToken());
+						Auth.fullMetalSocket.user.syncAuth(Auth.getToken());
 						return resolve(response);
 					}, function(err) {
 						console.log('qLoginByToken Failed:', err);
@@ -367,7 +396,7 @@ angular.module('ngLungeFullStack2App')
 				console.log("Auth asyncLoginByToken");
 
 				// the token has been set, so simply just shout out to the API to get the user!
-				var type;
+				var type = currentType;
 				try {
 					if($cookieStore.get("type")) {
 						var type = $cookieStore.get('type');
@@ -378,16 +407,21 @@ angular.module('ngLungeFullStack2App')
 					console.log("Cookiestore error: ", err);
 				}
 				// var Model = type == 'trainer' : Trainer : User;
-				if(type == "trainer"){
-					currentUser = Trainer.get(function(response, headers) {
-						Auth.fullMetalSocket.trainer.syncAuth(Auth.getToken());
-						console.log("Auth service auto logged in with response: ", response);
-					}, function(err){
-						console.log("Auth service auto login ERRRO: ", err);
-					});
-				}
-				else
-					currentUser = User.get(function(response, headers){
+				console.log("Getting based on token:", $cookieStore.get('token'), " and type: ", $cookieStore.get('type'));
+				// if(type == "trainer"){
+				// 	Trainer.get(function(response, headers) {
+				// 		currentUser = response;
+				// 		console.log("asyncLoginByToken current trainer is :", response);
+				// 		Auth.fullMetalSocket.trainer.syncAuth(Auth.getToken());
+				// 	}, function(err){
+				// 		console.log("Auth service auto login ERRRO: ", err);
+				// 	});
+				// }
+				// else
+				currentUser = User.get(function(response, headers){
+						currentUser = response;
+						Auth.fullMetalSocket.user.syncAuth(Auth.getToken());
+						console.log("asyncLoginByToken current user is :", response);
 						//Auth.syncAfterLogin();
 					});
 			}

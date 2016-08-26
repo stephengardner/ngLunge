@@ -1,11 +1,47 @@
-.flex-column {
-	@extend .flex-100;
-	@extend .flex-gt-xxs-90;
-	@extend .flex-gt-sm-75;
-	@extend .flex-gt-md-50;
+.ag-flex-column {
+	//@extend .flex;
+	//@extend .flex-100;
+	//@extend .flex-gt-xxs-90;
+	//@extend .flex-gt-sm-75;
+	//@extend .flex-gt-md-50;
+
+	// adding any flex- on this item made the footer problematic. do not add flex
+	width: 50%;
+	@include respond-to(lg) {
+		width: 50%;
+	}
+	@include respond-to(md) {
+		width: 75%;
+	}
+	@include respond-to(sm) {
+		width: 90%;
+	}
+	@include respond-to(xxs) {
+		width: 100%;
+	}
 	md-card {
 		//margin-bottom:30px;
 	}
+}
+
+.ag-loading-container {
+	padding: 10px;
+	background: none;
+	text-align: center;
+	margin: 0 auto;
+	font-weight: 300;
+	md-progress-circular {
+		margin: 0 auto;
+	}
+}
+
+form {
+	margin-bottom: 0;
+}
+// fixes a problem when using bottom sheet on scrolled pages.
+// bug is documented : https://github.com/angular/material/issues/4801
+md-bottom-sheet {
+	position: fixed!important;
 }
 
 #main-view {
@@ -37,6 +73,13 @@ md-dialog {
 	}
 }
 
+// new - used for certification bubble dialog
+.flexible-dialog-sm {
+	@extend .flex-100;
+	@extend .flex-gt-xs-75;
+	@extend .flex-gt-sm-50;
+	@extend .flex-gt-lg-30;
+}
 .flexible-dialog-medium {
 	@extend .flex-100;
 	@extend .flex-gt-sm-50;
@@ -49,7 +92,8 @@ md-dialog {
 }
 a.md-button {
 	&:hover {
-		color: inherit;
+		//color: inherit;
+		//color: initial;
 	}
 }
 
@@ -89,7 +133,7 @@ md-dialog-content {
 				font-weight: 500;
 			}
 			div:nth-of-type(2) {
-				font-weight: 300;
+				font-weight: 400;
 			}
 			padding: 0 24px 12px 24px;
 			margin: 0!important;
@@ -185,9 +229,9 @@ md-icon {
 }
 
 #signup {
-	#signup-trainer {
+	#signup-trainer, #signup-user {
 		text-align: center;
-		#signup-trainer-social {
+		#signup-trainer-social, #signup-user-social {
 			padding: 35px 30px;
 			h1 {
 				font-size: 26px;
@@ -208,6 +252,15 @@ md-icon {
 }
 
 #signup, #login {
+	#or {
+		vertical-align: middle;
+		font-size: 16px;
+		button, a {
+			text-transform: none;
+			min-width: 0;
+			vertical-align: middle;
+		}
+	}
 	ag-floating-label {
 		max-width: 300px;
 		margin: 0 auto;

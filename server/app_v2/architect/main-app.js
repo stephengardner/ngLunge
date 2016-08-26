@@ -22,6 +22,8 @@ module.exports = function(config) {
 		"../models/specialty/v1",
 		"../models/registration",
 		"../models/user",
+		"../models/chat",
+		"../models/trainee",
 		//"../../plugins/models/v1",
 		{
 			packagePath : "../../plugins/socket/v1",
@@ -29,6 +31,10 @@ module.exports = function(config) {
 		},
 		{
 			packagePath : "../models/trainer/v1/socket",
+			config : config
+		},
+		{
+			packagePath : "../models/user/socket", 
 			config : config
 		},
 		{
@@ -73,6 +79,9 @@ module.exports = function(config) {
 		// regular user
 		"../../app_v2/api/user/controller",
 		"../../app_v2/api/user/router",
+		// chat
+		"../../app_v2/api/chat/controller",
+		"../../app_v2/api/chat/router",
 
 
 		// COMPONENTS
@@ -180,7 +189,32 @@ module.exports = function(config) {
 		"../../components-v2/sendgrid/email-sender",
 
 
-		"../../components-v2/certifications-meta/updater"
+		"../../components-v2/certifications-meta/updater",
+
+		// Status Setter
+		"../../components-v2/certification/status-setter",
+
+		// Chat Sender
+		"../../components-v2/chat/sender",
+		// Chat Unread Counter
+		"../../components-v2/chat/unread-counter",
+		// Chat Notification Counter
+		"../../components-v2/chat/notification-counter",
+		// Chat Notification Reader
+		"../../components-v2/chat/notification-reader",
+		// Chat Preview Getter
+		"../../components-v2/chat/preview-getter",
+		// Chat Getter
+		"../../components-v2/chat/getter",
+
+		// User Populator
+		"../../components-v2/user/populator",
+
+		// Chat Populator
+		"../../components-v2/chat/populator",
+		
+		// Chat Message Read Setter
+		"../../components-v2/chat/message-read-setter"
 
 	];
 	var tree = architect.resolveConfig(appConfig, __dirname);

@@ -1,0 +1,13 @@
+{
+  "name": "traineeModel",
+  "version": "0.0.1",
+  "main": "trainee.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel",
+      "connectionDatabase"
+    ],
+    "provides": ["traineeModel"]
+  }
+}

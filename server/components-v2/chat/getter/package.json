@@ -1,0 +1,15 @@
+{
+  "name": "chatGetter",
+  "version": "0.0.1",
+  "main": "chat-getter.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel",
+      "chatModel",
+      "logger",
+      "socket"
+    ],
+    "provides": ["chatGetter"]
+  }
+}

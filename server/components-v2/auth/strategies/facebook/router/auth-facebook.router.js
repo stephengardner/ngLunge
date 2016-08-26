@@ -24,6 +24,13 @@ module.exports = function setup(options, imports, register) {
 
 	router.post('/', facebookSatellizer,
 		function (req, res, next) {
+			console.log("auth-facebook router for type: " + req.body.type);
+			if (req.body.type == 'trainee-register') {
+				return facebookSatellizerRegister(req, res, next);
+			}
+			if (req.body.type == 'trainee-login') {
+				return facebookSatellizerLogin(req, res, next);
+			}
 			if (req.body.type == 'trainer-register') {
 				return facebookSatellizerRegister(req, res, next);
 			}

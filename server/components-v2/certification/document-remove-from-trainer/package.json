@@ -4,7 +4,10 @@
   "main": "certification-document-remove-from-trainer.js",
   "private": true,
   "plugin": {
-    "consumes": ["certificationPopulator"],
+    "consumes": [
+      "certificationPopulator",
+      "certificationStatusSetter"
+    ],
     "provides": ["certificationDocumentRemoveFromTrainer"]
   }
 }

@@ -1,0 +1,16 @@
+<div id="account" class="main-push" ng-cloak>
+    <header>
+        <h1><i class="material-icons">person</i>
+            <span>
+                Account
+            </span>
+        </h1>
+    </header>
+    <div ng-if="userFactory.user._id">
+        <trainee-basic-info user-factory="userFactory"
+                            editable="userFactory.isMe()"></trainee-basic-info>
+        <trainee-bio user-factory="userFactory"
+                     editable="userFactory.isMe()"></trainee-bio>
+        <trainee-map user-factory="userFactory"></trainee-map>
+    </div>
+</div>

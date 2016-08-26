@@ -50,6 +50,7 @@ module.exports = function setup(options, imports, register) {
 				var token = auth.signToken(userOrTrainer._id, req.body.type);
 				var type = req.body.type ? req.body.type : "user";
 				req.trainer = userOrTrainer;
+				// console.log("Setting token for user: ", userOrTrainer, " on cookies... token is: " + token);
 				res.cookie('token', JSON.stringify(token));
 				res.cookie('type', JSON.stringify(type));
 				res.json({token: token, type : req.body.type, trainer : userOrTrainer});

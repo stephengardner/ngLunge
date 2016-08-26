@@ -1,0 +1,48 @@
+<div ng-if="!userFactory.user._id"
+     class="loading-block-sm">
+</div>
+<md-card class="section-animate-in"
+         ng-if="userFactory.user._id"
+         ag-editable-trainee-container
+         user-factory="userFactory"
+         id="trainee-reviews"
+         user-factory-section="'basicInfo'">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Reviews</span>
+            </h2>
+            <span flex></span>
+            <md-button
+                    ng-if="userFactory.isMe()"
+                    md-ink-ripple class="md-icon-button"
+                    ng-click="toggleEditing(basicInfo)">
+                <i  class="material-icons">mode_edit</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="reviews"
+          name="reviews"
+          ng-submit="submit(reviews); toggleEditing()">
+        <md-card-content cg-busy="{promise : cgBusy}">
+            <div class="ag-editable-container">
+                <div class="ag-editable-default">
+                    <div ng-if="!userFactory.user.reviews.given.length" class="empty">
+                        You haven't given any reviews yet.  To review a trainer, visit their profile and click
+                        the "Leave review" button
+                    </div>
+                </div>
+                <div class="ag-editable-editing">
+                    <div ng-if="!userFactory.user.reviews.given.length" class="empty">
+                        You haven't given any reviews yet.  To review a trainer, visit their profile and click
+                        the "Leave review" button
+                    </div>
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+            <md-button type="submit">Save</md-button>
+            <md-button ng-click="toggleEditing(reviews)">Cancel</md-button>
+        </md-card-actions>
+    </form>
+</md-card>

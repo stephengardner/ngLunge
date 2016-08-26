@@ -13,7 +13,8 @@ module.exports = function setup(options, imports, register){
 	router.get('/', controller.index);
 	router.get('/:id', auth.isTrainerMe(), controller.show);
 	router.get('/byUrlName/:urlName', auth.isTrainerMe(), controller.show);
-	router.put('/:id', /*bruteforce.prevent,*/ auth.authenticate(), auth.attachCorrectTrainerById(), controller.update, function(){ console.log("----------------------------------------OK_----------------");});
+	router.put('/:id', /*bruteforce.prevent,*/ auth.authenticate(), auth.attachCorrectTrainerById(), controller.update);
+	router.put('/:id/overwrite', /*bruteforce.prevent,*/ auth.authenticate(), auth.attachCorrectTrainerById(), controller.updateOverwrite);
 	router.patch('/:id', bruteforce.global.prevent, controller.update);
 	router.delete('/:id', bruteforce.global.prevent, controller.destroy);
 	router.get('/type/:type', controller.showType);
@@ -45,7 +46,7 @@ module.exports = function setup(options, imports, register){
 	
 	// contact inquiry from profile page
 	// bruteforce built-in controller
-	router.post('/:id/contact-inquiries', controller.sendEmail);
+	router.post('/:id/contact-inquiries', auth.authenticate(), controller.sendEmail);
 
 	
 	router.get('/send_email/:email', bruteforce.global.prevent, controller.sendEmail);

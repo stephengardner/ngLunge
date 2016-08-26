@@ -4,23 +4,16 @@
 <!--<div flex layout="row">-->
 <!--<material-menu flex>-->
 <!--</material-menu>-->
-<material-menu flex>
-</material-menu>
-<md-content id="main-view"
-            ng-controller="MainController">
-    <navbar></navbar>
-    <div flex
-         class="main-view"
-         ng-class="{'spaced' : spaced}"
-         ui-view>
+<navbar></navbar>
+<!--<div >-->
+<div class="main-view" ui-view></div>
+<span flex></span>
+<footer ng-if="!footer.hide">
+    <div layout="row" layout-align="space-between center" class="container">
+        <div id="footer-copyright">
+            &copy; Lunge 2016, all rights reserved
+        </div>
+        <span flex></span>
     </div>
-</md-content>
-<!--</div>-->
-<!--</div>-->
-
-
-
-<!--<div ng-include="'components/menu/menu.partial.html'"></div>-->
-<!--<div class="main-view" ng-class="{'spaced' : spaced}" ng-controller="MainController">-->
-<!--<div ui-view></div>-->
+</footer>
 <!--</div>-->

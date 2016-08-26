@@ -18,6 +18,7 @@ var mongoose = require('mongoose');
 module.exports = function setup(options, imports, register) {
 
 	var web = express();
+	web.use(require('prerender-node').set('prerenderToken', 'udNtjjjlEU37Vic0WB4s'));
 	var env = web.get('env');
 
 	console.log("env!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", env);
@@ -82,6 +83,7 @@ module.exports = function setup(options, imports, register) {
 		maxAge : new Date(Date.now() + 7200000), // 2 hr session lifetime
 		store : store
 	}));
+
 
 
 	console.log("The app path is:", web.get('appPath'));

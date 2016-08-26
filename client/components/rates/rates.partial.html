@@ -1,7 +1,9 @@
-<div class="loading-block-sm" ng-if="!trainerFactory.trainer"></div>
+<div class="loading-block-sm" ng-if="!trainerFactory.trainer.name"></div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer">
-    <div ag-editable-container trainer-factory-section="'rate'">
+         ng-if="trainerFactory.trainer.name">
+    <div
+            ag-editable-container
+            trainer-factory-section="'rate'">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>
@@ -15,7 +17,7 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <form name="rateForm" ng-submit="submit(rateForm)">
+        <form name="rateForm" ng-submit="submit(rateForm); toggleEditing()">
             <md-card-content cg-busy="{promise : cgBusy}">
                 <div class="ag-editable-container">
                     <div class="ag-editable-default">

@@ -26,8 +26,23 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		'ngMaterial',
 		'ngMdIcons',
 		'satellizer',
-		'md.data.table'
+		'md.data.table',
+		'socialMeta',
+		'720kb.socialshare',
+		'angular-momentjs'
 	])
+	.config(function($mdThemingProvider) {
+		// $mdThemingProvider.definePalette('lunge', {
+		// 	'400' : '3d069e'
+		// });
+		var lungeMap = $mdThemingProvider.extendPalette('purple', {
+			'500': '#3d069e',
+			'contrastDefaultColor': 'light'
+		});
+
+		$mdThemingProvider.definePalette('lunge', lungeMap);
+		$mdThemingProvider.theme('default').primaryPalette('lunge');
+	})
 	.config(function($authProvider) {
 		$authProvider.httpInterceptor = function(data) {
 			// console.log(data);
@@ -161,16 +176,22 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		};
 	}).config(['uiGmapGoogleMapApiProvider', function (GoogleMapApiProvider) {
 		GoogleMapApiProvider.configure({
-			key: 'AIzaSyCsamhmwhWUGzPQ5v73ZPM-xDeuNhjNIlE',
+			key: 'AIzaSyATQrT1NiVLNXzXKaVnFDUHBHeKpdQf7vs',
 			//v: '3.13',
 			libraries: 'places'
 		});
 	}])
-	.run(function ($timeout, $state, FullMetalSocket, TrainerFactory, $rootScope, $templateCache, $location, Auth/*, editableOptions*/) {
+	.run(function (SocialMeta, $timeout, $state, FullMetalSocket, TrainerFactory, $rootScope, $templateCache, $location, Auth/*, editableOptions*/) {
+		angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 2000);
 
 		$rootScope.$on('$stateChangeSuccess', function() {
-			angular.element('#main-view').scrollTop(0);
+			// angular.element('#main-view').scrollTop(0);
+			angular.element('body').scrollTop(0);
 		});
+
+		$rootScope.footer = {
+			hide : false // controlled for message pages, to hide the footer, we don't need it there
+		};
 
 		// works, will login or logout the user if their token changes, this is not for sockets, socket auth
 		// is handled within auth.
@@ -205,6 +226,9 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		// Redirect to login if route requires auth and you're not logged in
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			Auth.isLoggedInAsync(function(loggedIn) {
+				if(next.requiredType == 'trainee') {
+					// impelement
+				}
 				if (next.authenticate && !loggedIn) {
 					$location.path('/login');
 				}

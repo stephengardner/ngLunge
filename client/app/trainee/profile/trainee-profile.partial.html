@@ -1,0 +1,42 @@
+<!--<div layout="row" id="trainee-profile" -->
+<!--layout-align="center center" >-->
+<div ui-view id="trainee-profile" ng-cloak ng-if="ready" layout="row" layout-align="center center">
+    <div class="ag-flex-profile main-push">
+        <div id="profile-head">
+            <div layout="row"
+                 layout-align="center center"
+                 layout-wrap
+                 layout-align-gt-xs="start start">
+                <div id="profile-picture" flex="100" flex-xs="40" flex-gt-xs="30">
+                    <img ng-src="{{userFactory.user.profile_picture.thumbnail.url}}"/>
+                </div>
+                <div id="profile-main-text" flex="100" flex-xs="60" flex-gt-xs="70">
+                    <div layout="row" layout-align="space-between center">
+                        <h2 id="name">
+                            {{userFactory.user.name.full}}
+                        </h2>
+                        <div id="profile-edit">
+                            <md-button class="md-icon-button"
+                                       ng-if="userFactory.isMe()"
+                                       ui-sref="main.trainee.account.info">
+                                <i class="material-icons">edit</i>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div id="headline" ng-if="userFactory.user.headline.value">
+                        {{userFactory.user.headline.value}}
+                    </div>
+                    <div id="bio" ng-class="{'empty' : !userFactory.user.bio}">
+                        {{userFactory.user.bio || 'No bio yet'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="profile-body">
+            <trainee-reviews></trainee-reviews>
+            <trainee-map user-factory="userFactory"></trainee-map>
+            <trainee-work user-factory="userFactory"></trainee-work>
+        </div>
+    </div>
+</div>
+<!--</div>-->

@@ -6,19 +6,34 @@ var jwt = require('jsonwebtoken'),
 	;
 module.exports = function setup(options, imports, register){
 	var trainerModel = imports.trainerModel,
+		userModel = imports.userModel,
 		auth = imports.auth,
 		createJWT = auth.signToken;
 	var linkedinSatellizerLogin = function(req, res) {
 		// Profile received from FacebookSatellizer middleware
 		var profile = req.profile;
 
+		if(req.body.type && req.body.type.indexOf('trainee') != -1) {
+			type = "trainee";
+			Model = userModel;
+		}
+		else {
+			type = 'trainer';
+			Model = trainerModel;
+		}
 		// if (req.header('Authorization')) {
-			trainerModel.findOne({ 'registration_providers.linkedin' : profile.id }, function(err, existingUser) {
+		Model.findOne({ 'registration_providers.linkedin' : profile.id }, function(err, existingUser) {
 				if (existingUser) {
-					var token = createJWT(existingUser);
+					var token = auth.signToken(existingUser._id, req.body.type);
+					// console.log("Setting token for user: ", existingUser, " on cookies... token is: " + token);
 					res.cookie('token', JSON.stringify(token));
-					res.cookie('type', JSON.stringify('trainer'));
-					res.send({ token: token, type : 'trainer', trainer: existingUser });
+					res.cookie('type', JSON.stringify(type));
+					var returnObject = {
+						token : token,
+						type : type
+					};
+					returnObject[type] = existingUser;
+					res.send(returnObject);
 				}
 				else {
 					return res.status(404).send({

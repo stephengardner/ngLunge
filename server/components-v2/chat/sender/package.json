@@ -1,0 +1,20 @@
+{
+  "name": "chatSender",
+  "version": "0.0.1",
+  "main": "chat-sender.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel",
+      "trainerModel",
+      "userPopulator",
+      "trainerPopulator",
+      "chatModel",
+      "logger",
+      "socket",
+      "chatNotificationCounter",
+      "chatPopulator"
+    ],
+    "provides": ["chatSender"]
+  }
+}

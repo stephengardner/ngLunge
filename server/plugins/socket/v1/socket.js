@@ -25,8 +25,8 @@ module.exports = function setup(options, imports, register){
 	});
 
 	// This can console.log on every message that the pub/sub receives.
-	sub.on("message", function(){})
-	pub.on("message", function(){})
+	sub.on("message", function(){});
+	pub.on("message", function(){});
 
 	// This works, it works well, I needed to update socket.io and redis for it to work propertly
 	io.adapter(ioredis(
@@ -67,6 +67,14 @@ module.exports = function setup(options, imports, register){
 			}
 		}
 	}));
+	io.get_clients_by_room = function(roomId, namespace) {
+		io.of(namespace || "/").in(roomId).clients(function (error, clients) {
+			if (error) { throw error; }
+			console.log(clients[0]); // => [Anw2LatarvGVVXEIAAAD]
+			console.log(io.sockets.sockets[clients[0]]); //socket detail
+			return clients;
+		});
+	};
 
 	register(null, {
 			socket : io

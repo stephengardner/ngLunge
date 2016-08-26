@@ -1,6 +1,6 @@
-<div class="loading-block-xs" ng-if="!trainerFactory.trainer"></div>
+<div class="loading-block-xs" ng-if="!trainerFactory.trainer.name"></div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer"
+         ng-if="trainerFactory.trainer.name"
          ag-editable-container
          trainer-factory-section="'email'">
     <md-toolbar>
@@ -15,7 +15,7 @@
         </div>
     </md-toolbar>
     <form id="form"
-          ng-submit="changeEmail(form)"
+          ng-submit="changeEmail(form); toggleEditing()"
           name="form">
         <md-card-content cg-busy="{promise : cgBusy}">
             <div class="ag-editable-container">

@@ -31,34 +31,34 @@ angular.module('ngLungeFullStack2App')
 			})
 			// abstract certifications route.  actually helps when we check where the state is during menu when we
 			// add classes. just keep it like this
+			// .state('main.trainer.account.certifications', {
+			// 	url: '/certifications',
+			// 	abstract : true
+			// })
 			.state('main.trainer.account.certifications', {
-				url: '/certifications',
-				abstract : true
-			})
-			.state('main.trainer.account.certifications.show', {
-				url: '',
+				url: '/my-certifications',
 				views : {
 					'@main.trainer.account' : {
 						controller : "TrainerCertificationsController",
 						templateUrl : "app/trainer/account/certifications/trainer-certifications.partial.html"
 					}
 				}
-			})
-			.state('main.trainer.account.certifications.list', {
-				url: '/list',
-				views : {
-					'@main.trainer.account' : {
-						controller : "TrainerCertificationsListController",
-						templateUrl : "app/trainer/account/certifications/list/trainer-certifications-list.partial.html"
-					}
-				}
-			})
-			.state('main.trainer.account.certifications.faq', {
-				url: '/faq',
-				views : {
-					'@main.trainer.account' : {
-						templateUrl : "app/trainer/account/certifications/faq/trainer-certifications-faq.partial.html"
-					}
-				}
-			})
+			});
+			// .state('main.trainer.account.certifications.list', {
+			// 	url: '/list',
+			// 	views : {
+			// 		'@main.trainer.account' : {
+			// 			controller : "TrainerCertificationsListController",
+			// 			templateUrl : "app/trainer/account/certifications/list/trainer-certifications-list.partial.html"
+			// 		}
+			// 	}
+			// })
+			// .state('main.trainer.account.certifications.faq', {
+			// 	url: '/faq',
+			// 	views : {
+			// 		'@main.trainer.account' : {
+			// 			templateUrl : "app/trainer/account/certifications/faq/trainer-certifications-faq.partial.html"
+			// 		}
+			// 	}
+			// })
 	});

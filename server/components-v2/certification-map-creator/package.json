@@ -4,7 +4,9 @@
   "main": "certification-map-creator.js",
   "private": true,
   "plugin": {
-    "consumes": ["certificationOrganizationModel"],
+    "consumes": [
+      "certificationOrganizationModel"
+    ],
     "provides": ["certificationMapCreator"]
   }
 }

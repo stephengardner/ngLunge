@@ -1,0 +1,16 @@
+{
+  "name": "chatNotificationReader",
+  "version": "0.0.1",
+  "main": "chat-notification-reader.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel",
+      "userPopulator",
+      "chatModel",
+      "logger",
+      "chatNotificationCounter"
+    ],
+    "provides": ["chatNotificationReader"]
+  }
+}

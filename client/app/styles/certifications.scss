@@ -12,6 +12,11 @@
 			}
 		}
 	}
+	ag-collapse-body {
+		md-list-item {
+			padding: 0 $list-item-padding-horizontal;
+		}
+	}
 }
 specialties {
 	md-list {
@@ -19,6 +24,11 @@ specialties {
 		md-list-item {
 			padding: 0 $list-item-padding-horizontal;
 		}
+	}
+}
+#certifications {
+	header {
+		margin-bottom: 40px;
 	}
 }
 .certification-list, .trainer-certifications, specialties {
@@ -131,9 +141,11 @@ specialties {
 		.count-bubble {
 			&.pending {
 				color: #e49400;
+				background: rgba(255, 165, 0, 0.07);
 			}
 			&.unverified {
 				color: $brand-danger;
+				background: #fdf1f1;
 			}
 			&.verified {
 				color: $brand-primary;

@@ -3,9 +3,9 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 		restrict : 'AE',
 		replace : true,
 		scope : {
-			trainer : '=',
-			certificationOrganization : '=',
-			showTotal : '='
+			trainer : '<',
+			certificationOrganization : '<',
+			showTotal : '<'
 		},
 		templateUrl : 'components/trainer-certification-status-count-bubbles/trainer-certification-status-count-bubbles.partial.html',
 		link : function(scope, elem, attrs){
@@ -28,7 +28,7 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 					controllerAs : 'vm'
 				})
 			};
-			console.log(' The scope trainer certifications organization meta map is:', scope.trainer.certifications_meta.organization_map);
+
 			function getCount(type) {
 				if(scope.trainer.certifications_meta.organization_map &&
 					scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id])
@@ -37,23 +37,26 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 				return 0;
 			}
 			scope.setCounts = function() {
+				if(!scope.trainer || !scope.trainer.certifications_meta) return;
 				scope.countAdded = getCount('count_all');
 				scope.countPending = getCount('count_pending');
 				scope.countVerified = getCount('count_verified');
 				scope.countUnverified = getCount('count_unverified');
 				scope.countRejected= getCount('count_rejected');
 			};
-			scope.setCounts();
-			scope.$watch(function(){
-				return scope.certificationOrganization
-			}, function(newValue, oldValue) {
+
+			if(scope.trainer)
 				scope.setCounts();
-			});
+
+			// attempting another very shallow watch here... Getting the specific object in question
 			scope.$watch(function(){
-				return scope.trainer
+				if(scope.trainer && scope.trainer.certifications_meta)
+				return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
 			}, function(newValue, oldValue) {
-				scope.setCounts();
-			}, true)
+				if(newValue != oldValue)
+					console.log("trainer-certification-status-count-bubbles watch triggered");
+					scope.setCounts(); 
+			})
 		}
 	}
 }]);

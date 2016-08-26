@@ -13,7 +13,9 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 /**
  * App-wide Styles
  */
-
+footer {
+	//height: 64px;
+}
 .container {
 	@include responsive-padding();
 }
@@ -24,6 +26,13 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 	}
 }
 
+.ag-collapse-body {
+	position: relative;
+	display: block;
+	.list-item-default {
+		//min-height: 0;
+	}
+}
 // used to style the infowindow WITHOUT using infobox.
 // limited, though.
 .gm-style-iw {
@@ -118,16 +127,22 @@ body, html {
 
 // Component styles are injected through grunt
 // injector
+@import 'account/login-or-signup-dialog/login-or-signup-dialog.scss';
 @import 'account/login/login.scss';
 @import 'admin/admin.scss';
 @import 'admin/trainers/list/admin-trainers-list.scss';
 @import 'animations.scss';
 @import 'certifications/certification-type/modal-info/certifications-certification-type-modal-info.scss';
 @import 'certifications/certifications.scss';
+@import 'certifications/faq/certifications-faq.scss';
 @import 'main/main.scss';
 @import 'main/partials/find-section/find-section.scss';
 @import 'main/partials/jumbotron/jumbotron.scss';
 @import 'main/partials/trainers-home/category-home.scss';
+@import 'main/views/homepage/homepage.scss';
+@import 'main/what-is-lunge/what-is-lunge.scss';
+@import 'messages/message-in-dialog/message-in-dialog.scss';
+@import 'messages/message/message.scss';
 @import 'popovers/profile/info/privacy/privacy-popover.scss';
 @import 'privacy/privacy.scss';
 @import 'register/register.scss';
@@ -149,6 +164,8 @@ body, html {
 @import 'styles/cards/card.scss';
 @import 'styles/centered-tables.scss';
 @import 'styles/certifications.scss';
+@import 'styles/font-icons/linea-basic-elaboration.scss';
+@import 'styles/font-icons/linea-basic.scss';
 @import 'styles/forms.scss';
 @import 'styles/google-map.scss';
 @import 'styles/infinite-scroll.scss';
@@ -157,6 +174,7 @@ body, html {
 @import 'styles/locations.scss';
 @import 'styles/logo.scss';
 @import 'styles/menu.scss';
+@import 'styles/messages-menu.scss';
 @import 'styles/mixins/_grid-framework.scss';
 @import 'styles/mixins/_mixins.scss';
 @import 'styles/mixins/_responsive-utlities.scss';
@@ -165,7 +183,11 @@ body, html {
 @import 'styles/popovers.scss';
 @import 'styles/tables.scss';
 @import 'styles/xeditable.scss';
-@import 'trainer/account/certifications/faq/trainer-certifications-faq.scss';
+@import 'trainee/profile/trainee-profile.scss';
+@import 'trainee/sections/basic-info/trainee-basic-info.scss';
+@import 'trainee/sections/location/trainee-location.scss';
+@import 'trainee/sections/reviews/trainee-reviews.scss';
+@import 'trainee/sections/work/trainee-work.scss';
 @import 'trainer/account/certifications/trainer-account-certifications.scss';
 @import 'trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.scss';
 @import 'trainer/account/trainer-account.scss';
@@ -176,10 +198,13 @@ body, html {
 @import 'trainer/public/profile/profile-picture.scss';
 @import 'trainer/public/profile/profile.scss';
 @import 'trainer/register/register.scss';
+@import 'ag-editable-container/ag-editable-container.scss';
+@import 'ag-profile-share-button/bottom-sheet/ag-profile-share-bottom-sheet.scss';
 @import 'alert-message/alert-message.scss';
 @import 'angular-busy/templates/fullscreen-loader-partial.scss';
 @import 'certifications/certifications.scss';
 @import 'material-menu/menu.scss';
+@import 'material-messages-menu/material-messages-menu.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';
@@ -189,4 +214,5 @@ body, html {
 @import 'trainer-map/locations.scss';
 @import 'trainer-map/manual-location/trainer-manual-location.scss';
 @import 'trainer-map/trainer-map.scss';
+@import 'trainer-work/trainer-work.scss';
 // endinjector

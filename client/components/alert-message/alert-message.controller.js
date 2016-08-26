@@ -6,7 +6,7 @@ lungeApp.controller("AlertMessageController", function($scope, AlertMessage) {
 		return AlertMessage.type;
 	};
 	$scope.isActive = function() {
-		return AlertMessage.active;
+		return AlertMessage.active === true && AlertMessage.message;
 	};
 	$scope.isFixed = function(){
 		return AlertMessage.fixed;

@@ -1,0 +1,13 @@
+{
+  "name": "certificationStatusSetter",
+  "version": "0.0.1",
+  "main": "certification-status-setter.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "trainerModel",
+      "certificationPopulator"
+    ],
+    "provides": ["certificationStatusSetter"]
+  }
+}

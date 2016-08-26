@@ -1,4 +1,4 @@
-<md-dialog>
+<md-dialog id="contactTrainerDialog" class="flexible-dialog-sm">
     <form novalidate
           name="contactForm"
           cg-busy="{promise : cgBusy}"
@@ -14,75 +14,82 @@
                 </md-button>
             </div>
         </md-toolbar>
+        <div class="loggedInAs">
+            You are logged in as:
+            <strong>
+                {{vm.currentUser.name.full}}
+            </strong>
+        </div>
         <md-dialog-content layout-padding>
-            <div flex layout="row" layout-align="start start">
-                <div flex>
-                    <ag-floating-label>
-                        <label>
-                            First Name *
-                        </label>
-                        <ag-icon>
-                            <i class="material-icons">title</i>
-                        </ag-icon>
-                        <input server-error
-                               focus-if
-                               type="text"
-                               name="firstName"
-                               required
-                               ng-model="vm.inquiry.user.name.first"/>
-                        <div ng-messages="contactForm.firstName.$error">
-                            <div ng-message="required">First name is required</div>
-                            <div ng-message="mongoose">{{contactForm.errors.firstName}}</div>
-                        </div>
-                    </ag-floating-label>
+            <div ng-if="vm.isLoggedIn()">
+                <div flex layout="row" layout-align="start start">
+                    <!--
+                    <div flex>
+                        <ag-floating-label>
+                            <label>
+                                First Name *
+                            </label>
+                            <ag-icon>
+                                <i class="material-icons">title</i>
+                            </ag-icon>
+                            <input server-error
+                                   type="text"
+                                   name="firstName"
+                                   required
+                                   ng-model="vm.inquiry.user.name.first"/>
+                            <div ng-messages="contactForm.firstName.$error">
+                                <div ng-message="required">First name is required</div>
+                                <div ng-message="mongoose">{{contactForm.errors.firstName}}</div>
+                            </div>
+                        </ag-floating-label>
+                    </div>
+                    <div flex>
+                        <ag-floating-label>
+                            <label>
+                                Last Name
+                            </label>
+                            <input server-error
+                                   type="text"
+                                   name="lastName"
+                                   ng-model="vm.inquiry.user.name.last"/>
+                            <div ng-messages="contactForm.lastName.$error">
+                                <div ng-message="mongoose">{{contactForm.errors.lastName}}</div>
+                            </div>
+                        </ag-floating-label>
+                    </div>
                 </div>
-                <div flex>
-                    <ag-floating-label>
-                        <label>
-                            Last Name
-                        </label>
-                        <input server-error
-                               type="text"
-                               name="lastName"
-                               ng-model="vm.inquiry.user.name.last"/>
-                        <div ng-messages="contactForm.lastName.$error">
-                            <div ng-message="mongoose">{{contactForm.errors.lastName}}</div>
-                        </div>
-                    </ag-floating-label>
+                <div flex layout="row" layout-align="start start">
+                    <div flex>
+                        <ag-floating-label>
+                            <label>
+                                Email *
+                            </label>
+                            <ag-icon>
+                                <i class="material-icons">email</i>
+                            </ag-icon>
+                            <input server-error
+                                   type="email"
+                                   name="email"
+                                   ng-model="vm.inquiry.user.email"
+                                   required/>
+                            <div ng-messages="contactForm.email.$error">
+                                <div ng-message="required">Email is required</div>
+                                <div ng-message="email">This email is invalid</div>
+                                <div ng-message="mongoose">{{contactForm.errors.email}}</div>
+                            </div>
+                        </ag-floating-label>
+                    </div>
                 </div>
-            </div>
-            <div flex layout="row" layout-align="start start">
-                <div flex>
-                    <ag-floating-label>
-                        <label>
-                            Email *
-                        </label>
-                        <ag-icon>
-                            <i class="material-icons">email</i>
-                        </ag-icon>
-                        <input server-error
-                               type="email"
-                               name="email"
-                               ng-model="vm.inquiry.user.email"
-                               required/>
-                        <div ng-messages="contactForm.email.$error">
-                            <div ng-message="required">Email is required</div>
-                            <div ng-message="email">This email is invalid</div>
-                            <div ng-message="mongoose">{{contactForm.errors.email}}</div>
-                        </div>
-                    </ag-floating-label>
-                </div>
-            </div>
-            <div flex layout="row" layout-align="start start">
-                <div flex>
-                    <ag-floating-label>
-                        <label>
-                            Message *
-                        </label>
-                        <ag-icon>
-                            <i class="material-icons">message</i>
-                        </ag-icon>
-                        <!-- rows not working, probably because inside dialog -->
+                -->
+                    <div flex layout="row" layout-align="start start">
+                        <div flex>
+                            <ag-floating-label>
+                                <label>
+                                    Message *
+                                </label>
+                                <ag-icon>
+                                    <i class="material-icons">message</i>
+                                </ag-icon>
                     <textarea rows="5"
                               name="message"
                               style="height:100px;"
@@ -90,13 +97,17 @@
                               required
                               ng-model="vm.inquiry.message">
                     </textarea>
-                        <div ng-messages="contactForm.message.$error">
-                            <div ng-message="required">Message is required</div>
-                            <div ng-message="mongoose">{{contactForm.errors.message}}</div>
+                                <div ng-messages="contactForm.message.$error">
+                                    <div ng-message="required">Message is required</div>
+                                    <div ng-message="mongoose">{{contactForm.errors.message}}</div>
+                                </div>
+                            </ag-floating-label>
                         </div>
-                    </ag-floating-label>
+                    </div>
                 </div>
-            </div>
+                <div ng-if="!isLoggedIn()">
+
+                </div>
         </md-dialog-content>
         <md-dialog-actions>
             <md-button type="submit">

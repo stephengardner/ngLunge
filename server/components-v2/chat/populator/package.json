@@ -1,0 +1,14 @@
+{
+  "name": "chatPopulator",
+  "version": "0.0.1",
+  "main": "chat-populator.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "chatModel"
+    ],
+    "provides": [
+      "chatPopulator"
+    ]
+  }
+}

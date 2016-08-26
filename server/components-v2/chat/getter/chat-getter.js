@@ -1,0 +1,370 @@
+'use strict';
+
+var async = require('async'),
+	_ = require('lodash'),
+	mongoose = require('mongoose'),
+	moment = require('moment'),
+	config = require('../../../config/environment');
+;
+module.exports = function setup(options, imports, register) {
+	var chatModel = imports.chatModel,
+		userModel = imports.userModel,
+		logger = imports.logger.info,
+		loggerType = 'chat-getter'
+		;
+	var chatGetter = {
+
+		getInfo : function(chatId, userId) {
+			return new Promise(function(resolve, reject) {
+				var redact = {
+						$redact : {
+							$cond : {
+								if : {
+									$and : [
+										{
+											$eq : [
+												'$user', mongoose.Types.ObjectId(userId)
+											]
+										}
+									]
+								},
+								then : "$$PRUNE",
+								else : "$$DESCEND"
+							}
+						}
+					},
+					pipeline = [
+						{
+							$match : {
+								'_id': mongoose.Types.ObjectId(chatId)
+							}
+						},
+						redact
+					];
+
+
+				chatModel.aggregate(pipeline, function(err, response){
+					if(err) return reject(err);
+					if(!response || !response[0]) return reject(404);
+					var returnObject = {};
+					var firstResponse = response[0];
+					var hasOtherParticipants = false;
+					if(firstResponse.participants && firstResponse.participants.length) {
+						firstResponse.participants.forEach(function(item, index, arr) {
+							if(item.user) {
+								hasOtherParticipants = true;
+							}
+						})
+					}
+					if(!hasOtherParticipants) {
+						returnObject.non_group_message_reply_to_user = userId
+					}
+					else if(response[0] && response[0].participants && response[0].participants[0]) {
+						returnObject.non_group_message_reply_to_user = response[0].participants[0].user
+					}
+					return resolve(returnObject);
+				})
+			});
+		},
+
+		getByParticipantsOrCreate : function(user1, user2) {
+			return new Promise(function(resolve, reject) {
+				var foundChat,
+					parsedChatAfterFound,
+					savedNewChat
+				;
+				if(!user1) {
+					return reject(new Error('include a first user for this endpoint'));
+				}
+				if(!user2) {
+					return reject(new Error('include a second user for this endpoint'));
+				}
+				async.waterfall([
+					function findUserOne(callback) {
+						userModel.findById(user1, function(err, found){
+							if(err) return reject(err);
+							if(!found) return callback(new Error('user ' + user1 + ' does not exist'));
+							callback();
+						})
+					},
+					function findUserTwo(callback) {
+						userModel.findById(user2, function(err, found){
+							if(err) return reject(err);
+							if(!found) return callback(new Error('user ' + user2 + ' does not exist'));
+							callback();
+						})
+					},
+					function findConvo(callback) {
+						chatModel.findOne({
+							$and : [
+								{
+									'participants' : { $size : 2 }
+								},
+								{
+									'participants' : {
+										$elemMatch : {
+											'user' : mongoose.Types.ObjectId(user1)
+										}
+									}
+								},
+								{
+									'participants' : {
+										$elemMatch : {
+											'user' : mongoose.Types.ObjectId(user2)
+										}
+									}
+								}
+							]
+						}, function(err, response) {
+							if(err) return callback(err);
+							foundChat = response;
+							callback();
+						})
+					},
+					function getOrCreate(callback) {
+						if(foundChat) {
+							chatGetter.get(foundChat._id, user1).then(function(response){
+								parsedChatAfterFound = response;
+								callback();
+							}).catch(callback);
+						}
+						else{
+							var newChat = {
+								participants : [
+									{
+										user : user1
+									},
+									{
+										user : user2
+									}
+								],
+								started_by : user1
+							};
+							var createdChat = new chatModel(newChat);
+							createdChat.save(function(err, saved){
+								if(err) return callback(err);
+								savedNewChat = saved;
+								callback();
+							});
+						}
+					}
+				], function(err, response){
+					if(err) return reject(err);
+					if(parsedChatAfterFound) {
+						return resolve(parsedChatAfterFound);
+					}
+					else {
+						if(savedNewChat) {
+							return resolve({
+								created : savedNewChat._id
+							})
+						}
+						else {
+							return reject(404);
+						}
+					}
+				})
+			})
+		},
+		get : function(chatId, userId, maxDate) {
+			console.log("Getting for chatID:", chatId, " and userID:",userId);
+			return new Promise(function(resolve, reject) {
+				var gotMessages,
+					returnObject = {
+						nextMaxDate : new Date('2030-01-01'),
+						data : []
+					}
+					;
+				maxDate = maxDate || new Date('2030-01-01');
+				//maxDate = new Date("07/27/2016");
+				var secondMatch;
+				var parsedMaxDate = new moment(new Date(maxDate)).toDate();
+				// if(maxDate) {
+				secondMatch = {
+					$match : {
+						'messages.sent_at' : {
+							$lt : parsedMaxDate,
+							$exists : true
+						}
+					}
+				};
+				async.waterfall([
+					function getChat(callback) {
+						var matchObject = {
+							$match : {
+								'_id' : mongoose.Types.ObjectId(chatId),
+								'participants' : {
+									$elemMatch : {
+										'user' : mongoose.Types.ObjectId(userId)
+									}
+								}
+							}
+						};
+						var pipelineFirst = [
+								matchObject,
+								{
+									$unwind : '$messages'
+								},
+								secondMatch,
+								{
+									$sort : { 'messages.sent_at' : -1 }
+								},
+								{
+									$limit : 10
+								}
+							],
+							pipelineSecond = [
+								{
+									$redact : {
+										$cond : {
+											if : {
+												$and : [
+													{
+														$eq : ['$user', mongoose.Types.ObjectId(userId) ]
+													},
+													{
+														$eq : ['notification', null]
+													}
+												]
+											},
+											then : "$$PRUNE",
+											else : "$$DESCEND"
+										}
+									}
+								},
+								{
+									$group : {
+										_id: {
+											year: {$year: "$messages.sent_at"},
+											month: {$month: "$messages.sent_at"},
+											day: {$dayOfMonth: "$messages.sent_at"}
+										},
+										max_date : { $max : '$messages.sent_at' },
+										next_max_date : { $min : '$messages.sent_at' },
+										messages : {
+											$push : '$messages'
+										},
+										participants : {
+											$first : '$participants'
+										}
+									}
+								},
+								// sort in descending order, get NEWEST FIRST
+								{
+									$sort : {'_id.year' : -1, '_id.month' : -1, '_id.day' : -1 }
+								}
+							];
+
+						if(secondMatch) {
+							//pipelineFirst.push(secondMatch);
+						}
+
+						var pipeline = pipelineFirst.concat(pipelineSecond);
+
+						chatModel.aggregate(
+							pipeline,
+							function(err, response) {
+								if(err) return callback(err);
+								gotMessages = response;
+								// console.log("GOTMESSAGES:", gotMessages[0].messages);
+								callback();
+							})
+					},
+					function setTrueIfSeenByUser(callback) {
+						if (gotMessages && gotMessages.length) {
+							gotMessages.forEach(function (aggregatedByDate, index, arr) {
+								if (aggregatedByDate.messages && aggregatedByDate.messages.length) {
+									aggregatedByDate.messages.forEach(function (message, messageIndex, messagesArr) {
+										if (message.meta && message.meta.length >= 1) {
+											message.meta.forEach(function (metaItem, metaIndex, metaArr) {
+												if (metaItem.user == userId && !metaItem.read) {
+													logger.info({
+														type : loggerType,
+														msg : 'retrieved an unseen message, we\'ll ping the server' +
+														' when it\'s seen',
+														message : message.message
+													});
+													message.sendEventWhenSeen = true;
+												}
+											});
+										}
+										if (message.sendEventWhenSeen !== true) {
+											message.sendEventWhenSeen = false;
+										}
+										messagesArr[messageIndex] = message;
+									});
+								}
+							});
+						}
+						callback();
+					},
+					function populateAndTransform(callback) {
+						if(gotMessages && gotMessages.length) {
+							gotMessages.forEach(function(item, index, arr) {
+								item.day = item._id.day;
+								item.month = item._id.month;
+								item.year = item._id.year;
+
+								if(item.participants && item.participants.length) {
+									item.non_group_message_reply_to_user = item.participants[0].user;
+								}
+
+								if(new moment().diff(item.max_date, 'days') >= 1) {
+									item.date_formatted = new moment(item.max_date).format('MMM DD');
+								}
+								else {
+									item.date_formatted = 'Today';
+								}
+								if(item.messages && item.messages.length) {
+									item.messages.forEach(function(i, x, a) {
+										i.sent_at_time_formatted = moment(i.sent_at).format('h:mma');
+									})
+								}
+								item.internal_client_key = item.day + '-' + item.month + '-' + item.year;
+								arr[index] = item;
+							});
+							userModel.populate(gotMessages,
+								{
+									path : 'messages.sender participants.user',
+									select : '_id name profile_picture urlName'
+								},
+								function(err, populated) {
+									if(err) return callback(err);
+									returnObject.nextMaxDate = gotMessages[gotMessages.length - 1].next_max_date;
+									populated.forEach(function(item, index, arr) {
+										if(item.messages && item.messages.length) {
+											item.messages.forEach(function(message, messageIndex, messagesArr) {
+												if(message.sender) {
+													var senderProfileUrl = config.DOMAIN + '/';
+													if(message.sender.kind == 'trainee') {
+														senderProfileUrl += 'user/';
+													}
+													senderProfileUrl += message.sender.urlName;
+													message.sender_profile_url = senderProfileUrl;
+												}
+												// message.sender_u = config.DOMAIN + '/' + message.sender.urlName;
+											})
+										}
+										item.userForThumbnail = item.participants[0].user;
+										// item.sender_profile_url = config.domain + item.participants[0].user.urlName;
+										arr[index] = item;
+									});
+									returnObject.data = gotMessages;
+									callback();
+								})
+						}
+						else {
+							callback();
+						}
+					}
+				], function(err){
+					if(err) return reject(err);
+					return resolve(returnObject);
+				})
+			})
+		}
+	};
+	register(null, {
+		chatGetter : chatGetter
+	})
+};

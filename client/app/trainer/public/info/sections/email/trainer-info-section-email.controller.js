@@ -2,11 +2,6 @@ myApp.controller("TrainerInfoSectionEmailController", function(FormControl, Aler
 	$scope.editing = false;
 	$scope.trainerFactory = TrainerFactory;
 
-	// $scope.toggleEditing = function(form) {
-	// 	$scope.editing = !$scope.editing;
-	// 	if(!$scope.editing) $scope.reset(form); // reset the user input if they cancel the request
-	// 	TrainerFactory.setEditingOf('email', $scope.editing);
-	// };
 	$scope.ajax = {
 		busy : false
 	};
@@ -20,7 +15,6 @@ myApp.controller("TrainerInfoSectionEmailController", function(FormControl, Aler
 		$scope.cgBusy = TrainerFactory.save('email').then(function(response){
 			$scope.ajax.busy = false;
 			AlertMessage.success("Your email has been changed to " + $scope.trainerFactory.trainer.email);
-			$scope.toggleEditing();// = false;
 		}).catch(function(err){
 			$scope.ajax.busy = false;
 			FormControl.parseValidationErrors(form, err);

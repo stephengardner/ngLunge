@@ -1,0 +1,22 @@
+#trainee-map {
+	md-card-content {
+		padding: 0;
+	}
+}
+#trainee-location-dialog {
+	md-autocomplete {
+		md-input-container {
+			padding-bottom: 0;
+		}
+	}
+}
+#trainee-location {
+	md-list {
+		padding: $card-padding;
+		padding-top: 2px;
+		padding-bottom: 2px;
+	}
+	.location {
+		font-size: 18px;
+	}
+}

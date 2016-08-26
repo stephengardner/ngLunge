@@ -1,4 +1,4 @@
-<div class="jumbo-main bg-full main-push" ag-editable-animation>
+<div class="jumbo-main bg-full" ag-editable-animation>
     <div class="welcome-wrapper">
         <div class="welcome-container">
             <div class="welcome-cell">
@@ -6,7 +6,11 @@
                     Your Fitness Journey Starts Here
                 </h1>
                 <div class="buttons">
-                    <a ui-sref="main.signup" class="btn btn-transparent btn-lg btn-home">Sign me Up</a>
+                    <md-button id="sign-up"
+                               ui-sref="main.signup">
+                        Sign me Up
+                    </md-button>
+                    <!--<a ui-sref="main.signup" class="btn btn-transparent btn-lg btn-home">Sign me Up</a>-->
                 </div>
             </div>
         </div>
@@ -14,9 +18,4 @@
     <div class="location" ng-if="cityState" ng-class="{'scale-in' : cityState}" >
         <i class="fa fa-crosshairs"></i> {{cityState}}
     </div>
-    <!--
-    <div class="callout">
-        <h1>Personal Trainers. Where, and When You Need Them!</h1>
-    </div>
-    -->
 </div>

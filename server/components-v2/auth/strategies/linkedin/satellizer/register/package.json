@@ -6,6 +6,7 @@
   "plugin": {
     "consumes": [
       "trainerModel",
+      "userModel",
       "auth"
     ],
     "provides": ["linkedinSatellizerRegister"]

@@ -1,0 +1,24 @@
+#login-or-signup-dialog {
+	md-pagination-wrapper {
+		width: auto!important; // bug where the tabs arent rendered properly.
+	}
+	#login, #signup {
+		max-width: none!important;
+		//display: flex;
+	}
+	md-card {
+		margin: 0;
+	}
+	.md-dialog-content {
+		padding: 0;
+	}
+	.woops {
+		font-size: 20px;
+		border: 2px solid;
+		padding: 20px;
+		border-top-right-radius: 5px;
+		border-top-left-radius: 5px;
+		border-color: #3d069e;
+		text-align: center;
+	}
+}

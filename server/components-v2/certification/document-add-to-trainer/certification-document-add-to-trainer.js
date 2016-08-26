@@ -2,6 +2,7 @@ var async = require('async'),
 	expect = require('chai').expect
 ;
 module.exports = function setup(options, imports, register){
+	var certificationStatusSetter = imports.certificationStatusSetter;
 	/**
 	 *
 	 * @type {{add: Function}}
@@ -35,6 +36,12 @@ module.exports = function setup(options, imports, register){
 						foundCertificationV2 = certification_v2;
 						break;
 					}
+				}
+				try {
+					certificationStatusSetter.set(foundCertificationV2);
+				}
+				catch(err) {
+					return reject(err);
 				}
 				trainer.save(function(err, savedTrainer){
 					if(err) return reject(err);

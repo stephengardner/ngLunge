@@ -1,22 +1,26 @@
+'use strict';
 
 lungeApp.controller("TrainerCertificationsController",
-	function(TrainerCertifications, 
-	         FullMetalSocket, 
-	         CertificationOrganization, 
-	         TrainerFactory, 
-	         AlertMessage, 
+	function(TrainerCertifications,
+	         FullMetalSocket,
+	         CertificationOrganization,
+	         TrainerFactory,
+	         AlertMessage,
 	         Auth,
-	         Certification, 
-	         $http, 
-	         $scope, 
+	         Certification,
+	         $http,
+	         $scope,
+	         $timeout,
 	         $mdDialog){
+
+		var originatorEv;
 
 		$scope.openMenu = function($mdOpenMenu, ev) {
 			originatorEv = ev;
 			$mdOpenMenu(ev);
 		};
-		
-		$scope.verifyCertificationPopup = function(certificationV2, ev) {
+
+		$scope.verifyCertificationPopup = function(certificationV2) {
 			$scope.certificationV2 = certificationV2;
 			$mdDialog.show({
 				templateUrl: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
@@ -25,14 +29,8 @@ lungeApp.controller("TrainerCertificationsController",
 					certificationV2 : certificationV2
 				},
 				clickOutsideToClose : true,
-				targetEvent : ev
+				targetEvent : originatorEv
 			});
-			// $scope.modal = ngDialog.open({
-			// 	template: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
-			// 	scope: $scope,
-			// 	className: 'ngdialog-theme-default large',
-			// 	controller: "TrainerAccountVerifyCertificationsModalController"
-			// });
 		};
 
 		$scope.getTrainerModelCertificationType = function(certificationType) {
@@ -42,26 +40,24 @@ lungeApp.controller("TrainerCertificationsController",
 					return certification_v2;
 				}
 			}
-		}
+		};
 
 		$scope.certificationsEmpty = function() {
 			if($scope.trainerFactory && $scope.trainerFactory.trainer.certifications_v2) {
 				var arr = $scope.trainerFactory.trainer.certifications_v2.filter(function(item){
-					if(item.active == false){
-						return false;
-					}
-					return true;
-				})
-				return arr.length == 0 ? true : false;
+					return item.active;
+				});
+				return arr.length == 0;
 			}
 			else {
 				return false;
 			}
-		}
+		};
 
 		$scope.deleteCertification = function(certification){
 			certification.removing = true;
-			var messageToSend = "Removed a " + certification.certification_type.name + " certification from your profile";
+			var messageToSend = "Removed the " + certification.certification_type.name + " certification from your" +
+				" profile";
 			TrainerFactory.removeCertification(certification.certification_type).save().then(onSuccess).catch(onError);
 			function onSuccess() {
 				certification.removing = false;
@@ -69,11 +65,12 @@ lungeApp.controller("TrainerCertificationsController",
 				certification.busy = false;
 				certification.removing = false;
 			}
-			function onError(err){
+			function onError(){
 				certification.removing = false;
 				certification.busy = false;
 			}
-		}
+		};
+
 		$scope.toggleDeleteCertification = function(certificationV2) {
 			certificationV2.removalConfirmation = !certificationV2.removalConfirmation;
 		}

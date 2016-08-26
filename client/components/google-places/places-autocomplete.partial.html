@@ -1,6 +1,5 @@
 <div id="place-autocomplete">
         <md-autocomplete md-no-cache="false"
-                         md-autofocus
                          md-selected-item="location"
                          md-selected-item-change="getLatLng(item)"
                          ng-model-options="{debounce: 300}"
@@ -10,23 +9,22 @@
                          md-item-text="item.description"
                          md-min-length="2"
                          md-max-length="50"
-                         placeholder="Type your address"
+                         server-error
+                         placeholder="Type your location"
                          md-input-name="autocomplete"
+                         md-floating-label="Enter your location"
                          ng-model="location">
             <md-item-template>
             <span md-highlight-text="searchText" md-highlight-flags="^i">
                 {{item.description}}
             </span>
             </md-item-template>
-            <div ng-messages="autocompleteForm.autocomplete.$error">
-                <div ng-message="required">Required</div>
+            <div ng-messages="form.autocomplete.$error">
+                <div ng-message="local">Hey there locally</div>
+                <div ng-message="mongoose">{{form.errors.autocomplete}}</div>
             </div>
             <md-not-found>
-                No matches found for "{{searchText}}".....
-                {{form.autocomplete}}
-        <pre>
-        form is: {{form | json}}
-        </pre>
+                No matches found for "{{searchText}}"
             </md-not-found>
         </md-autocomplete>
 </div>

@@ -12,6 +12,16 @@
 	}
 }
 md-button, a {
+	&.ag-padded {
+		padding: 2px 10px;
+		i, span {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		i, md-icon {
+			margin-right: 7px;
+		}
+	}
 	&.social-button {
 		color: white;
 		&:hover {

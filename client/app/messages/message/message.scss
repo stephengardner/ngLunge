@@ -1,0 +1,162 @@
+#message, #message-in-dialog {
+	ag-floating-label {
+		margin-top: 20px;
+		.ag-errors-spacer {
+			display: none;
+		}
+		.ag-floating-label-content-wrapper {
+			margin-bottom: 0;
+		}
+		textarea {
+			padding-right: 60px;
+			[disabled] {
+				background: #f8f8f8;
+			}
+		}
+		button {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			margin: 0;
+			margin-bottom: 3px;
+			margin-right: 3px;
+			min-width: 0;
+			padding: 0 10px;
+		}
+	}
+}
+
+#message {
+	md-content {
+		height: auto;
+	}
+	.name {
+		font-size: 14px;
+		color: black;
+		text-decoration: none;
+		&:hover {
+			text-decoration: none;
+		}
+	}
+	#message-md-content {
+		position: relative;
+	}
+	#textbox-container {
+		position: relative;
+	}
+	#new-message-count {
+		position: absolute;
+		top: -10px;
+		z-index: 1;
+		width: 200px;
+		left: 50%;
+		margin-left: -100px;
+		button {
+			overflow: hidden;
+			text-decoration: none;
+			min-height: 0;
+			margin: 0;
+			border-radius: 20px;
+			@extend .md-whiteframe-z2;
+			padding: 6px 12px;
+			background: white;
+			font-weight: 400;
+			//cursor: pointer;
+			//&:hover {
+			//	background: #f8f8f8;
+			//}
+			.md-ripple-container {
+				overflow: hidden;
+				border-radius: 20px;
+			}
+			span {
+				line-height: 1;
+				text-transform: none;
+			}
+		}
+	}
+	.chat-message {
+		padding: 5px 0;
+		&.unseen {
+			transition: background 0s;
+			background: #e6d9ec;
+		}
+		&.seen {
+			transition: background 2.3s;
+			background: transparent;
+		}
+	}
+	.loading {
+		.spinner-and-text {
+			margin-top: 40px;
+			.text {
+				margin-top: 5px;
+				font-size: 16px;
+				font-weight: 300;
+			}
+		}
+	}
+	#message-container {
+		//position: relative;
+		// DO NOT DELETE - if we need the footer, we'll use this!
+		//max-height: calc(100% - 65px);
+		//height: calc(100% - 65px);
+		height: 100%;
+	}
+	.message-row {
+		.message-content {
+			white-space: pre-wrap;
+			// space for the time above it
+			padding-right: 50px;
+		}
+		.message-row-1 {
+			.name {
+				font-weight: 500;
+			}
+			.time {
+				color: #888;
+			}
+		}
+		~ .message-row {
+			//margin-top: 10px;
+		}
+	}
+	.profile-picture {
+		width: 45px;
+		img {
+			width: 100%;
+			display: block;
+		}
+		margin-right: 10px;
+	}
+	.displayDate {
+		color: #888;
+		> div {
+			padding: 10px;
+		}
+		._md-subheader-inner {
+			//width: 100%;
+			@extend .flex-100;
+			@extend .layout-row;
+			@extend .layout-align-center-center;
+			padding: 0;
+			._md-subheader-content {
+				padding: 10px 10px;
+			}
+			&:before, &:after {
+				content: '';
+				flex: 1;
+				display: flex;
+				height: 1px;
+				background: #ddd;
+			}
+		}
+		&:before, &:after {
+			content: '';
+			flex: 1;
+			display: flex;
+			height: 1px;
+			background: #ddd;
+		}
+	}
+}

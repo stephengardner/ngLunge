@@ -1,0 +1,13 @@
+#share-bottom-sheet {
+	md-list {
+		md-icon {
+			margin-right: 8px;
+		}
+		button {
+			margin-right: 0;
+			&.md-list-item-content {
+				padding: 0 7px;
+			}
+		}
+	}
+}

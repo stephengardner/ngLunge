@@ -1,22 +1,25 @@
 <!--<div ng-cloak>-->
-    <md-card class="section-animate-in" ng-if="trainerFactory.trainer">
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <h2>
-                    <span>Locations</span>
-                </h2>
-                <span flex></span>
-                <md-button class="md-icon-button"
-                           ng-if="editable"
-                           ng-click="locationDialog($event)">
-                    <md-icon>
-                        <i class="material-icons">add</i>
-                    </md-icon>
-                </md-button>
-            </div>
-        </md-toolbar>
+<div class="loading-block-lg" ng-if="!trainerFactory.trainer.name"></div>
+<md-card class="section-animate-in" ng-if="trainerFactory.trainer.name">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Locations</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button"
+                       ng-if="editable"
+                       ng-click="locationDialog($event)">
+                <md-icon>
+                    <i class="material-icons">add</i>
+                </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-card-content class="map">
         <trainer-map></trainer-map>
-        <!--<trainer-map-add-location editable="{{editable}}"></trainer-map-add-location>-->
-        <trainer-map-locations editable="{{editable}}"></trainer-map-locations>
-    </md-card>
+    </md-card-content>
+    <!--<trainer-map-add-location editable="{{editable}}"></trainer-map-add-location>-->
+    <trainer-map-locations editable="{{editable}}"></trainer-map-locations>
+</md-card>
 <!--</div>-->

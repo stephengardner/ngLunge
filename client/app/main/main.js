@@ -22,4 +22,8 @@ angular.module('ngLungeFullStack2App')
 				url: '^/',
 				templateUrl : "app/main/views/homepage/homepage.html"
 			})
+			.state('main.what-is-lunge', {
+				url: '^/what-is-lunge',
+				templateUrl : "app/main/what-is-lunge/what-is-lunge.partial.html"
+			})
 	});

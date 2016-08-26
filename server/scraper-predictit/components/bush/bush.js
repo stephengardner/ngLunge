@@ -1,7 +1,6 @@
 var async = require("async");
 var logger = require("../../../components/logger")();
-var osmosis = require("osmosis");
-	config = require('../../../config/environment'),
+var config = require('../../../config/environment'),
 	mandrill = require('node-mandrill')(config.mandrill.API_KEY),
 	expect = require('chai').expect,
 	_ = require('lodash'),
@@ -84,48 +83,48 @@ module.exports = function setup(options, imports, register) {
 		}
 	};
 	var scraper = {
-		active : true,
-		scrape : function(){
-			return new Promise(function(resolve, reject){
-				if(conditionToPing()) {
-					osmosis
-						.get(url)
-						.set(find)
-						.data(function(data){
-							console.log("Data : ", data);
-							async.each(tripConditions, checkIfTripped.bind(null, data), function(err) {
-								if(err)	return scraper.send({subject : subjects.error}).then(resolve).catch(reject);
-								return resolve(null);
-							})
-						}).error(function(err){
-							scraper._onError(err, reject);
-						})
-				}
-				else {
-					scraper._onTripped(reject);
-				}
-			})
-		},
-		_onTripped : function(reject) {
-			console.log(moduleName + " tripped.  Reactivate manually");
-			reject(false);
-		},
-		_onError : function(err, reject) {
-			console.log("err:",err);
-			reject(false);
-		},
-		send : function(options) {
-			return new Promise(function(resolve, reject){
-				disable();
-				expect(options).to.have.property('subject');
-				var params = _.merge({}, MANDRILL_DEFAULTS, options);
-				mandrill('messages/send-template', params, function(error, response){
-					console.log('Mandrill Send Response: ', response);
-					if(error) return reject(error);
-					return resolve(response);
-				});
-			})
-		}
+		// active : true,
+		// scrape : function(){
+		// 	return new Promise(function(resolve, reject){
+		// 		if(conditionToPing()) {
+		// 			osmosis
+		// 				.get(url)
+		// 				.set(find)
+		// 				.data(function(data){
+		// 					console.log("Data : ", data);
+		// 					async.each(tripConditions, checkIfTripped.bind(null, data), function(err) {
+		// 						if(err)	return scraper.send({subject : subjects.error}).then(resolve).catch(reject);
+		// 						return resolve(null);
+		// 					})
+		// 				}).error(function(err){
+		// 					scraper._onError(err, reject);
+		// 				})
+		// 		}
+		// 		else {
+		// 			scraper._onTripped(reject);
+		// 		}
+		// 	})
+		// },
+		// _onTripped : function(reject) {
+		// 	console.log(moduleName + " tripped.  Reactivate manually");
+		// 	reject(false);
+		// },
+		// _onError : function(err, reject) {
+		// 	console.log("err:",err);
+		// 	reject(false);
+		// },
+		// send : function(options) {
+		// 	return new Promise(function(resolve, reject){
+		// 		disable();
+		// 		expect(options).to.have.property('subject');
+		// 		var params = _.merge({}, MANDRILL_DEFAULTS, options);
+		// 		mandrill('messages/send-template', params, function(error, response){
+		// 			console.log('Mandrill Send Response: ', response);
+		// 			if(error) return reject(error);
+		// 			return resolve(response);
+		// 		});
+		// 	})
+		// }
 	};
 	register(null, {
 		bush : scraper

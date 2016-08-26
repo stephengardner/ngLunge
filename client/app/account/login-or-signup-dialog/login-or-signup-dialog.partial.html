@@ -1,0 +1,283 @@
+<md-dialog id="login-or-signup-dialog" class="flexible-dialog-medium">
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <h2 class="woops"
+                layout="row"
+                layout-align="center center">
+                {{ title || 'Login to enjoy all the features of Lunge - it\'s free!' }}
+            </h2>
+            <div layout="row"
+                 layout-align="center center"
+                 ng-controller="LoginController"
+                 ng-if="loginOrSignup == 'login'"
+                 layout-wrap>
+                <div flex
+                     id="login">
+                    <md-card>
+                        <form name="loginForm"
+                              ng-submit="loginFromDialog(loginForm)">
+                            <md-toolbar>
+                                <div class="md-toolbar-tools">
+                                    <h2>
+                                        Login
+                                    </h2>
+                                    <span flex></span>
+                                    <div id="or">
+                                        or,
+                                        <md-button ng-click="selectLoginOrSignup('signup')">
+                                            Signup
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </md-toolbar>
+                            <md-tabs md-selected="loginSelectedIndex"
+                                     md-border-bottom
+                                     md-dynamic-height
+                                     md-autoselect>
+                                <!-- User Tab -->
+                                <md-tab label="User"
+                                        ng-click="selectTab('trainee')">
+                                    <md-card-content layout="column" layout-align="center center" id="user-login-social">
+                                        <h1>
+                                            User Social Login
+                                        </h1>
+                                        <md-button class="facebook social-button"
+                                                   href=""
+                                                   ng-click="loginOAuthFromDialog('facebook')">
+                                            <md-icon>
+                                                <ng-md-icon icon="facebook"></ng-md-icon>
+                                            </md-icon>
+                                            Login with Facebook
+                                        </md-button>
+                                        <md-button class="linkedin social-button"
+                                                   href=""
+                                                   ng-click="loginOAuthFromDialog('linkedin')">
+                                            <md-icon>
+                                                <ng-md-icon icon="linkedin"></ng-md-icon>
+                                            </md-icon>
+                                            Login with LinkedIn
+                                        </md-button>
+                                    </md-card-content>
+                                </md-tab>
+                                <!-- Trainer Tab -->
+                                <md-tab label="Trainer"
+                                        ng-click="selectTab('trainer')">
+                                    <!-- Trainer Social Login -->
+                                    <md-card-content id="trainer-login-social"
+                                                     layout="column"
+                                                     layout-align="center center">
+                                        <h1>
+                                            Trainer Social Login
+                                        </h1>
+                                        <md-button class="facebook social-button"
+                                                   href=""
+                                                   ng-click="trainerLoginOAuthFromDialog('facebook')">
+                                            <md-icon>
+                                                <ng-md-icon icon="facebook"></ng-md-icon>
+                                            </md-icon>
+                                            Login with Facebook
+                                        </md-button>
+                                        <md-button class="linkedin social-button"
+                                                   href=""
+                                                   ng-click="trainerLoginOAuthFromDialog('linkedin')">
+                                            <md-icon>
+                                                <ng-md-icon icon="linkedin"></ng-md-icon>
+                                            </md-icon>
+                                            Login with LinkedIn
+                                        </md-button>
+                                    </md-card-content>
+                                    <md-divider></md-divider>
+                                    <!-- Trainer Local Login -->
+                                    <md-card-content
+                                            id="trainer-login-local">
+                                        <h3 class="text-center">
+                                            Or Login Using Your Email
+                                        </h3>
+                                        <ag-floating-label>
+                                            <label>
+                                                Email
+                                            </label>
+                                            <input type="email"
+                                                   name="email"
+                                                   server-error
+                                                   ng-model="user.email"/>
+                                            <div ng-messages="loginForm.email.$error">
+                                                <div ng-message="mongoose">
+                                                    {{loginForm.errors.email}}
+                                                </div>
+                                            </div>
+                                        </ag-floating-label>
+                                        <ag-floating-label>
+                                            <label>
+                                                Password
+                                            </label>
+                                            <input type="password"
+                                                   name="password"
+                                                   server-error
+                                                   ng-model="user.password"/>
+                                            <div ng-messages="loginForm.password.$error">
+                                                <div ng-message="mongoose">
+                                                    {{loginForm.errors.password}}
+                                                </div>
+                                            </div>
+                                        </ag-floating-label>
+                                        <div id="forgot-password">
+                                            <a ui-sref="main.password-reset.submit({type : 'trainer'})">Forgot password?</a>
+                                        </div>
+                                    </md-card-content>
+                                    <md-card-actions>
+                                        <md-button type="submit">
+                                            Login
+                                        </md-button>
+                                        <md-button ng-click="cancel()">
+                                            Cancel
+                                        </md-button>
+                                    </md-card-actions>
+                                </md-tab>
+                            </md-tabs>
+                        </form>
+                    </md-card>
+                </div>
+            </div>
+            <div layout="row"
+                 layout-align="center center"
+                 ng-if="loginOrSignup == 'signup'">
+                <div flex id="signup">
+                    <md-card ng-if="!success">
+                        <form name="registrationForm"
+                              novalidate
+                              ng-submit="submit(registrationForm)">
+                            <md-toolbar>
+                                <div class="md-toolbar-tools">
+                                    <h2>
+                                        Sign Up
+                                    </h2>
+                                    <span flex></span>
+                                    <div id="or">
+                                        or,
+                                        <md-button ng-click="selectLoginOrSignup('login')">
+                                            Login
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </md-toolbar>
+                            <md-tabs md-selected="signupSelectedIndex"
+                                     md-border-bottom
+                                     md-dynamic-height
+                                     md-autoselect>
+                                <md-tab label="User" ng-click="selectTab('trainee')">
+                                    <div id="signup-user">
+                                        <!--<md-card-content layout="column" layout-align="center center">-->
+                                        <div id="signup-user-social">
+                                            <h1>Ready to start your fitness journey?</h1>
+                                            <h2>Signup with Lunge today!</h2>
+                                            <div>
+                                                <md-button class="facebook social-button"
+                                                           href=""
+                                                           ng-click="authenticate('facebook')">
+                                                    <md-icon>
+                                                        <ng-md-icon icon="facebook"></ng-md-icon>
+                                                    </md-icon>
+                                                    Connect with Facebook
+                                                </md-button>
+                                            </div>
+                                            <div>
+                                                <md-button class="linkedin social-button"
+                                                           href=""
+                                                           ng-click="authenticate('linkedin')">
+                                                    <md-icon>
+                                                        <ng-md-icon icon="linkedin"></ng-md-icon>
+                                                    </md-icon>
+                                                    Connect with LinkedIn
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                        <!--</md-card-content>-->
+                                    </div>
+                                </md-tab>
+                                <md-tab label="Trainer" id="signup-trainer" ng-click="selectTab('trainer')">
+                                    <div id="signup-trainer">
+                                        <div id="signup-trainer-social">
+                                            <h1>Are you a Certified Trainer?</h1>
+                                            <h2>Get started with Lunge today!</h2>
+                                            <div>
+                                                <md-button class="facebook social-button"
+                                                           href=""
+                                                           ng-click="authenticate('facebook')">
+                                                    <md-icon>
+                                                        <ng-md-icon icon="facebook"></ng-md-icon>
+                                                    </md-icon>
+                                                    Connect with Facebook
+                                                </md-button>
+                                            </div>
+                                            <div>
+                                                <md-button class="linkedin social-button"
+                                                           href=""
+                                                           ng-click="authenticate('linkedin')">
+                                                    <md-icon>
+                                                        <ng-md-icon icon="linkedin"></ng-md-icon>
+                                                    </md-icon>
+                                                    Connect with LinkedIn
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                        <md-divider></md-divider>
+                                        <div id="signup-trainer-local">
+                                            <md-card-content>
+                                                <h3>
+                                                    Or Signup Using Your Email
+                                                </h3>
+                                                <ag-floating-label>
+                                                    <label>
+                                                        Email
+                                                    </label>
+                                                    <input type="text"
+                                                           server-error
+                                                           name="email"
+                                                           ng-model="user.email"/>
+                                                    <div ng-messages="registrationForm.email.$error">
+                                                        <div ng-message="mongoose">
+                                                            {{registrationForm.errors.email}}
+                                                        </div>
+                                                    </div>
+                                                </ag-floating-label>
+                                            </md-card-content>
+                                            <md-card-actions>
+                                                <md-button type="submit">
+                                                    Sign up
+                                                </md-button>
+                                                <md-button ng-click="cancel()">
+                                                    Cancel
+                                                </md-button>
+                                            </md-card-actions>
+                                        </div>
+                                    </div>
+                                </md-tab>
+                            </md-tabs>
+                        </form>
+                    </md-card>
+                    <form name="resendEmailForm"
+                          ng-submit="resendEmail()">
+                        <md-card ng-if="success">
+                            <md-card-title>
+                                <md-card-title-text>
+                        <span class="md-headline">
+                            Check your email!
+                        </span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                We sent you a link to verify your identity and get started using Lunge.
+                            </md-card-content>
+                            <md-card-actions>
+                                <md-button type="submit">
+                                    Resend email
+                                </md-button>
+                            </md-card-actions>
+                        </md-card>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>

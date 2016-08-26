@@ -5,12 +5,6 @@ myApp.controller("TrainerInfoSectionBasicInfoController", function(lodash,
                                                                    $scope){
 	$scope.editing = false;
 	$scope.trainerFactory = TrainerFactory;
-	$scope.toggleEditing = function(form) {
-		$scope.editing = !$scope.editing;
-		if(!$scope.editing) $scope.reset(form);
-		TrainerFactory.setEditingOf('basicInfo', $scope.editing);
-	};
-
 	$scope.ajax = {};
 
 	$scope.reset = function(form) {
@@ -23,7 +17,6 @@ myApp.controller("TrainerInfoSectionBasicInfoController", function(lodash,
 		$scope.cgBusy = TrainerFactory.save('basicInfo').then(function(response){
 				$scope.ajax.busy = false;
 				AlertMessage.success("'Basic Info' section updated");
-				$scope.toggleEditing();// = false;
 		}).catch(function(err){
 			$scope.ajax.busy = false;
 			form.$setPristine();

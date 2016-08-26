@@ -1,0 +1,14 @@
+{
+  "name": "api-chat.router.js",
+  "version": "0.0.1",
+  "main": "api-chat.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "apiChatController",
+      "bruteforce",
+      "auth"
+    ],
+    "provides": ["apiChatRouter"]
+  }
+}

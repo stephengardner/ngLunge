@@ -1,0 +1,49 @@
+<div ng-if="!userFactory.user.name"
+     class="loading-block-sm">
+</div>
+<md-card class="section-animate-in"
+         ng-if="userFactory.user.name"
+         ag-editable-trainee-container
+         user-factory="userFactory"
+         user-factory-section="bio">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Bio</span>
+            </h2>
+            <span flex></span>
+            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing()">
+                <i  class="material-icons">mode_edit</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="bioForm"
+          name="bioForm"
+          ng-submit="submit(bioForm); toggleEditing()">
+        <md-card-content cg-busy="{promise : cgBusy}"  >
+            <div class="ag-editable-container">
+                <div class="ag-editable-default">
+                    {{userFactory.user.bio || 'Write something about yourself'}}
+                </div>
+                <div class="ag-editable-editing">
+                    <ag-floating-label>
+                        <label>Bio</label>
+                        <textarea name="bio"
+                                  ng-model="userFactory.userEditing.bio"
+                                  server-error
+                                  rows="{{textareaRows}}"
+                                  md-no-autogrow
+                                  md-select-on-focus></textarea>
+                        <div ng-messages="bioForm.bio.$error">
+                            <div ng-message="mongoose">{{bioForm.errors.bio}}</div>
+                        </div>
+                    </ag-floating-label>
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+            <md-button type="submit">Save</md-button>
+            <md-button ng-click="toggleEditing()">Cancel</md-button>
+        </md-card-actions>
+    </form>
+</md-card>

@@ -1,0 +1,68 @@
+#trainee-profile {
+	md-card {
+		margin-bottom: 30px;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.ag-flex-profile {
+		//@extend .flex-100;
+		//@extend .flex-gt-xs-75;
+		//@extend .flex-gt-sm-60;
+		@include respond-to(xxs) {
+			margin: 0 10px;
+		}
+		// adding any flex- on this item made the footer problematic. do not add flex
+		width: 50%;
+		@include respond-to(lg) {
+			width: 60%;
+		}
+		@include respond-to(md) {
+			width: 75%;
+		}
+		@include respond-to(sm) {
+			width: 90%;
+		}
+		@include respond-to(xxs) {
+			width: 100%;
+		}
+	}
+	#profile-head {
+		#profile-picture {
+			text-align: center;
+			img {
+				border-radius: 1000px;
+				width: 100%;
+				@include respond-to(xs) {
+					width: 75%;
+				}
+			}
+		}
+		#profile-main-text {
+			padding-left: 20px;
+			font-size: 16px;
+			#name {
+				font-weight: 400;
+			}
+			> div {
+				margin-top: 15px;
+				&.empty {
+					color: #aaa;
+				}
+			}
+			#headline {
+				margin-top: 0px;
+				font-size: 18px;
+			}
+			#bio {
+				margin-top: 10px;
+			}
+			@include respond-to(xs) {
+				margin-top: 8px;
+				padding-left: 0;
+			}
+		}
+	}
+	#profile-body {
+		margin-top: 40px;
+	}
+}

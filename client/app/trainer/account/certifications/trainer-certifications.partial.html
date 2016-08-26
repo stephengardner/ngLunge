@@ -1,7 +1,7 @@
 <div id="trainer-certifications" class="trainer-certifications trainer-verify-certifications main-push">
     <header class="fade-in">
         <h1>
-            <i class="material-icons">pages</i>
+            <i class="material-icons">verified_user</i>
             <span>
                 My Certifications
             </span>
@@ -32,29 +32,32 @@
     <section class="certifications fade-in-300">
         <div id="md-fab-container">
             <md-button class="md-fab" aria-label="Add certification"
-                       ui-sref="main.trainer.account.certifications.list">
-                <md-icon>
-                    <i class="material-icons">add</i>
-                </md-icon>
+                       ui-sref="main.certifications.list">
+                <div layout="row" layout-fill>
+                    <md-icon>
+                        <i class="material-icons">add</i>
+                    </md-icon>
+                </div>
             </md-button>
         </div>
         <md-card ng-if="certificationsEmpty()">
-            <md-card-title>
-                <md-card-title-text>
-                    <span class="md-headline" ng-if="certificationsEmpty()">
-                        You have no certifications yet!  Add one by clicking the button above.
-                    </span>
-                </md-card-title-text>
-            </md-card-title>
+            <md-card-content>
+                <h3>
+                    You have no certifications yet!  Add one by clicking the button above.
+                </h3>
+            </md-card-content>
         </md-card>
+        <div class="ag-loading-container" ng-if="trainerFactory.loading">
+            <md-progress-circular md-diameter="130"></md-progress-circular>
+            Loading...
+        </div>
         <md-card ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
-            <accordion close-others="true">
-                <md-list>
-                    <accordion-group is-open="mappedOrganization.isOpen"
-                                     class="certification-organization">
-                        <accordion-heading>
-                            <md-list-item md-ink-ripple>
-                                <span layout="row" layout-align="start end"
+            <md-list>
+                <ag-collapse-container class="certification-organization"
+                                       is-open="mappedOrganization.isOpen">
+                    <ag-collapse-header>
+                        <md-list-item md-ink-ripple>
+                                <span layout="row" layout-align="start center"
                                       class="name">
                                     <span class="count-unbubble total-certifications">
                                         <md-tooltip md-direction="top">
@@ -68,13 +71,14 @@
                                     </span>
                                     {{mappedOrganization.name}}
                                 </span>
-                                <div class="md-secondary" flex="nogrow" layout="row" layout-align="center center">
-                                    <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
-                                                                                certification-organization="mappedOrganization">
-                                    </trainer-certification-status-count-bubbles>
-                                </div>
-                            </md-list-item>
-                        </accordion-heading>
+                            <div class="md-secondary" flex="nogrow" layout="row" layout-align="center center">
+                                <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
+                                                                            certification-organization="mappedOrganization">
+                                </trainer-certification-status-count-bubbles>
+                            </div>
+                        </md-list-item>
+                    </ag-collapse-header>
+                    <ag-collapse-body>
                         <md-list>
                             <md-list-item ng-repeat="certificationV2 in mappedOrganization.types.all"
                                           class="secondary-button-padding">
@@ -173,12 +177,11 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </md-list-item>
                         </md-list>
-                    </accordion-group>
-                </md-list>
-            </accordion>
+                    </ag-collapse-body>
+                </ag-collapse-container>
+            </md-list>
         </md-card>
     </section>
 </div>

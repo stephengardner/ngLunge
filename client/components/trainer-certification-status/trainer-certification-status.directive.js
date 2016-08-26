@@ -3,13 +3,10 @@ myApp.directive('trainerCertificationStatus', ['$mdDialog', function($mdDialog){
 		restrict : 'AE',
 		replace : true,
 		scope : {
-			trainer : '=',
-			certification : '='
+			trainer : '<',
+			certification : '<'
 		},
 		templateUrl : 'components/trainer-certification-status/trainer-certification-status.partial.html',
-		controller : ['$scope', function($scope) {
-
-		}],
 		link : function($scope, $elem, $attrs) {
 			/// get the status of a certification if the trainer has it in its certification_v2 array
 			$scope.openDialog = function(status, ev) {
@@ -48,16 +45,17 @@ myApp.directive('trainerCertificationStatus', ['$mdDialog', function($mdDialog){
 				$scope.status = $scope.getStatus();
 			};
 			$scope.setStatus();
+
+			// watch on busy because this is a VERY SHALLOW WATCH
+			// don't watch on the whole trainer object, or something dumb like that
 			$scope.$watch(function(){
-				return $scope.certification
+				return $scope.certification.busy
 			}, function(newValue, oldValue) {
-				$scope.setStatus();
-			});
-			$scope.$watch(function(){
-				return $scope.trainer
-			}, function(newValue, oldValue) {
-				$scope.setStatus();
-			}, true)
+				if(newValue != oldValue){
+					console.log("trainer-certification-status watch triggered");
+					$scope.setStatus();
+				}
+			})
 		}
 	}
 }])

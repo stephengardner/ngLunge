@@ -16,11 +16,9 @@ myApp.controller("TrainerInfoSectionAboutController", function(TrainerFactory, A
 		$scope.ajax.busy = true;
 		$scope.cgBusy = TrainerFactory.save('about').then(function(response){
 			$scope.ajax.busy = false;
-			AlertMessage.success("'About' section updated");
-			$scope.toggleEditing();// = false;
+			AlertMessage.success("Bio updated");
 		}).catch(function(err){
 			$scope.ajax.busy = false;
-			form.$setPristine();
 			FormControl.parseValidationErrors(form, err);
 			$scope.errors = FormControl.errors;
 		})

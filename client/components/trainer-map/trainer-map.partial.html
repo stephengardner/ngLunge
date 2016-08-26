@@ -18,7 +18,7 @@
     <div ng-if="trainerFactory.trainer.location.state"
          id="google-map"
          class="google-map">
-        <div ng-show="map.center.latitude && map.bounds">
+        <div ng-if="map.center.latitude && map.bounds">
             <ui-gmap-google-map
                     center="map.center"
                     zoom="map.zoom"

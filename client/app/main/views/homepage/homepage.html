@@ -1,1 +1,165 @@
-<div ng-include="'app/main/partials/jumbotron/jumbotron.partial.html'"></div>
+<div id="home">
+    <div class="jumbo-main bg-full" ag-editable-animation>
+        <div class="welcome-wrapper">
+            <div class="welcome-container">
+                <div class="welcome-cell">
+                    <h1>
+                        Your Fitness Journey Starts Here
+                    </h1>
+                    <div class="buttons">
+                        <md-button id="sign-up"
+                                   ui-sref="main.signup">
+                            Sign me Up
+                        </md-button>
+                        <!--<a ui-sref="main.signup" class="btn btn-transparent btn-lg btn-home">Sign me Up</a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="location" ng-if="cityState" ng-class="{'scale-in' : cityState}" >
+            <i class="fa fa-crosshairs"></i> {{cityState}}
+        </div>
+    </div>
+    <div id="description">
+        <!--<div class="loading-block loading-sm"></div>-->
+        <div class="container">
+            <div layout="row" layout-align="center center" layout-padding layout-wrap>
+                <div flex="100" flex-gt-md="50">
+                    <h2>
+                        A New Fitness Network
+                    </h2>
+                    <div class="subheader">
+                        We are a community of personal trainers and personal challenges, our goal is to change the world one
+                        healthy habit at a time by connecting trainers to those looking to take the next step in their fitness journey.
+                    </div>
+                    <md-button ui-sref="main">
+
+                    </md-button>
+                </div>
+                <div flex="100" flex-gt-md="50">
+                    <div id="description-icons" layout="row" layout-align="center start" layout-wrap>
+                        <div flex="100" flex-gt-xs="50">
+                            <div class="icon">
+                                <i class="linea-icon-basic icon-basic-paperplane"></i>
+                            </div>
+                            <div class="headline">
+                                Completely Free
+                            </div>
+                            <div class="text">
+                                Trainers and Clients can use Lunge at no cost.  It's free now...  And free forever.
+                            </div>
+                        </div>
+                        <div flex="100" flex-gt-xs="50">
+                            <div class="icon">
+                                <i class="linea-icon-basic-elaboration icon-basic-elaboration-todolist-check"></i>
+                            </div>
+                            <div class="headline">
+                                Vetted and Verified
+                            </div>
+                            <div class="text">
+                                Lunge makes sure each trainer is individually verified, so you know who's right for you!
+                            </div>
+                        </div>
+                        <div flex="100" flex-gt-xs="50">
+                            <div class="icon">
+                                <i class="linea-icon-basic icon-basic-magnifier"></i>
+                            </div>
+                            <div class="headline">
+                                Transparent
+                            </div>
+                            <div class="text">
+                                View a trainer's fees, specialties, certifications and experience up front.
+                            </div>
+                        </div>
+                        <div flex="100" flex-gt-xs="50">
+                            <div class="icon">
+                                <i class="linea-icon-basic-elaboration icon-basic-elaboration-message-happy"></i>
+                            </div>
+                            <div class="headline">
+                                Easy to use
+                            </div>
+                            <div class="text">
+                                Like what you see?  Contact a local trainer and start your fitness journey today.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="description-2">
+        <div class="container">
+            <h2>Get the Facts on Trainers Near You</h2>
+            <h3>Personalized profiles, verified trainers, and public reviews from real people just like you.</h3>
+            <div layout="row" layout-align="center stretch">
+                <div flex="100" flex-gt-md="33">
+                    <div class="headline">
+                        Search Your Area
+                    </div>
+                    <div class="icon">
+                        <i class="linea-icon-basic icon-basic-geolocalize-05"></i>
+                    </div>
+                    <div class="text">
+
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div flex="100" flex-gt-md="33">
+                    <div class="headline">
+                        Find Your Fit
+                    </div>
+                    <div class="icon">
+                        <i class="linea-icon-basic-elaboration icon-basic-elaboration-bookmark-check"></i>
+                    </div>
+                    <div class="text">
+
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div flex="100" flex-gt-md="33">
+                    <div class="headline">
+                        Get In Touch
+                    </div>
+                    <div class="icon">
+                        <i class="linea-icon-basic-elaboration icon-basic-elaboration-smartphone-heart"></i>
+                    </div>
+                    <div class="text">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shade"></div>
+    </div>
+    <div id="description-3">
+        <div class="shade"></div>
+        <div class="container-sm">
+            <h2>Ready When You Are</h2>
+            <ag-floating-label>
+                <label>
+                    Where are we looking?
+                </label>
+                <ag-icon>
+                    <i class="material-icons">
+                        search
+                    </i>
+                </ag-icon>
+                <input type="text" ng-model="location"/>
+            </ag-floating-label>
+        </div>
+    </div>
+    <div id="description-4">
+        <div class="icon">
+            <i class="linea-icon-basic icon-basic-info"></i>
+        </div>
+        <div class="container">
+            Still curious about what makes US move?  Check out our <md-button ui-sref="main.what-is-lunge">About</md-button> page to
+            read
+            more.
+            <br/><br/>
+            Are you a personal trainer?  Get <md-button ui-sref="main.signup">registered</md-button> with Lunge today.
+            It's free.
+        </div>
+    </div>
+</div>

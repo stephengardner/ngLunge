@@ -7,10 +7,10 @@
     </div>
     <accordion close-others="true">
         <md-list>
-            <accordion-group is-open="mappedOrganization.isOpen"
-                             class="certification-organization"
-                             ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
-                <accordion-heading>
+            <ag-collapse-container is-open="mappedOrganization.isOpen"
+                               class="certification-organization"
+                               ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
+                <ag-collapse-header>
                     <md-list-item md-ink-ripple>
                                 <span class="name">
                                     {{mappedOrganization.name}}
@@ -21,8 +21,8 @@
                             </trainer-certification-status-count-bubbles>
                         </div>
                     </md-list-item>
-                </accordion-heading>
-                <md-list>
+                </ag-collapse-header>
+                <md-list ag-collapse-body>
                     <md-list-item ng-repeat="certificationV2 in mappedOrganization.types.all"
                                   class="secondary-button-padding">
                         <div flex class="md-list-item-animation-container">
@@ -42,7 +42,7 @@
 
                     </md-list-item>
                 </md-list>
-            </accordion-group>
+            </ag-collapse-container>
         </md-list>
     </accordion>
 </div>

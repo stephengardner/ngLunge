@@ -1,0 +1,14 @@
+{
+  "name": "userPopulator",
+  "version": "0.0.1",
+  "main": "user-populator.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel"
+    ],
+    "provides": [
+      "userPopulator"
+    ]
+  }
+}

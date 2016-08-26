@@ -7,7 +7,7 @@
              ng-if="trainerFactory.trainer"
              bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}">
         </div>
-        <a ng-if="isMe()"
+        <a ng-if="isMe() && trainerFactory.trainer.profile_picture.thumbnail.url"
            id="profilePictureUploadButton"
            class="upload-button"
            ng-click="saveClickEventForModal($event)"

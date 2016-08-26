@@ -18,7 +18,7 @@
     </md-toolbar>
     <form id="basicInfo"
           name="basicInfo"
-          ng-submit="submit(basicInfo)">
+          ng-submit="submit(basicInfo); toggleEditing()">
         <md-card-content cg-busy="{promise : cgBusy}">
             <div class="ag-editable-container">
                 <div class="ag-editable-default">
@@ -54,6 +54,14 @@
                             {{trainerFactory.trainer.years_of_experience.value || '-'}}
                         </div>
                     </div>
+                    <div class="info-row">
+                        <div class="name">
+                            Headline
+                        </div>
+                        <div class="value">
+                            {{trainerFactory.trainer.headline.value || '-'}}
+                        </div>
+                    </div>
                 </div>
                 <div class="ag-editable-editing">
                     <fieldset ng-disabled="ajax.busy">
@@ -83,13 +91,6 @@
                                     <div ng-message="mongoose">{{form.gender.$error.mongoose}}</div>
                                 </div>
                             </ag-floating-label>
-                            <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="gender">
-                                <i class="fa"
-                                   ng-class="{
-                                'fa-globe' : trainerFactory.trainerEditing.gender.privacy == 'public',
-                                'fa-lock' : trainerFactory.trainerEditing.gender.privacy == 'private'
-                               }"></i>
-                            </div>
                         </div>
                         <div layout="row">
                             <input type="hidden" name="age"/>
@@ -105,13 +106,6 @@
                                     <div ng-message="mongoose">{{form.age.$error.mongoose}}</div>
                                 </div>
                             </ag-floating-label>
-                            <div class="privacy" privacy-popover active="{{editing}}" model-to-edit="age">
-                                <i class="fa"
-                                   ng-class="{
-                                'fa-globe' : trainerFactory.trainerEditing.age.privacy == 'public',
-                                'fa-lock' : trainerFactory.trainerEditing.age.privacy == 'private'
-                               }"></i>
-                            </div>
                         </div>
                         <div layout="row" layout-align="start center">
                             <input type="hidden" name="yearsOfExperience"/>
@@ -128,6 +122,23 @@
                                 </div>
                             </ag-floating-label>
                         </div>
+                        <ag-floating-label>
+                            <label>
+                                Headline
+                            </label>
+                            <input name="headline"
+                                   ng-change="removeMongooseError(basicInfo, 'headline')"
+                                   ng-model="trainerFactory.trainerEditing.headline.value">
+                            <ag-hints>
+                                <ag-hint>
+                                    Write a quick bio about yourself.  Your headline helps other people quickly
+                                    identify your interests and expertise.
+                                </ag-hint>
+                            </ag-hints>
+                            <div ng-messages="basicInfo.headline.$error" class="md-auto-hide">
+                                <div ng-message="mongoose">{{basicInfo.headline.$error.mongoose}}</div>
+                            </div>
+                        </ag-floating-label>
                     </fieldset>
                 </div>
             </div>

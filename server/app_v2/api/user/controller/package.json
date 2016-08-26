@@ -6,7 +6,15 @@
   "plugin": {
     "consumes": [
       "redis",
-      "userModel"
+      "userModel",
+      "chatModel",
+      "chatNotificationReader",
+      "chatPreviewGetter",
+      "chatSender",
+      "traineeModel",
+      "chatMessageReadSetter",
+      "logger",
+      "chatGetter"
     ],
     "provides": ["apiUserController"]
   }

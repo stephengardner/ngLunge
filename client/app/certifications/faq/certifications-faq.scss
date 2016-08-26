@@ -1,0 +1,40 @@
+#faq {
+	margin-bottom: 60px;
+	header {
+		margin-bottom: 30px;
+	}
+	.container {
+		max-width: 800px;
+	}
+	.faqs {
+		.item {
+			padding-bottom: 20px;
+			.question {
+				font-size: 22px;
+				margin-bottom: 5px;
+			}
+			.answer {
+				i {
+					vertical-align: middle;
+					font-size: 18px;
+				}
+				ul {
+					padding-left: 30px;
+				}
+				padding-left: 40px;
+			}
+			~ .item {
+				padding-top: 20px;
+			}
+		}
+	}
+	.still-have-questions {
+		margin-top: 20px;
+		.item {
+			.question {
+				line-height: 1.5em;
+				font-size: 20px;
+			}
+		}
+	}
+}

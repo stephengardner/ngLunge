@@ -15,7 +15,6 @@ Array.prototype.pushUnique = function (item){
 }
 
 function pushUniqueCertification(certificationV2Array, certification_type) {
-	console.log("Adding certification_type:", certification_type);
 	for(var i = 0; i < certificationV2Array.length; i++) {
 		var certification_type_at_index = certificationV2Array[i].certification_type;
 		if(certification_type_at_index
@@ -23,7 +22,6 @@ function pushUniqueCertification(certificationV2Array, certification_type) {
 			&& certification_type
 			&& certification_type._id == certification_type_at_index._id){
 			certificationV2Array[i].active = true; // see if this works
-			console.log("---> set to active!", certificationV2Array[i]);
 			return false;
 		}
 	}
@@ -32,7 +30,14 @@ function pushUniqueCertification(certificationV2Array, certification_type) {
 	});
 	return true;
 }
-myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $rootScope, Auth, $q/*, socket*/){
+myApp.factory("TrainerFactory", function(lodash,
+                                         Menu,
+                                         FullMetalSocket,
+                                         $location,
+                                         $rootScope,
+                                         Auth,
+                                         $timeout,
+                                         $q){
 	var TrainerFactory = {
 		trainer : false,
 		trainerEditing : false,
@@ -59,11 +64,66 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			this.params.syncCallback = func
 		},
 		isMe : function() {
-			//console.log("Tjos traomer is: ", this.trainer._id, " The auth current user is:", Auth.getCurrentUser());
 			return this.trainer && Auth.getCurrentUser() && this.trainer._id == Auth.getCurrentUser()._id;
 		},
 		setEditingOf : function(property, value) {
+			console.log("trainer.factory setting editing of '" + property + "' to: " + value);
 			this.isEditing[property] = value;
+		},
+		initToCurrentTrainerIfNecessary : function() {
+			var self = this;
+			this.loading = true;
+			var isTrainerFactoryAlreadySet = Auth.getCurrentUser() &&
+				Auth.getCurrentUser()._id &&
+				Auth.getCurrentUser()._id == TrainerFactory.trainer._id;
+			if(isTrainerFactoryAlreadySet) {
+				console.log("Trainer Account Controller NOT reloading trainerfactory");
+				// don't re-init TrainerFactory, it's already on the right person.
+				// $scope.trainerFactory = TrainerFactory;
+				// Actually, we're just going to doGetTrainer anyways.
+				// this is because it doesn't really do anything extra, but it does wait for menu to close.
+				doGetTrainer();
+			}
+			else {
+				console.log("Trainer Account Controller RELOADING TRAINERFACTORY");
+				doGetTrainer();
+			}
+
+			function doGetTrainer(){
+				TrainerFactory.unset();
+				if(Menu.isOpenLeft) {
+					var unbindWatch = $rootScope.$watch(function(){
+						return Menu.isOpenLeft
+					}, function(newValue, oldValue){
+						if(newValue === false) {
+							getTrainer();
+							unbindWatch();
+						}
+					});
+				}
+				else getTrainerWithTimeout();
+
+				function getTrainerWithTimeout() {
+					$timeout(function() {
+						getTrainer();
+					}, 50);
+				}
+
+				function getTrainer() {
+					Auth.isLoggedInAsync(function () {
+						if (Auth.getCurrentType() == "trainer") {
+							self.loading = false;
+							// $scope.trainerFactory = TrainerFactory;
+							TrainerFactory.init(Auth.getCurrentUser(), {
+								sync: true
+							});
+						}
+						else {
+							// $scope.user = Auth.getCurrentUser();
+						}
+					});
+				}
+			}
 		},
 		// When updating the TrainerFactory, we will ultimately get synced with the response from the server.
 		// But if updating multiple sections, we don't want trainerEditing updated when it's still in editing mode.
@@ -89,6 +149,9 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 				case 'rate' :
 					mergeObject.rate = this.trainerEditing.rate;
 					break;
+				case 'work' :
+					mergeObject.work = this.trainerEditing.work;
+					break;
 				case 'email' :
 					mergeObject.email = this.trainerEditing.email;
 					break;
@@ -101,6 +164,7 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 					mergeObject.gender = this.trainerEditing.gender;
 					mergeObject.age = this.trainerEditing.age;
 					mergeObject.years_of_experience = this.trainerEditing.years_of_experience;
+					mergeObject.headline = this.trainerEditing.headline;
 					break;
 				case 'locations' :
 					mergeObject.locations = this.trainerEditing.locations;
@@ -128,10 +192,7 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 		_createSendObjectFromSection : function(section) {
 			console.log("This.trainer is... (and no locations should be null):", this.trainer);
 			var copyOfTrainer = angular.copy(this.trainer);
-			console.log("copyOfTrainer is:", copyOfTrainer);
 			var mergeObject = this._createMergeObjectBySection(section);
-			console.log("toReturn is merging angular.copy(this.trainer) which is:", copyOfTrainer, " with mergeObject " +
-			"which is: ", mergeObject);
 			var toReturn = lodash.deepExtend(copyOfTrainer, mergeObject);
 
 			// when locations are deepExtended with copyOfTrainer, it's merging an arrya of length X
@@ -143,10 +204,12 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			toReturn.twitter = mergeObject.twitter;
 			toReturn.linkedin = mergeObject.linkedin;
 			toReturn.instagram = mergeObject.instagram;
-			console.log("To return is:", toReturn);
 			return toReturn;
 		},
 		save : function(opt_section, options) {
+			var DEFAULTS = {};
+			options = lodash.merge(DEFAULTS, options);
+
 			var deferred = $q.defer();
 			delete TrainerFactory.trainerEditing.location;
 			var updatableParams;
@@ -156,28 +219,58 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			else {
 				updatableParams = TrainerFactory.trainerEditing;
 			}
-
-			console.log("Updatable = :", updatableParams);
-			Auth.updateProfile(updatableParams).then(function(updatedUser){
-				TrainerFactory.trainer = updatedUser;
-				deferred.resolve(updatedUser);
-			}).catch(function(err){
-				if(options && options.resetEditing) {
-					TrainerFactory.resetEditing(opt_section);
+			// This is essentially how the userFactory does it.
+			// 1 - it overwrites the parameters on the client side and
+			// 2 - it uses an endpoint that overwrites the parameters on the server-side
+			// basically, this works on arrays, it updates THE WHOLE THING.
+			if(options.updateOverwrite) {
+				var paramsToUpdate = createMergeObjectV2(opt_section),
+					valuesToUpdate = {}
+					;
+				for (var attrname in paramsToUpdate) {
+					valuesToUpdate[attrname] = this.trainerEditing[attrname];
 				}
-				deferred.reject(err);
-			});
+				console.log("TrainerFactory.save() updateOverwriteProfile with the following values:", valuesToUpdate);
+				Auth.updateOverwriteProfile(valuesToUpdate).then(function(updatedUser){
+					TrainerFactory.trainer = updatedUser;
+					if(opt_section)
+						TrainerFactory.setEditingOf(opt_section, false);
+					deferred.resolve(updatedUser);
+				}).catch(function(err){
+					if(options && options.resetEditing) {
+						TrainerFactory.resetEditing(opt_section);
+						deferred.reject(err);
+					}
+					else {
+						deferred.reject(err);
+					}
+				});
+			}
+			else {
+				Auth.updateProfile(updatableParams).then(function(updatedUser){
+					TrainerFactory.trainer = updatedUser;
+					if(opt_section)
+						TrainerFactory.setEditingOf(opt_section, false);
+					deferred.resolve(updatedUser);
+				}).catch(function(err){
+					if(options && options.resetEditing) {
+						TrainerFactory.resetEditing(opt_section);
+						deferred.reject(err);
+					}
+					else {
+						deferred.reject(err);
+					}
+				});
+			}
 			return deferred.promise;
 		},
 		unset : function() {
-			this.init({}, {});
+			this.init({}, { sync : false });
 		},
 		addEditedLocation : function(location, isManual) {
-			console.log("Trainer addEditedLocation adding:", location);
 			this.newLocation = location;
 			this.newLocation.type = isManual ? "manual" : undefined;
 			this.trainerEditing.locations.push(this.newLocation);
-			console.log("After addEditingLocation, trainerEditing.locations are:", this.trainerEditing.locations);
 			if(this.trainerEditing.locations.length == 1) {
 				this.setPrimaryLocation(this.newLocation);
 			}
@@ -193,6 +286,12 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			}
 			return this;
 		},
+		getDefaultModel : function() {
+			return this.trainer;
+		},
+		getEditingModel : function() {
+			return this.trainerEditing;
+		},
 		addCertification : function(certification) {
 			if(!this.trainerEditing.certifications_v2) {
 				this.trainerEditing.certifications_v2 = [];
@@ -200,7 +299,6 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			if(this.trainerEditing.certifications_v2) {
 				pushUniqueCertification(this.trainerEditing.certifications_v2, certification)
 			}
-			console.log("after adding a certification to the trainer factory, the trainerEditing is:", this.trainerEditing);
 			return this;
 		},
 		removeCertification : function(certification) {
@@ -218,9 +316,7 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 		removeSpecialty : function(specialty){
 			for(var i = 0; i < this.trainerEditing.specialties.length; i++) {
 				var specialtyToCheck = this.trainerEditing.specialties[i];
-				console.log("Checking", specialty._id, " vs ", specialtyToCheck._id);
 				if(specialty._id == specialtyToCheck._id){
-					console.log("slicing");
 					this.trainerEditing.specialties.remove(i);
 				}
 			}
@@ -235,6 +331,9 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 					case 'rate' :
 						this.trainerEditing.rate = angular.copy(this.trainer.rate);
 						break;
+					case 'work' :
+						this.trainerEditing.work = angular.copy(this.trainer.work);
+						break;
 					case 'email' :
 						this.trainerEditing.email = angular.copy(this.trainer.email);
 						break;
@@ -247,6 +346,7 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 						this.trainerEditing.gender = angular.copy(this.trainer.gender);
 						this.trainerEditing.age = angular.copy(this.trainer.age);
 						this.trainerEditing.years_of_experience = angular.copy(this.trainer.years_of_experience);
+						this.trainerEditing.headline = angular.copy(this.trainer.headline);
 						break;
 					case 'locations' :
 						this.trainerEditing.locations = angular.copy(this.trainer.locations);
@@ -293,11 +393,58 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 			}
 			return this;
 		},
+		addWorkplace : function(workplace) {
+			return new $q(function(resolve, reject) {
+				this.trainerEditing.work.places.push(workplace);
+				this.save('work', { updateOverwrite : true }).then(resolve).catch(reject);
+			}.bind(this));
+		},
+		removeWorkplace : function(workplace) {
+			return new $q(function(resolve, reject) {
+				var foundPlace = false;
+				for(var i = 0; i < this.trainerEditing.work.places.length; i++) {
+					var place = this.trainerEditing.work.places[i];
+					if(place._id == workplace._id){
+						foundPlace = true;
+						this.trainerEditing.work.places.splice(i, 1);
+						break;
+					}
+				}
+				if(foundPlace) {
+					this.save('work', { updateOverwrite : true }).then(resolve).catch(reject);
+				}
+				else {
+					alert('Workplace not found');
+					return reject(new Error('Workplace not found'));
+				}
+			}.bind(this));
+		},
+		editWorkplace : function(workplace) {
+			return new $q(function(resolve, reject) {
+				var foundPlace = false;
+				for(var i = 0; i < this.trainerEditing.work.places.length; i++) {
+					var place = this.trainerEditing.work.places[i];
+					if(place._id == workplace._id){
+						foundPlace = true;
+						this.trainerEditing.work.places[i] = workplace;
+						break;
+					}
+				}
+				if(foundPlace) {
+					this.save('work', { updateOverwrite : true }).then(resolve).catch(reject);
+				}
+				else {
+					alert('Workplace not found');
+					return reject(new Error('workplace not found'));
+				}
+			}.bind(this));
+		},
 		syncModel : function() {
 			var cb = this.params.syncCallback || angular.noop;
-			FullMetalSocket.trainer.syncUnauth(this.trainer, function(event, newTrainer) {
-				console.log("The trainer factory synced using a socket and the socket came back with this" +
-				" as the newTrainer:", newTrainer);
+			console.log("trainerFactory calling syncModel with trainer:", this.trainer);
+			FullMetalSocket.user.syncUnauth(this.trainer, function(event, newTrainer) {
+				console.log("The user factory synced using a socket and the socket came back with this" +
+					" as the newTrainer:", newTrainer);
 				// Set the trainer to be the response, and the trainerEditing to be the response minus anything
 				// we want to keep that is still editing
 				this.trainer = newTrainer;
@@ -317,8 +464,41 @@ myApp.factory("TrainerFactory", function(lodash, FullMetalSocket, $location, $ro
 
 		},
 		unsyncModel : function(){
-			FullMetalSocket.trainer.unsyncUnauth(TrainerFactory.trainer);
+			FullMetalSocket.user.unsyncUnauth(TrainerFactory.trainer);
 		}
 	};
+	function createMergeObjectV2(section) {
+		var returnObject= {};
+		switch(section) {
+			case 'basicInfo' :
+				returnObject = {
+					name : 1,
+					gender : 1,
+					age : 1,
+					headline : 1
+				};
+				break;
+			case 'work' :
+				returnObject = {
+					work : 1
+				};
+				break;
+			case 'bio' :
+				returnObject = {
+					bio : 1
+				};
+				break;
+			case 'location' :
+				returnObject.location = 1;
+				break;
+			default :
+				console.warn("WARNING!!!!!!!!!!!!!!! " +
+					"createMergeObject in user.factory.js: the section didnt match" +
+					" anything: '" + section + "'");
+				break;
+		}
+		console.log("CreateMergeObject returning:", returnObject);
+		return returnObject;
+	}
 	return TrainerFactory;
 })

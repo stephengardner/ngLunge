@@ -46,7 +46,7 @@ $default-animation-delay: .3s;
 }
 
 
-[ag-editable-container] {
+[ag-editable-container], [ag-editable-trainee-container] {
 	md-card-actions {
 		transition: all .5s;
 		overflow: hidden;
@@ -76,7 +76,7 @@ $default-animation-delay: .3s;
 	}
 	.ag-editable-container {
 		position: relative;
-		.ag-editable-editing {
+		.ag-editable-editing, .ag-editable-default {
 			&.ag-editable-showing {
 				transition: all 0s;
 				position: absolute;
@@ -84,9 +84,19 @@ $default-animation-delay: .3s;
 				left: 0;
 				top: 0;
 			}
+			&.ag-editable-closing {
+				transition: all 0s;
+				position: absolute!important;
+				right: 0;
+				left: 0;
+				top: 0;
+			}
+			&.ag-set-absolute-to-get-height {
+				position: absolute!important;
+			}
 			&.ag-editable-preparing {
 				transition: all 0s;
-				position: absolute;
+				position: absolute!important;
 				right: 9000px;
 				width: 100%; // this is important, otherwise it may flex and take up a smaller space
 			}
@@ -110,11 +120,66 @@ md-list-item ._md-list-item-inner ._md-secondary-container .md-button:last-of-ty
 }
 
 .list-item-default, .list-item-removing, .list-item-default-alternate {
-	-webkit-transition: all .275s ease-in-out;
+	transition: all .375s ease-in-out;
 	width: 100%;
 	min-height: $list-item-height;
 }
 
+.ag-row-slider, .ag-row-default, .ag-row-removing {
+	transition: all 5.375s ease-in-out;
+	width: 100%;
+	min-height: $list-item-height;
+}
+
+.ag-row-slider {
+	.ag-row-slider-container {
+		position: relative;
+		width: 100%;
+		//overflow: hidden;
+	}
+	.ag-row-default {
+		right: 0;
+		top: 0;
+		&.ng-enter {
+			position: absolute;
+			right: -120%;
+		}
+		&.ng-enter-active {
+			position: absolute;
+			right: 0;
+		}
+		&.ng-leave {
+			position: absolute;
+			right: 0;
+		}
+		&.ng-leave-active {
+			position: absolute;
+			right: -120%;
+		}
+	}
+	.ag-row-removing {
+		transform: translate3d(0%,0,0);
+		top: 0;
+		text-align: center;
+		p {
+			text-align: left;
+		}
+		&.ng-enter {
+			transform: translate3d(-100%,0,0);
+		}
+		&.ng-enter-active {
+			transform: translate3d(0%,0,0);
+		}
+		&.ng-leave {
+			position: absolute;
+			transform: translate3d(0%,0,0);
+		}
+		&.ng-leave-active {
+			position: absolute;
+			transform: translate3d(-100%,0,0);
+		}
+	}
+}
 // Needed when there's extra padding on a list item.
 // This is because the position: absolute clings to the edge of the padding isntantly before moving.
 // Adding this container means we don't ahve to fiddle with right: 16px etc etc.
@@ -122,6 +187,9 @@ md-list-item ._md-list-item-inner ._md-secondary-container .md-button:last-of-ty
 	position: relative;
 	width: 100%;
 	min-height: $list-item-height;
+	md-menu {
+		padding: 0;
+	}
 }
 
 .list-item-default {

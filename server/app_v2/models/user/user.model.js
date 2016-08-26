@@ -4,27 +4,190 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
 var authTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'],
-	autoIncrement = require('mongoose-auto-increment');
+	autoIncrement = require('mongoose-auto-increment'),
+	validator = require('validator')
+;
 
+var options = {
+	discriminatorKey : 'kind',
+	toObject: { virtuals: true },
+	toJSON: { virtuals: true }
+};
 var UserSchema = new Schema({
-	picture : { type : String, default : "none"},
-	name: String,
-	id : {type : Number},
-	email: { type: String, lowercase: true },
-	role: {
-		type: String,
-		default: 'user'
+		picture : { type : String, default : "none"},
+		name: { first : String, last : String },
+		headline : {
+			value : { type : String },
+			privacy : { type : String, default : 'public' }
+		},
+		gender : {
+			value : { type : String, default : 'none' },
+			privacy : { type : String, default : 'private' }
+		},
+		birthday : {
+			value : { type : String, default : '-' },
+			privacy : { type : String, default : 'private' }
+		},
+		age : {
+			value : { type : String, default : '-' },
+			privacy : { type : String, default : 'private' }
+		},
+		work : {
+			places : [
+				{
+					position : { type : String },
+					company_name : { type : String },
+					website : { type : String },
+					title : { type : String } // user given title
+				}
+			],
+			privacy : { type : String, default : 'public' }
+		},
+		bio : { type : String, required : false },
+		id : {type : Number},
+		email: { type: String, lowercase: true },
+		role: {
+			type: String,
+			default: 'user'
+		},
+		location: {
+			title : { type : String, default : "Main Location", required : false },
+			google : {
+				placesAPI : {
+					formatted_address : { type : String }
+				}
+			},
+			primary : { type : Boolean, default : true },
+			address_line_1 : {type : String, required : false},
+			address_line_2 : {type : String, required : false},
+			city : {type : String, required : false},
+			state : {type : String, required : false},
+			zipcode : {type : String, required : false},
+			coords : {
+				type : Object,
+				lat : { type : Number },
+				lon : { type : Number }
+			},
+			smarty_streets_response : {}
+		},
+	reviews : {
+		given : [
+			{
+				to : {
+					type : Schema.Types.ObjectId, ref : 'User'
+				}
+			}
+		],
+		received : [
+			{
+				from :
+				{
+					type : Schema.Types.ObjectId, ref : 'User'
+				}
+			}
+		]
 	},
-	hashedPassword: String,
-	provider: String,
-	salt: String,
-	facebook: {},
-	twitter: {},
-	google: {},
-	linkedin : {},
-	github: {}
-});
-
+		urlName : String,
+		hashedPassword: String,
+		provider: String,
+		salt: String,
+		registration_providers : {
+			facebook: {},
+			linkedin : {}
+		},
+		facebook: {},
+		twitter: {},
+		google: {},
+		linkedin : {},
+		github: {},
+		notifications : {
+			count : {
+				chat : {
+					type : Number,
+					default : 0
+				}
+			}
+		},
+		chat : [
+			{
+				type : Schema.Types.ObjectId, ref : 'Chat'
+			}
+		],
+		profile_picture : {
+			high_resolution : {
+				url : {
+					type : String
+				}
+			},
+			medium_resolution : {
+				url : {
+					type : String
+				}
+			},
+			thumbnail : {
+				url : {
+					type : String,
+					// default : "/assets/images/default-profile-picture.jpg"
+				}
+			}
+		},
+		email_inquiries : [
+			{
+				sent : { type : Number, default : 0 },
+				user : {
+					reference : { type : Schema.Types.ObjectId, ref : 'User' },
+					name : {
+						first: { type : String, required : true },
+						last : String,
+						full : String
+					},
+					email : String
+				},
+				message : String
+			}
+		]
+	},
+	options);
+// When saving a trainer, set their initial urlName to be their email address
+// if someone else has already used that email address for a different domain,
+// ex: augdog@gmail vs augdog@yahoo, then append a "-2" onto the end of the name.
+// or, append a -# (where # is the next number in the sequence), if there are more than two (highly unlikely).
+UserSchema
+	.pre('save', function(next) {
+		console.log("!!!!!!!!!!!!HEEEEEEEEEEEEEEEYYYYYYYYYYYYYYYYYY\n\n\n");
+		if (this.urlName || !this.email) return next();
+		var newUrlName = this.email.split("@");
+		newUrlName = newUrlName[0];
+		var self = this;
+		var emailSplit = self.email.split("@");
+		emailSplit = emailSplit[0];
+		console.log("Attempting to find urlname:", emailSplit);
+		this.constructor.find({}).exec(function(err, found){
+			console.log("ALLLLLLLLLLLLLLLL?", found.length);
+			this.constructor
+				.find({
+					urlName: new RegExp(emailSplit, "i")
+				}).sort({urlName : -1 }).exec(function(err, trainer) {
+				console.log("Did we find any?!?!?!?!?!", trainer);
+				if(err) throw err;
+				if(trainer.length) {
+					var maxUrlName = trainer[0].urlName,
+						secondToLastChar = maxUrlName.charAt(maxUrlName.length - 2),
+						lastChar = maxUrlName.charAt(maxUrlName.length - 1);
+					if(secondToLastChar == "-")
+						newUrlName = maxUrlName.substr(0, maxUrlName.length - 2) + "-" + (parseInt(lastChar) + 1);
+					else {
+						newUrlName = maxUrlName + "-2";
+					}
+					self.urlName = newUrlName;
+				}
+				else {
+					self.urlName = newUrlName;
+				}
+				next();
+			});
+		}.bind(this))
+	});
 
 /**
  * Virtuals
@@ -41,6 +204,31 @@ UserSchema
 		return this._password;
 	});
 
+UserSchema.virtual('name.full').get(function () {
+	if(this.name.last && this.name.first) {
+		return this.name.first + ' ' + this.name.last;
+	}
+	else if(this.name.first) {
+		return this.name.first;
+	}
+	else
+		return this.name.last;
+}).set(function(fullName) {
+	var regexp = /^[a-zA-Z- ]+$/;
+	function isValid(str) { return regexp.test(str); }
+	if(!isValid(fullName)){
+		return this.invalidate('name', 'Only letters and hyphens are allowed in a name');
+	}
+	// when setting full name, set the first name as the first element and the last name as the last element
+	this.name = {};
+	var fullName = fullName.split(" ");
+	if(fullName && fullName[0]) {
+		this.name.first = fullName[0];
+	}
+	if(fullName.length && fullName.length > 1) {
+		this.name.last = fullName[fullName.length - 1];
+	}
+});
 // Public profile information
 UserSchema
 	.virtual('profile')
@@ -72,6 +260,30 @@ UserSchema
 		if (authTypes.indexOf(this.provider) !== -1) return true;
 		return email && email.length;
 	}, 'Email cannot be blank');
+
+// Validate empty email
+UserSchema
+	.path('work.places')
+	.validate(function(workplaces) {
+		console.log("Workplaces:", workplaces);
+		if(!workplaces || !workplaces.length) {
+			return;
+		}
+		workplaces.forEach(function(item){
+			if(item.position && item.position.length > 50) {
+				return this.invalidate('position', 'Job title must be less than 50 characters');
+			}
+			if(item.company_name && item.company_name.length > 50) {
+				return this.invalidate('companyName', 'Company name must be less than 50 characters');
+			}
+			if(item.website && !validator.isURL(item.website, {
+					require_protocol : true
+				})) {
+				return this.invalidate('website', 'Company website must be a valid URL');
+			}
+		}.bind(this));
+		return true;
+	}, 'Workplace error');
 
 // Validate empty password
 UserSchema
@@ -123,7 +335,11 @@ var validatePresenceOf = function(value) {
 UserSchema
 	.pre('save', function(next) {
 		if (!this.isNew) return next();
-
+		for(let type of authTypes) {
+			if(this.registration_providers[type]) {
+				return next();
+			}
+		}
 		if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1)
 			next(new Error('Invalid password'));
 		else
@@ -172,7 +388,12 @@ UserSchema.methods = {
 module.exports = function setup(options, imports, register) {
 	var connectionDatabase = imports.connectionDatabase;
 	var Model = connectionDatabase.model('User', UserSchema);
-
+	// Model.collection.dropIndex("email_1", function(err, dropped){
+	// 	console.log("Dropped?", dropped)
+	// });
+	// Model.collection.dropIndex("email", function(err, dropped){
+	// 	console.log("Dropped?", dropped)
+	// });
 	UserSchema.plugin(autoIncrement.plugin, { model: 'User', field: 'id' });
 	register(null, {
 		userModel : Model

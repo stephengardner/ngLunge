@@ -1,72 +1,8 @@
-<!--<div class="container">-->
-<!--<div class="log-in-tabs">-->
-<!--<tabset>-->
-<!--<tab heading="Trainer">-->
-<!--<div class="log-in" ng-controller="LoginController">-->
-<!--<form name="form" class="form-horizontal" role="form" ng-submit="login(form)">-->
-<!--<div class="form-group">-->
-<!--<label for="email" class="col-sm-4 control-label">Email</label>-->
-<!--<div class="col-sm-20">-->
-<!--<input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<label for="password" class="col-sm-4 control-label">Password</label>-->
-<!--<div class="col-sm-20">-->
-<!--<input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">-->
-<!--</div>-->
-<!--</div>-->
-<!--<div ng-if="errors.password || errors.hashedPassword" class="form-group has-error">-->
-<!--<div class="help-block"  ng-repeat="error in errors">-->
-<!--{{error}}-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="form-group last">-->
-<!--<div class="col-xs-24 col-sm-20 col-sm-push-4">-->
-<!--<input class="form-control input-lg" type="submit" value="{{!sending ? 'Log in' : 'Logging in...'}}" ng-disabled="submitting">-->
-<!--</div>-->
-<!--</div>-->
-<!--</form>-->
-<!--</div>-->
-<!--</tab>-->
-<!--<tab heading="Public (Coming Soon!)">-->
-<!--<div class="log-in">-->
-<!--<h3>Lunge is bringing it's training interface to public clients.  Stay tuned!</h3>-->
-<!--</div>-->
-<!--<div ng-if="0" class="log-in" ng-controller="LoginController">-->
-<!--<h1>Log in using one of the services below</h1>-->
-<!--<div class="social-logins">-->
-<!--<div class="social-login">-->
-<!--<a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">-->
-<!--<i class="fa fa-facebook"></i> Log in with Facebook-->
-<!--</a>-->
-<!--</div>-->
-<!--<div class="social-login">-->
-<!--<a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">-->
-<!--<i class="fa fa-google-plus"></i> Log in with Google+-->
-<!--</a>-->
-<!--</div>-->
-<!--<div class="social-login">-->
-<!--<a class="btn btn-linkedin" href="" ng-click="loginOauth('linkedin')">-->
-<!--<i class="fa fa-linkedin"></i> Log in with LinkedIn-->
-<!--</a>-->
-<!--</div>-->
-<!--<div class="social-login last">-->
-<!--<a class="btn btn-twitter" href="" ng-click="loginOauth('twitter')">-->
-<!--<i class="fa fa-twitter"></i> Log in with Twitter-->
-<!--</a>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</tab>-->
-<!--</tabset>-->
-<!--</div>-->
-<!--</div>-->
 <div layout="row"
      layout-align="center center"
      class="main-push"
      ng-controller="LoginController">
-    <div class="flex-column" id="login">
+    <div class="ag-flex-column" id="login">
         <md-card>
             <form name="loginForm"
                   ng-submit="login(loginForm)">
@@ -75,6 +11,13 @@
                         <h2>
                             Login
                         </h2>
+                        <span flex></span>
+                        <div id="or">
+                            or,
+                            <md-button ui-sref="main.signup({tab : type})">
+                                Signup
+                            </md-button>
+                        </div>
                     </div>
                 </md-toolbar>
                 <md-tabs md-selected="selectedIndex"
@@ -82,19 +25,37 @@
                          md-dynamic-height
                          md-autoselect>
                     <!-- User Tab -->
-                    <md-tab label="User" >
-                        <md-card-content layout="column" layout-align="center center">
-                            Users
+                    <md-tab label="User" ng-click="selectTab('trainee')">
+                        <md-card-content layout="column" layout-align="center center" id="user-login-social">
+                            <h1>
+                                User Social Login
+                            </h1>
+                            <md-button class="facebook social-button"
+                                       href=""
+                                       ng-click="loginOAuth('facebook')">
+                                <md-icon>
+                                    <ng-md-icon icon="facebook"></ng-md-icon>
+                                </md-icon>
+                                Login with Facebook
+                            </md-button>
+                            <md-button class="linkedin social-button"
+                                       href=""
+                                       ng-click="loginOAuth('linkedin')">
+                                <md-icon>
+                                    <ng-md-icon icon="linkedin"></ng-md-icon>
+                                </md-icon>
+                                Login with LinkedIn
+                            </md-button>
                         </md-card-content>
                     </md-tab>
                     <!-- Trainer Tab -->
-                    <md-tab label="Trainer">
+                    <md-tab label="Trainer" ng-click="selectTab('trainer')">
                         <!-- Trainer Social Login -->
                         <md-card-content id="trainer-login-social"
                                          layout="column"
                                          layout-align="center center">
                             <h1>
-                                Social Login
+                                Trainer Social Login
                             </h1>
                             <md-button class="facebook social-button"
                                        href=""

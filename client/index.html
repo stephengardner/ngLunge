@@ -1,4 +1,4 @@
-<!doctype html>
+<html ng-app="ngLungeFullStack2App">
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -7,7 +7,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -37,7 +36,7 @@
     -->
     <script src="//localhost:35729/livereload.js"></script>
 </head>
-<body ng-app="ngLungeFullStack2App"">
+<body>
 <div class="cg-remove-style" cg-busy="{promise:globalAjax.busy, wrapperClass: '', templateUrl:'components/angular-busy/templates/fullscreen.partial.html'}"></div>
 <!--[if lt IE 7]>
 
@@ -47,7 +46,18 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js" type="text/javascript"></script>
 -->
 <!-- One single main view for everything -->
-<div layout-fill layout="column" ui-view=""></div>
+
+<!-- need these at the top level because angular material will check the body's scrolling when they're opened -->
+<material-messages-menu flex>
+</material-messages-menu>
+<material-menu flex>
+</material-menu>
+<div layout-fill
+     ui-view
+     id="main-view"
+     ng-controller="MainController"
+     ng-class="{'spaced' : spaced}"
+     layout="column"></div>
 <!--[if lt IE 9]>
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
@@ -55,8 +65,8 @@
 
 <!-- scripts I cannot host on bower_components -->
 <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?
-        key=AIzaSyCsamhmwhWUGzPQ5v73ZPM-xDeuNhjNIlE&libraries=places"></script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATQrT1NiVLNXzXKaVnFDUHBHeKpdQf7vs&libraries=places">
+</script>
 
 
 <!-- build:js({client,node_modules}) app/vendor.js -->
@@ -96,6 +106,9 @@
 <script src="bower_components/angular-material-icons/angular-material-icons.min.js"></script>
 <script src="bower_components/satellizer/satellizer.js"></script>
 <script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>
+<script src="bower_components/angular-socialshare/dist/angular-socialshare.min.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-momentjs/angular-momentjs.js"></script>
 <!-- endbower -->
 <script src="socket.io-client/socket.io.js"></script>
 <!-- endbuild -->
@@ -104,6 +117,9 @@
 <!-- build:js(client) app/app.js -->
 <script src="app/app.js"></script>
 <!-- injector:js -->
+<script src="app/admin/admin.module.js"></script>
+<script src="modules/socialMeta/socialMeta.module.js"></script>
+<script src="app/account/login-or-signup-dialog/login-or-signup-dialog.controller.js"></script>
 <script src="app/account/login/login.controller.js"></script>
 <script src="app/account/password-reset/confirm/password-reset-confirm.controller.js"></script>
 <script src="app/account/password-reset/submit/password-reset-submit.controller.js"></script>
@@ -111,16 +127,20 @@
 <script src="app/account/signup/signup.controller.js"></script>
 <script src="app/admin/admin.controller.js"></script>
 <script src="app/admin/admin.js"></script>
-<script src="app/admin/admin.module.js"></script>
 <script src="app/admin/certifications/list/admin-certifications-list.controller.js"></script>
 <script src="app/admin/trainers/individual/admin-trainer-individual.controller.js"></script>
 <script src="app/admin/trainers/list/admin-trainers-list.controller.js"></script>
 <script src="app/certifications/certification-type/modal-info/certification-type-modal-info.controller.js"></script>
+<script src="app/certifications/certifications.js"></script>
+<script src="app/certifications/list/list-certifications.controller.js"></script>
 <script src="app/filters/order-object-by.filter.js"></script>
 <script src="app/main/main.controller.js"></script>
 <script src="app/main/main.js"></script>
 <script src="app/main/partials/jumbotron/jumbotron.controller.js"></script>
 <script src="app/main/partials/trainers-home/trainer-home.controller.js"></script>
+<script src="app/messages/message-in-dialog/message.controller.js"></script>
+<script src="app/messages/message/message.controller.js"></script>
+<script src="app/messages/messages.js"></script>
 <script src="app/modals/admin/certifications/admin-certification-add-modal.controller.js"></script>
 <script src="app/popovers/profile/info/privacy/privacy-popover.directive.js"></script>
 <script src="app/popovers/profile/info/privacy/privacy.popover.controller.js"></script>
@@ -129,8 +149,21 @@
 <script src="app/public/certification/organization/public-certification-organization.controller.js"></script>
 <script src="app/register/main/register-main.controller.js"></script>
 <script src="app/register/register.js"></script>
+<script src="app/trainee/account/trainee-account.controller.js"></script>
+<script src="app/trainee/account/trainee-account.js"></script>
+<script src="app/trainee/profile/trainee-profile.controller.js"></script>
+<script src="app/trainee/profile/trainee-profile.js"></script>
+<script src="app/trainee/sections/basic-info/trainee-basic-info.controller.js"></script>
+<script src="app/trainee/sections/basic-info/trainee-basic-info.directive.js"></script>
+<script src="app/trainee/sections/bio/trainee-bio.controller.js"></script>
+<script src="app/trainee/sections/bio/trainee-bio.directive.js"></script>
+<script src="app/trainee/sections/location/trainee-location.controller.js"></script>
+<script src="app/trainee/sections/reviews/trainee-reviews.controller.js"></script>
+<script src="app/trainee/sections/reviews/trainee-reviews.directive.js"></script>
+<script src="app/trainee/sections/work/trainee-work.controller.js"></script>
+<script src="app/trainee/sections/work/trainee-work.directive.js"></script>
+<script src="app/trainee/trainee.js"></script>
 <script src="app/trainer/account/certifications/filter/certification.filter.js"></script>
-<script src="app/trainer/account/certifications/list/trainer-certifications-list.controller.js"></script>
 <script src="app/trainer/account/certifications/trainer-certifications.controller.js"></script>
 <script src="app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.controller.js"></script>
 <script src="app/trainer/account/trainer-account.controller.js"></script>
@@ -165,11 +198,18 @@
 <script src="app/trainer/register/steps/password/trainer-register-password.controller.js"></script>
 <script src="app/trainer/register/trainer-register.controller.js"></script>
 <script src="app/trainer/trainer.js"></script>
+<script src="components/ag-chat/ag-chat.directive.js"></script>
+<script src="components/ag-collapse/ag-collapse.directive.js"></script>
 <script src="components/ag-editable-animation/ag-editable-animation-directive.js"></script>
 <script src="components/ag-editable-container/ag-editable-container.directive.js"></script>
+<script src="components/ag-editable-trainee-container/ag-editable-trainee-container.directive.js"></script>
 <script src="components/ag-hint/ag-hint.directive.js"></script>
 <script src="components/ag-map-size-container/ag-map-size-container.js"></script>
+<script src="components/ag-profile-share-button/ag-profile-share-button.controller.js"></script>
+<script src="components/ag-profile-share-button/ag-profile-share-button.directive.js"></script>
+<script src="components/ag-profile-share-button/bottom-sheet/ag-profile-share-button-bottom-sheet.controller.js"></script>
 <script src="components/ag-trainer-masthead/ag-trainer-masthead.directive.js"></script>
+<script src="components/ag-window-focus/ag-window-focus.js"></script>
 <script src="components/alert-message/alert-message.controller.js"></script>
 <script src="components/alert-message/alert-message.directive.js"></script>
 <script src="components/alert-message/alert-message.service.js"></script>
@@ -187,6 +227,7 @@
 <script src="components/certifications/card/certifications-card.directive.js"></script>
 <script src="components/certifications/certifications-list.controller.js"></script>
 <script src="components/certifications/certifications-list.directive.js"></script>
+<script src="components/chat/chat.service.js"></script>
 <script src="components/directives/compile.directive.js"></script>
 <script src="components/directives/e-autosize.directive.js"></script>
 <script src="components/directives/edit-button.directive.js"></script>
@@ -203,6 +244,8 @@
 <script src="components/material-menu/menu-link.directive.js"></script>
 <script src="components/material-menu/menu-toggle.directive.js"></script>
 <script src="components/material-menu/menu.service.js"></script>
+<script src="components/material-messages-menu/material-messages-menu.directive.js"></script>
+<script src="components/material-messages-menu/material-messages-menu.service.js"></script>
 <script src="components/menu-button/menu-button.controller.js"></script>
 <script src="components/menu/menu.controller.js"></script>
 <script src="components/menu/menu.directive.js"></script>
@@ -225,6 +268,11 @@
 <script src="components/specialties/specialties.directive.js"></script>
 <script src="components/specialties/specialties.tpl.js"></script>
 <script src="components/sync/sync.service.js"></script>
+<script src="components/trainee-map/add-location/dialog/trainee-map-add-location-dialog.controller.js"></script>
+<script src="components/trainee-map/location/trainee-map-location.directive.js"></script>
+<script src="components/trainee-map/trainee-map.controller.js"></script>
+<script src="components/trainee-map/trainee-map.directive.js"></script>
+<script src="components/trainee-map/trainee-map.service.js"></script>
 <script src="components/trainer-certification-status-count-bubbles/trainer-certification-status-count-bubbles.directive.js"></script>
 <script src="components/trainer-certification-status/trainer-certification-status.directive.js"></script>
 <script src="components/trainer-certifications/trainer-certifications.service.js"></script>
@@ -243,10 +291,15 @@
 <script src="components/trainer-map/trainer-map.directive.js"></script>
 <script src="components/trainer-map/trainer-map.service.js"></script>
 <script src="components/trainer-map/ui-overlays/trainer-map-ui-overlays.service.js"></script>
+<script src="components/trainer-meta/trainer-meta.factory.js"></script>
+<script src="components/trainer-work/trainer-work.controller.js"></script>
+<script src="components/trainer-work/trainer-work.directive.js"></script>
 <script src="components/upload/upload.controller.direct.to.s3.working.js"></script>
 <script src="components/upload/upload.controller.js"></script>
+<script src="components/user-factory/user.factory.js"></script>
 <script src="components/validate-on-blur/validate-on-blur.directive.js"></script>
 <script src="components/validation/validation.service.js"></script>
+<script src="modules/socialMeta/socialMeta.factory.js"></script>
 <script src="app/account/account.js"></script>
 <!-- endinjector -->
 <!-- endbuild -->

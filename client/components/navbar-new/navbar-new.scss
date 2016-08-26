@@ -1,11 +1,29 @@
+#navbar {
+	button, a {
+		margin: 0;
+	}
+}
 .navbar-new {
-	background: $brand-primary;
-	position:fixed;
-	top:0;
-	left:0;
-	right:0;
-	z-index:4;
-	height:60px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 4;
+	button {
+		position: relative;
+		overflow: visible;
+	}
+	.count-bubble {
+		width: 20px;
+		height: 20px;
+		background: red;
+		color: white;
+		border-radius: 10px;
+		top: -3px;
+		right: -3px;
+		position: absolute;
+		font-size: .9em;
+	}
 	a {
 		text-decoration:none;
 		color:inherit;
@@ -16,8 +34,9 @@
 				border-radius: 100px;
 				display: inline-block;
 				@extend .md-raised;
+				margin-left: 8px;
 			}
-			transition: all .4s;
+			//transition: all .4s;
 			&.active {
 				@extend .md-raised;
 				//color: black;

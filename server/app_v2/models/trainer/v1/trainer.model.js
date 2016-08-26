@@ -10,16 +10,26 @@ var mongoose = require('mongoose'),
 
 var authTypes = ['email'];
 
+var options = {
+	discriminatorKey : 'kind',
+	toObject: { virtuals: true },
+	toJSON: { virtuals: true }
+};
+
 var TrainerSchema = new Schema(
 	{
-		id : { type : Number },
-		email : { type : String, unique : true },
+		// id : { type : Number },
+		email : { type : String },
 		website : String,
 		name : {
 			first : {
 				type : String, required : false
 			},
 			last : {type : String, required : false}
+		},
+		headline : {
+			value : { type : String },
+			privacy : { type : String, default : 'public' }
 		},
 		gender : {
 			value : { type : String, default : 'none' },
@@ -196,13 +206,12 @@ var TrainerSchema = new Schema(
 		email_inquiries : [
 			{
 				sent : { type : Number, default : 0 },
-				mandrill_success : {},
-				mandrill_error : {},
 				user : {
-					reference : String,
+					reference : { type : Schema.Types.ObjectId, ref : 'User' },
 					name : {
 						first: { type : String, required : true },
-						last : String
+						last : String,
+						full : String
 					},
 					email : String
 				},
@@ -212,10 +221,7 @@ var TrainerSchema = new Schema(
 		//certifications : [{ type : Schema.Types.ObjectId, ref : 'CertificationType' }]//,
 		//certifications : [{type : Schema.Types.ObjectId, ref : 'CertificationTypes'}]
 	},
-	{
-		toObject: { virtuals: true },
-		toJSON: { virtuals: true }
-	}
+	options
 );
 
 var validatePresenceOf = function(value) {
@@ -648,10 +654,13 @@ TrainerSchema
 	.path('email')
 	.validate(function(value, respond) {
 		var self = this;
-		this.constructor.findOne({email: value}, function(err, trainer) {
+		this.constructor.findOne({email: value, kind : 'trainer'}, function(err, trainer) {
 			if(err) throw err;
+			console.log("\n\n\n\n\n ---------------- \n\n\nTRAINER:", trainer);
 			if(trainer) {
 				if(self.id === trainer.id) return respond(true);
+				console.log("whats going on? ::: " + trainer.id);
+				console.log("\n\n", self);
 				return respond(false);
 			}
 			respond(true);
@@ -722,7 +731,7 @@ TrainerSchema
 	.path('urlName')
 	.validate(function(value, respond) {
 		var self = this;
-		this.constructor.findOne({urlName: value}).exec(function(err, trainer){
+		this.constructor.findOne({urlName: value, kind : 'trainer'}).exec(function(err, trainer){
 			if(err) throw err;
 			if(trainer) {
 				if(self.id == trainer.id){
@@ -749,11 +758,20 @@ TrainerSchema
 TrainerSchema
 	.path('bio')
 	.validate(function(value, respond) {
-		if(value.length > 300) {
+		if(value.length > 2000) {
 			respond(false);
 		}
 		respond(true);
-	}, 'Bio must be less than 300 characters.');
+	}, 'Bio must be less than 2000 characters.');
+
+TrainerSchema
+	.path('headline.value')
+	.validate(function(value, respond) {
+		if(value && value.length > 60) {
+			this.invalidate('headline', 'Please limit your headline to 60 characters');
+		}
+		respond(true);
+	}, 'Headline must be less than 60 characters.');
 
 /**
  * Methods
@@ -812,7 +830,9 @@ var methods = {
 };
 
 module.exports = function setup(options, imports, register) {
-	var certificationMapCreator = imports.certificationMapCreator;
+	var certificationMapCreator = imports.certificationMapCreator,
+		userModel = imports.userModel
+	;
 
 	TrainerSchema.pre('save', function(next){
 		imports.certificationsMetaUpdater.update(this).then(function(){
@@ -845,9 +865,10 @@ module.exports = function setup(options, imports, register) {
 
 	TrainerSchema.methods = methods;
 	var connectionDatabase = imports.connectionDatabase;
-	var Model = connectionDatabase.model('Trainer', TrainerSchema);
+	var Model = userModel.discriminator('trainer', TrainerSchema);
+	// var Model = connectionDatabase.model('Trainer', TrainerSchema);
 
-	TrainerSchema.plugin(autoIncrement.plugin, { model: 'Trainer', field: 'id' });
+	// TrainerSchema.plugin(autoIncrement.plugin, { model: 'Trainer', field: 'id' });
 	register(null, {
 		trainerModel : Model
 	});

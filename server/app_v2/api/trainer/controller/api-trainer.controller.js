@@ -59,6 +59,8 @@ var customValidationError = function(res, errField, errMessage) {
 function handleError(res, err) {
 	console.log("There was an error and logger should be outputting it...");
 	logger.error(err);
+	logger.error(err.message);
+	logger.error(err.errors);
 	return res.send(500, err);
 }
 
@@ -422,7 +424,6 @@ module.exports = function setup(options, imports, register) {
 
 		delete req.body.certifications;
 		delete req.body.__v;
-		console.log("Req body instagram is:", req.body.instagram);
 		if(req.body.name && req.body.name.full) {
 			var nameFullParts = req.body.name.full.split(" ");
 			req.body.name.first = nameFullParts[0];
@@ -459,6 +460,41 @@ module.exports = function setup(options, imports, register) {
 			}
 			return handleError(res, err);
 		})
+	};
+
+	exports.updateOverwrite = function(req, res, next) {
+		if(req.body._id) { delete req.body._id; }
+		if(req.body.id) { delete req.body.id; } // um... sometimes this is "undefined"??? that's BAD
+		if(req.body._v) { delete req.body._v; }
+		if(req.body.__v) { delete req.body.__v; }
+		var trainer = req.user;
+		delete trainer.__v;
+		if(!trainer) { return res.send(404); }
+
+		if(req.body.name && req.body.name.full) {
+			var nameFullParts = req.body.name.full.split(" ");
+			req.body.name.first = nameFullParts[0];
+			req.body.name.last = nameFullParts[1];
+		}
+		delete trainer.password;
+		Trainer.findById(trainer._id, function(err, found) {
+			if(err) return handleError(res, err);
+			for (var attrname in req.body) {
+				console.log("updating " + attrname + " to: ", req.body[attrname]);
+				found[attrname] = req.body[attrname];
+				if(_.isEmpty(req.body[attrname])) {
+					console.log(attrname + " is being DELETED");
+					found[attrname] = undefined; // this WORKED for deleting a location
+					found.markModified[attrname];
+				}
+			}
+			console.log("found:", found);
+			found.save(function(err, saved){
+				console.log("Saved");
+				if(err) return handleError(res, err);
+				return res.json(saved);
+			})
+		});
 	};
 
 	exports.addLocation = function(req, res) {

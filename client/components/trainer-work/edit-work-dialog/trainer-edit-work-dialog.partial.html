@@ -1,0 +1,74 @@
+<md-dialog flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100" id="trainee-location-dialog">
+    <form name="workForm"
+          ng-submit="submit(workForm)"
+          cg-busy="{promise : cgBusy}">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit workplace</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <ag-floating-label>
+                    <label>
+                        Position
+                    </label>
+                    <input type="text"
+                           server-error
+                           ng-model="workplace.position"
+                           name="position"/>
+                    <div ng-messages="workForm.position.$error">
+                        <div ng-message="mongoose">
+                            {{workForm.errors.position}}
+                        </div>
+                    </div>
+                    <ag-hints>
+                        <ag-hint>
+                            What is your job title?
+                        </ag-hint>
+                    </ag-hints>
+                </ag-floating-label>
+                <ag-floating-label>
+                    <label>
+                        Company name
+                    </label>
+                    <input type="text"
+                           server-error
+                           ng-model="workplace.company_name"
+                           name="companyName"/>
+                    <div ng-messages="workForm.companyName.$error">
+                        <div ng-message="mongoose">
+                            {{workForm.errors.companyName}}
+                        </div>
+                    </div>
+                </ag-floating-label>
+                <ag-floating-label>
+                    <label>
+                        Company website
+                    </label>
+                    <input type="text"
+                           server-error
+                           ng-model="workplace.website"
+                           name="website"/>
+                    <div ng-messages="workForm.website.$error">
+                        <div ng-message="mongoose">
+                            {{workForm.errors.website}}
+                        </div>
+                    </div>
+                </ag-floating-label>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button type="submit">
+                Save
+            </md-button>
+            <md-button ng-click="cancel()">
+                Cancel
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

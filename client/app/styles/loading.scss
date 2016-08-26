@@ -16,7 +16,18 @@ $loading-bg-light: #eee;
 	bottom: 0;
 	background: $loading-bg-dark;
 }
-
+//@-webkit-keyframes placeHolderShimmer{
+//	0%{background-position:-468px 0}
+//	100%{background-position:468px 0}
+//}
+@keyframes placeHolderShimmer{
+	0%{
+		background-position-x: 70%;
+	}
+	100%{
+		background-position-x: -110%;
+	}
+}
 *[id^='loading-'], *[class^='loading-']  {
 	background: $loading-bg-dark;
 }
@@ -71,6 +82,20 @@ $loading-bg-light: #eee;
 	&:after {
 		content : '';
 		display: flex;
+
+		background: #f6f7f9;
+		//background-image: linear-gradient(to right, blue 0%, #bb496e 20%, #90922a 40%, #f6f7f9 100%); for testing
+		background-image: linear-gradient(to right, #f6f7f9 0%, #e9ebee 20%, #f6f7f9 40%, #f6f7f9 100%);
+		background-repeat: no-repeat;
+		background-size: 200%;
+		height: 100%;
+		width: 100%;
+		position: relative;
+		-webkit-animation-duration: 1s;
+		-webkit-animation-fill-mode: forwards;
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-name: placeHolderShimmer;
+		-webkit-animation-timing-function: linear;
 	}
 
 	background: $loading-bg-light;

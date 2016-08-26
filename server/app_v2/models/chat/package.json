@@ -1,0 +1,12 @@
+{
+  "name": "chatModel",
+  "version": "0.0.1",
+  "main": "chat.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "connectionDatabase"
+    ],
+    "provides": ["chatModel"]
+  }
+}

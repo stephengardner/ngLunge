@@ -5,13 +5,30 @@ lungeApp.controller("SignupController", function($timeout, $rootScope, TrainerFa
                                                        $auth,
                                                        $mdToast
 ){
+	$scope.type = $stateParams.tab;
+
+	$scope.getSelectedTab = function() {
+		if($scope.type == 'trainer') {
+			$scope.selectedIndex = 1;
+		}
+		else {
+			$scope.selectedIndex = 0;
+		}
+	};
+
+	$scope.selectTab = function(tab) {
+		$scope.type = tab;
+	};
+
+	$scope.getSelectedTab();
+
 	$scope.user = {
+		type : $scope.type,
 		email : ''
 	};
 
 	$scope.submit = function(registrationForm) {
 		console.log("passing in:", $scope.user);
-
 		$http({
 			method : 'POST',
 			url : '/api/registrations',
@@ -39,12 +56,16 @@ lungeApp.controller("SignupController", function($timeout, $rootScope, TrainerFa
 			FormControl.parseValidationErrors(resendEmailForm, err);
 			AlertMessage.error('Please wait a moment, then try again');
 		})
-	}
+	};
+
 	$scope.authenticate = function(provider) {
-		$auth.authenticate(provider, { type : 'trainer-register' }).then(function(response){
+		var type = $scope.type;
+		$auth.authenticate(provider, { type : type + '-register' }).then(function(response){
 			$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));
-			Auth.setCurrentUser(response.data.trainer);
-			$state.go('profile');
+			Auth.setCurrentUser(response.data[type]);
+			if(type == 'trainer') {
+				$state.go('profile');
+			}
 			// $window.location.href = '/trainer/info';
 		}).catch(function(err){
 			$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));

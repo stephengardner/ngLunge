@@ -8,6 +8,8 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory',
 	'$scope',
 	'Auth',
 	'Menu',
+	'Chat',
+	'MessagesMenu',
 	function(TrainerFactory,
 	         $timeout,
 	         MenuService,
@@ -17,28 +19,48 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory',
 	         $window,
 	         $scope,
 	         Auth,
-	         Menu){
+	         Menu,
+	         Chat,
+	         MessagesMenu
+	){
 		Auth.isLoggedInAsync(function(){
 			$scope.getCurrentUser = Auth.getCurrentUser;
-		})
+		});
+
+		$scope.getUnreadMessageCount = function(){
+			var count;
+			try {
+				count = Auth.getCurrentUser().notifications.count.chat;
+			}
+			catch(err) {
+				console.log(err);
+			}
+			return count;
+		};
+
 
 		$scope.toggleMenu = Menu.toggleLeft;
-		
+		$scope.toggleMessagesMenu = MessagesMenu.toggleLeft;
+
 		$scope.$watch(function(){
 			return $state.current.name
 		}, function(toState, fromState){
-			$scope.isOnProfilePage = toState.indexOf('profile') != -1;
+			$scope.isOnProfilePage = toState.indexOf('profilePage') != -1;
 			$scope.isOnAdminPage = toState.indexOf('admin') != -1;
+			if($scope.isOnProfilePage) {
+				$scope.showShareButton = true;
+			}
 		});
 
-		$scope.showShareButton = function() {
-			return $scope.isOnProfilePage && TrainerFactory.isMe();
-		};
-		/*
-		 $scope.isAdminPage = function(){
-		 return $location.path().indexOf('admin') == 1;
-		 };
-		 */
+		$scope.$watch(function(){
+			return Auth.getCurrentUser()._id
+		}, function(newValue, oldValue) {
+			console.log("navbar new auth getcurrentuser watch newvalue:", newValue);
+			if(!newValue) {
+				$scope.showShareButton = false;
+			}
+		});
+
 		//console.log($location.path().indexOf("admin"));//.includes('admin'));
 		// check scrolled and do scope apply on home page scrolling
 		angular.element($window).bind("scroll", function() {
@@ -52,27 +74,6 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory',
 			}
 		});
 
-		// check page and scrolled on page changes
-		$rootScope.$on('$locationChangeSuccess', function (event, next) {
-			checkPageAndScrolled();
-		});
-
-		// check page and scrolled on load
-		checkPageAndScrolled();
-
-		// helper function, check location path and scroll distance
-		function checkPageAndScrolled() {
-			if($location.path() == "/"){
-				if(window.pageYOffset < 100){
-					$scope.scrolled = false;
-				}
-				$rootScope.spaced = false;
-			}
-			else {
-				$rootScope.spaced = true;
-				$scope.scrolled = true;
-			}
-		}
 		$scope.isLoggedIn = Auth.isLoggedIn;
 		$scope.isAdmin = Auth.isAdmin;
 		$scope.getCurrentUser = Auth.getCurrentUser;
@@ -97,15 +98,23 @@ lungeApp.controller("NavbarNewController", ['TrainerFactory',
 			//socket.unsync.user("trainer", Auth.getCurrentUser());
 		});
 
-		// Bind the share button popover
-		$scope.$on('$includeContentLoaded', function(){
-			// var sharePopover = $popover(angular.element("#share-popover"), {
-			// 	contentTemplate: 'app/popovers/navbar/share/popover.tpl.html',
-			// 	html: true,
-			// 	trigger: 'click',
-			// 	animation : 'am-flip-x',
-			// 	placement : 'bottom',
-			// 	autoClose: true
-			// });
-		})
+
+		// check page and scrolled on page changes
+		$rootScope.$on('$locationChangeSuccess', function (event, next) {
+			setSpaced();
+		});
+
+		// set spaced on load
+		setSpaced();
+
+		// helper function, set spaced
+		function setSpaced() {
+			if($location.path() == "/"){
+				$rootScope.spaced = false;
+			}
+			else {
+				$rootScope.spaced = true;
+				$scope.scrolled = true;
+			}
+		}
 	}]);

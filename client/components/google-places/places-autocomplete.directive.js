@@ -77,6 +77,8 @@ myApp
 				};
 
 				$scope.search = function(input) {
+					console.log("Scope form is:", $scope.form);
+					$scope.form['autocomplete'].$setValidity('mongoose', true);
 					if($scope.ngChange) {
 						$scope.ngChange();
 					}

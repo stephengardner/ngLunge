@@ -1,5 +1,4 @@
 var logger = require("../../../components/logger")(),
-	osmosis = require("osmosis"),
 	config = require('../../../config/environment'),
 	mandrill = require('node-mandrill')(config.mandrill.API_KEY),
 	expect = require('chai').expect,
@@ -50,7 +49,6 @@ module.exports = function setup(options, imports, register) {
 			tripConditions : [],
 			moduleName : 'no module name set'
 		};
-		this.osmosis = osmosis;
 		this.x = x;
 		// apply phantomjs to xray if specified
 		if(params.phantom) {
@@ -99,6 +97,7 @@ module.exports = function setup(options, imports, register) {
 					async.waterfall([
 						function checkText(innerCallback) {
 							if(condition.text) {
+								console.log("should be sending a text message");
 								simpleScraperThis._sendText({subject : condition.text.message}).then(function(response){
 									innerCallback(null, response);
 								}).catch(innerCallback);
@@ -133,11 +132,12 @@ module.exports = function setup(options, imports, register) {
 					return this._onBusy().then(reject).catch(reject);
 				}
 				if(this._conditionToPing()) {
-					console.log("Scraping...", this.params.url);
+					this.cacheBuster = "?cacheBuster=" + Math.random();
+					console.log("Scraping...", this.params.url + this.cacheBuster);
 					this.busy = true;
 					// Emitters currently not used, but will be caught if we want to catch this event
 					this.emit('scrape-start');
-					this.x(this.params.url,	this.params.find)(function(err, data) {
+					this.x(this.params.url + this.cacheBuster,	this.params.find)(function(err, data) {
 						if(err) {
 							console.log("XRAY ERROR(Setting busy to false): ", err);
 							this.busy = false;
@@ -208,6 +208,7 @@ module.exports = function setup(options, imports, register) {
 		_sendText : function(options) {
 			var self = this;
 			return new Promise(function(resolve, reject){
+				console.log("Creating twilio client");
 				var client = new twilio.RestClient(config.twilio.notifier.sid, config.twilio.notifier.token);
 				client.sms.messages.create({
 					to : phoneNumber,

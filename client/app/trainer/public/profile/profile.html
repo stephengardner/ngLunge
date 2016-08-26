@@ -3,7 +3,7 @@
     <div id="profile-body"
          layout="row"
          layout-align="center center">
-        <div class="flex-column">
+        <div class="ag-flex-column" ng-if="trainerFactory.trainer">
             <div ng-if="!trainerFactory.trainer">
                 <div class="loading-block-md">
                     <div class="header"></div>
@@ -21,6 +21,9 @@
             <trainer-map-card editable="{{isMe()}}"
                               class="section-animate-in">
             </trainer-map-card>
+            <trainer-work editable="{{isMe()}}"
+                          class="section-animate-in">
+            </trainer-work>
             <specialties ng-if="trainerFactory.trainer"
                          editable="{{isMe()}}"
                          class="section-animate-in">

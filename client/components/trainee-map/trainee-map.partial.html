@@ -1,0 +1,70 @@
+<div class="loading-block-sm" ng-if="!userFactory.user._id"></div>
+<md-card class="section-animate-in" ng-if="userFactory.user._id" id="trainee-map">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Location</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button"
+                       ng-if="editable"
+                       ng-click="locationDialog($event)">
+                <md-icon>
+                    <i class="material-icons">{{userFactory.user.location.state ? 'edit' : 'add'}}</i>
+                </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <!--
+<md-card-content class="google-map"
+     ng-class="{'empty-loading' : !googleMapLoaded, 'empty' : googleMapLoaded
+&& !trainerFactory.trainer.location.state, 'loaded' : googleMapLoaded
+&& trainerFactory.trainer.location.state}" ag-map-size-container>
+    <div layout="row"
+         layout-align="center center"
+         style="height:100%"
+         ng-if="!userFactory.user || !userFactory.user.location.state">
+        <h1 ng-if="!userFactory.user">
+            <md-progress-circular md-diameter="100"></md-progress-circular>
+        </h1>
+        <h2 ng-if="userFactory.user &&
+                !userFactory.user.location.state"
+            class="no-main-location">
+            No location has been added yet.
+        </h2>
+    </div>
+    <div ng-if="userFactory.user.location.state"
+         id="google-map"
+         class="google-map">
+        <div ng-if="map.center.latitude && map.bounds">
+            <ui-gmap-google-map
+                    center="map.center"
+                    zoom="map.zoom"
+                    draggable="true"
+                    options="gmapOptions"
+                    bounds="map.bounds"
+                    events="map.events"
+                    control="map.control">
+                <ui-gmap-markers
+                        models="map.markers"
+                        coords="'coords'"
+                        options="'options'",
+                        events="map.markersEvents">
+                </ui-gmap-markers>
+            </ui-gmap-google-map>
+        </div>
+    </div>
+    </md-card-content>
+    <trainee-map-location></trainee-map-location>
+    -->
+    <md-card-content>
+        <md-list-item ng-if="!userFactory.user.location.state">
+            <div>
+                No location has been added yet
+            </div>
+        </md-list-item>
+        <trainee-map-location></trainee-map-location>
+    </md-card-content>
+    <!--<trainer-map-add-location editable="{{editable}}"></trainer-map-add-location>-->
+    <!--<trainer-map-locations editable="{{editable}}"></trainer-map-locations>-->
+</md-card>

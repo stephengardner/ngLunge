@@ -1,5 +1,8 @@
 lungeApp.controller("TrainerSyncedProviderController", function(TrainerFactory, AlertMessage, $location, InfoOverlay, $window, $scope){
 	$scope.isProviderActive = function(provider) {
+		if(provider == 'website') {
+			return TrainerFactory.trainerEditing['website'];
+		}
 		if(provider == "linkedin")
 			return TrainerFactory.trainerEditing[provider] && TrainerFactory.trainerEditing[provider].publicProfileUrl;
 		else {
@@ -15,7 +18,8 @@ lungeApp.controller("TrainerSyncedProviderController", function(TrainerFactory, 
 			google : "Google+",
 			twitter : "Twitter",
 			facebook : "Facebook",
-			instagram : "Instagram"
+			instagram : "Instagram",
+			website : "website"
 		}
 		return asString[provider];
 	}
@@ -24,11 +28,14 @@ lungeApp.controller("TrainerSyncedProviderController", function(TrainerFactory, 
 		if(provider == "linkedin") {
 			key = "publicProfileUrl";
 		}
+		else if(provider == 'website') {
+			return TrainerFactory.trainer.website;
+		}
 		else {
 			key = "link";
 		}
 		return TrainerFactory.trainer[provider]['link'];
-	}
+	};
 	$scope.unlink = function(provider) {
 		TrainerFactory.trainerEditing[provider] = {};
 	}

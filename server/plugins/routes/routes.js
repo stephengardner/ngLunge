@@ -12,6 +12,7 @@ module.exports = function setup(options, imports, register) {
 			web.use('/api/certification-organizations', imports.apiCertificationOrganizationRouter);
 			web.use('/api/specialties', imports.apiSpecialtyRouter);
 			web.use('/api/users', imports.apiUserRouter);
+			web.use('/api/chats', imports.apiChatRouter);
 			//express.use('/api/aws', imports.apiAWSRouter);
 			web.use('/auth', imports.authRoutes);
 			web.use('/api/registrations', imports.apiRegistrationRouter);

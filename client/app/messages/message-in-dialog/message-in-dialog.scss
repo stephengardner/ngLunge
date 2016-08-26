@@ -1,0 +1,22 @@
+#message-in-dialog {
+	.container {
+		overflow: auto;
+		width: 100%;
+	}
+	md-content {
+		height: auto;
+		//padding: 0 15px;
+		md-dialog-content {
+			padding: 0 15px;
+		}
+		.message-row {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+	}
+	#message {
+		message-container, #message-container {
+			height: auto;
+		}
+	}
+}

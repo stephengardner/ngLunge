@@ -1,0 +1,33 @@
+.md-sidenav-left {
+	.profile-picture {
+		width: 45px;
+		height: 45px;
+		border-radius: 100px;
+		margin-right: 10px;
+		img {
+			width: 100%;
+		}
+	}
+	.md-3-line {
+		min-height: 45px;
+		> .md-no-style {
+			min-height: 45px;
+		}
+		.md-list-item-text {
+			overflow: hidden!important;
+			text-overflow: ellipsis;
+		}
+		h3 {
+			.time {
+				font-size: 13px;
+				color: #999;
+			}
+		}
+		h4 {
+			.material-icons {
+				font-size: 13px;
+				color: #aaa;
+			}
+		}
+	}
+}

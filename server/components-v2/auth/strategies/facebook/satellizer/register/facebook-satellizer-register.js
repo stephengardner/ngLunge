@@ -4,15 +4,30 @@ var jwt = require('jsonwebtoken'),
 	graph = require('fbgraph'),
 	_ = require('lodash')
 	;
+String.prototype.capitalize = function() {
+	return this.charAt(0).toUpperCase() + this.slice(1);
+}
 module.exports = function setup(options, imports, register){
 	var trainerModel = imports.trainerModel,
+		traineeModel = imports.traineeModel,
 		auth = imports.auth,
 		createJWT = auth.signToken;
 	var facebookSatellizerRegister = function(req, res, next) {
 		var profile = req.profile,
-			provider = 'facebook'
+			provider = 'facebook',
+			type,
+			Model
 			;
-		trainerModel.findOne({ 'email': profile.email }, function(err, existingUser) {
+		if(req.body.type && req.body.type.indexOf('trainee') != -1) {
+			type = "trainee";
+			Model = traineeModel;
+		}
+		else {
+			type = "trainer";
+			Model = trainerModel;
+		}
+		console.log("facebookSatellizerRegister registering for type: " + type);
+		Model.findOne({ 'email': profile.email }, function(err, existingUser) {
 			if (existingUser && existingUser.registration_providers[provider] == profile.id) {
 				return res.status(409).send({
 					message: 'There is already a ' +
@@ -21,44 +36,62 @@ module.exports = function setup(options, imports, register){
 				});
 			}
 			else if(existingUser) {
-				addRegistrationToExistingTrainer(trainer);
+				addRegistrationToExistingDocument(existingUser);
 			}
-			createNewTrainer();
+			createNewDocument();
 		});
-		function addRegistrationToExistingTrainer(trainer) {
-			trainer.registration_providers[provider] = profile.id;
-			trainer[provider] = JSON.parse(JSON.stringify(profile));
-			trainer.save(function(err, saved){
+		function addRegistrationToExistingDocument(document) {
+			document.registration_providers[provider] = profile.id;
+			document[provider] = JSON.parse(JSON.stringify(profile));
+			document.save(function(err, saved){
 				if(err) return res.status(500).send(err);
-				sendResponse(trainer);
+				sendResponse(document);
 			})
 		}
-		function createNewTrainer(){
-			var user = new trainerModel();
-			setTrainerBasedOnFacebookDetails(user).then(function(response){
-				user.save(function(err, saved) {
-					if(err) return res.status(500).send(err);
+		function createNewDocument(){
+			console.log("Creating a new " + type);
+			var user = new Model();
+			setDocumentBasedOnFacebookDetails(user).then(function(response){
+				response.save(function(err, saved) {
+					if(err) {
+						console.log("Uhhh, error:", err);
+						return res.status(500).send(err);
+					}
 					sendResponse(user);
 				});
 			}).catch(function(err){
 				console.log(err);
 			});
 		}
-		function setTrainerBasedOnFacebookDetails(trainer) {
+		function setPicture(document) {
+			if(type == "trainee") {
+				if(document.profile_picture && !document.profile_picture.thumbnail.url) {
+					document.profile_picture.thumbnail.url = profile.picture.graph.url;
+				}
+			}
+		}
+		function setDocumentBasedOnFacebookDetails(user) {
 			return new Promise(function(resolve, reject){
-				trainer.registration_providers[provider] = profile.id;
-				trainer[provider] = JSON.parse(JSON.stringify(profile));
-				trainer.email = profile.email;
-				trainer.name.full = profile.name;
-				return resolve(trainer);
+				user.registration_providers[provider] = profile.id;
+				user[provider] = JSON.parse(JSON.stringify(profile));
+				user.email = profile.email;
+				user.name.full = profile.name;
+				setPicture(user);
+				console.log("Created " + type + ": ", user);
+				return resolve(user);
 			});
 		}
-		function sendResponse(trainer) {
-			var token = createJWT(trainer);
-			console.log("CREATED USER\n\n");
+		function sendResponse(user) {
+			var token = createJWT(user);
+			console.log("SENDING type: " + type + " \n\n");
 			res.cookie('token', JSON.stringify(token));
-			res.cookie('type', JSON.stringify('trainer'));
-			res.send({ token: token, type : 'trainer', trainer : trainer });
+			res.cookie('type', JSON.stringify(type));
+			var returnObject = {
+				token : token,
+				type : type
+			};
+			returnObject[type] = user;
+			res.send(returnObject);
 		}
 	};
 	register(null, {

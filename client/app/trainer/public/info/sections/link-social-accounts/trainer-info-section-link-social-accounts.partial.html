@@ -1,9 +1,9 @@
-<div ng-if="!trainerFactory.trainer" class="loading-block-xs"></div>
+<div ng-if="!trainerFactory.trainer.name" class="loading-block-xs"></div>
 <md-card ag-editable-container
          trainer-factory-section="'social'"
          on-editable-hide="reset()"
          class="section-animate-in"
-         ng-if="trainerFactory.trainer">
+         ng-if="trainerFactory.trainer.name">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -17,7 +17,7 @@
     </md-toolbar>
     <form id="sync-social-accounts"
           name="linkSocial"
-          ng-submit="submit()">
+          ng-submit="submit(); toggleEditing()">
         <md-card-content cg-busy="{promise : cgBusy}">
             <div class="ag-editable-container">
                 <div class="ag-editable-default">
@@ -157,6 +157,7 @@
                         </div>
                         <div layout="column" layout-align="start center">
                             <md-button ng-class="{'active' : trainerHasWebsite()}"
+                                       ng-click="personalLinkDialog($event)"
                                        class="md-icon-button"
                                        ng-click="personalLinkPopup()">
                                 <md-icon>
@@ -171,13 +172,12 @@
                             </md-button>
                         </div>
                     </div>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button type="submit">Save</md-button>
+                        <md-button ng-click="toggleEditing()">Cancel</md-button>
+                    </md-card-actions>
                 </div>
-
             </div>
         </md-card-content>
-        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-            <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing()">Cancel</md-button>
-        </md-card-actions>
     </form>
 </md-card>

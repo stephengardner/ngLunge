@@ -8,7 +8,7 @@
         <!-- Basic Info, Not Editing -->
         <div class="basic-info-inner">
             <a ui-sref="main.trainer.account.edit-profile"
-               ng-if="editable"
+               ng-if="trainerFactory.isMe()"
                md-button
                class="edit md-icon-button">
                 <i class="material-icons">edit</i>
@@ -20,49 +20,93 @@
                     </h1>
                 </div>
                 <div class="item">
-                    <h2>{{trainerFactory.trainer.location.cityState}}</h2>
+                    <h3 ng-if="!trainerFactory.trainer.location.city">
+                        No location set
+                    </h3>
+                    <h3 ng-if="trainerFactory.trainer.location.city">
+                        {{trainerFactory.trainer.location.cityState}}
+                    </h3>
                 </div>
-                <div class="item">
-                    <div class="rating">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half"></i>
-                    </div>
+                <div id="trainer-rating" class="unrated">
+                    <md-tooltip md-direction="right">Not yet rated</md-tooltip>
+                    <i class="material-icons">star_border</i>
+                    <i class="material-icons">star_border</i>
+                    <i class="material-icons">star_border</i>
+                    <i class="material-icons">star_border</i>
+                    <i class="material-icons">star_border</i>
                 </div>
-                <div class="bio item">
-                    {{trainerFactory.trainer.bio ? trainerFactory.trainer.bio : 'No bio yet' }}
+                <!--<div class="item">-->
+                <!--<div class="rating">-->
+                <!--<i class="fa fa-star"></i>-->
+                <!--<i class="fa fa-star"></i>-->
+                <!--<i class="fa fa-star"></i>-->
+                <!--<i class="fa fa-star"></i>-->
+                <!--<i class="fa fa-star-half"></i>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div id="headline" class="item">
+                    {{trainerFactory.trainer.headline.value ? trainerFactory.trainer.headline.value : '' }}
+                </div>
+                <div id="bio" class="item" ng-if="trainerFactory.trainer.bio" style="white-space: pre-line;">
+                    {{trainerFactory.trainer.bio}}
                 </div>
                 <div class="social-links item">
                     <md-button ng-if="trainerFactory.trainer.facebook"
                                class="md-icon-button sync-icon active sync-facebook"
                                target="_blank"
-                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s Facebook page"
                                ng-href="{{trainerFactory.trainer.facebook.link}}">
+                        <md-tooltip md-direction="top">
+                            {{trainerFactory.trainer.name.first}}'s Facebook page
+                        </md-tooltip>
                         <ng-md-icon icon="facebook"></ng-md-icon>
                     </md-button>
                     <md-button ng-if="trainerFactory.trainer.instagram"
                                class="md-icon-button sync-icon active sync-linkedin"
                                target="_blank"
-                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s LinkedIn page"
                                ng-href="{{trainerFactory.trainer.linkedin.link}}">
+                        <md-tooltip md-direction="top">
+                            {{trainerFactory.trainer.name.first}}'s LinkedIn page
+                        </md-tooltip>
                         <ng-md-icon icon="linkedin"></ng-md-icon>
                     </md-button>
                     <md-button ng-if="trainerFactory.trainer.instagram"
                                class="md-icon-button sync-icon active sync-instagram"
                                target="_blank"
-                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s Instagram page"
                                ng-href="{{trainerFactory.trainer.instagram.link}}">
+                        <md-tooltip md-direction="top">
+                            {{trainerFactory.trainer.name.first}}'s Instagram page
+                        </md-tooltip>
                         <i class="fa fa-instagram"></i>
                     </md-button>
                     <md-button ng-if="trainerFactory.trainer.twitter"
                                class="md-icon-button sync-icon active sync-twitter"
                                target="_blank"
-                               ng-attr-title="{{trainerFactory.trainer.name.first}}'s Twitter page"
                                ng-href="{{trainerFactory.trainer.twitter.link}}">
+                        <md-tooltip md-direction="top">
+                            {{trainerFactory.trainer.name.first}}'s Twitter page
+                        </md-tooltip>
                         <ng-md-icon icon="twitter"></ng-md-icon>
                     </md-button>
+                    <md-button ng-if="trainerFactory.trainer.website"
+                               class="md-icon-button sync-icon active"
+                               target="_blank"
+                               ng-href="{{trainerFactory.trainer.website}}">
+                    <md-tooltip md-direction="top">
+                        {{trainerFactory.trainer.name.first}}'s Website
+                    </md-tooltip>
+                    <i class="material-icons">link</i>
+                    </md-button>
+                </div>
+                <div id="experience"
+                     layout="row" layout-align="end center"
+                     class="item"
+                     ng-if="trainerFactory.trainer.years_of_experience">
+                    <i class="material-icons">work</i>
+                    <span>
+                        {{trainerFactory.trainer.years_of_experience.value}}
+                        {{trainerFactory.trainer.years_of_experience.value > 1 ? 'years' : 'year'}}
+                        of personal training experience
+                    </span>
                 </div>
             </div>
         </div>
