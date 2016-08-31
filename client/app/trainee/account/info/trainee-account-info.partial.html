@@ -8,9 +8,13 @@
     </header>
     <div ng-if="userFactory.user._id">
         <trainee-basic-info user-factory="userFactory"
-                            editable="userFactory.isMe()"></trainee-basic-info>
+                            editable="userFactory.isMe()">
+        </trainee-basic-info>
         <trainee-bio user-factory="userFactory"
-                     editable="userFactory.isMe()"></trainee-bio>
-        <trainee-map user-factory="userFactory"></trainee-map>
+                     editable="userFactory.isMe()">
+        </trainee-bio>
+        <trainee-map user-factory="userFactory"
+                     editable="userFactory.isMe()">
+        </trainee-map>
     </div>
 </div>

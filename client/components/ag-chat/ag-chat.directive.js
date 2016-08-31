@@ -1,4 +1,22 @@
-
+myApp.directive('agOnEnter', function() {
+	return {
+		scope : {
+			'agOnEnter' : '&'
+		},
+		link : function(scope, element, attrs) {
+			// alert();
+			element.bind("keydown", function(e) {
+				if(e.which === 13) {
+					console.log(scope.agOnEnter);
+					// scope.$apply(function(){
+						scope.agOnEnter({ e : e });
+					// });
+					// e.preventDefault();
+				}
+			});
+		}
+	};
+});
 myApp.directive('messageContainer', function(lodash, $timeout, Auth, User){
 	function markMessageRead(message) {
 		console.log("marking message read:", message);
@@ -13,8 +31,8 @@ myApp.directive('messageContainer', function(lodash, $timeout, Auth, User){
 	}
 	return {
 		restrict : 'AE',
-		controller : function($scope) {
-		},
+		controller : ['$scope', function($scope) {
+		}],
 		link : {
 			pre : function(scope, element, attrs, ctrl){
 				var initialized,

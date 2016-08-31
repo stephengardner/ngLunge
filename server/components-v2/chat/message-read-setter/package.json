@@ -5,13 +5,8 @@
   "private": true,
   "plugin": {
     "consumes": [
-      "userModel",
-      "trainerModel",
-      "userPopulator",
-      "trainerPopulator",
       "chatModel",
-      "logger",
-      "socket"
+      "logger"
     ],
     "provides": ["chatMessageReadSetter"]
   }

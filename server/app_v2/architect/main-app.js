@@ -212,9 +212,12 @@ module.exports = function(config) {
 
 		// Chat Populator
 		"../../components-v2/chat/populator",
-		
+
 		// Chat Message Read Setter
-		"../../components-v2/chat/message-read-setter"
+		"../../components-v2/chat/message-read-setter",
+
+		// Chat Message Read Setter
+		"../../components-v2/chat/new-user-signup-message/sender"
 
 	];
 	var tree = architect.resolveConfig(appConfig, __dirname);

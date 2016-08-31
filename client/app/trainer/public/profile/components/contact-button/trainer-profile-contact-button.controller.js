@@ -1,36 +1,58 @@
 myApp.controller('TrainerProfileContactButtonController', function(TrainerFactory,
                                                                    $stateParams,
                                                                    $timeout,
-                                                                   Trainer, Auth, $scope, $mdDialog) {
+                                                                   $rootScope,
+                                                                   Trainer,
+                                                                   Auth,
+                                                                   $http,
+                                                                   $scope,
+                                                                   $mdDialog) {
 	$scope.afterLogin = function() {
 		alert();
 	};
 	$scope.close = $mdDialog.hide;
 	$scope.showDialog = function(ev){
 		var currentProfilePageId = $scope.trainerFactory.trainer._id;
-		if(Auth.getCurrentUser()._id) {
-			// $mdDialog.show({
-			// 	templateUrl : 'app/account/login-or-signup-dialog/login-or-signup-dialog.partial.html',
-			// 	controller : 'LoginOrSignupDialogController',
-			// 	clickOutsideToClose : true,
-			// 	targetEvent : ev,
-			// 	scope : $scope,
-			// 	preserveScope : true,
-			// 	// fullscreen: true,
-			// 	parent: angular.element(document.body)
-			// });
-			$stateParams.id = '579847e4ef061fc01e1c0ad2';
-			$scope.id = '579847e4ef061fc01e1c0ad2';
+		function okayGetChat() {
+			// .busy = true;
+			$rootScope.globalAjax.busy = $http({
+				method : 'GET',
+				url : 'api/users/' + Auth.getCurrentUser()._id + '/chat/to/' + currentProfilePageId
+			}).success(function(response){
+				// $rootScope.globalAjax.busy = false;
+				openChatDialog(response);
+				console.log("getChat Response:", response);
+			}).error(function(err){
+				// $rootScope.globalAjax.busy = false;
+				console.log('getChat returned error:', err);
+			});
+		}
+		function openChatDialog(id) {
+			$stateParams.id = id;
+			$scope.id = id;
 			$mdDialog.show({
 				templateUrl : 'app/messages/message-in-dialog/message.partial.html',
 				controller : 'MessageController',
 				clickOutsideToClose : true,
 				targetEvent : ev,
 				scope : $scope,
+				preserveScope : true
+			})
+		}
+		if(Auth.getCurrentUser()._id) {
+			okayGetChat();
+		}
+		else {
+			$mdDialog.show({
+				templateUrl : 'app/account/login-or-signup-dialog/login-or-signup-dialog.partial.html',
+				controller : 'LoginOrSignupDialogController',
+				clickOutsideToClose : true,
+				targetEvent : ev,
+				scope : $scope,
 				preserveScope : true,
 				// fullscreen: true,
-				// parent: angular.element(document.body)
-			})
+				parent: angular.element(document.body)
+			});
 		}
 		function showMessageDialog(){
 			$mdDialog.show(

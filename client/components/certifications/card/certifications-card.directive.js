@@ -4,9 +4,9 @@ myApp.directive('certificationsCard', ['TrainerFactory', function(TrainerFactory
 		scope : {
 			editable : '@'
 		},
-		controller : function($scope) {
+		controller : ['$scope', function($scope) {
 			$scope.trainerFactory = TrainerFactory;
-		},
+		}],
 		templateUrl : 'components/certifications/card/certifications-card.partial.html'
 	}
 }])

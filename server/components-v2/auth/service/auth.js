@@ -37,7 +37,7 @@ function isValidRegistration(){
 	// Attach user to request
 		.use(function(req, res, next) {
 			console.log("body id: ", req.params.id);
-			Trainer.findOne({'registration.authenticationHash' : req.params.id }, function (err, trainer) {
+			userModel.findOne({'registration.authenticationHash' : req.params.id }, function (err, trainer) {
 				if (err) return next(err);
 				if (!trainer){
 					console.log("shit", trainer);

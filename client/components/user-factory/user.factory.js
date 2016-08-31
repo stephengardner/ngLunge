@@ -35,12 +35,22 @@ myApp.factory('UserFactory', function(Auth, User, $http, lodash, $q){
 				self.userEditing = angular.copy(user);
 			}
 		},
+
+		getDefaultModel : function() {
+			return this.user;
+		},
+
+		getEditingModel : function() {
+			return this.userEditing;
+		},
+
 		addWorkplace : function(workplace) {
 			return new $q(function(resolve, reject) {
 				this.userEditing.work.places.push(workplace);
 				this.save('work').then(resolve).catch(reject);
 			}.bind(this));
 		},
+
 		removeWorkplace : function(workplace) {
 			return new $q(function(resolve, reject) {
 				var foundPlace = false;
@@ -83,6 +93,7 @@ myApp.factory('UserFactory', function(Auth, User, $http, lodash, $q){
 				}
 			}.bind(this));
 		},
+
 		resetEditing : function(section) {
 			console.log("Reset editing on section:", section);
 			// var itemsToReassign = lodash.assign(createMergeObject(section), this.user);
@@ -93,11 +104,13 @@ myApp.factory('UserFactory', function(Auth, User, $http, lodash, $q){
 			}
 			lodash.merge(this.userEditing, valuesToUpdate);
 		},
+
 		removeLocation : function() {
 			this.userEditing.location = {};
 			return this.save('location')
 		},
-		save : function(section) {
+
+		save : function(section, options) {
 			return new $q(function(resolve, reject){
 				var paramsToUpdate = createMergeObject(section),
 					valuesToUpdate = {}
@@ -140,6 +153,11 @@ myApp.factory('UserFactory', function(Auth, User, $http, lodash, $q){
 					work : 1
 				};
 				break;
+			case 'chatPressEnterToSend' :
+				returnObject = {
+					chat_press_enter_to_send : 1
+				};
+				break;
 			case 'bio' :
 				returnObject = {
 					bio : 1
@@ -154,6 +172,7 @@ myApp.factory('UserFactory', function(Auth, User, $http, lodash, $q){
 					" anything: '" + section + "'");
 				break;
 		}
+
 		console.log("CreateMergeObject returning:", returnObject);
 		return returnObject;
 	}

@@ -20,19 +20,23 @@ lungeApp.controller("ListCertificationsController", function($document,
 
 	$scope.trainerFactory = TrainerFactory;
 
+	$scope.isLoggedInTrainer = function() {
+		return Auth.getCurrentType() == 'trainer';
+	};
+
 	$scope.openMenu = function($mdOpenMenu, ev) {
 		originatorEv = ev;
 		$mdOpenMenu(ev);
 	};
 	
-	$scope.certificationTypeInfoModal = function(certificationType) {
+	$scope.certificationTypeInfoModal = function(certificationType, opt_event) {
 		$mdDialog.show({
 			controller : ['$scope', function($scope){
 				$scope.certificationType = certificationType;
 				$scope.cancel = $mdDialog.cancel;
 			}],
 			templateUrl : "app/certifications/certification-type/modal-info/certification-type-modal-info.modal.html",
-			targetEvent : originatorEv,
+			targetEvent : originatorEv || opt_event,
 			clickOutsideToClose : true
 		})
 	};
@@ -46,7 +50,28 @@ lungeApp.controller("ListCertificationsController", function($document,
 			return TrainerFactory.trainer.certifications_v2_map[certificationOrganization._id].count;
 		}
 		return undefined;
-	}
+	};
+
+
+	$scope.verifyCertificationPopupFromPublicList = function(certification) {
+		// Busy is necessary for the status directive $watch function
+		certification.busy = true;
+		var certificationV2 = TrainerFactory.getCertificationDetails(certification);
+		console.log("certificationV2 is:", certificationV2);
+		$mdDialog.show({
+			templateUrl: "app/trainer/account/certifications/verify-modal/trainer-account-certifications-verify-modal.template.html",
+			controller : 'TrainerAccountVerifyCertificationsModalController',
+			locals : {
+				certificationV2 : certificationV2
+			},
+			clickOutsideToClose : true,
+			targetEvent : originatorEv
+		}).then(function(){
+			certification.busy = false;
+		}).catch(function(){
+			certification.busy = false;
+		});
+	};
 
 	// If we need to re-get the same page.
 	$scope.refreshCertifications = function() {

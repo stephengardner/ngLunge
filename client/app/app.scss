@@ -66,6 +66,7 @@ footer {
 }
 
 body.md-toast-animating { overflow: auto !important; }
+body._md-toast-animating { overflow: auto !important; }
 
 .nopadding {
 	padding: 0!important;
@@ -135,6 +136,7 @@ body, html {
 @import 'certifications/certification-type/modal-info/certifications-certification-type-modal-info.scss';
 @import 'certifications/certifications.scss';
 @import 'certifications/faq/certifications-faq.scss';
+@import 'certifications/list/list-certifications.scss';
 @import 'main/main.scss';
 @import 'main/partials/find-section/find-section.scss';
 @import 'main/partials/jumbotron/jumbotron.scss';
@@ -150,6 +152,7 @@ body, html {
 @import 'styles/_grid.scss';
 @import 'styles/_modals.scss';
 @import 'styles/_variables.scss';
+@import 'styles/ag-floating-label-overrides.scss';
 @import 'styles/alerts.scss';
 @import 'styles/angular-material-custom/buttons.scss';
 @import 'styles/angular-material-custom/layouts.scss';
@@ -181,6 +184,7 @@ body, html {
 @import 'styles/modules.scss';
 @import 'styles/ng-dialog-themes/large.scss';
 @import 'styles/popovers.scss';
+@import 'styles/scrollbar.scss';
 @import 'styles/tables.scss';
 @import 'styles/xeditable.scss';
 @import 'trainee/profile/trainee-profile.scss';
@@ -208,8 +212,10 @@ body, html {
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
 @import 'screen-size/screen-size.scss';
+@import 'specialties/dialog/specialties-dialog.scss';
 @import 'specialties/specialties.scss';
 @import 'trainer-certification-status-count-bubbles/dialog/trainer-certification-status-count-bubbles-dialog.scss';
+@import 'trainer-certification-status/dialog/trainer-certification-status-dialog.scss';
 @import 'trainer-map/add-location/trainer-map-add-location.scss';
 @import 'trainer-map/locations.scss';
 @import 'trainer-map/manual-location/trainer-manual-location.scss';

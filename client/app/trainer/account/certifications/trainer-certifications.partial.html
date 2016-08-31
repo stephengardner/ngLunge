@@ -40,7 +40,7 @@
                 </div>
             </md-button>
         </div>
-        <md-card ng-if="certificationsEmpty()">
+        <md-card ng-if="certificationsEmpty()" id="empty">
             <md-card-content>
                 <h3>
                     You have no certifications yet!  Add one by clicking the button above.
@@ -48,7 +48,7 @@
             </md-card-content>
         </md-card>
         <div class="ag-loading-container" ng-if="trainerFactory.loading">
-            <md-progress-circular md-diameter="130"></md-progress-circular>
+            <md-progress-circular md-diameter="60"></md-progress-circular>
             Loading...
         </div>
         <md-card ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
@@ -94,8 +94,7 @@
                                         <p class="md-list-item-text" flex>
                                             {{certificationV2.certification_type.name}}
                                         </p>
-                                        <div class="md-secondary"
-                                             layout="row"
+                                        <div layout="row"
                                              layout-align="end center"
                                              flex="nogrow">
                                             <md-menu md-position-mode="target-right target">
@@ -144,17 +143,16 @@
                                          ng-if="certificationV2.removalConfirmation"
                                          layout="row"
                                          layout-align="space-between center">
-                                        <p flex>
+                                        <p>
                                             Are you sure you want to remove the
                                             <strong>
                                                 {{certificationV2.certification_type.name}}
                                             </strong>
                                             specialty?
                                         </p>
-                                        <div class="md-secondary"
-                                             flex hide-xs hide-xxs
+                                        <div flex hide-xs hide-xxs
                                              layout="row"
-                                             layout-align="center end">
+                                             layout-align="end center">
                                             <md-button ng-click="deleteCertification(certificationV2)">
                                                 Yes
                                             </md-button>
@@ -162,10 +160,9 @@
                                                 Cancel
                                             </md-button>
                                         </div>
-                                        <div class="md-secondary"
-                                             flex hide-gt-xs
+                                        <div flex hide-gt-xs
                                              layout="row"
-                                             layout-align="center end">
+                                             layout-align="end center">
                                             <md-button class="md-icon-button"
                                                        ng-click="deleteCertification(certificationV2)">
                                                 <i class="material-icons">check</i>

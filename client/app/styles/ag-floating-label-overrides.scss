@@ -1,0 +1,10 @@
+.ag-floating-label {
+	&.ag-input-focused {
+		.ag-floating-label-underline {
+			background: $brand-primary;
+		}
+		.ag-floating-label-underline, label, i {
+			color: $brand-primary;
+		}
+	}
+}

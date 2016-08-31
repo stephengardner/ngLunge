@@ -30,6 +30,7 @@ module.exports = function setup(options, imports, register) {
 						console.log("Rejecting because status code was: ", response.statusCode);
 						return reject(response);
 					}
+					console.log("Successfully sent message.  Response is:", response);
 					return resolve(response);
 				});
 			})

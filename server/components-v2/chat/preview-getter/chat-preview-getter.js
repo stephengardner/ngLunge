@@ -19,6 +19,7 @@ module.exports = function setup(options, imports, register) {
 					function populate(callback){
 						userPopulator.populate(user).then(function(response){
 							populatedUser = response;
+							populatedUserId = mongoose.Types.ObjectId(response._id);
 							if(!response) {
 								return callback(404);
 							}
@@ -29,7 +30,7 @@ module.exports = function setup(options, imports, register) {
 						chatModel.aggregate([
 							{
 								$match : {
-									'participants.user' : populatedUser._id
+									'participants.user' : populatedUserId
 								}
 							},
 							{
@@ -44,15 +45,15 @@ module.exports = function setup(options, imports, register) {
 									$or : [
 										{
 											'participants.user' : {
-												$ne : populatedUser._id
+												$ne : populatedUserId
 											}
 										},
 										{
 											'participants.user' : {
-												$eq : populatedUser._id
+												$eq : populatedUserId
 											},
 											'started_by' : {
-												$eq : populatedUser._id
+												$eq : populatedUserId
 											}
 										}
 									]
@@ -201,7 +202,7 @@ module.exports = function setup(options, imports, register) {
 											$and : [
 												{
 													$eq : [
-														'$user', mongoose.Types.ObjectId(populatedUser._id)
+														'$user', populatedUserId
 													]
 												},
 												{
@@ -214,7 +215,13 @@ module.exports = function setup(options, imports, register) {
 									}
 								}
 							},
+							{
+								$sort : {
+									'last_message_sent_at' : -1
+								}
+							}
 						], function(err, response){
+							if(err) return callback(err);
 							console.log("response:", response);
 							userModel.populate(response,
 								{'path' : 'last_message_sender', 'select' : '_id name profile_picture'},

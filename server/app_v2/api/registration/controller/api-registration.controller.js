@@ -100,9 +100,13 @@ module.exports = function setup(options, imports, register) {
 		}
 		else {
 			Trainer.findOne({
-				email : req.body.email
+				email : req.body.email,
+				'registration_providers.local' : true
 			}).exec(function(err, found) {
 				if(err) return handleError(res, err);
+				if(found) {
+					console.log("FOUND TRAINER IS:", found._id);
+				}
 				if(found && found.registration.email_verified) { // let it error out properly
 					createTrainer();
 				}

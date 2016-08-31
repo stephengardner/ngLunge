@@ -26,38 +26,64 @@ myApp.factory('Menu', [
 					type : 'link',
 					state : 'account',
 					icon : 'settings'
-				},
-				{
+				}
+			);
+			var certificationSection;
+			if(Auth.getCurrentUser().type == 'trainer') {
+				certificationSection = {
+					name: 'Certifications',
+					type: 'toggle',
+					state: 'main.certifications',
+					pages: [
+						{
+							name: 'All Certifications',
+							type: 'link',
+							state: 'main.certifications.list'
+						},
+						{
+							name: 'My Certifications',
+							type: 'link',
+							state: 'main.trainer.account.certifications'
+						},
+						{
+							name: 'faq',
+							type: 'link',
+							state: 'main.certifications.faq'
+						}
+					],
+					icon: 'pages'
+				};
+			}
+			else {
+				certificationSection = {
 					name : 'Certifications',
 					type : 'toggle',
 					state : 'main.certifications',
 					pages : [
 						{
-							name : 'My Certifications',
+							name : 'All Certifications',
 							type : 'link',
-							state : 'main.trainer.account.certifications.show'
-						},
-						{
-							name : 'Add Certifications',
-							type : 'link',
-							state : 'main.certifications.list'
+							state: 'main.certifications.list'
 						},
 						{
 							name : 'faq',
 							type : 'link',
 							state : 'main.certifications.faq'
 						}
-					],
-					icon : 'pages'
-				},
-				{
-					name : 'Logout',
-					type : 'link',
-					state : 'main.login',
-					icon : 'power_settings_new',
-					action : 'logout()' // from the rootscope
+					]
 				}
-			);
+			}
+			sections.push(certificationSection);
+
+			var logoutLink = {
+				name : 'Logout',
+				type : 'link',
+				state : 'main.login',
+				icon : 'power_settings_new',
+				action : 'logout()' // from the rootscope
+			};
+
+			sections.push(logoutLink);
 		} 
 
 		function setLoggedOutLinks() {

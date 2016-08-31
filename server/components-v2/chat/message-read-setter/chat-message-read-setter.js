@@ -2,8 +2,7 @@ var async = require('async')
 	;
 
 module.exports = function setup(options, imports, register) {
-	var userPopulator = imports.userPopulator,
-		chatModel = imports.chatModel,
+	var chatModel = imports.chatModel,
 		logger = imports.logger.info,
 		loggerType = 'chat-message-read-setter'
 		;

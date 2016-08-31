@@ -1,5 +1,10 @@
-<div class="loading-block-sm" ng-if="!userFactory.user._id"></div>
-<md-card class="section-animate-in" ng-if="userFactory.user._id" id="trainee-map">
+<div ng-if="!userFactory.user.name"
+     class="loading-block-sm">
+</div>
+<md-card class="section-animate-in"
+         ng-if="userFactory.user.name"
+         ag-editable-trainee-container
+         id="trainee-map">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>

@@ -14,82 +14,82 @@
     </md-toolbar>
     <!--<div class="container">-->
 
-        <md-content id="message" layout="column" layout-align="end stretch">
-            <div ng-if="chat.initialLoadError" layout="row" layout-align="center center" class="main-push">
-                <h2>Woops, that chat does not exist anymore!</h2>
+    <md-content id="message"
+                message-container
+                layout="column"
+                layout-align="end stretch">
+        <div ng-if="chat.initialLoadError" layout="row" layout-align="center center" class="main-push">
+            <h2>Woops, that chat does not exist anymore!</h2>
+        </div>
+        <!--<md-dialog-content>-->
+        <div ng-if="!chat.complete && chat.busy"
+             class="loading text-center">
+            <md-progress-circular md-diameter="50"></md-progress-circular>
+            <div class="text" flex="100">
+                Loading...
             </div>
-            <!--<md-dialog-content>-->
-                <div ng-if="!chat.complete"
+        </div>
+        <div id="message-container"
+             layout="row"
+             layout-align="stretch stretch"
+             ag-window-focus="readThisChatNotification()">
+            <div flex
+                 id="message-md-content"
+                 style="height: auto;">
+                <div ng-if="!chat.dates.length"
+                     id="empty-chat"
                      layout="row"
                      layout-align="center center">
-                    <div ng-if="!chat.complete"
-                         layout="column"
-                         layout-align="center center"
-                         class="loading">
-                        <div ng-if="chat.busy" class="text-center spinner-and-text">
-                            <md-progress-circular md-diameter="50"></md-progress-circular>
-                            <div class="text">
-                                Loading...
-                            </div>
-                        </div>
-                        <md-button ng-if="!chat.busy" ng-click="get()">
-                            Load previous messages
-                        </md-button>
-                    </div>
+                    <h3>
+                        Starting a new chat with {{trainerFactory.trainer.name.first}}
+                    </h3>
                 </div>
-                <div id="message-container"
-                     layout="row"
-                     layout-align="stretch stretch"
-                     ag-window-focus="readThisChatNotification()">
-                    <div  flex id="message-md-content" style="height: auto;">
-                        <div ng-repeat="date in chat.dates | orderBy:localComparator">
-                            <md-subheader class="displayDate"
-                                          layout="row"
-                                          md-subheader
-                                          layout-align="center center">
-                                <div flex="nogrow">
-                                    {{date.formatted_display}}
-                                </div>
-                            </md-subheader>
-                            <message-container>
-                                <div ng-repeat="messageObject in
+                <div ng-repeat="date in chat.dates | orderBy:localComparator">
+                    <md-subheader class="displayDate"
+                                  layout="row"
+                                  md-subheader
+                                  layout-align="center center">
+                        <div flex="nogrow">
+                            {{date.formatted_display}}
+                        </div>
+                    </md-subheader>
+                    <div ng-repeat="messageObject in
                                 chat.formatted[date.formatted_display]
                                 track by messageObject._id"
-                                     layout="row"
-                                     chat-message="messageObject"
-                                     ng-class="{'unseen' : messageObject.sendEventWhenSeen,
+                         layout="row"
+                         chat-message="messageObject"
+                         ng-class="{'unseen' : messageObject.sendEventWhenSeen,
                                      'seen' : !messageObject.sendEventWhenSeen}"
-                                     layout-align="start start"
-                                     class="message-row chat-message">
-                                    <div flex="nogrow" class="profile-picture">
-                                        <img ng-src="{{messageObject.sender.profile_picture.thumbnail.url}}"/>
-                                    </div>
-                                    <div flex>
-                                        <div layout="column" layout-align="start stretch">
-                                            <div class="message-row-1">
-                                                <div layout="row" layout-align="space-between center">
-                                                    <a flex="nogrow"
-                                                       class="name"
-                                                       target="_blank"
-                                                       ng-href="{{messageObject.sender_profile_url}}">
-                                                        {{messageObject.sender.name.full}}
-                                                    </a>
-                                                    <div flex="nogrow" class="time">
-                                                        {{messageObject.sent_at_time_formatted}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="message-content">{{messageObject.message}}</div>
+                         layout-align="start start"
+                         class="message-row chat-message">
+                        <div flex="nogrow" class="profile-picture">
+                            <img ng-src="{{messageObject.sender.profile_picture.thumbnail.url}}"/>
+                        </div>
+                        <div flex>
+                            <div layout="column" layout-align="start stretch">
+                                <div class="message-row-1">
+                                    <div layout="row" layout-align="space-between center">
+                                        <a flex="nogrow"
+                                           class="name"
+                                           target="_blank"
+                                           ng-href="{{messageObject.sender_profile_url}}">
+                                            {{messageObject.sender.name.full}}
+                                        </a>
+                                        <div flex="nogrow" class="time">
+                                            {{messageObject.sent_at_time_formatted}}
                                         </div>
                                     </div>
                                 </div>
-                            </message-container>
+                                <div class="message-content">{{messageObject.message}}</div>
+                            </div>
                         </div>
                     </div>
-                    <!--</div>-->
                 </div>
-            <!--</md-dialog-content>-->
-        </md-content>
+            </div>
+            <!--</div>-->
+        </div>
+        <!--</md-dialog-content>-->
+    </md-content>
     <!--</div>-->
     <div flex="nogrow"
          id="textbox-container"
@@ -102,20 +102,26 @@
         </div>
         <form ng-submit="sendMessage()">
             <ag-floating-label>
-                <label>Write a reply...</label>
+                <label>Write a message...</label>
                 <textarea id="textArea"
+                          ag-on-enter="onEnter(e)"
                           ng-blur="textAreaSetFocus(false)"
                           ng-focus="textAreaSetFocus(true)"
-                          ng-disabled="sendMessageBusy"
-                          ng-attr-rows="{{getRows()}}"
-                          ng-model="message.text"
-                          ag-no-autogrow></textarea>
-                <md-button type="submit"
-                           class="md-raised">
-                    Send
-                </md-button>
+                          ng-class="{'has-padding' : showButton()}"
+                          rows="3"
+                          ng-model="message.text"></textarea>
             </ag-floating-label>
+            <md-button type="submit"
+                       ng-if="showButton()"
+                       ng-disabled="sendMessageBusy"
+                       class="md-raised md-icon-button md-primary">
+                <i class="material-icons">send</i>
+            </md-button>
         </form>
+        <div class="press-enter-to-send" layout="row" layout-align="end center">
+            <md-checkbox ng-model="pressEnterToSend.bool" ng-click="updatePressEnterToSend()"></md-checkbox> Press
+            enter to send
+        </div>
     </div>
     <!--</div>-->
     <!--</md-dialog-content>-->

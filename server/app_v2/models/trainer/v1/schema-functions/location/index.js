@@ -125,7 +125,8 @@ module.exports = function(TrainerSchema) {
 	TrainerSchema.path('locations')
 		.validate(function(locations) {
 			if(validatePresenceOf(locations)) {
-				for ( var i=0; i < locations.length; i++ ) {
+				var i;
+				for (i=0; i < locations.length; i++ ) {
 					var checkLocation = locations[i];
 					if(checkLocation) {
 						for(var k = 0; k < locations.length; k++) {
@@ -147,7 +148,7 @@ module.exports = function(TrainerSchema) {
 						}
 					}
 				}
-				for(var i = 0; i < locations.length; i++) {
+				for(i = 0; i < locations.length; i++) {
 					var location = locations[i];
 					if(location) {
 						if(!location.type == 'manual' && !location.address_line_1) {
@@ -158,7 +159,9 @@ module.exports = function(TrainerSchema) {
 							// if this err pops up, don't include the city/state ones.
 							// because in reality, they might have included a city/state but the smartystreets
 							// processor didn't end up showing it.
-							return this.invalidate("location", "Please include a more exact address");
+							// As of 8.29.2016 I'm remvoing this.
+							// I'm letting them click, for example, "Washington DC" as an address
+							// return this.invalidate("location", "Please include a more exact address");
 						}
 						if(!location.city) {
 							this.invalidate("city", "Please include a city");
@@ -214,10 +217,11 @@ module.exports = function(TrainerSchema) {
 					var location = locations[i];
 					if(location) {
 						var value = location.state;
-						if (value && (value != "MD" && value != "DC" && value != "VA")) {
-							console.log("INVALID USER STATE (not dc,md,va)");
-							return this.invalidate('state', 'Lunge is not active in that state');
-						}
+						// removing state validation
+						// if (value && (value != "MD" && value != "DC" && value != "VA")) {
+						// 	console.log("INVALID USER STATE (not dc,md,va)");
+						// 	return this.invalidate('state', 'Lunge is not active in that state');
+						// }
 					}
 					else {
 						console.log("\nWARNING - is this a null location? ::: ", location, " and all locations are:", locations);

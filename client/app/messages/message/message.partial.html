@@ -6,22 +6,18 @@
         <h2>Woops, that chat does not exist anymore!</h2>
     </div>
     <!--<div ng-if="!chat.complete"-->
-         <!--layout="row"-->
-         <!--layout-align="center center">-->
+    <!--layout="row"-->
+    <!--layout-align="center center">-->
     <!--</div>-->
     <div id="message-container"
          layout="column"
          layout-align="end stretch"
          ag-window-focus="readThisChatNotification()">
-        <div ng-if="!chat.complete"
-             layout="column"
-             layout-align="center center"
-             class="loading">
-            <div ng-if="chat.busy" class="text-center spinner-and-text">
-                <md-progress-circular md-diameter="50"></md-progress-circular>
-                <div class="text">
-                    Loading...
-                </div>
+        <div ng-if="!chat.complete && chat.busy"
+             class="loading text-center">
+            <md-progress-circular md-diameter="50"></md-progress-circular>
+            <div class="text" flex="100">
+                Loading...
             </div>
         </div>
         <span flex></span>
@@ -36,9 +32,9 @@
             </div>
             <div ng-repeat="date in chat.dates | orderBy:localComparator">
                 <md-subheader class="displayDate"
-                     layout="row"
-                     md-subheader
-                     layout-align="center center">
+                              layout="row"
+                              md-subheader
+                              layout-align="center center">
                     <div flex="nogrow">
                         {{date.formatted_display}}
                     </div>
@@ -79,21 +75,27 @@
                 </md-button>
             </div>
             <form ng-submit="sendMessage()">
-                <ag-floating-label>
-                    <label>Write a reply...</label>
+                <ag-floating-label >
+                    <label>Write a message...</label>
                 <textarea id="textArea"
+                          ag-on-enter="onEnter(e)"
                           ng-blur="textAreaSetFocus(false)"
                           ng-focus="textAreaSetFocus(true)"
-                          ng-disabled="sendMessageBusy"
-                          ng-attr-rows="{{getRows()}}"
-                          ng-model="message.text"
-                          ag-no-autogrow></textarea>
-                    <md-button type="submit"
-                               class="md-raised">
-                        Send
-                    </md-button>
+                          rows="3"
+                          ng-class="{'has-padding' : showButton()}"
+                          ng-model="message.text"></textarea>
                 </ag-floating-label>
+                <md-button type="submit"
+                           ng-if="showButton()"
+                           ng-disabled="sendMessageBusy"
+                           class="md-raised md-icon-button md-primary">
+                    <i class="material-icons">send</i>
+                </md-button>
             </form>
+            <div class="press-enter-to-send" layout="row" layout-align="end center">
+                <md-checkbox ng-model="pressEnterToSend.bool" ng-click="updatePressEnterToSend()"></md-checkbox> Press
+                enter to send
+            </div>
         </div>
         <!--</div>-->
     </div>

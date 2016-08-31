@@ -54,6 +54,11 @@
                            server-error
                            ng-model="workplace.website"
                            name="website"/>
+                    <ag-hints>
+                        <ag-hint>
+                            A valid url must include http:// or https://
+                        </ag-hint>
+                    </ag-hints>
                     <div ng-messages="workForm.website.$error">
                         <div ng-message="mongoose">
                             {{workForm.errors.website}}

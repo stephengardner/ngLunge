@@ -34,7 +34,7 @@ lungeApp.controller("TraineeWorkController", function($scope,
 			targetEvent : ev,
 			templateUrl : 'app/trainee/sections/work/add-work-dialog/trainee-add-work-dialog.partial.html',
 			clickOutsideToClose : true,
-			controller : function($scope){
+			controller : ['$scope', function($scope){
 				$scope.userFactory = userFactory;
 				$scope.cancel = $mdDialog.hide;
 				$scope.workplace = {};
@@ -47,7 +47,7 @@ lungeApp.controller("TraineeWorkController", function($scope,
 						AlertMessage.error('Woops, something went wrong');
 					});
 				}
-			}
+			}]
 		})
 	}
 	$scope.editWorkDialog = function(workplace, ev) {
@@ -57,7 +57,7 @@ lungeApp.controller("TraineeWorkController", function($scope,
 			targetEvent : ev,
 			templateUrl : 'app/trainee/sections/work/edit-work-dialog/trainee-edit-work-dialog.partial.html',
 			clickOutsideToClose : true,
-			controller : function($scope){
+			controller : ['$scope', function($scope){
 				$scope.userFactory = userFactory;
 				$scope.cancel = $mdDialog.hide;
 				$scope.workplace = workplace;
@@ -70,7 +70,7 @@ lungeApp.controller("TraineeWorkController", function($scope,
 						AlertMessage.error('Woops, something went wrong');
 					});
 				}
-			}
+			}]
 		})
 	}
 });

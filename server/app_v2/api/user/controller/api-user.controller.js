@@ -12,7 +12,8 @@ var validationError = function(res, err) {
 };
 
 module.exports = function setup(options, imports, register) {
-	var User = imports.userModel,
+	var userModel;
+	var User = userModel = imports.userModel,
 		chatNotificationReader = imports.chatNotificationReader,
 		chatModel = imports.chatModel,
 		chatPreviewGetter = imports.chatPreviewGetter,
@@ -20,7 +21,8 @@ module.exports = function setup(options, imports, register) {
 		logger = imports.logger.info,
 		chatMessageReadSetter = imports.chatMessageReadSetter,
 		traineeModel = imports.traineeModel,
-		chatGetter = imports.chatGetter
+		chatGetter = imports.chatGetter,
+		trainerPopulatorCertificationsAggregated = imports.trainerPopulatorCertificationsAggregated
 		;
 	var exports = {};
 	function handleError(res, err) {
@@ -137,12 +139,12 @@ module.exports = function setup(options, imports, register) {
 			req.body.name.last = nameFullParts[1];
 		}
 		delete trainee.password;
-		traineeModel.findById(trainee._id, function(err, found) {
+		userModel.findById(trainee._id, function(err, found) {
 			if(err) return handleError(res, err);
 			for (var attrname in req.body) {
 				console.log("updating " + attrname + " to: ", req.body[attrname]);
 				found[attrname] = req.body[attrname];
-				if(_.isEmpty(req.body[attrname])) {
+				if(_.isObject(req.body[attrname]) && _.isEmpty(req.body[attrname])) {
 					console.log(attrname + " is being DELETED");
 					found[attrname] = undefined; // this WORKED for deleting a location
 					found.markModified[attrname];
@@ -271,7 +273,16 @@ module.exports = function setup(options, imports, register) {
 		}, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
 			if (err) return next(err);
 			if (!user) return res.json(401);
-			res.json(user);
+			if(user.kind == 'trainer') {
+				trainerPopulatorCertificationsAggregated.get(user).then(function(response){
+					res.json(response);
+				}).catch(function(err) {
+					handleError(res, err);
+				});
+			}
+			else {
+				res.json(user);
+			}
 		});
 	};
 

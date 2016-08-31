@@ -159,7 +159,9 @@ module.exports = function setup(options, imports, register) {
 	function onAuthenticateAsync(socket, data) {
 		console.log("---\n---\nnew socket attempting to authenticate\n---\n---\n---");
 		socket.on('logout', function(){
-			console.log("------------------------ I've received a logout message --------------------------");
+			var err = new Error();
+			console.log(err.trace);
+			console.log("------------------------ WARNING: I've received a logout message --------------------------");
 			socket.disconnect();
 		});
 		if(data.token) {

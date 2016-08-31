@@ -5,6 +5,7 @@ myApp.controller('SpecialtiesDialogController', function($scope,
                                                          $http,
                                                          $q,
                                                          $mdToast,
+                                                         Auth,
                                                          $timeout
 ) {
 
@@ -12,14 +13,27 @@ myApp.controller('SpecialtiesDialogController', function($scope,
 		$mdDialog.cancel();
 	};
 
+	$scope.userHasSpecialty = function(specialty) {
+		console.log(TrainerFactory.trainerEditing.specialties);
+		for(var i = 0; i < TrainerFactory.trainerEditing.specialties.length; i++) {
+			var specialtyAtIndex = TrainerFactory.trainerEditing.specialties[i];
+			console.log("Checking ", specialtyAtIndex, " vs " + specialty);
+			if(specialtyAtIndex._id == specialty._id) return true;
+		}
+		return false;
+	};
+
 	$scope.toastSuccess = function($event) {
 		var element = angular.element('#specialtiesForm');
 		$scope.toast = $mdToast.show({
-			parent : angular.element('body'),
+			parent : angular.element('.md-dialog-container'),
 			template : '<md-toast>\
 			<span flex>Specialty added!</span>\
 			</md-toast>'
 		});
+		// $timeout(function(){
+		// 	alert();
+		// }, 500);
 		// AlertMessage.success('Specialty added!');
 	};
 	// $scope.toast.updateTextContent('OK');
@@ -56,7 +70,12 @@ myApp.controller('SpecialtiesDialogController', function($scope,
 			return [];
 		}
 		var deferred = $q.defer();
-		$http.get('/api/specialties/query/' + query).success(function(res){
+		$http({
+			url : '/api/specialties/query/' + query,
+			params : {
+				userId: Auth.getCurrentUser()._id
+			}
+		}).success(function(res){
 			console.log("The result is:", res);
 			res = res.length ? res : [];
 			deferred.resolve(res);

@@ -13,6 +13,7 @@
                          placeholder="Type your location"
                          md-input-name="autocomplete"
                          md-floating-label="Enter your location"
+                         required
                          ng-model="location">
             <md-item-template>
             <span md-highlight-text="searchText" md-highlight-flags="^i">
@@ -22,6 +23,7 @@
             <div ng-messages="form.autocomplete.$error">
                 <div ng-message="local">Hey there locally</div>
                 <div ng-message="mongoose">{{form.errors.autocomplete}}</div>
+                <div ng-message="required">Select a location</div>
             </div>
             <md-not-found>
                 No matches found for "{{searchText}}"

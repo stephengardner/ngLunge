@@ -23,7 +23,7 @@ $gray:                   lighten(#000, 33.5%) !default; // #555
 $gray-light:             lighten(#000, 60%) !default;   // #999
 $gray-lighter:           lighten(#000, 93.5%) !default; // #eee
 
-$brand-primary:         #428bca !default;
+$brand-primary:         rgb(61,6,158);//#428bca !default;
 $brand-success:         #37BE6C;//#41E180;//#3CFF88;//#4FFD99;//#2ecc71;//#5cb85c !default;
 $brand-info:            rgb(77, 208, 225);//#5bc0de !default;
 $brand-warning:         #f0ad4e !default;

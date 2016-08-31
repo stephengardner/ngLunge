@@ -51,6 +51,18 @@ lungeApp.factory("FormControl", function(broadcastService, lodash){
 			console.log(" [FormControl] this.errors is now:", this.errors);
 			return false;
 		},
+		parseSingleClientSideError: function(form, field, msg) {
+			var err = {
+				errors : {
+				}
+			};
+			err.errors[field] = {
+				message : msg
+			};
+
+			console.log("parseSingleClientSideError err:", err);
+			return this.parseValidationErrors(form, err);
+		},
 		parseValidationErrors : function(form, err){
 			var self = this;
 			this.resetErrors();

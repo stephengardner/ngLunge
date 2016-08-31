@@ -55,7 +55,7 @@ module.exports = function setup(options, imports, register) {
 	}
 
 	//if(process.env.NODE_ENV == "development")
-	//	web.use(force200Responses);
+	web.use(force200Responses);
 	web.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 	web.use(bodyParser.json({limit: '50mb'}));
 	web.set('views', config.root + '/server/views');

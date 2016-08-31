@@ -57,7 +57,7 @@
 			@extend .md-whiteframe-z2;
 			md-button, a, button {
 				&.active {
-					background: lighten($brand-primary, 40%)!important;
+					background: #eee!important;
 					color: #333!important;
 				}
 			}

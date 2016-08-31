@@ -8,6 +8,12 @@ myApp.directive('trainerCertificationStatus', ['$mdDialog', function($mdDialog){
 		},
 		templateUrl : 'components/trainer-certification-status/trainer-certification-status.partial.html',
 		link : function($scope, $elem, $attrs) {
+			// On the trainer account page, this is being re-linked.
+			// I suppose this is happening because the resource is updating and creating entirely new directives,
+			// but i could be wrong.
+			// Essentially, what this means is the $scope.$watch isn't effective for that route.
+			// But may be effective for others.  In fact I believe it is, for the general list page.
+			
 			/// get the status of a certification if the trainer has it in its certification_v2 array
 			$scope.openDialog = function(status, ev) {
 				$mdDialog.show({
@@ -21,7 +27,7 @@ myApp.directive('trainerCertificationStatus', ['$mdDialog', function($mdDialog){
 					}],
 					controllerAs : 'vm'
 				});
-			}
+			};
 			$scope.getStatus = function() {
 				var trainer = $scope.trainer,
 					certification = $scope.certification

@@ -1,4 +1,5 @@
-<md-dialog flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
+<md-dialog id="specialties-dialog"
+           flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
     <form name="specialtiesForm" id="specialtiesForm"
           ng-submit="submit(specialtiesForm)"
           cg-busy="{promise : cgBusy}">
@@ -23,7 +24,9 @@
                         placeholder="What is your specialty?"
                         md-selected-item-change="submit()">
                     <md-item-template>
-                        <span md-highlight-text="searchText" md-highlight-flags="^i">{{specialtyModel.name}}</span>
+                        <div ng-class="{'disabled' : userHasSpecialty(specialtyModel)}">
+                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{specialtyModel.name}}</span>
+                        </div>
                     </md-item-template>
                     <md-not-found>
                         No specialties matching "{{searchText}}" were found.

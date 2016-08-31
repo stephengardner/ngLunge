@@ -22,7 +22,7 @@
         </div>
     </header>
     <div id="view-my-certifications-wrapper">
-        <md-button ng-if="trainerFactory.trainer"
+        <md-button ng-if="isLoggedInTrainer()"
                    class="ag-padded"
                    ui-sref="main.trainer.account.certifications">
             <md-icon>
@@ -38,10 +38,10 @@
         </md-button>
     </div>
     <md-card ng-repeat="certificationOrganization in trainerCertifications.certificationOrganizations">
-            <md-list>
-                <ag-collapse-container class="certification-organization">
-                    <ag-collapse-header>
-                        <md-list-item md-ink-ripple>
+        <md-list>
+            <ag-collapse-container class="certification-organization">
+                <ag-collapse-header>
+                    <md-list-item md-ink-ripple>
                             <span layout="row" layout-align="start center"
                                   class="name">
                                 <span class="count-unbubble total-certifications">
@@ -56,106 +56,133 @@
                                 </span>
                                 {{certificationOrganization.name}}
                             </span>
-                            <div class="md-secondary" layout="row">
-                                <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
-                                                                            certification-organization="certificationOrganization">
-                                </trainer-certification-status-count-bubbles>
-                            </div>
-                        </md-list-item>
-                    </ag-collapse-header>
-                    <ag-collapse-body>
-                        <div ng-if="!certificationOrganization.certifications.length">
-                            <md-list-item>
-                                <h4>Sorry, no certifications available</h4>
-                            </md-list-item>
+                        <div class="md-secondary" layout="row">
+                            <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
+                                                                        certification-organization="certificationOrganization">
+                            </trainer-certification-status-count-bubbles>
                         </div>
-                        <md-list>
-                            <md-list-item
-                                    ng-repeat="certification in certificationOrganization.certifications">
-                                <div flex class="md-list-item-animation-container">
-                                    <div flex class="list-item-default" ng-if="!certification.removing"
-                                         layout="row" layout-align="space-between center">
-                                        <trainer-certification-status certification="certification"
-                                                                      trainer="trainerFactory.trainer">
-                                        </trainer-certification-status>
-                                        <p class="md-list-item-text">
-                                            {{certification.name}}
-                                        </p>
-                                        <div class="md-secondary" flex>
-                                            <div ng-if="!trainerFactory.trainer">
-                                                <md-button class="md-icon-button"
-                                                           ng-click="certificationTypeInfoModal(certification, $event)">
-                                                    <i md-menu-align-target class="material-icons">
-                                                        info_outline
-                                                    </i>
-                                                </md-button>
-                                            </div>
-                                            <md-menu md-position-mode="target-right target"
-                                                     ng-if="trainerFactory.trainer">
-                                                <md-button class="md-icon-button"
-                                                           ng-click="openMenu($mdOpenMenu, $event)">
-                                                    <i md-menu-origin
-                                                       class="material-icons">
-                                                        more_vert
-                                                    </i>
-                                                </md-button>
-                                                <md-menu-content width="3">
-                                                    <md-menu-item
-                                                            ng-if="!trainerHasCertification(certification)">
-                                                        <md-button ng-click="addOrRemoveCertification('add', certification)">
-                                                            <div layout="row" flex>
-                                                                <p flex>
-                                                                    Add certification
-                                                                </p>
-                                                                <md-button class="md-icon-button">
-                                                                    <i md-menu-align-target class="material-icons">
-                                                                        add
-                                                                    </i>
-                                                                </md-button>
-                                                            </div>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item ng-if="trainerHasCertification(certification)">
-                                                        <md-button ng-click="addOrRemoveCertification('remove', certification)">
-                                                            <div layout="row" flex>
-                                                                <p flex>
-                                                                    Remove certification
-                                                                </p>
-                                                                <md-button class="md-icon-button">
-                                                                    <i md-menu-align-target class="material-icons">
-                                                                        delete
-                                                                    </i>
-                                                                </md-button>
-                                                            </div>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="certificationTypeInfoModal(certification, $event)">
-                                                            <div layout="row" flex>
-                                                                <p flex>
-                                                                    Details
-                                                                </p>
-                                                                <md-button class="md-icon-button">
-                                                                    <i md-menu-align-target class="material-icons">
-                                                                        info_outline
-                                                                    </i>
-                                                                </md-button>
-                                                            </div>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </div>
+                    </md-list-item>
+                </ag-collapse-header>
+                <ag-collapse-body>
+                    <div ng-if="!certificationOrganization.certifications.length">
+                        <md-list-item>
+                            <h4>Sorry, no certifications available</h4>
+                        </md-list-item>
+                    </div>
+                    <md-list>
+                        <md-list-item
+                                ng-repeat="certification in certificationOrganization.certifications">
+                            <div flex class="md-list-item-animation-container">
+                                <div flex class="list-item-default" ng-if="!certification.removing"
+                                     layout="row" layout-align="space-between center">
+                                    <trainer-certification-status certification="certification"
+                                                                  trainer="trainerFactory.trainer">
+                                    </trainer-certification-status>
+                                    <p class="md-list-item-text">
+                                        {{certification.name}}
+                                    </p>
+                                    <div class="md-secondary" flex>
+                                        <!--<trainer-certification-status trainer="trainerFactory.trainer"-->
+                                        <!--certification="certification.certification_type">-->
+                                        <!--</trainer-certification-status>-->
+                                        <md-button ng-click="
+                                                    certificationTypeInfoModal(certification, $event)
+                                                    "
+                                                   class="md-icon-button"
+                                                   ng-if="!isLoggedInTrainer()">
+                                            <i class="material-icons">
+                                                info_outline
+                                            </i>
+                                        </md-button>
+                                        <md-menu md-position-mode="target-right target"
+                                                 ng-if="isLoggedInTrainer()">
+                                            <md-button class="md-icon-button"
+                                                       ng-click="openMenu($mdOpenMenu, $event)">
+                                                <i md-menu-origin
+                                                   class="material-icons">
+                                                    more_vert
+                                                </i>
+                                            </md-button>
+                                            <md-menu-content width="3">
+                                                <md-menu-item
+                                                        ng-if="!trainerHasCertification(certification)">
+                                                    <md-button ng-click="
+                                                        addOrRemoveCertification('add', certification)
+                                                        ">
+                                                        <div layout="row" flex>
+                                                            <p flex>
+                                                                Add certification
+                                                            </p>
+                                                            <md-button class="md-icon-button">
+                                                                <i md-menu-align-target class="material-icons">
+                                                                    add
+                                                                </i>
+                                                            </md-button>
+                                                        </div>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item ng-if="trainerHasCertification(certification)">
+                                                    <md-button
+                                                            ng-click="
+                                                            verifyCertificationPopupFromPublicList(certification)
+                                                            ">
+                                                        <div layout="row" flex>
+                                                            <p flex>
+                                                                Verify this certification
+                                                            </p>
+                                                            <md-button class="md-icon-button">
+                                                                <i md-menu-align-target class="material-icons">
+                                                                    file_upload
+                                                                </i>
+                                                            </md-button>
+                                                        </div>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item ng-if="trainerHasCertification(certification)">
+                                                    <md-button ng-click="
+                                                    addOrRemoveCertification('remove', certification)
+                                                    ">
+                                                        <div layout="row" flex>
+                                                            <p flex>
+                                                                Remove certification
+                                                            </p>
+                                                            <md-button class="md-icon-button">
+                                                                <i md-menu-align-target class="material-icons">
+                                                                    delete
+                                                                </i>
+                                                            </md-button>
+                                                        </div>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button ng-click="
+                                                    certificationTypeInfoModal(certification, $event)
+                                                    ">
+                                                        <div layout="row" flex>
+                                                            <p flex>
+                                                                Details
+                                                            </p>
+                                                            <md-button class="md-icon-button">
+                                                                <i md-menu-align-target class="material-icons">
+                                                                    info_outline
+                                                                </i>
+                                                            </md-button>
+                                                        </div>
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
                                     </div>
                                 </div>
-                            </md-list-item>
-                        </md-list>
-                    </ag-collapse-body>
-                </ag-collapse-container>
-            </md-list>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </ag-collapse-body>
+            </ag-collapse-container>
+        </md-list>
     </md-card>
     <md-progress-circular ng-if="ajax.loading"
-                          md-diameter="120"
+                          md-diameter="60"
                           md-mode='indeterminate'>
     </md-progress-circular>
     <div class="load-more" ng-if="!ajax.complete">

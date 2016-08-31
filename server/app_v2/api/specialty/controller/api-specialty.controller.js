@@ -16,7 +16,9 @@ var validationError = function(res, err) {
 };
 
 module.exports = function setup(options, imports, register) {
-	var Specialty = imports.specialtyModel;
+	var Specialty = imports.specialtyModel,
+		userModel = imports.userModel
+		;
 	var exports = {};
 
 	// Get list of things
@@ -37,12 +39,28 @@ module.exports = function setup(options, imports, register) {
 	};
 
 	exports.query = function(req, res) {
-		Specialty.find({ name : new RegExp(req.params.query, "i")}).limit(8).exec(function (err, specialties) {
-			if(err) { return handleError(res, err); }
-			console.log("Query reslt:", specialties);
-			if(!specialties[0]) { return res.sendStatus(404); }
-			return res.status(200).json(specialties);
-		});
+		var query = {
+			name : new RegExp(req.params.query, "i")
+		};
+		if (req.query.userId) {
+			userModel.findById(req.query.userId, function(err, found) {
+				if(err) return handleError(res, err);
+				if(!found) return res.send(404);
+				query['_id'] = {"$nin": found.specialties};
+				performSearch();
+			});
+		}
+		else {
+			performSearch();
+		}
+		function performSearch() {
+			Specialty.find(query).limit(10).exec(function (err, specialties) {
+				if(err) { return handleError(res, err); }
+				console.log("Query reslt:", specialties);
+				if(!specialties[0]) { return res.sendStatus(404); }
+				return res.status(200).json(specialties);
+			});
+		}
 	}
 
 	register(null, {

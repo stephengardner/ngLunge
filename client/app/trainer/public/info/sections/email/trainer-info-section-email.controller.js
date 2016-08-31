@@ -14,7 +14,7 @@ myApp.controller("TrainerInfoSectionEmailController", function(FormControl, Aler
 		$scope.ajax.busy = true;
 		$scope.cgBusy = TrainerFactory.save('email').then(function(response){
 			$scope.ajax.busy = false;
-			AlertMessage.success("Your email has been changed to " + $scope.trainerFactory.trainer.email);
+			AlertMessage.success("Email changed to: " + $scope.trainerFactory.trainer.email);
 		}).catch(function(err){
 			$scope.ajax.busy = false;
 			FormControl.parseValidationErrors(form, err);

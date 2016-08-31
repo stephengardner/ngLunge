@@ -1,4 +1,13 @@
 #material-messages-menu {
+	#menu-items {
+		position: relative;
+		md-progress-linear {
+			position: absolute;
+			z-index: 2;
+			top: -5px;
+			width: 100%;
+		}
+	}
 	.chat-row {
 		padding: $list-item-padding-vertical $list-item-padding-horizontal;
 		min-height: $list-item-height;
@@ -25,9 +34,15 @@
 		.last-message {
 			color: #999;
 			font-size: 15px;
+			white-space: nowrap;
+			span {
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
 			.material-icons {
 				color: #bbb;
 				margin-right: 4px;
+				margin-bottom: 3px;
 				font-size: 15px;
 			}
 		}

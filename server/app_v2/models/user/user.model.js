@@ -6,7 +6,7 @@ var crypto = require('crypto');
 var authTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'],
 	autoIncrement = require('mongoose-auto-increment'),
 	validator = require('validator')
-;
+	;
 
 var options = {
 	discriminatorKey : 'kind',
@@ -70,23 +70,23 @@ var UserSchema = new Schema({
 			},
 			smarty_streets_response : {}
 		},
-	reviews : {
-		given : [
-			{
-				to : {
-					type : Schema.Types.ObjectId, ref : 'User'
-				}
-			}
-		],
-		received : [
-			{
-				from :
+		reviews : {
+			given : [
 				{
-					type : Schema.Types.ObjectId, ref : 'User'
+					to : {
+						type : Schema.Types.ObjectId, ref : 'User'
+					}
 				}
-			}
-		]
-	},
+			],
+			received : [
+				{
+					from :
+					{
+						type : Schema.Types.ObjectId, ref : 'User'
+					}
+				}
+			]
+		},
 		urlName : String,
 		hashedPassword: String,
 		provider: String,
@@ -108,6 +108,7 @@ var UserSchema = new Schema({
 				}
 			}
 		},
+		chat_press_enter_to_send : { type : Boolean, default : false },
 		chat : [
 			{
 				type : Schema.Types.ObjectId, ref : 'Chat'

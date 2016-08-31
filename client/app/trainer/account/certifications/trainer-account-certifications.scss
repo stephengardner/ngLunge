@@ -52,6 +52,10 @@
 }
 
 #trainer-certifications, #trainer-certifications-list {
+	#empty {
+		padding: 20px;
+		text-align: center;
+	}
 	header {
 		margin-bottom: 0!important;
 	}
@@ -80,6 +84,7 @@
 		padding: 0 1em;
 		border-left: 4px solid pink;
 		margin-top: 3em;
+		font-size: 16px;
 	}
 	#md-fab-container {
 		text-align: right;

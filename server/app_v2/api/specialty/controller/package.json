@@ -4,7 +4,10 @@
   "main": "api-specialty.controller.js",
   "private": true,
   "plugin": {
-    "consumes": ["specialtyModel"],
+    "consumes": [
+      "specialtyModel",
+      "userModel"
+    ],
     "provides": ["apiSpecialtyController"]
   }
 }

@@ -42,7 +42,7 @@ lungeApp.controller("TrainerWorkController", function($scope,
 			targetEvent : ev,
 			templateUrl : 'components/trainer-work/add-work-dialog/trainer-add-work-dialog.partial.html',
 			clickOutsideToClose : true,
-			controller : function($scope){
+			controller : ['$scope', function($scope){
 				$scope.cancel = $mdDialog.hide;
 				$scope.workplace = {};
 				$scope.submit = function(form) {
@@ -54,7 +54,7 @@ lungeApp.controller("TrainerWorkController", function($scope,
 						AlertMessage.error('Woops, something went wrong');
 					});
 				}
-			}
+			}]
 		})
 	};
 	$scope.editWorkDialog = function(workplace, ev) {		
@@ -62,10 +62,18 @@ lungeApp.controller("TrainerWorkController", function($scope,
 			targetEvent : ev,
 			templateUrl : 'components/trainer-work/edit-work-dialog/trainer-edit-work-dialog.partial.html',
 			clickOutsideToClose : true,
-			controller : function($scope){
+			controller : ['$scope', function($scope){
 				$scope.modelFactory = modelFactory;
 				$scope.cancel = $mdDialog.hide;
-				$scope.workplace = workplace;
+				for(var i = 0; i < TrainerFactory.trainerEditing.work.places.length; i++) {
+					var place = TrainerFactory.trainerEditing.work.places[i];
+					if(place._id == workplace._id){
+						foundPlace = true;
+						$scope.workplace = place;
+						console.log("scope workplace is:", $scope.workplace);
+						break;
+					}
+				}
 				$scope.submit = function(form) {
 					$scope.cgBusy = modelFactory.editWorkplace($scope.workplace).then(function(){
 						AlertMessage.success('Workplace edited');
@@ -75,7 +83,7 @@ lungeApp.controller("TrainerWorkController", function($scope,
 						AlertMessage.error('Woops, something went wrong');
 					});
 				}
-			}
+			}]
 		})
 	}
 });

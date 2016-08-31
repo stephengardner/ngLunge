@@ -6,12 +6,9 @@
   "plugin": {
     "consumes": [
       "userModel",
-      "trainerModel",
-      "userPopulator",
-      "trainerPopulator",
       "chatModel",
       "logger",
-      "socket"
+      "userPopulator"
     ],
     "provides": ["chatNotificationCounter"]
   }

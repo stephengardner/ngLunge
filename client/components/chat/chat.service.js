@@ -72,7 +72,12 @@ myApp.factory('SingleChat', function(Auth, User, $q, $http){
 			console.log("receiveWebnsocketMessage:", message);
 			var self = this;
 			if(!this.formatted['Today']) {
-				this.formatted['Today'] = [];
+				var newDate = {
+					formatted_display: 'Today',
+					formatted_sorting: new Date()
+				};
+				this.dates.push(newDate);
+				this.formatted[newDate.formatted_display] = [];
 			}
 			if(message.sender._id != Auth.getCurrentUser()._id) {
 				message.isNew = true;
@@ -80,6 +85,7 @@ myApp.factory('SingleChat', function(Auth, User, $q, $http){
 			}
 			this.websocketMessages.push(message);
 			this.formatted['Today'].push(message);
+			console.log("This.formatted is:", this.formatted);
 		},
 		newMessageCount : function() {
 			var count = 0;
@@ -125,7 +131,6 @@ myApp.factory('SingleChat', function(Auth, User, $q, $http){
 					type: 'GET',
 					url: 'api/chats/' + id + '/forUser/' + Auth.getCurrentUser()._id,
 					params: {
-						test: 'something',
 						nextMaxDate: self.nextMaxDate
 					}
 				}).success(function (data, status, headers) {
@@ -134,6 +139,7 @@ myApp.factory('SingleChat', function(Auth, User, $q, $http){
 					self.APIResponse = data;
 					var formatted = self.formatted;
 					if (data && data.length) {
+						var messagesReceived = 0;
 						for (var i = 0; i < data.length; i++) {
 							var chat = data[i];
 							if (!formatted[chat.date_formatted]) {
@@ -145,6 +151,7 @@ myApp.factory('SingleChat', function(Auth, User, $q, $http){
 								self.dates.push(newDate);
 							}
 							for (var k = 0; k < chat.messages.length; k++) {
+								messagesReceived++;
 								// console.log("We read messages as:", chat.messages[k]);
 								formatted[chat.date_formatted].unshift(chat.messages[k]);
 							}
@@ -152,6 +159,9 @@ myApp.factory('SingleChat', function(Auth, User, $q, $http){
 					}
 					else {
 						console.log("--- Chat complete ---");
+						self.complete = true;
+					}
+					if(messagesReceived < 10) {
 						self.complete = true;
 					}
 					self.busy = false;

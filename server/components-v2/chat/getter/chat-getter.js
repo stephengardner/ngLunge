@@ -95,49 +95,79 @@ module.exports = function setup(options, imports, register) {
 						})
 					},
 					function findConvo(callback) {
-						chatModel.findOne({
-							$and : [
-								{
-									'participants' : { $size : 2 }
-								},
-								{
-									'participants' : {
-										$elemMatch : {
-											'user' : mongoose.Types.ObjectId(user1)
+						if(user1 == user2) { // sending message to self
+							chatModel.findOne({
+								$and : [
+									{
+										'participants' : { $size : 1 }
+									},
+									{
+										'participants' : {
+											$elemMatch : {
+												'user' : mongoose.Types.ObjectId(user1)
+											}
 										}
 									}
-								},
-								{
-									'participants' : {
-										$elemMatch : {
-											'user' : mongoose.Types.ObjectId(user2)
+								]
+							}, function(err, response) {
+								if(err) return callback(err);
+								foundChat = response;
+								callback();
+							})
+						}
+						else { // sending message to someone else
+							chatModel.findOne({
+								$and : [
+									{
+										'participants' : { $size : 2 }
+									},
+									{
+										'participants' : {
+											$elemMatch : {
+												'user' : mongoose.Types.ObjectId(user1)
+											}
+										}
+									},
+									{
+										'participants' : {
+											$elemMatch : {
+												'user' : mongoose.Types.ObjectId(user2)
+											}
 										}
 									}
-								}
-							]
-						}, function(err, response) {
-							if(err) return callback(err);
-							foundChat = response;
-							callback();
-						})
+								]
+							}, function(err, response) {
+								if(err) return callback(err);
+								foundChat = response;
+								callback();
+							})
+						}
 					},
 					function getOrCreate(callback) {
 						if(foundChat) {
-							chatGetter.get(foundChat._id, user1).then(function(response){
-								parsedChatAfterFound = response;
-								callback();
-							}).catch(callback);
+							callback();
 						}
 						else{
-							var newChat = {
-								participants : [
+							var participants;
+							if(user1 != user2) {
+								participants = [
 									{
 										user : user1
 									},
 									{
 										user : user2
 									}
-								],
+								]
+							}
+							else {
+								participants = [
+									{
+										user : user1
+									}
+								]
+							}
+							var newChat = {
+								participants : participants,
 								started_by : user1
 							};
 							var createdChat = new chatModel(newChat);
@@ -150,14 +180,12 @@ module.exports = function setup(options, imports, register) {
 					}
 				], function(err, response){
 					if(err) return reject(err);
-					if(parsedChatAfterFound) {
-						return resolve(parsedChatAfterFound);
+					if(foundChat) {
+						return resolve(foundChat._id);
 					}
 					else {
 						if(savedNewChat) {
-							return resolve({
-								created : savedNewChat._id
-							})
+							return resolve(savedNewChat._id)
 						}
 						else {
 							return reject(404);
@@ -167,7 +195,7 @@ module.exports = function setup(options, imports, register) {
 			})
 		},
 		get : function(chatId, userId, maxDate) {
-			console.log("Getting for chatID:", chatId, " and userID:",userId);
+			console.log("Getting for chatID:", chatId, " and userID:", userId);
 			return new Promise(function(resolve, reject) {
 				var gotMessages,
 					returnObject = {
@@ -255,16 +283,15 @@ module.exports = function setup(options, imports, register) {
 								}
 							];
 
-						if(secondMatch) {
-							//pipelineFirst.push(secondMatch);
-						}
-
 						var pipeline = pipelineFirst.concat(pipelineSecond);
 
 						chatModel.aggregate(
 							pipeline,
 							function(err, response) {
 								if(err) return callback(err);
+								if(!response) {
+									return callback(404);
+								}
 								gotMessages = response;
 								// console.log("GOTMESSAGES:", gotMessages[0].messages);
 								callback();

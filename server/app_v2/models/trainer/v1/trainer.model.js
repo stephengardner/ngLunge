@@ -110,7 +110,7 @@ var TrainerSchema = new Schema(
 			primary : { type : Boolean, default : false },
 			title : { type : String },
 			type : { type : String, required : false },
-			address_line_1 : {type : String, required : true},
+			address_line_1 : {type : String, required : false},
 			address_line_2 : {type : String, required : false},
 			city : {type : String, required : true},
 			state : {type : String, required : true},
@@ -656,7 +656,6 @@ TrainerSchema
 		var self = this;
 		this.constructor.findOne({email: value, kind : 'trainer'}, function(err, trainer) {
 			if(err) throw err;
-			console.log("\n\n\n\n\n ---------------- \n\n\nTRAINER:", trainer);
 			if(trainer) {
 				if(self.id === trainer.id) return respond(true);
 				console.log("whats going on? ::: " + trainer.id);
@@ -665,7 +664,8 @@ TrainerSchema
 			}
 			respond(true);
 		});
-	}, 'The specified email address is already in use.');
+	}, 'The specified email address ' +
+		'is already in use.');
 
 TrainerSchema
 	.path('email')
@@ -831,9 +831,30 @@ var methods = {
 
 module.exports = function setup(options, imports, register) {
 	var certificationMapCreator = imports.certificationMapCreator,
-		userModel = imports.userModel
+		userModel = imports.userModel,
+		newUserSignupMessageSender = imports.newUserSignupMessageSender,
+		logger = imports.logger
 	;
 
+	TrainerSchema.post('save', function(){
+		if(!this.wasNew) {
+			console.log(" ++ not wasNew ++");
+		}
+		else {
+			console.log(" ++ wasNew ++");
+			newUserSignupMessageSender.send(this).then(function(response){
+				
+			}).catch(function(err) {
+				logger.error(err);
+			});
+		}
+	});
+	TrainerSchema.pre('save', function(next){
+		if(this.isNew) {
+			this.wasNew = true;
+		}
+		next();
+	});
 	TrainerSchema.pre('save', function(next){
 		imports.certificationsMetaUpdater.update(this).then(function(){
 			console.log("this.certifications_meta ===== ", this.certifications_meta.types_by_organization);

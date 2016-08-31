@@ -8,7 +8,9 @@
       "certificationMapCreator",
       "connectionDatabase",
       "certificationsMetaUpdater",
-      "userModel"
+      "userModel",
+      "newUserSignupMessageSender",
+      "logger"
     ],
     "provides": ["trainerModel"]
   }

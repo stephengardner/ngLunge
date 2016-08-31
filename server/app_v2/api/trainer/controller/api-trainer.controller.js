@@ -356,13 +356,19 @@ module.exports = function setup(options, imports, register) {
 			.exec(function (err, trainer) {
 				if(err) { return handleError(res, err); }
 				if(!trainer) { return res.send(404); }
-				certificationOrganizationModel
-					.populate(trainer,
-						{path : 'certifications_v2.certification_type.organization', model : 'CertificationOrganization'},
-						function(err, populatedTrainer){
-							if(err) { return handleError(res, err); }
-							return res.json(populatedTrainer);
-						});
+				trainerPopulatorCertificationsAggregated.get(trainer).then(function(response){
+					// logger.info(response);
+					return res.status(200).json(response);
+				}).catch(function(err){
+					return handleError(res, err);
+				});
+				// certificationOrganizationModel
+				// 	.populate(trainer,
+				// 		{path : 'certifications_v2.certification_type.organization', model : 'CertificationOrganization'},
+				// 		function(err, populatedTrainer){
+				// 			if(err) { return handleError(res, err); }
+				// 			return res.json(populatedTrainer);
+				// 		});
 			});
 	};
 
@@ -597,7 +603,7 @@ module.exports = function setup(options, imports, register) {
 			res.json(response);
 		}).catch(function(err) {
 			handleError(res, err);
-		})
+		});
 
 		//Trainer.aggregate([
 		//	{

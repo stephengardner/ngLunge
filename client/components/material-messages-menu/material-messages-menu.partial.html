@@ -10,7 +10,7 @@
     </md-toolbar>
     <div id="menu-items">
         <div layout="row" layout-align="center center" ng-if="chatService.busy">
-            <md-progress-circular md-diameter="35"></md-progress-circular>
+            <md-progress-linear ng-mode="indeterminate"></md-progress-linear>
         </div>
         <!--<md-list>-->
             <!--<md-list-item ui-sref="main.messages.message({id : chat._id})"-->
@@ -44,7 +44,9 @@
                             <span ng-if="chat.is_reply">
                                 <i class="material-icons">reply</i>
                             </span>
-                            {{chat.last_message_text}}
+                            <span>
+                                {{chat.last_message_text}}
+                            </span>
                         </div>
                     </div>
                 </div>

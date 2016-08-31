@@ -40,7 +40,7 @@ module.exports = function setup(options, imports, register) {
 							}
 						}
 					],
-					"template_id": "5ea8d8e5-5c16-4534-bfe1-b25959df3b69"
+					"template_id": "aa29ec6d-89e5-4b42-80b9-929b841397a4"
 				}).then(resolve).catch(reject);
 				// sendgrid.send(email, function(err, response){
 				// 	if(err){

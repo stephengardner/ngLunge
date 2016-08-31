@@ -63,10 +63,8 @@ lungeApp.controller("SignupController", function($timeout, $rootScope, TrainerFa
 		$auth.authenticate(provider, { type : type + '-register' }).then(function(response){
 			$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));
 			Auth.setCurrentUser(response.data[type]);
-			if(type == 'trainer') {
-				$state.go('profile');
-			}
-			// $window.location.href = '/trainer/info';
+			Auth.setCurrentType(response.data[type].kind);
+			$state.go('profile');
 		}).catch(function(err){
 			$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
 			console.log("err", err);

@@ -59,6 +59,7 @@ myApp.factory("TrainerFactory", function(lodash,
 			if(this.params.sync) {
 				this.syncModel();
 			}
+			return TrainerFactory;
 		},
 		setSyncCallback : function(func) {
 			this.params.syncCallback = func
@@ -148,6 +149,9 @@ myApp.factory("TrainerFactory", function(lodash,
 			switch(section) {
 				case 'rate' :
 					mergeObject.rate = this.trainerEditing.rate;
+					break;
+				case 'chatPressEnterToSend' :
+					mergeObject.chat_press_enter_to_send = this.trainerEditing.chat_press_enter_to_send;
 					break;
 				case 'work' :
 					mergeObject.work = this.trainerEditing.work;
@@ -419,6 +423,22 @@ myApp.factory("TrainerFactory", function(lodash,
 				}
 			}.bind(this));
 		},
+		getCertificationDetails : function(certification) {
+			var id;
+			if(certification._id) {
+				id = certification._id;
+			}
+			for(var i = 0; i < this.trainer.certifications_v2.length; i++){
+				var certificationAtIndex = this.trainer.certifications_v2[i];
+				// console.log("Checking ", certificationAtIndex, " against ", id);
+				if(certificationAtIndex.certification_type._id == id) {
+					console.log("Returning ", certificationAtIndex);
+					return certificationAtIndex;
+				}
+			}
+			alert("No certification found");
+			return false;
+		},
 		editWorkplace : function(workplace) {
 			return new $q(function(resolve, reject) {
 				var foundPlace = false;
@@ -464,7 +484,7 @@ myApp.factory("TrainerFactory", function(lodash,
 
 		},
 		unsyncModel : function(){
-			FullMetalSocket.user.unsyncUnauth(TrainerFactory.trainer);
+			FullMetalSocket.user.unsyncUnauthUserFactory(TrainerFactory.trainer);
 		}
 	};
 	function createMergeObjectV2(section) {
@@ -481,6 +501,11 @@ myApp.factory("TrainerFactory", function(lodash,
 			case 'work' :
 				returnObject = {
 					work : 1
+				};
+				break;
+			case 'chatPressEnterToSend' :
+				returnObject = {
+					chat_press_enter_to_send : 1
 				};
 				break;
 			case 'bio' :

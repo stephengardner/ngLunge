@@ -100,7 +100,8 @@
                 <div id="experience"
                      layout="row" layout-align="end center"
                      class="item"
-                     ng-if="trainerFactory.trainer.years_of_experience">
+                     ng-if="trainerFactory.trainer.years_of_experience.value &&
+                     trainerFactory.trainer.years_of_experience.value != '-'">
                     <i class="material-icons">work</i>
                     <span>
                         {{trainerFactory.trainer.years_of_experience.value}}

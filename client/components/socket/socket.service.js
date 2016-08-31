@@ -6,7 +6,10 @@ angular.module('ngLungeFullStack2App')
 		var socket;
 		var authenticatePromise = function(){
 			return new $q(function(resolve, reject) {
-				if(Socket_v2.authenticated) return resolve(true);
+				if(Socket_v2.authenticated) {
+					console.log("|socket_v2| authenticatePromise already authenticated");
+					return resolve(true);
+				}
 				if(!Socket_v2.socket) {
 					Socket_v2.init();
 				}
@@ -135,7 +138,9 @@ angular.module('ngLungeFullStack2App')
 
 			// Unsync the authe methods for a specific model name
 			unsyncAuth : function(modelName) {
-				this.socket.emit('logout');
+				// I removed this... I'm not sure this is necessary here.  It caused problems when
+				// navigating away from a user profile page
+				// this.socket.emit('logout');
 				this.socket.removeAllListeners(modelName + ':auth:updated');
 				this.socket.removeAllListeners(modelName + ':auth:logout');
 				this.socket.removeAllListeners(modelName + ':authenticated');
@@ -258,7 +263,10 @@ myApp.factory('ChatSocket', function(socket_v2, $rootScope) {
 	var ChatSocket = {
 		joinChat : function(chatId) {
 			var roomName = 'chat:' + chatId;
-			if(socket_v2.inRoom(roomName)) return false;
+			if(socket_v2.inRoom(roomName)) {
+				console.log("Socket already in room " + roomName + ", not binding socket events");
+				return false;
+			}
 			socket_v2.checkAuthentication().then(function(isAuthenticated) {
 				var socket = socket_v2.socket,
 					rooms = socket_v2.rooms;
@@ -269,7 +277,8 @@ myApp.factory('ChatSocket', function(socket_v2, $rootScope) {
 				socket.on('chat:' + chatId + ':joined', function () {
 					console.log("[ChatSocket] successfully joined chat room with id: ", chatId);
 					rooms.push(roomName);
-					socket_v2.socket.on('chat:' + chatId + ":message", function(message){
+					console.log("Binding on chat:" + chatId + ":message to have an event");
+					socket.on('chat:' + chatId + ":message", function(message){
 						ChatSocket.onMessage(chatId, message);
 					})
 				})
@@ -331,11 +340,13 @@ angular.module('ngLungeFullStack2App')
 				});
 			},
 
-			unsyncUnauthUserFactory() {
-				socket_v2.unsyncAuth('user');
-			},
+			// unsyncUnauthUserFactory : function(modelObj) {
+			// 	console.log(" [-] Socket is leaving the syncUnauth room for: ", "user:" + modelObj._id);
+			// 	socket_v2.socket.emit("leaveRoom", "user:" + modelObj._id);
+			// 	socket_v2.unsyncUpdates('user', modelObj);
+			// },
 
-			syncUnauthUserFactory(userFactory) {
+			syncUnauthUserFactory : function(userFactory) {
 				if(!socket_v2.socket) {
 					socket_v2.init();
 				}
@@ -360,8 +371,8 @@ angular.module('ngLungeFullStack2App')
 			},
 
 			// unsync the unauth'ed listeners.
-			unsyncUnauth : function(modelObj){
-				console.log(" [-] Socket is leaving the syncUnauth room for: ", "trainer:" + modelObj._id);
+			unsyncUnauthUserFactory : function(modelObj){
+				console.log(" [-] Socket is leaving the syncUnauth room for: ", "user:" + modelObj._id);
 				// socket_v2.socket.emit("leaveRoom", "user:" + modelObj._id);
 				socket_v2.leaveRoom('user:' + modelObj._id);
 				socket_v2.unsyncUpdates('user', modelObj);

@@ -14,7 +14,8 @@
       "traineeModel",
       "chatMessageReadSetter",
       "logger",
-      "chatGetter"
+      "chatGetter",
+      "trainerPopulatorCertificationsAggregated"
     ],
     "provides": ["apiUserController"]
   }

@@ -1,5 +1,6 @@
 <md-dialog flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
     <form name="googlePlacesForm"
+          novalidate
           ng-submit="submit(googlePlacesForm)">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -17,9 +18,9 @@
                 <h3>Search using the Google Places API</h3>
                 <div cg-busy="{promise : cgBusy}">
                     <places-autocomplete ng-model="location"
+                                         form="googlePlacesForm"
                                          ng-change="removeMongooseError(googlePlacesForm, 'location')">
                     </places-autocomplete>
-                    <br/>
                     <ag-floating-label>
                         <label>
                             Name this location
@@ -30,8 +31,7 @@
                                ng-model="title.text"
                                maxlength="30"
                                minlength="5"
-                               required
-                        />
+                               required/>
                         <div ng-messages="googlePlacesForm.title.$error" class="md-auto-hide" ng-messages-multiple>
                             <div ng-message="required">Title is required</div>
                             <div ng-message="mongoose">{{googlePlacesForm.errors.title}}</div>

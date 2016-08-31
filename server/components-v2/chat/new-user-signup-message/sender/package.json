@@ -1,0 +1,13 @@
+{
+  "name": "newUserSignupMessageSender",
+  "version": "0.0.1",
+  "main": "new-user-signup-message-sender.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userModel",
+      "chatSender"
+    ],
+    "provides": ["newUserSignupMessageSender"]
+  }
+}

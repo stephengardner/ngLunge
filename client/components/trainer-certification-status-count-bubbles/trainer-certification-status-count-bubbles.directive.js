@@ -50,12 +50,14 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 
 			// attempting another very shallow watch here... Getting the specific object in question
 			scope.$watch(function(){
-				if(scope.trainer && scope.trainer.certifications_meta)
-				return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
+				if(scope.trainer
+					&& scope.trainer.certifications_meta
+					&& scope.trainer.certifications_meta.organization_map)
+					return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
 			}, function(newValue, oldValue) {
 				if(newValue != oldValue)
 					console.log("trainer-certification-status-count-bubbles watch triggered");
-					scope.setCounts(); 
+				scope.setCounts();
 			})
 		}
 	}

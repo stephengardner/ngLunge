@@ -43,7 +43,7 @@ myApp.controller('TrainerInfoSectionLinkSocialAccountsController', function(
 		$scope.ajax.busy = true;
 		$scope.cgBusy = TrainerFactory.save('social').then(function(response){
 			$scope.ajax.busy = false;
-			AlertMessage.success("'Social Accounts' section updated");
+			AlertMessage.success("Social accounts updated");
 		}).catch(function(err){
 			$scope.ajax.busy = false;
 		})

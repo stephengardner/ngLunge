@@ -3,6 +3,7 @@ myApp.controller('AgProfileShareButtonBottomSheetController', function(Socialsha
                                                                        $location,
                                                                        TrainerFactory,
                                                                        TrainerMeta,
+                                                                       Auth,
                                                                        $scope){
 	$scope.items = [
 		{ name : 'Facebook', icon : 'facebook' },
@@ -12,7 +13,14 @@ myApp.controller('AgProfileShareButtonBottomSheetController', function(Socialsha
 		// { name: 'Print this page', icon: 'print' },
 	];
 
-	$scope.trainerUrl = $location.protocol() + "://" + location.host + "/" + TrainerFactory.trainer.urlName;
+	$scope.trainerUrl = $location.protocol() + "://" + location.host;
+	if(Auth.getCurrentType() == 'trainee') {
+		$scope.trainerUrl += '/user/'
+	}
+	else {
+		$scope.trainerUrl += '/';
+	}
+	$scope.trainerUrl += Auth.getCurrentUser().urlName;
 
 	$scope.listItemClick = function(item) {
 		Socialshare.share({

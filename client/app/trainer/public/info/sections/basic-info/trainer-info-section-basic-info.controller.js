@@ -16,7 +16,7 @@ myApp.controller("TrainerInfoSectionBasicInfoController", function(lodash,
 		$scope.ajax.busy = true;
 		$scope.cgBusy = TrainerFactory.save('basicInfo').then(function(response){
 				$scope.ajax.busy = false;
-				AlertMessage.success("'Basic Info' section updated");
+				AlertMessage.success("Basic info updated");
 		}).catch(function(err){
 			$scope.ajax.busy = false;
 			form.$setPristine();

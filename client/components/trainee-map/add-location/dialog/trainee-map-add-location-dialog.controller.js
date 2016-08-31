@@ -53,16 +53,8 @@ myApp.controller('TraineeMapAddLocationDialogController', function($timeout,
 			// 	return reject(new Error('Please address the errors listed before continuing'));
 			// }
 			if(!$scope.userFactory.userEditing.location || !$scope.userFactory.userEditing.location.city) {
-				var err = {
-					errors : {
-						autocomplete : {
-							message : 'Please select a location'
-						}
-					}
-				};
-				FormControl.parseValidationErrors(form, err);
-				// AlertMessage.error('Please select a location from the dropdown list');
-				return reject(new Error('Please select a location from the dropdown list'));
+				FormControl.parseSingleClientSideError('autocomplete', 'Please select a location');
+				return reject(false);
 			}
 			$scope.cgBusy = $scope.userFactory.save('location')
 				.then(function(response){

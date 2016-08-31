@@ -51,6 +51,11 @@ myApp.controller('TrainerMapAddLocationDialogController', function($timeout,
 				AlertMessage.error('Please address the erros listed before continuing');
 				return reject(new Error('Please address the errors listed before continuing'));
 			}
+
+			if(!$scope.location || (!$scope.location.city && !$scope.location.state)) {
+				FormControl.parseSingleClientSideError(form, 'autocomplete', 'Please select a location');
+				return reject(false);
+			}
 			if(!$scope.location || !$scope.location.city) {
 				AlertMessage.error('Please select a location from the dropdown list');
 				return reject(new Error('Please select a location from the dropdown list'));
