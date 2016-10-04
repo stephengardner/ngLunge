@@ -1,17 +1,17 @@
 // I fixed this controller, separated it into a TrainerCertifications Service on 1.26.16
 // It is actually quite lean now, lookups operate on hash tables (objects).  Using ng-infinite-scroll as well.
 lungeApp.controller("ListCertificationsController", function($document,
-                                                                    TrainerCertifications,
-                                                                    $timeout,
-                                                                    FullMetalSocket,
-                                                                    CertificationOrganization,
-                                                                    TrainerFactory,
-                                                                    AlertMessage,
-                                                                    Auth,
-                                                                    Certification,
-                                                                    $http,
-                                                                    $scope,
-                                                                    $mdDialog){
+                                                             TrainerCertifications,
+                                                             $timeout,
+                                                             FullMetalSocket,
+                                                             CertificationOrganization,
+                                                             TrainerFactory,
+                                                             AlertMessage,
+                                                             Auth,
+                                                             Certification,
+                                                             $http,
+                                                             $scope,
+                                                             $mdDialog){
 	var originatorEv;
 	$scope.trainerCertifications = TrainerCertifications;
 	TrainerFactory.initToCurrentTrainerIfNecessary();
@@ -28,7 +28,7 @@ lungeApp.controller("ListCertificationsController", function($document,
 		originatorEv = ev;
 		$mdOpenMenu(ev);
 	};
-	
+
 	$scope.certificationTypeInfoModal = function(certificationType, opt_event) {
 		$mdDialog.show({
 			controller : ['$scope', function($scope){
@@ -41,7 +41,11 @@ lungeApp.controller("ListCertificationsController", function($document,
 		})
 	};
 
-	$scope.trainerCertifications.getPage();
+	$scope.trainerCertifications.getPage().then(function(response){
+		$scope.initialLoadSuccess = true;
+	}).catch(function(err){
+		AlertMessage.error('Error loading certifications, please try again later');
+	});
 
 	// This is set as a virtual on the trainer if the trainer is populated, which it is.
 	$scope.getCertificationOrganizationCount = function(certificationOrganization){
@@ -51,7 +55,6 @@ lungeApp.controller("ListCertificationsController", function($document,
 		}
 		return undefined;
 	};
-
 
 	$scope.verifyCertificationPopupFromPublicList = function(certification) {
 		// Busy is necessary for the status directive $watch function
@@ -86,15 +89,15 @@ lungeApp.controller("ListCertificationsController", function($document,
 		if(type == 'add') {
 			messageToSend = "Added a " + certification.name + " certification to your profile";
 			console.log("Adding certification:", certification, " from trainercertificationslistcontroller");
-			$timeout(function(){
-				TrainerFactory.addCertification(certification).save().then(onSuccess).catch(onError);
-			}, 500);
+			// $timeout(function(){
+			certification.cgBusy = TrainerFactory.addCertification(certification).save().then(onSuccess).catch(onError);
+			// }, 500);
 		}
 		else if(type == 'remove') {
 			messageToSend = "Removed a " + certification.name + " certification from your profile";
-			$timeout(function(){
-				TrainerFactory.removeCertification(certification).save().then(onSuccess).catch(onError);
-			}, 500);
+			// $timeout(function(){
+			certification.cgBusy = TrainerFactory.removeCertification(certification).save().then(onSuccess).catch(onError);
+			// }, 500);
 		}
 		else { alert('invalid type'); return; }
 		function onSuccess() {

@@ -5,15 +5,9 @@ myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope
 	Array.prototype.differenceOfLocations = function(a) {
 		return this.filter(function (i) {
 			var found = false;
-			console.log("A is:", a, " i is: ", i);
 			for (var k = 0; k < a.length; k++) {
 				var _id = a[k]._id;
-				console.log("Checking if id:", i._id, " == ", _id);
 				if (i._id == _id) found = true;
-				// for (var j = 0; j < i.length; j++) {
-				// 	console.log("Checking if id:", i[j]._id, " == ", _id);
-				// 	if (i[j]._id == _id) found = true;
-				// }
 			}
 			return !found;
 		});
@@ -51,7 +45,7 @@ myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope
 			},
 			markersEvents: {
 				click: function(marker, eventName, model) {
-					console.log("Got Model:",model);
+					// this is the click on the actual ICON, not the rows.
 					TrainerMap.map.window.model = model;
 					TrainerMap.map.window.show = true;
 				}
@@ -86,13 +80,12 @@ myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope
 		// All the markers were created to map to locations, but we need to set the model to a specific
 		// marker instance.  So use this function
 		showWindowForLocationModel : function(location) {
-			console.log("checking location:", location);
 			for(var i = 0; i < TrainerMap.map.markers.length; i++) {
 				var marker = TrainerMap.map.markers[i];
-				console.log("Against marker:", marker);
 				if(marker._id == location._id) {
 					TrainerMap.map.window.model = marker;
 					TrainerMap.map.window.show = true;
+					TrainerMap.setGoogleMapCenter(marker);
 					return true;
 				}
 			}
@@ -146,10 +139,8 @@ myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope
 			var currentMarkers = this.map.markers || [], returnArray = [], marker, location, i;
 			var differenceBetweenTrainerLocationsAndMapMarkers =
 				this.trainer.locations.differenceOfLocations(currentMarkers);
-			console.log("Diff1:", differenceBetweenTrainerLocationsAndMapMarkers);
 			var differenceBetweenMapMarkersAndTrainerLocations =
 				currentMarkers.differenceOfLocations(this.trainer.locations);
-			console.log("Diff2:", differenceBetweenMapMarkersAndTrainerLocations);
 			if(!this.map.markers) {
 				console.log("---- was no this.map.markers ----");
 				this.map.markers = [];
@@ -197,15 +188,19 @@ myApp.factory('trainerMap', function($window, $compile, $timeout, $q, $rootScope
 			}
 			return this.map.markers;
 		},
-		setGoogleMapCenter : function() {
+
+		setGoogleMapCenter : function(optionalMarker) {
 			if(this.map.control.getGMap) {
 				var map = this.map.control.getGMap();
-				map.setCenter({
-					lat: TrainerMap.map.center.latitude,
-					lng: TrainerMap.map.center.longitude
-				});
+				var coords = {
+					lat : optionalMarker ? optionalMarker.coords.latitude : TrainerMap.map.center.latitude,
+					lng : optionalMarker ? optionalMarker.coords.longitude : TrainerMap.map.center.longitude
+				};
+				console.log("[Trainer Map Service] setting center to coords:", coords);
+				map.setCenter(coords);
 			}
 		},
+
 		triggerResize : function() {
 			if(this.map.control.getGMap) {
 				var map = this.map.control.getGMap();

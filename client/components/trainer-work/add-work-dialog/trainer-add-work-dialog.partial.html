@@ -1,12 +1,12 @@
 <md-dialog flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100" id="trainee-location-dialog">
     <form name="workForm"
-          ng-submit="submit(workForm)"
-          cg-busy="{promise : cgBusy}">
+          ng-submit="vm.submit(workForm)"
+          cg-busy="{promise : vm.cgBusy}">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Add workplace</h2>
                 <span flex></span>
-                <md-button class="md-icon-button" ng-click="cancel()">
+                <md-button class="md-icon-button" ng-click="vm.cancel()">
                     <md-icon aria-label="Close dialog">close</md-icon>
                 </md-button>
             </div>
@@ -19,7 +19,7 @@
                     </label>
                     <input type="text"
                            server-error
-                           ng-model="workplace.position"
+                           ng-model="vm.workplace.position"
                            name="position"/>
                     <div ng-messages="workForm.position.$error">
                         <div ng-message="mongoose">
@@ -38,7 +38,7 @@
                     </label>
                     <input type="text"
                            server-error
-                           ng-model="workplace.company_name"
+                           ng-model="vm.workplace.company_name"
                            name="companyName"/>
                     <div ng-messages="workForm.companyName.$error">
                         <div ng-message="mongoose">
@@ -52,7 +52,7 @@
                     </label>
                     <input type="text"
                            server-error
-                           ng-model="workplace.website"
+                           ng-model="vm.workplace.website"
                            name="website"/>
                     <ag-hints>
                         <ag-hint>

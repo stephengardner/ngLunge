@@ -7,7 +7,8 @@
                         Your Fitness Journey Starts Here
                     </h1>
                     <div class="buttons">
-                        <md-button id="sign-up"
+                        <md-button aria-label="Sign me up"
+                                   id="sign-up"
                                    ui-sref="main.signup">
                             Sign me Up
                         </md-button>
@@ -33,9 +34,6 @@
                         the world one healthy habit at a time by connecting each individual with the right tools to
                         take the next step in their fitness journey.
                     </div>
-                    <md-button ui-sref="main">
-
-                    </md-button>
                 </div>
                 <div flex="100" flex-gt-md="50">
                     <div id="description-icons" layout="row" layout-align="center start" layout-wrap>
@@ -87,7 +85,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div id="description-2">
         <div class="container">
@@ -155,12 +152,18 @@
             <i class="linea-icon-basic icon-basic-info"></i>
         </div>
         <div class="container">
-            Still curious about what makes US move?  Check out our <md-button ui-sref="main.what-is-lunge">About</md-button> page to
-            read
-            more.
+            Still curious about what makes US move?  Check out our
+            <md-button aria-label="About"
+                       ui-sref="main.what-is-lunge">
+                About
+            </md-button>
+            page to read more.
             <br/><br/>
-            Are you a personal trainer?  Get <md-button ui-sref="main.signup">registered</md-button> with Lunge today.
-            It's free.
+            Are you a personal trainer?  Get
+            <md-button ui-sref="main.signup" aria-label="registered">
+                registered
+            </md-button>
+            with Lunge today.  It's free.
         </div>
     </div>
 </div>

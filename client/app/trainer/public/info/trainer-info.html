@@ -6,12 +6,20 @@
             </span>
         </h1>
     </header>
-    <trainer-info-section-basic-info toggle-popover="togglePopover"></trainer-info-section-basic-info>
-    <trainer-info-section-link-social-accounts></trainer-info-section-link-social-accounts>
-    <trainer-info-section-about></trainer-info-section-about>
-    <trainer-map-card editable="{{isMe()}}"></trainer-map-card>
-    <specialties editable="{{isMe()}}"></specialties>
-    <certifications-card editable="{{isMe()}}"></certifications-card>
-    <rates editable="{{isMe()}}"></rates>
-    <trainer-info-section-email></trainer-info-section-email>
+    <trainer-info-section-basic-info
+            ng-if="userFactory.user"
+            user-factory="userFactory">
+    </trainer-info-section-basic-info>
+    <trainer-info-section-link-social-accounts
+            ng-if="userFactory.user"
+            user-factory="userFactory">
+    </trainer-info-section-link-social-accounts>
+    <specialties>
+    </specialties>
+    <!--<trainer-info-section-about></trainer-info-section-about>-->
+    <!--<trainer-map-card editable="{{isMe()}}"></trainer-map-card>-->
+    <!--<specialties editable="{{isMe()}}"></specialties>-->
+    <!--<certifications-card editable="{{isMe()}}"></certifications-card>-->
+    <!--<rates editable="{{isMe()}}"></rates>-->
+    <!--<trainer-info-section-email></trainer-info-section-email>-->
 </div>

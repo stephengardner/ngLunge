@@ -57,10 +57,12 @@
                                        is-open="mappedOrganization.isOpen">
                     <ag-collapse-header>
                         <md-list-item md-ink-ripple>
-                                <span layout="row" layout-align="start center"
-                                      class="name">
+                            <div layout="row"
+                                 flex
+                                 layout-align="start center"
+                                 class="name">
                                     <span class="count-unbubble total-certifications">
-                                        <md-tooltip md-direction="top">
+                                        <md-tooltip md-delay="500" md-direction="top">
                                             {{mappedOrganization.types.count_all}}
                                             {{mappedOrganization.types.count_all > 1
                                             ? 'certifications'
@@ -69,8 +71,8 @@
                                         </md-tooltip>
                                         {{mappedOrganization.types.count_all}}
                                     </span>
-                                    {{mappedOrganization.name}}
-                                </span>
+                                {{mappedOrganization.name}}
+                            </div>
                             <div class="md-secondary" flex="nogrow" layout="row" layout-align="center center">
                                 <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
                                                                             certification-organization="mappedOrganization">
@@ -80,9 +82,8 @@
                     </ag-collapse-header>
                     <ag-collapse-body>
                         <md-list>
-                            <md-list-item ng-repeat="certificationV2 in mappedOrganization.types.all"
-                                          class="secondary-button-padding">
-                                <div flex class="md-list-item-animation-container">
+                            <md-list-item ng-repeat="certificationV2 in mappedOrganization.types.all">
+                                <div class="md-list-item-animation-container">
                                     <div flex
                                          class="list-item-default"
                                          ng-if="!certificationV2.removalConfirmation"
@@ -91,7 +92,7 @@
                                         <trainer-certification-status trainer="trainerFactory.trainer"
                                                                       certification="certificationV2.certification_type">
                                         </trainer-certification-status>
-                                        <p class="md-list-item-text" flex>
+                                        <p class="md-list-item-text">
                                             {{certificationV2.certification_type.name}}
                                         </p>
                                         <div layout="row"
@@ -110,7 +111,7 @@
                                                         <md-button ng-click="verifyCertificationPopup(certificationV2, $event)">
                                                             <div layout="row" flex>
                                                                 <p flex>
-                                                                    Upload
+                                                                    Verify this certification
                                                                 </p>
                                                                 <md-button class="md-icon-button">
                                                                     <i md-menu-align-target class="material-icons">
@@ -143,14 +144,16 @@
                                          ng-if="certificationV2.removalConfirmation"
                                          layout="row"
                                          layout-align="space-between center">
-                                        <p>
+                                        <p flex>
                                             Are you sure you want to remove the
                                             <strong>
                                                 {{certificationV2.certification_type.name}}
                                             </strong>
                                             specialty?
                                         </p>
-                                        <div flex hide-xs hide-xxs
+                                        <div flex="initial"
+                                             hide-xs
+                                             hide-xxs
                                              layout="row"
                                              layout-align="end center">
                                             <md-button ng-click="deleteCertification(certificationV2)">
@@ -160,7 +163,8 @@
                                                 Cancel
                                             </md-button>
                                         </div>
-                                        <div flex hide-gt-xs
+                                        <div flex="initial"
+                                             hide-gt-xs
                                              layout="row"
                                              layout-align="end center">
                                             <md-button class="md-icon-button"

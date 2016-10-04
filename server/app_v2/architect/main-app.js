@@ -24,6 +24,7 @@ module.exports = function(config) {
 		"../models/user",
 		"../models/chat",
 		"../models/trainee",
+		"../models/review",
 		//"../../plugins/models/v1",
 		{
 			packagePath : "../../plugins/socket/v1",
@@ -34,7 +35,11 @@ module.exports = function(config) {
 			config : config
 		},
 		{
-			packagePath : "../models/user/socket", 
+			packagePath : "../models/user/socket",
+			config : config
+		},
+		{
+			packagePath : "../models/review/socket",
 			config : config
 		},
 		{
@@ -82,6 +87,9 @@ module.exports = function(config) {
 		// chat
 		"../../app_v2/api/chat/controller",
 		"../../app_v2/api/chat/router",
+		// review
+		"../../app_v2/api/review/controller",
+		"../../app_v2/api/review/router",
 
 
 		// COMPONENTS
@@ -217,7 +225,28 @@ module.exports = function(config) {
 		"../../components-v2/chat/message-read-setter",
 
 		// Chat Message Read Setter
-		"../../components-v2/chat/new-user-signup-message/sender"
+		"../../components-v2/chat/new-user-signup-message/sender",
+
+		// Review Submitter
+		"../../components-v2/review/submitter",
+
+		// Review Populator
+		"../../components-v2/review/populator",
+
+		// Review Populator
+		"../../components-v2/review/deleter",
+
+		// Review ByUserForUser Getter
+		"../../components-v2/review/by-user-for-user-getter",
+
+		// API Error Handler
+		"../../components-v2/api-error-handler",
+
+		// API Error Handler
+		"../../components-v2/color-generator",
+
+		// API Error Handler
+		"../../components-v2/location/setter"
 
 	];
 	var tree = architect.resolveConfig(appConfig, __dirname);

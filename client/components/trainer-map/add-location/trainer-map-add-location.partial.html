@@ -23,7 +23,7 @@
                                    removeMongooseError(manualForm, 'address_line_1');"
                                    class="form-control"
                                    type="text"
-                                   ng-model="trainerFactory.newLocation.address_line_1"
+                                   ng-model="userFactory.newLocation.address_line_1"
                                    placeholder="Street address 1"/>
                             <div class="form-error" ng-show="manualForm.location.$error.mongoose
                             || manualForm.address_line_1.$error.mongoose">
@@ -40,7 +40,7 @@
                                    removeMongooseError(manualForm, 'location')"
                                    class="form-control"
                                    type="text"
-                                   ng-model="trainerFactory.newLocation.address_line_2"
+                                   ng-model="userFactory.newLocation.address_line_2"
                                    placeholder="Street address 2"/>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                                    removeMongooseError(manualForm, 'city')"
                                    class="form-control"
                                    type="text"
-                                   ng-model="trainerFactory.newLocation.city"
+                                   ng-model="userFactory.newLocation.city"
                                    placeholder="City"/>
                             <div class="form-error" ng-show="manualForm.city.$error.mongoose"><span>{{errors.city}}</span></div>
                         </div>
@@ -71,7 +71,7 @@
                                    removeMongooseError(manualForm, 'state')"
                                    class="form-control"
                                    type="text"
-                                   ng-model="trainerFactory.newLocation.state"
+                                   ng-model="userFactory.newLocation.state"
                                    placeholder="State"/>
                             <div class="form-error" ng-show="manualForm.state.$error.mongoose"><span>{{errors.state}}</span></div>
                         </div>
@@ -81,7 +81,7 @@
                             Zipcode
                         </label>
                         <div class="input-container col-sm-18">
-                            <input id="zipcode" ng-change="removeMongooseError(manualForm, 'location')" class="form-control" type="text" ng-model="trainerFactory.newLocation.zipcode" placeholder="Zipcode"/>
+                            <input id="zipcode" ng-change="removeMongooseError(manualForm, 'location')" class="form-control" type="text" ng-model="userFactory.newLocation.zipcode" placeholder="Zipcode"/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -89,7 +89,7 @@
                             Name this location
                         </label>
                         <div class="col-sm-18">
-                            <input id="title" ng-keydown="removeMongooseError(manualForm, 'title')" placeholder="ex: Home Studio or Gold's Gym Van Ness" type="text" name="title" ng-model="trainerFactory.newLocation.title" class="form-control"/>
+                            <input id="title" ng-keydown="removeMongooseError(manualForm, 'title')" placeholder="ex: Home Studio or Gold's Gym Van Ness" type="text" name="title" ng-model="userFactory.newLocation.title" class="form-control"/>
                             <div class="form-error" ng-show="manualForm.title.$error.mongoose"><span>{{errors.title}}</span></div>
                         </div>
                     </div>

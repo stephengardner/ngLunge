@@ -23,64 +23,6 @@
         <md-dialog-content layout-padding>
             <div ng-if="vm.isLoggedIn()">
                 <div flex layout="row" layout-align="start start">
-                    <!--
-                    <div flex>
-                        <ag-floating-label>
-                            <label>
-                                First Name *
-                            </label>
-                            <ag-icon>
-                                <i class="material-icons">title</i>
-                            </ag-icon>
-                            <input server-error
-                                   type="text"
-                                   name="firstName"
-                                   required
-                                   ng-model="vm.inquiry.user.name.first"/>
-                            <div ng-messages="contactForm.firstName.$error">
-                                <div ng-message="required">First name is required</div>
-                                <div ng-message="mongoose">{{contactForm.errors.firstName}}</div>
-                            </div>
-                        </ag-floating-label>
-                    </div>
-                    <div flex>
-                        <ag-floating-label>
-                            <label>
-                                Last Name
-                            </label>
-                            <input server-error
-                                   type="text"
-                                   name="lastName"
-                                   ng-model="vm.inquiry.user.name.last"/>
-                            <div ng-messages="contactForm.lastName.$error">
-                                <div ng-message="mongoose">{{contactForm.errors.lastName}}</div>
-                            </div>
-                        </ag-floating-label>
-                    </div>
-                </div>
-                <div flex layout="row" layout-align="start start">
-                    <div flex>
-                        <ag-floating-label>
-                            <label>
-                                Email *
-                            </label>
-                            <ag-icon>
-                                <i class="material-icons">email</i>
-                            </ag-icon>
-                            <input server-error
-                                   type="email"
-                                   name="email"
-                                   ng-model="vm.inquiry.user.email"
-                                   required/>
-                            <div ng-messages="contactForm.email.$error">
-                                <div ng-message="required">Email is required</div>
-                                <div ng-message="email">This email is invalid</div>
-                                <div ng-message="mongoose">{{contactForm.errors.email}}</div>
-                            </div>
-                        </ag-floating-label>
-                    </div>
-                </div>
-                -->
                     <div flex layout="row" layout-align="start start">
                         <div flex>
                             <ag-floating-label>

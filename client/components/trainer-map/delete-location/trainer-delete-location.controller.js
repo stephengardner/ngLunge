@@ -6,14 +6,6 @@ lungeApp.controller("TrainerDeleteLocationController", function($mdDialog,
                                                                 AlertMessage,
                                                                 Auth,
                                                                 $scope){
-
-
-	// when clicking the "Remove" button from the ng-repeat of all locations
-	$scope.removeLocation = function(location) {
-		/*
-		 */
-	}
-
 	// Modals
 	$scope.deleteLocationModal = function(location, ev) {
 		$mdDialog.show({
@@ -24,18 +16,20 @@ lungeApp.controller("TrainerDeleteLocationController", function($mdDialog,
 			clickOutsideToClose : true,
 			controller : ['$mdDialog', function($mdDialog) {
 				var vm = this;
-				vm.confirm = $mdDialog.hide;
+				vm.confirm = function(){
+					location.removing = true;
+					$scope.userFactory.deleteLocation(location);
+					vm.cgBusy = $scope.userFactory.save('locations', { updateOverwrite : true }).then(function(response){
+						$mdDialog.hide();
+						AlertMessage.success("Location removed successfully");
+					}).catch(function(err){
+						AlertMessage.error("Location removal failed");
+					});
+				};
 				vm.cancel = $mdDialog.cancel;
 			}],
 			controllerAs : 'vm'
 		}).then(function(response){
-			location.removing = true;
-			TrainerFactory.deleteLocation(location);
-			TrainerFactory.save().then(function(response){
-				AlertMessage.success("Location removed successfully");
-			}).catch(function(err){
-				AlertMessage.error("Location removal failed");
-			});
 		}, function(response) {
 		});
 		//

@@ -1,11 +1,9 @@
-<div ng-if="!trainerFactory.trainer.name"
+<div ng-if="!userFactory.user._id"
      class="loading-block-sm">
 </div>
 <md-card class="section-animate-in"
          id="trainer-work"
-         ng-if="trainerFactory.trainer.name"
-         ag-editable-container
-         trainer-factory-section="work">
+         ng-if="userFactory.user._id">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -13,8 +11,9 @@
             </h2>
             <span flex></span>
             <md-button class="md-icon-button"
-                       ng-click="addWorkDialog($event)">
-                <md-tooltip md-direction="top">
+                       ng-if="editable"
+                       ng-click="WorkCtrl.addWorkDialog($event)">
+                <md-tooltip md-delay="500" md-direction="top">
                     Add a workplace
                 </md-tooltip>
                 <i  class="material-icons">add</i>
@@ -23,94 +22,82 @@
     </md-toolbar>
     <form id="workForm"
           name="workForm"
-          ng-submit="submit(workForm); toggleEditing()">
-        <md-card-content cg-busy="{promise : cgBusy}"  >
-            <div class="ag-editable-container">
-                <div class="ag-editable-default">
-                    <md-list ng-if="trainerFactory.trainer.work.places.length">
-                        <md-list-item ng-repeat="workplace in trainerFactory.trainer.work.places">
-                            <div class="md-list-item-animation-container">
-                                <div class="list-item-default"
-                                     layout="row" layout-align="space-between center"
-                                     ng-if="!workplace.removing">
-                                    <p>{{workplace.position}} at
-                                        <a ng-if="workplace.website"
-                                           target="_blank"
-                                           ng-href="{{workplace.website}}">
-                                            {{workplace.company_name}}
-                                        </a>
-                                        <span ng-if="!workplace.website">
+          ng-submit="WorkCtrl.submit(workForm)">
+        <md-card-content cg-busy="{promise : WorkCtrl.cgBusy}"  >
+            <md-list ng-if="userFactory.user.work.places.length">
+                <md-list-item ng-repeat="workplace in userFactory.user.work.places">
+                    <div class="md-list-item-animation-container">
+                        <div class="list-item-default"
+                             layout="row" layout-align="space-between center"
+                             ng-if="!workplace.removing">
+                            <p>{{workplace.position}} at
+                                <a ng-if="workplace.website"
+                                   target="_blank"
+                                   ng-href="{{workplace.website}}">
+                                    {{workplace.company_name}}
+                                </a>
+                                <span ng-if="!workplace.website">
                                             {{workplace.company_name}}
                                         </span>
-                                    </p>
-                                    <div>
-                                        <md-button class="md-icon-button"
-                                                   ng-click="editWorkDialog(workplace, $event)">
-                                            <i class="material-icons">
-                                                edit
-                                            </i>
-                                        </md-button>
-                                        <md-button class="md-icon-button"
-                                                   ng-click="toggleRemoveWorkplace(workplace)">
-                                            <i class="material-icons">
-                                                delete
-                                            </i>
-                                        </md-button>
-                                    </div>
-                                </div>
-                                <div flex
-                                     class="list-item-removing"
-                                     ng-if="workplace.removing"
-                                     layout="row"
-                                     layout-align="space-between center">
-                                    <p flex>
-                                        Are you sure you want to remove {{workplace.company_name}} from your workplaces?
-                                    </p>
-                                    <div flex="nogrow" hide-xs>
-                                        <md-button ng-click="removeWorkplace(workplace)">
-                                            Yes
-                                        </md-button>
-                                        <md-button ng-click="toggleRemoveWorkplace(workplace)">
-                                            Cancel
-                                        </md-button>
-                                    </div>
-                                    <div flex hide-gt-xs layout="row" layout-align="center right">
-                                        <md-button class="md-icon-button" ng-click="removeWorkplace(workplace)">
-                                            <i class="material-icons">check</i>
-                                        </md-button>
-                                        <md-button class="md-icon-button" ng-click="toggleRemoveWorkplace(workplace)">
-                                            <i class="material-icons">cancel</i>
-                                        </md-button>
-                                    </div>
-                                </div>
+                            </p>
+                            <div>
+                                <md-button class="md-icon-button"
+                                           ng-click="WorkCtrl.editWorkDialog(workplace, $event)">
+                                    <i class="material-icons">
+                                        edit
+                                    </i>
+                                </md-button>
+                                <md-button class="md-icon-button"
+                                           ng-click="WorkCtrl.toggleRemoveWorkplace(workplace)">
+                                    <i class="material-icons">
+                                        delete
+                                    </i>
+                                </md-button>
                             </div>
-                        </md-list-item>
-                    </md-list>
-                    <md-list-item ng-if="!trainerFactory.trainer.work.places.length">
-                        <div>
-                            No workplaces to show
                         </div>
-                    </md-list-item>
-                </div>
-                <div class="ag-editable-editing">
-                    <ag-floating-label>
-                        <label>Bio</label>
-                        <textarea name="bio"
-                                  ng-model="trainerFactory.trainerEditing.bio"
-                                  server-error
-                                  rows="{{textareaRows}}"
-                                  md-no-autogrow
-                                  md-select-on-focus></textarea>
-                        <div ng-messages="bioForm.bio.$error">
-                            <div ng-message="mongoose">{{bioForm.errors.bio}}</div>
+                        <div flex
+                             class="list-item-removing"
+                             ng-if="workplace.removing"
+                             layout="row"
+                             layout-align="space-between center">
+                            <p flex>
+                                Are you sure you want to remove {{workplace.company_name}} from your workplaces?
+                            </p>
+                            <div flex="initial" hide-xs>
+                                <md-button ng-click="WorkCtrl.removeWorkplace(workplace)">
+                                    Yes
+                                </md-button>
+                                <md-button ng-click="WorkCtrl.toggleRemoveWorkplace(workplace)">
+                                    Cancel
+                                </md-button>
+                            </div>
+                            <div flex="initial" hide-gt-xs layout="row" layout-align="center right">
+                                <md-button class="md-icon-button"
+                                           ng-click="WorkCtrl.removeWorkplace(workplace)">
+                                    <i class="material-icons">
+                                        check
+                                    </i>
+                                </md-button>
+                                <md-button class="md-icon-button"
+                                           ng-click="WorkCtrl.toggleRemoveWorkplace(workplace)">
+                                    <i class="material-icons">
+                                        cancel
+                                    </i>
+                                </md-button>
+                            </div>
                         </div>
-                    </ag-floating-label>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <md-list-item ng-if="!userFactory.user.work.places.length">
+                <div>
+                    No workplaces to show
                 </div>
-            </div>
+            </md-list-item>
         </md-card-content>
         <md-card-actions ng-if="editing" layout="row" layout-align="end center">
             <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing()">Cancel</md-button>
+            <md-button ng-click="editing = !editing">Cancel</md-button>
         </md-card-actions>
     </form>
 </md-card>

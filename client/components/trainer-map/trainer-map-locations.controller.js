@@ -25,13 +25,12 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 
 	$scope.errors = FormControl.errors;
 	$scope.removeMongooseError = FormControl.removeMongooseError;
-	$scope.trainerFactory = TrainerFactory;
 	// Catch events broadcasted from the profile controller for when the profile page updates the location
 	//$scope.$on("locationsChanged", trainerMap.updateLocations);
 	$scope.makePrimary = function(location) {
 		$scope.ajax.busy = true;
-		TrainerFactory.setPrimaryLocation(location);
-		$scope.cgBusy = TrainerFactory.save('locations').then(function(response){
+		$scope.userFactory.setPrimaryLocation(location);
+		$scope.cgBusy = $scope.userFactory.save('locations').then(function(response){
 			$scope.ajax.busy = false;
 			AlertMessage.success("Primary location set to " + response.location.address_line_1);
 		}).catch(function(err){
@@ -48,16 +47,14 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 			'trainer-map-change-title-dialog.partial.html',
 			targetEvent : $scope.events.menu,
 			clickOutsideToClose : true,
-			locals : {
-				location : location
-			},
 			focusOnOpen : false,
 			controller : ['$mdDialog', function($mdDialog) {
 				var vm = this;
-				vm.location = $scope.trainerFactory.trainerEditing.locations
-					[$scope.trainerFactory.trainer.locations.indexOf(location)];
+				console.log("Scope userfactory is:", $scope.userFactory);
+				vm.location = $scope.userFactory.userEditing.locations
+					[$scope.userFactory.user.locations.indexOf(location)];
 				vm.confirm = function(form){
-					TrainerFactory.save().then(function(response){
+					$scope.userFactory.save('locations').then(function(response){
 						AlertMessage.success("Location title changed successfully");
 						$mdDialog.hide();
 					}).catch(function(err){
@@ -75,11 +72,11 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 	};
 	$scope.$on('trainerUpdated', function() {
 		//alert("Updated");
-		trainerMap.updateLocations(TrainerFactory.trainer);
+		trainerMap.updateLocations($scope.userFactory.user);
 	});
 	$scope.changeTitle = function(form, location) {
 		$scope.ajax.busy = true;
-		$scope.cgBusy = TrainerFactory.save('locations').then(function(){
+		$scope.cgBusy = $scope.userFactory.save('locations').then(function(){
 			$scope.ajax.busy = false;
 			$scope.toggleChangeTitle(location);
 			AlertMessage.success("Location title changed successfully");
@@ -96,7 +93,7 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 		return index < $scope.locationLimit;
 	};
 	$scope.locationsShowMore = function() {
-		return $scope.locationLimit < TrainerFactory.trainer.locations.length;
+		return $scope.locationLimit < $scope.userFactory.user.locations.length;
 	};
 
 	$scope.isMarkerLocationSelected = function(location) {
@@ -104,14 +101,14 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 	};
 
 	$scope.toggleLimitLocations = function() {
-		if(!TrainerFactory.trainer) return false;
-		if($scope.locationLimit < TrainerFactory.trainer.locations.length) {
+		if(!$scope.userFactory.user) return false;
+		if($scope.locationLimit < $scope.userFactory.user.locations.length) {
 			/*
 			 $scope.locationLimit +4 <= TrainerFactory.trainer.locations.length
 			 ? $scope.locationLimit += 4
 			 : $scope.locationLimit = TrainerFactory.trainer.locations.length;
 			 */
-			$scope.locationLimit = TrainerFactory.trainer.locations.length;
+			$scope.locationLimit = $scope.userFactory.user.locations.length;
 		}
 		else{
 			$scope.locationLimit = 1;//TrainerFactory.trainer.locations.length;
@@ -120,9 +117,8 @@ lungeApp.controller("TrainerMapLocationsController", function(AlertMessage,
 	};
 	Auth.isLoggedInAsync(function(trainer) {
 		$scope.closeInfoWindow = trainerMap.closeInfoWindow;
-		$scope.trainerFactory = TrainerFactory;
-		TrainerFactory.trainer.locations && TrainerFactory.trainer.locations[0]
-			? TrainerFactory.trainer.locations[0].open = true : false;
+		$scope.userFactory.user.locations && $scope.userFactory.user.locations[0]
+			? $scope.userFactory.user.locations[0].open = true : false;
 
 		$scope.triggerMarkerClick = function(location){
 			trainerMap.showWindowForLocationModel(location);

@@ -4,16 +4,30 @@
 <!--<div flex layout="row">-->
 <!--<material-menu flex>-->
 <!--</material-menu>-->
-<navbar></navbar>
+<!--<md-content>-->
+
 <!--<div >-->
-<div class="main-view" ui-view></div>
-<span flex></span>
-<footer ng-if="!footer.hide">
-    <div layout="row" layout-align="space-between center" class="container">
-        <div id="footer-copyright">
-            &copy; Lunge 2016, all rights reserved
+<!--<div layout="row"-->
+<!--flex-->
+<!--class="main-view" ng-cloak>-->
+<!--<md-content>-->
+<!--<div id="test" style="overflow:auto; position: relative" layout="column" layout-align="start stretch" flex>-->
+<navbar></navbar>
+<!--<div flex="grow" layout="column">-->
+<!-- layout="column" layout-align="start stretch" -->
+<div ui-view flex="noshrink"></div> <!-- flex grow is important -->
+<!--<footer ng-if="!footer.hide" flex>-->
+<div class="new-footer" ng-if="!footer.hide">
+    <div class="container">
+        <div layout="row" layout-align="space-between center">
+            <div id="footer-copyright">
+                &copy; Lunge 2016, all rights reserved
+            </div>
+            <a href="https://golunge.com">GoLunge.com</a>
         </div>
-        <span flex></span>
     </div>
-</footer>
+</div>
+<!--</div>-->
+<!--</footer>-->
+<!--</div>-->
 <!--</div>-->

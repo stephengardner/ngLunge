@@ -9,9 +9,13 @@ lungeApp.directive('agEditableEditing', function(){
 	}
 });
 
-lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'TrainerFactory', function($animate, $q, $animateCss, TrainerFactory){
+lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', function($animate, $q, $animateCss){
 	return {
 		restrict : "AE",
+		scope : {
+			section : '<',
+			userFactory : '<'
+		},
 		link : function(scope, element, attrs) {
 			var container = angular.element(element[0].querySelector('.ag-editable-container')),
 				containerHeightDefault = $(container).outerHeight(true),//.prop('offsetHeight'),
@@ -93,7 +97,8 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 				// setDefaultHeight();
 				// setEditingHeight();
 				getHeightsOnOpen();
-				console.log("Animating from " + containerHeightDefault + "px to " + containerHeightEditing + "px");
+				console.log("[AgEditableContainer] Animating from " +
+					containerHeightDefault + "px to " + containerHeightEditing + "px");
 				// return;
 				editingContainer.removeClass('ng-hide');
 				var containerAnimation = $animateCss(container, {
@@ -150,7 +155,8 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 
 			function hideEditingAnimation() {
 				getHeightsOnClose2();
-				console.log("Animating from " + containerHeightEditing + "px to " + containerHeightDefault + "px");
+				console.log("[AgEditableContainer] Animating from " +
+					containerHeightEditing + "px to " + containerHeightDefault + "px");
 				defaultContainer.removeClass('ng-hide');
 				// return;
 				// $(defaultContainer).css({position : 'relative'});
@@ -211,15 +217,15 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 			}
 			editingContainer.addClass('ng-hide');
 
-			scope.trainerFactorySection = attrs.trainerFactorySection;
-			var section = scope.$eval(attrs.trainerFactorySection);
+			scope.section = attrs.section;
+			var section = scope.$eval(attrs.section);
 			scope.$watch(function(){
-				return TrainerFactory.isEditing[section]
+				return scope.userFactory.isEditing[section]
 			}, function(newValue, oldValue) {
 				// necessary to check if oldValue is undefined, it gets changed a little bit and this could cause
 				// too many animations firing
-				if(newValue != oldValue && oldValue !== undefined) {
-					console.log("editable container directive toggling from " + oldValue + " to: " + newValue);
+				// alert("switching to:" +  newValue + ' from : ' + scope.editing);
+				if(newValue != scope.editing && (newValue === false || newValue === true)) {
 					scope.toggleEditing();
 				}
 			});
@@ -227,7 +233,7 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 			scope.toggleEditing = function(form){
 				editing = !editing;
 				scope.editing = editing;
-
+				scope.userFactory.setEditingOf(section, editing);
 				if(editing) {
 					showEditingAnimation();
 				}
@@ -236,7 +242,6 @@ lungeApp.directive("agEditableContainer", ['$animate', '$q', '$animateCss', 'Tra
 				}
 				if(!editing){
 					if(scope.onEditableHide) {
-						console.log("Calling scope.onEditableHide which is:", scope.onEditableHide);
 						scope.$eval(scope.onEditableHide);
 					}
 					else if(scope.reset) {

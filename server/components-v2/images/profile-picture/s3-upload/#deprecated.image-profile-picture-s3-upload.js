@@ -47,7 +47,7 @@ module.exports = function setup(options, imports, register) {
 					else if(response && response.statusCode == 200) {
 						console.log("image uploaded.");
 						return resolve({
-							url : "http://lungeapp.s3.amazonaws.com/profile-pictures/trainers/"
+							url : "//lungeapp.s3.amazonaws.com/profile-pictures/trainers/"
 							+ newS3Filename + path.extname(filepath)
 						})
 					}

@@ -1,442 +1,382 @@
 /* global io */
 'use strict';
-angular.module('ngLungeFullStack2App')
-	.factory('socket_v2', function($q, socketFactory, $rootScope) {
-		var ioSocket;
-		var socket;
-		var authenticatePromise = function(){
-			return new $q(function(resolve, reject) {
-				if(Socket_v2.authenticated) {
-					console.log("|socket_v2| authenticatePromise already authenticated");
-					return resolve(true);
-				}
-				if(!Socket_v2.socket) {
-					Socket_v2.init();
-				}
-				Socket_v2.socket.emit('custom-authenticate', { token : Socket_v2.token });
-				Socket_v2.socket.on('user:authenticated', function(){
-					console.log("Socket received event user:authenticated from authenticatePromise");
-					Socket_v2.authenticated = true;
-					return resolve(true);
-				});
-				Socket_v2.socket.on('unauth:connected', function(){
-					console.log("Socket received event unauth:connected from authenticatePromise");
-					Socket_v2.authenticated = false;
-					return resolve(false);
-				});
-			});
-		};
-		var Socket_v2 = {
-			ioSocket : false,
-			token : false,
-			authenticated : false,
-			rooms : [],
-
-			inRoom : function(roomName) {
-				for(var i = 0; i < this.rooms.length; i++) {
-					var roomAtIndex = this.rooms[i];
-					if(roomAtIndex == roomName) {
-						return true;
-					}
-				}
-				return false;
-			},
-
-			joinRoom : function(room) {
-				console.log("[Socket] join room: " + room);
-				this.socket.emit("joinRoom", room);
-				this.rooms.push(room);
-			},
-
-			leaveRoom : function(room) {
-				console.log("[Socket] leave room: " + room);
-				this.socket.emit("leaveRoom", room);
-				for(var i = 0; i < this.rooms.length; i++) {
-					var roomAtIndex = this.rooms[i];
-					if(roomAtIndex == room) {
-						this.rooms.splice(i, 1);
-						return;
-					}
-				}
-			},
-
-			authenticate : authenticatePromise,
-
-			// alias, so we know that something is authenticated
-			checkAuthentication : function(){
-				return this.authenticate();
-			},
-
-			reconnect : function() {
-				var self = this;
-				this.init(); // Not sure if this is necessary
-				function joinAllRooms(){
-					console.log("[Socket] joinAllRooms joining room list:", self.rooms);
-					for(var i = 0; i < self.rooms.length; i++) {
-						var room = self.rooms[i];
-						self.socket.emit('joinRoom', room);
-					}
-				}
-				this.authenticate().then(function(){
-					joinAllRooms();
-				});
-			},
-
-			// Initialize the socket, it can come with a blank query token (unauthed).
-			init : function(token){
-				console.log("[Socket] calling socket_v2.init()");
-				this.token = token;
-				if(this.socket) {
-					socket.connect();
-					this.socket = socket;
-					this.socket.emit('custom-authenticate', { token : token });
-					return;
-				}
-				this.token = token;
-				ioSocket = io('', {
-					// Send auth token on connection, you will need to DI the Auth service above
-					//forceNew: true,
-					query: 'token=' + token,
-					path: '/socket.io-client',
-					transports: ['websocket'] // ON PAAS (heroku) we cannot use Polling
-				});
-				socket = socketFactory({
-					ioSocket: ioSocket
-				});
-				this.socket = socket;
-				this.socket.emit('custom-authenticate', { token : token });
-
-				// If init is called twice, make sure we remove that reconnect event
-				this.socket.removeAllListeners('reconnect');
-				this.socket.on('reconnect', function(){
-					console.log("[Socket] reconnect event triggered");
-					this.reconnect();
-				}.bind(this))
-			},
-
-			reset : function() {
-				Socket_v2.ioSocket = false;
-				Socket_v2.token = false;
-			},
-
-			// Sync updates across the entire model, this can be useful for things that are rarely updated
-			// Like certifications
-			syncUpdates : function(modelName, cb) {
-				console.log("socket.service: syncUpdates() binding to: " + modelName + ":updated etc");
-				this.socket.on(modelName + ":saved", function(msg){
-					console.log("socket.service on " + modelName + ":saved");
-					cb('saved', msg);
-				});
-				this.socket.on(modelName + ":removed", function(msg){
-					cb('removed', msg);
-				});
-				this.socket.on(modelName + ":updated", function(msg){
-					console.log("socket.service on " + modelName + ":updated");
-					cb('updated', msg);
-				})
-			},
-
-			// Unsync the authe methods for a specific model name
-			unsyncAuth : function(modelName) {
-				// I removed this... I'm not sure this is necessary here.  It caused problems when
-				// navigating away from a user profile page
-				// this.socket.emit('logout');
-				this.socket.removeAllListeners(modelName + ':auth:updated');
-				this.socket.removeAllListeners(modelName + ':auth:logout');
-				this.socket.removeAllListeners(modelName + ':authenticated');
-			},
-
-			// Unsync updates across all possible model / modleObj possibilities.
-			// This doesn't however, take into account the auth: methods (maybe do that?)
-			unsyncUpdates: function (modelName, modelObj) {
-				this.socket.removeAllListeners(modelName + ':saved');
-				this.socket.removeAllListeners(modelName + ':removed');
-				this.socket.removeAllListeners(modelName + ':updated');
-				if(modelObj){
-					this.socket.removeAllListeners(modelName + ':' + modelObj._id + ':saved');
-					this.socket.removeAllListeners(modelName + ':' + modelObj._id + ':removed');
-					this.socket.removeAllListeners(modelName + ':' + modelObj._id + ':updated');
-				}
-			}
-		};
-		return Socket_v2;
-	});
-
-angular.module('ngLungeFullStack2App')
-	.factory('CertificationSyncer', function($timeout, socket_v2, $cookieStore, $rootScope, Auth) {
-		var CertificationSyncer = {
-			syncUnauth : function(cb){
-				cb = cb || angular.noop;
-				if(!socket_v2.socket) {
-					socket_v2.init();
-				}
-				// We only need to join the CertificationOrganization room, because every time we add a
-				// certificationType, the associated certificationOrganization will be altered and hence emit a :saved
-				socket_v2.socket.emit("joinRoom", "certificationOrganization");
-				socket_v2.syncUpdates('certificationOrganization', cb);
-				socket_v2.syncUpdates('certificationType', cb);
-			},
-			unsyncUnauth : function() {
-				socket_v2.unsyncUpdates('certificaitonOrganization');
-
-				socket_v2.unsyncUpdates('certificaitonType');
-			}
-		};
-		return CertificationSyncer;
-	});
-
-angular.module('ngLungeFullStack2App')
-	.factory('TrainerSyncer', function($timeout, socket_v2, $cookieStore, $rootScope, Auth) {
-		var TrainerSyncer = {
-			// When we're syncing to an actual token, we create a new socket and authenticate it,
-			// Then we attach some more methods such as _onLogout()
-			syncAuth : function(token) {
-				//alert("ontime");
-				socket_v2.init(token);
-				socket_v2.socket.on('trainer:authenticated', this._onAuthenticated);
-				//socket_v2.socket.on('trainer:' + Auth.getCurrentUser()._id + ':updated', this._onUpdated);
-				socket_v2.socket.on('trainer:auth:updated', this._onAuthUpdated);
-				socket_v2.socket.on('message', function(message){
-					console.log("Message:", message);
-					alert("NEW MESSAGE");
-				})
-			},
-			unsyncAuth : function(){
-				console.log("Socket (TrainerSyncer) is unsyncing the socket methods so that they don't get double-" +
-					"bound if we log-in again");
-				// unsync the trainer so events do not get double-bound when we happen to log-in again.
-				socket_v2.unsyncAuth('trainer');
-			},
-			// When we're just syncing this socket on a general :updated trainer method.
-			// for example, when we're on their profile page
-			syncUnauth : function(modelObj, cb) {
-				cb = cb || angular.noop;
-				if(!socket_v2.socket) {
-					socket_v2.init();
-				}
-				console.log(" [+] Socket is joining the syncUnauth room for: ", "trainer:" + modelObj._id);
-				socket_v2.socket.emit("joinRoom", "trainer:" + modelObj._id);
-				// note - we remove this listener in TrainerFactory
-				// TrainerFactory.unsyncModel removes this listener by calling FullMetalSocket.trainer.unsyncUnauth
-				//socket_v2.syncUpdates('trainer', function(msg){
-				//	console.log("TrainerSyncer.unauthSync() callback, make sure this does not fire repeatedly. " +
-				//	"Should sync with user: ", msg.email);
-				//	cb('updated', msg);
-				//});
-				socket_v2.socket.on("trainer:" + modelObj._id + ":updated" , function(msg){
-					// IF this fires repeatedly it means that the scope did not destroy the listeners when the scope
-					// itself was destroyed.  Must do that.
-					console.log("Socket - TrainerSyncer.unauthSync() callback, make sure this does not fire" +
-						" repeatedly. " +
-						"Should sync with user: ", msg.email);
-					cb('updated', msg);
-				});
-			},
-
-			// unsync the unauth'ed listeners.
-			unsyncUnauth : function(modelObj){
-				console.log(" [-] Socket is leaving the syncUnauth room for: ", "trainer:" + modelObj._id);
-				socket_v2.socket.emit("leaveRoom", "trainer:" + modelObj._id);
-				socket_v2.unsyncUpdates('trainer', modelObj);
-			},
-
-			_onAuthUpdated : function(modelObj) {
-				console.log(" [Socket - Authenticated Update] we have just updated a logged in trainer socket");
-				Auth.setCurrentUser(modelObj);
-			},
-
-			_onAuthenticated : function(modelObj) {
-				socket_v2.socket.on("trainer:auth:logout", TrainerSyncer._onLogout);
-			},
-
-			// When a trainer:auth:logout message is received from server
-			_onLogout : Auth.logoutBySocket,
-
-			logout : function(trainer) {
-				socket_v2.socket.emit('logout', trainer);
-			}
-		};
-		return TrainerSyncer;
-	});
-
-myApp.factory('ChatSocket', function(socket_v2, $rootScope) {
-	var ChatSocket = {
-		joinChat : function(chatId) {
-			var roomName = 'chat:' + chatId;
-			if(socket_v2.inRoom(roomName)) {
-				console.log("Socket already in room " + roomName + ", not binding socket events");
-				return false;
-			}
-			socket_v2.checkAuthentication().then(function(isAuthenticated) {
-				var socket = socket_v2.socket,
-					rooms = socket_v2.rooms;
-				socket.removeAllListeners('chat:' + chatId + ':joined');
-				// tells the server to check for the chat room, if I'm a member
-				socket.emit('joinChat', chatId);
-				// when the server returns... join the chat
-				socket.on('chat:' + chatId + ':joined', function () {
-					console.log("[ChatSocket] successfully joined chat room with id: ", chatId);
-					rooms.push(roomName);
-					console.log("Binding on chat:" + chatId + ":message to have an event");
-					socket.on('chat:' + chatId + ":message", function(message){
-						ChatSocket.onMessage(chatId, message);
-					})
-				})
-			});
-		},
-		leaveChat : function(chatId) {
-			console.log("[ChatSocket] calling unsync chat room with id: ", chatId);
-			socket_v2.leaveRoom('chat:' + chatId);
-			socket_v2.socket.removeAllListeners('chat:' + chatId + ':message');
-		},
-		onMessage : function(chatId, message) {
-			console.log("[ChatSocket] received through socket the message:", message);
-			$rootScope.$broadcast('chat:' + chatId + ':message', message);
-		}
-	};
-	return ChatSocket;
+var io; // just a fix to remove the warning we get from typescript for socket.io
+var LogPrefixer = (function () {
+    function LogPrefixer() {
+    }
+    LogPrefixer.prototype.prefix = function (prefix) {
+        var oldConsole = console.log;
+        Array.prototype.unshift.call(arguments, "[" + prefix + "] ");
+        return oldConsole.apply(this, arguments);
+    };
+    return LogPrefixer;
+}());
+angular.module('myApp').service('LogPrefixer', LogPrefixer);
+var SocketV2 = (function () {
+    function SocketV2($q, socketFactory, $rootScope) {
+        this.$q = $q;
+        this.socketFactory = socketFactory;
+        this.$rootScope = $rootScope;
+        this._authenticationStatus = 'ready'; // ready, pending, authenticated
+        this._resetAuthenticatePromise();
+        this._init();
+        this.rooms = [];
+    }
+    SocketV2.log = function () {
+        var optionalParams = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            optionalParams[_i - 0] = arguments[_i];
+        }
+        var prefix = 'SocketV2', oldConsole = console.log;
+        Array.prototype.unshift.call(arguments, "[" + prefix + "] ");
+        oldConsole.apply(this, arguments);
+    };
+    ;
+    SocketV2.prototype._resetAuthenticatePromise = function () {
+        var _this = this;
+        this._authenticationStatus = 'ready';
+        this._authenticatePromise = this.$q(function (resolve, reject) {
+            _this._authenticatePromiseResolve = resolve;
+            _this._authenticatePromiseReject = reject;
+        });
+    };
+    SocketV2.prototype._init = function (token) {
+        SocketV2.log("initializing socket");
+        this._ioSocket = io('', {
+            // Send auth token on connection, you will need to DI the Auth service above
+            //forceNew: true,
+            query: 'token=' + token,
+            path: '/socket.io-client',
+            transports: ['websocket'] // ON PAAS (heroku) we cannot use Polling
+        });
+        this._socket = this.socketFactory({
+            ioSocket: this._ioSocket
+        });
+        this._socket.on('reconnect', this._reconnect.bind(this));
+    };
+    SocketV2.prototype.authenticate = function (token, forceReset) {
+        var _this = this;
+        var tokenHasChanged = token && this._token && token != this._token;
+        if (forceReset || tokenHasChanged) {
+            console.log("the socket", this._socket);
+            // I'm calling init here because if the token changed that means i believe that we've RESET
+            // this socket connection, and you cant connect with it anymore.... ?????
+            this._init();
+            if (forceReset) {
+                console.warn("[SocketV2] force reset has been called");
+            }
+            else
+                console.warn("[SocketV2] Woah nelly, were logging in as someone else, the tokens changed!  Potential \n                problem...");
+            this._resetAuthenticatePromise();
+        }
+        this._token = token;
+        if (this._authenticationStatus == 'pending')
+            return this._authenticatePromise;
+        this._authenticationStatus = 'pending';
+        SocketV2.log('emitting custom-authenticate with token ? yes/no: ' + !!this._token);
+        this._socket.on('user:authenticated', function () {
+            SocketV2.log('received user:authenticated message from server');
+            _this._authenticationStatus = 'authenticated';
+            _this._authenticatePromiseResolve();
+        });
+        this._socket.emit('custom-authenticate', { token: this._token });
+        return this._authenticatePromise;
+    };
+    SocketV2.prototype.isInRoom = function (room) {
+        for (var i = 0; i < this.rooms.length; i++) {
+            var roomAtIndex = this.rooms[i];
+            if (roomAtIndex == room) {
+                return true;
+            }
+        }
+        return false;
+    };
+    SocketV2.prototype.leaveRoom = function (room) {
+        SocketV2.log("leaving room \"" + room + "\"");
+        this._socket.emit("leaveRoom", room);
+        for (var i = 0; i < this.rooms.length; i++) {
+            var roomAtIndex = this.rooms[i];
+            if (roomAtIndex == room) {
+                this.rooms.splice(i, 1);
+                return;
+            }
+        }
+    };
+    SocketV2.prototype.joinRoom = function (room) {
+        if (this.isInRoom(room)) {
+            console.warn("[SocketV2] joining a room multiple times... this shouldnt happen.  Room: " + room);
+        }
+        SocketV2.log("joining room \"" + room + "\"");
+        this._socket.emit("joinRoom", room);
+        this.rooms.push(room);
+    };
+    SocketV2.prototype._rejoinAllRooms = function () {
+        SocketV2.log("rejoining all rooms triggered");
+        for (var i = 0; i < this.rooms.length; i++) {
+            var room = this.rooms[i];
+            this._socket.emit('joinRoom', room);
+        }
+    };
+    SocketV2.prototype._reconnect = function () {
+        var _this = this;
+        SocketV2.log("reconnect event triggered");
+        this.authenticate(this._token, true).then(function () {
+            _this._rejoinAllRooms();
+        });
+    };
+    SocketV2.prototype.watchModelChanges = function (model, callback) {
+        var savedMessageEvent = model + ":saved", updatedMessageEvent = model + ":updated", removedMessageEvent = model + ":removed";
+        this._socket.on(savedMessageEvent, function (msg) {
+            callback('saved', msg);
+        });
+        this._socket.on(updatedMessageEvent, function (msg) {
+            callback('updated', msg);
+        });
+        this._socket.on(removedMessageEvent, function (msg) {
+            callback('removed', msg);
+        });
+    };
+    SocketV2.prototype.unwatchModelChanges = function (model) {
+        var savedMessageEvent = model + ":saved", updatedMessageEvent = model + ":updated", removedMessageEvent = model + ":removed";
+        this._socket.removeAllListeners(savedMessageEvent);
+        this._socket.removeAllListeners(updatedMessageEvent);
+        this._socket.removeAllListeners(removedMessageEvent);
+    };
+    SocketV2.prototype.unsyncModelAuth = function (model) {
+        var authUpdatedMessage = model + ":auth:updated", authLogoutMessage = model + ":auth:logout", authenticatedMessage = model + ":authenticated";
+        this._socket.removeAllListeners(authUpdatedMessage);
+        this._socket.removeAllListeners(authLogoutMessage);
+        this._socket.removeAllListeners(authenticatedMessage);
+    };
+    SocketV2.prototype.onLogout = function () {
+        this._resetAuthenticatePromise();
+    };
+    SocketV2.prototype.logout = function () {
+        this.onLogout();
+        this.unsyncModelAuth('user');
+    };
+    SocketV2.$inject = ['$q', 'socketFactory', '$rootScope'];
+    return SocketV2;
+}());
+angular.module('myApp').service('SocketV2', SocketV2);
+angular.module('myApp')
+    .factory('CertificationSyncer', function ($timeout, SocketV2, $cookieStore, $rootScope) {
+    var CertificationSyncer = {
+        syncUnauth: function (cb) {
+            cb = cb || angular.noop;
+            // SocketV2
+            // if(!socket_v2.socket) {
+            // socket_v2.init();
+            // }
+            // We only need to join the CertificationOrganization room, because every time we add a
+            // certificationType, the associated certificationOrganization will be altered and hence emit a :saved
+            SocketV2.join('certificationOrganization');
+            SocketV2.on('certificationOrganization:saved');
+            SocketV2.watchModelChanges('certificationOrganization', cb);
+            SocketV2.watchModelChanges('certificationType', cb);
+        },
+        unsyncUnauth: function () {
+            SocketV2.unwatchModelChanges('certificationOrganization');
+            SocketV2.unwatchModelChanges('certificationType');
+        }
+    };
+    return CertificationSyncer;
 });
-
-angular.module('ngLungeFullStack2App')
-	.factory('UserSyncer', function($timeout, socket_v2, $cookieStore, $rootScope, Auth) {
-		var UserSyncer = {
-			// When we're syncing to an actual token, we create a new socket and authenticate it,
-			// Then we attach some more methods such as _onLogout()
-			syncAuth : function(token) {
-				socket_v2.init(token);
-				socket_v2.socket.on('user:authenticated', this._onAuthenticated);
-				//socket_v2.socket.on('trainer:' + Auth.getCurrentUser()._id + ':updated', this._onUpdated);
-				socket_v2.socket.on('user:auth:updated', this._onAuthUpdated);
-				// socket_v2.socket.on('message', function(message){
-				// 	console.log("Message:", message);
-				// 	alert("NOOOOOOOOO NEW MESSAGE");
-				// })
-			},
-			unsyncAuth : function(){
-				console.log("Socket (TrainerSyncer) is unsyncing the socket methods so that they don't get double-" +
-					"bound if we log-in again");
-				// unsync the trainer so events do not get double-bound when we happen to log-in again.
-				socket_v2.unsyncAuth('user');
-			},
-			// When we're just syncing this socket on a general :updated trainer method.
-			// for example, when we're on their profile page
-			syncUnauth : function(modelObj, cb) {
-				cb = cb || angular.noop;
-				if(!socket_v2.socket) {
-					socket_v2.init();
-				}
-				console.log(" [+] Socket is joining the syncUnauth room for: ", "user:" + modelObj._id);
-				// var e = new Error();
-				// console.log(e.stack);
-				// socket_v2.socket.emit("joinRoom", "user:" + modelObj._id);
-				socket_v2.joinRoom('user:' + modelObj._id);
-				socket_v2.socket.on("user:" + modelObj._id + ":updated" , function(msg){
-					// IF this fires repeatedly it means that the scope did not destroy the listeners when the scope
-					// itself was destroyed.  Must do that.
-					console.log("Socket - UserSyncer.unauthSync() callback, make sure this does not fire" +
-						" repeatedly. " +
-						"Should sync with user: ", msg.email);
-					cb('updated', msg);
-				});
-			},
-
-			// unsyncUnauthUserFactory : function(modelObj) {
-			// 	console.log(" [-] Socket is leaving the syncUnauth room for: ", "user:" + modelObj._id);
-			// 	socket_v2.socket.emit("leaveRoom", "user:" + modelObj._id);
-			// 	socket_v2.unsyncUpdates('user', modelObj);
-			// },
-
-			syncUnauthUserFactory : function(userFactory) {
-				if(!socket_v2.socket) {
-					socket_v2.init();
-				}
-				var user = userFactory.user;
-				if(!user || !user._id) {
-					console.warn('attempting to sync a user factory without a user');
-					return;
-				}
-				console.log(" [+] Socket is joining the syncUnauth room for: ", "user:" + user._id);
-				// var e = new Error();
-				// console.log(e.stack);
-				// socket_v2.socket.emit("joinRoom", "user:" + modelObj._id);
-				socket_v2.joinRoom('user:' + user._id);
-				socket_v2.socket.on("user:" + user._id + ":updated" , function(msg){
-					// IF this fires repeatedly it means that the scope did not destroy the listeners when the scope
-					// itself was destroyed.  Must do that.
-					console.log("Socket - UserSyncer.unauthSync() callback, make sure this does not fire" +
-						" repeatedly. " +
-						"Should sync with user: ", msg.email);
-					userFactory.init(msg);
-				});
-			},
-
-			// unsync the unauth'ed listeners.
-			unsyncUnauthUserFactory : function(modelObj){
-				console.log(" [-] Socket is leaving the syncUnauth room for: ", "user:" + modelObj._id);
-				// socket_v2.socket.emit("leaveRoom", "user:" + modelObj._id);
-				socket_v2.leaveRoom('user:' + modelObj._id);
-				socket_v2.unsyncUpdates('user', modelObj);
-			},
-
-			_onAuthUpdated : function(modelObj) {
-				console.log(" [Socket - User Authenticated Update] we have just updated a logged in trainer socket" +
-					" with current user now: ", modelObj);
-				Auth.setCurrentUser(modelObj);
-			},
-
-			_onAuthenticated : function(modelObj) {
-				socket_v2.isAuthenticated = socket_v2.authenticated = true;
-				socket_v2.socket.removeAllListeners("user:auth:logout");
-				socket_v2.socket.on("user:auth:logout", UserSyncer._onLogout);
-			},
-
-			// syncChatRoom : function(chatRoomId) {
-			// 	console.log("[Socket] calling sync chat room with id: ", chatRoomId);
-			// 	if(!socket_v2.socket) {
-			// 		socket_v2.init();
-			// 	}
-			// 	socket_v2.joinRoom('chat:' + chatRoomId);
-			//
-			// },
-			//
-			// unsyncChatRoom : function(chatRoomId) {
-			// 	console.log("[Socket] calling un-sync chat room with id: ", chatRoomId);
-			// 	socket_v2.leaveRoom('chat:' + chatRoomId);
-			// },
-			// When a trainer:auth:logout message is received from server
-			_onLogout : function() {
-				socket_v2.socket.removeAllListeners();
-				socket_v2.isAuthenticated = false;
-				Auth.logoutBySocket();
-			},
-
-			logout :function(user) {
-				socket_v2.socket.emit('logout', user);
-			}
-
-		};
-		return UserSyncer;
-	});
-angular.module('ngLungeFullStack2App')
-	.factory('FullMetalSocket', function(UserSyncer, socket_v2, TrainerSyncer, Auth, CertificationSyncer) {
-		//socket_v2.init();
-		var FullMetalSocketOverrides = {
-			testConnect : function() {
-				if(!socket_v2.socket) {
-					socket_v2.init();
-				}
-			},
-			testDisconnect : function() {
-
-			}
-		};
-		var FullMetalSocket = angular.extend(
-			{ trainer : TrainerSyncer },
-			{ user : UserSyncer },
-			{ certification : CertificationSyncer },
-			FullMetalSocketOverrides, {}
-		);
-		//console.log("FullMetalSocket is:", FullMetalSocket);
-		Auth.setFullMetalSocket(FullMetalSocket);
-		return FullMetalSocket;
-	});
+angular.module('myApp').factory('ChatSocket', function (SocketV2, $rootScope) {
+    var ChatSocket = {
+        joinChat: function (chatId) {
+            var roomName = 'chat:' + chatId;
+            if (SocketV2.isInRoom(roomName)) {
+                console.log("Socket already in room " + roomName + " + \", not binding socket events");
+                return false;
+            }
+            SocketV2.authenticate().then(function () {
+                var socket = SocketV2._socket, joinedRoomEvent = "chat:" + chatId + ":joined";
+                socket.removeAllListeners(joinedRoomEvent);
+                socket.emit('joinChat', chatId);
+                socket.on(joinedRoomEvent, function () {
+                    console.log("successfully joined chat room with id " + chatId);
+                    var newMessageEvent = "chat:" + chatId + ":message", messageSeenEvent = "chat:" + chatId + ":message-seen", messagePreviewUpdateEvent = "chat:" + chatId + ":message-preview-update";
+                    SocketV2.rooms.push(roomName);
+                    socket.on(newMessageEvent, function (message) {
+                        ChatSocket.onMessage(chatId, message);
+                    });
+                    socket.on(messageSeenEvent, function (message) {
+                        ChatSocket.onMessageSeen(chatId, message);
+                    });
+                    socket.on(messagePreviewUpdateEvent, function (message) {
+                        ChatSocket.onMessagePreviewUpdate(chatId, message);
+                    });
+                });
+            });
+        },
+        leaveChat: function (chatId) {
+            console.log("[ChatSocket] calling unsync chat room with id: ", chatId);
+            SocketV2.leaveRoom("chat:" + chatId);
+            SocketV2._socket.removeAllListeners("chat:" + chatId + ":message");
+            // socket_v2.leaveRoom('chat:' + chatId);
+            // socket_v2.socket.removeAllListeners('chat:' + chatId + ':message');
+        },
+        onMessage: function (chatId, message) {
+            console.log("[ChatSocket] received through socket the message:", message.message);
+            $rootScope.$broadcast('chat:' + chatId + ':message', message);
+        },
+        onMessageSeen: function (chatId, message) {
+            console.log("[ChatSocket] received through socket the message seen notification for message:", message.message);
+            $rootScope.$broadcast('chat:' + chatId + ':message-seen', message);
+        },
+        onMessagePreviewUpdate: function (chatId, message) {
+            console.log("[ChatSocket] received through socket the message preview update notification for message:", message.last_message_text);
+            $rootScope.$broadcast('chat:' + chatId + ':message-preview-update', message);
+            // $rootScope.$broadcast('chat:' + chatId + ':message-seen', message);
+        }
+    };
+    return ChatSocket;
+});
+angular.module('myApp').factory('UserReviewsSocket', function (SocketV2, $rootScope) {
+    var UserReviewsSocket = {
+        roomPrefix: 'user-reviews',
+        createRoomName: function (userId) {
+            return this.roomPrefix + ':' + userId;
+        },
+        watchReviewUpdatesForUser: function (userId, callback) {
+            var eventSuffix = 'review-updated', roomName = this.createRoomName(userId), eventName = 'review-updated';
+            if (SocketV2.isInRoom(roomName))
+                return console.log(this.roomPrefix + " socket already in room " + roomName + ", not binding socket" +
+                    " events");
+            var socket = SocketV2._socket, rooms = SocketV2.rooms;
+            socket.emit('joinRoom', roomName);
+            socket.removeAllListeners(eventName);
+            socket.on(eventName, callback);
+        },
+        unwatchReviewUpdatesForUser: function (userId) {
+            // console.log("[ChatSocket] calling unsync chat room with id: ", chatId);
+            // socket_v2.leaveRoom('chat:' + chatId);
+            // socket_v2.socket.removeAllListeners('chat:' + chatId + ':message');
+        },
+        onMessage: function (chatId, message) {
+            console.log("[ChatSocket] received through socket the message:", message);
+            $rootScope.$broadcast('chat:' + chatId + ':message', message);
+        },
+        onMessageSeen: function (chatId, message) {
+            console.log("[ChatSocket] received through socket the message seen notification for message:", message);
+            $rootScope.$broadcast('chat:' + chatId + ':message-seen', message);
+        },
+        onMessagePreviewUpdate: function (chatId, message) {
+            console.log("[ChatSocket] received through socket the message preview update notification for message:", message);
+            $rootScope.$broadcast('chat:' + chatId + ':message-preview-update', message);
+        }
+    };
+    return UserReviewsSocket;
+});
+var UserSyncer = (function () {
+    function UserSyncer(Chat, SocketV2, $rootScope, Auth) {
+        this.Chat = Chat;
+        this.SocketV2 = SocketV2;
+        this.$rootScope = $rootScope;
+        this.Auth = Auth;
+        // this.log = LogPrefixer(this.constructor.name);
+    }
+    UserSyncer.log = function () {
+        var optionalParams = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            optionalParams[_i - 0] = arguments[_i];
+        }
+        var prefix = 'UserSyncer', oldConsole = console.log;
+        Array.prototype.unshift.call(arguments, "[" + prefix + "] ");
+        oldConsole.apply(this, arguments);
+    };
+    ;
+    UserSyncer.prototype.syncAuth = function (token) {
+        var _this = this;
+        var onAuthenticatedMessage = "user:authenticated", onAuthUpdatedMessage = "user:auth:updated";
+        UserSyncer.log('attempting to sync auth message callbacks');
+        this.SocketV2.authenticate(token).then(function () {
+            UserSyncer.log('auth message callbacks synced');
+            _this.SocketV2._socket.on(onAuthenticatedMessage, _this._onAuthenticated.bind(_this));
+            _this.SocketV2._socket.on(onAuthUpdatedMessage, _this._onAuthUpdated.bind(_this));
+        });
+        // this.SocketV2._socket.removeAllListeners(onAuthenticatedMessage);
+        // this.SocketV2._socket.removeAllListeners(onAuthUpdatedMessage);
+    };
+    UserSyncer.prototype.unsyncAuth = function () {
+        UserSyncer.log("Socket (TrainerSyncer) is unsyncing the socket methods so that they don't get double-" +
+            "bound if we log-in again");
+        // unsync the trainer so events do not get double-bound when we happen to log-in again.
+        this.SocketV2.unsyncModelAuth('user');
+    };
+    UserSyncer.prototype.syncUnauth = function (modelObj, cb) {
+        cb = cb || angular.noop;
+        UserSyncer.log("joining the user sync unauth room for user: " + modelObj._id);
+        var roomName = "user:" + modelObj._id, updatedMessage = "user:" + modelObj._id + ":updated";
+        this.SocketV2.joinRoom(roomName);
+        this.SocketV2._socket.on(updatedMessage, function (msg) {
+            UserSyncer.log("UserSyncer.unauthSync() callback, make sure this does not fire" +
+                " repeatedly. Should sync with user: ", msg.email);
+            cb('updated', msg);
+        });
+    };
+    UserSyncer.prototype.syncUnauthUserFactory = function (userFactory) {
+        var user = userFactory.user, roomName = "user:" + user._id, updatedMessage = "user:" + user._id + ":updated";
+        if (!user || !user._id) {
+            console.error('[UserSyncer] attempting to sync a user factory without a user');
+            return;
+        }
+        this.SocketV2.joinRoom(roomName);
+        this.SocketV2._socket.on(updatedMessage, function (msg) {
+            UserSyncer.log("UserSyncer.unauthSync() callback, make sure this does not fire repeatedly. \n            Should sync with user: " + msg.email);
+            userFactory.init(msg);
+        });
+    };
+    UserSyncer.prototype.unsyncUnauthUserFactory = function (userFactory) {
+        if (!userFactory.user || !userFactory.user._id) {
+            console.error('[UserSyncer] attempting to unsync a user factory with no user');
+        }
+        this.SocketV2.leaveRoom("user:" + userFactory.user._id);
+        this.SocketV2.unwatchModelChanges('user', userFactory.user);
+    };
+    UserSyncer.prototype._onAuthUpdated = function (modelObj) {
+        console.log("[Socket - User Authenticated Update] we have just updated a logged in trainer with id:" +
+            modelObj._id);
+        this.Auth.onSocketUpdatedMessage(modelObj);
+    };
+    UserSyncer.prototype._onAuthenticated = function (modelObj) {
+        var userAuthLogoutMessage = "user:auth:logout", chatMessagePreviewUpdateMessage = "chat:message-preview-update";
+        this.SocketV2._socket.removeAllListeners(userAuthLogoutMessage);
+        this.SocketV2._socket.on("user:auth:logout", this._onLogout.bind(this));
+        this.SocketV2._socket.removeAllListeners(chatMessagePreviewUpdateMessage);
+        this.SocketV2._socket.on(chatMessagePreviewUpdateMessage, this._onChatPreviewUpdate.bind(this));
+    };
+    UserSyncer.prototype._onChatPreviewUpdate = function (message) {
+        console.log("[User Socket] chat:message-preview-update message received for message: ", message.last_message_text);
+        this.Chat.updatePreviewWebsocketMessageReceived(message);
+    };
+    UserSyncer.prototype._onLogout = function () {
+        this.SocketV2._socket.removeAllListeners();
+        this.SocketV2.onLogout();
+        this.Auth.logoutBySocket();
+    };
+    UserSyncer.prototype.logout = function (user) {
+        this.SocketV2._socket.emit('logout', user);
+    };
+    UserSyncer.$inject = ['Chat', 'SocketV2', '$rootScope', 'Auth'];
+    return UserSyncer;
+}());
+angular.module('myApp').service('UserSyncer', UserSyncer);
+angular.module('myApp')
+    .factory('FullMetalSocket', function (UserSyncer, SocketV2, CertificationSyncer) {
+    //socket_v2.init();
+    var FullMetalSocketOverrides = {
+        // testConnect : function() {
+        // 	if(!socket_v2.socket) {
+        // 		socket_v2.init();
+        // 	}
+        // },
+        testDisconnect: function () {
+        }
+    };
+    var FullMetalSocket = angular.extend(
+    // { trainer : TrainerSyncer },
+    { user: UserSyncer }, { certification: CertificationSyncer }, FullMetalSocketOverrides, {});
+    return FullMetalSocket;
+});

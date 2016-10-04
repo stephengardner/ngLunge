@@ -1,0 +1,14 @@
+{
+  "name": "api-review.router.js",
+  "version": "0.0.1",
+  "main": "api-review.router.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "apiReviewController",
+      "bruteforce",
+      "auth"
+    ],
+    "provides": ["apiReviewRouter"]
+  }
+}

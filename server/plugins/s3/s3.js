@@ -10,4 +10,4 @@ module.exports = function setup(options, imports, register) {
 	register(null, {
 		s3 : client
 	})
-}
+}; 

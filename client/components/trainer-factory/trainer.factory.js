@@ -68,63 +68,11 @@ myApp.factory("TrainerFactory", function(lodash,
 			return this.trainer && Auth.getCurrentUser() && this.trainer._id == Auth.getCurrentUser()._id;
 		},
 		setEditingOf : function(property, value) {
-			console.log("trainer.factory setting editing of '" + property + "' to: " + value);
+			console.log("[TrainerFactory] setting editing of '" + property + "' to: " + value);
 			this.isEditing[property] = value;
 		},
 		initToCurrentTrainerIfNecessary : function() {
-			var self = this;
-			this.loading = true;
-			var isTrainerFactoryAlreadySet = Auth.getCurrentUser() &&
-				Auth.getCurrentUser()._id &&
-				Auth.getCurrentUser()._id == TrainerFactory.trainer._id;
-			if(isTrainerFactoryAlreadySet) {
-				console.log("Trainer Account Controller NOT reloading trainerfactory");
-				// don't re-init TrainerFactory, it's already on the right person.
-				// $scope.trainerFactory = TrainerFactory;
-				// Actually, we're just going to doGetTrainer anyways.
-				// this is because it doesn't really do anything extra, but it does wait for menu to close.
-				doGetTrainer();
-			}
-			else {
-				console.log("Trainer Account Controller RELOADING TRAINERFACTORY");
-				doGetTrainer();
-			}
-
-			function doGetTrainer(){
-				TrainerFactory.unset();
-				if(Menu.isOpenLeft) {
-					var unbindWatch = $rootScope.$watch(function(){
-						return Menu.isOpenLeft
-					}, function(newValue, oldValue){
-						if(newValue === false) {
-							getTrainer();
-							unbindWatch();
-						}
-					});
-				}
-				else getTrainerWithTimeout();
-
-				function getTrainerWithTimeout() {
-					$timeout(function() {
-						getTrainer();
-					}, 50);
-				}
-
-				function getTrainer() {
-					Auth.isLoggedInAsync(function () {
-						if (Auth.getCurrentType() == "trainer") {
-							self.loading = false;
-							// $scope.trainerFactory = TrainerFactory;
-							TrainerFactory.init(Auth.getCurrentUser(), {
-								sync: true
-							});
-						}
-						else {
-							// $scope.user = Auth.getCurrentUser();
-						}
-					});
-				}
-			}
+			this.init(Auth.getCurrentUser());
 		},
 		// When updating the TrainerFactory, we will ultimately get synced with the response from the server.
 		// But if updating multiple sections, we don't want trainerEditing updated when it's still in editing mode.
@@ -194,7 +142,6 @@ myApp.factory("TrainerFactory", function(lodash,
 		// That way, if we're updating multiple sections but hit save, we know we're only saving the trainerEditing
 		// data from that specific section.
 		_createSendObjectFromSection : function(section) {
-			console.log("This.trainer is... (and no locations should be null):", this.trainer);
 			var copyOfTrainer = angular.copy(this.trainer);
 			var mergeObject = this._createMergeObjectBySection(section);
 			var toReturn = lodash.deepExtend(copyOfTrainer, mergeObject);
@@ -461,10 +408,8 @@ myApp.factory("TrainerFactory", function(lodash,
 		},
 		syncModel : function() {
 			var cb = this.params.syncCallback || angular.noop;
-			console.log("trainerFactory calling syncModel with trainer:", this.trainer);
 			FullMetalSocket.user.syncUnauth(this.trainer, function(event, newTrainer) {
-				console.log("The user factory synced using a socket and the socket came back with this" +
-					" as the newTrainer:", newTrainer);
+				console.log('[TrainerFactory] syncing the model with trainerId: ' + newTrainer._id);
 				// Set the trainer to be the response, and the trainerEditing to be the response minus anything
 				// we want to keep that is still editing
 				this.trainer = newTrainer;
@@ -481,10 +426,11 @@ myApp.factory("TrainerFactory", function(lodash,
 				$rootScope.$broadcast('trainerUpdated'); // must be at the END
 				cb(event, newTrainer);
 			}.bind(this))
-
 		},
 		unsyncModel : function(){
-			FullMetalSocket.user.unsyncUnauthUserFactory(TrainerFactory.trainer);
+			if(this.trainer) {
+				FullMetalSocket.user.unsyncUnauthUserFactory(this);
+			}
 		}
 	};
 	function createMergeObjectV2(section) {

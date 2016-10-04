@@ -1,0 +1,17 @@
+{
+  "name": "reviewSubmitter",
+  "version": "0.0.1",
+  "main": "review-submitter.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userPopulator",
+      "apiErrorHandler",
+      "reviewModel",
+      "logger"
+    ],
+    "provides": [
+      "reviewSubmitter"
+    ]
+  }
+}

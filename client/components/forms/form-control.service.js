@@ -43,7 +43,10 @@ lungeApp.factory("FormControl", function(broadcastService, lodash){
 		setError : function(form, propertyName, errorMessage) {
 			console.log(" [FormControl] Setting form." + propertyName + " to error: ", errorMessage);
 			if(form && form[propertyName]) {
+				form.$setSubmitted();
 				form[propertyName].$setValidity('mongoose', false);
+				if(!form.errors) form.errors = {};
+				form.errors[propertyName] = errorMessage;
 			}
 			if(errorMessage && this.errors) {
 				this.errors[propertyName] = errorMessage;

@@ -13,7 +13,6 @@ module.exports = function setup(options, imports, register) {
 				async.waterfall([
 					function getMap(callback) {
 						certificationMapCreator.create(trainer).then(function(map){
-							console.log("The map:", map);
 							organizationMap = map;
 							callback();
 						}).catch(callback);

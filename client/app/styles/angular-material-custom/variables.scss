@@ -1,0 +1,18 @@
+$material-menu-width : 400px;
+$material-menu-width-md : 350px;
+$material-menu-width-sm : 250px;
+
+@mixin styleMenuWidth() {
+	// your SCSS here, e.g.
+	transition: max-width .5s, width .5s;
+	width : $material-menu-width;
+	max-width: $material-menu-width; // this is actually necessary due to flexbox
+	@include respond-to(md) {
+		width : $material-menu-width-md;
+		max-width: $material-menu-width-md; // this is actually necessary due to flexbox
+	}
+	@include respond-to(sm) {
+		width : $material-menu-width-sm;
+		max-width: $material-menu-width-sm; // this is actually necessary due to flexbox
+	}
+}

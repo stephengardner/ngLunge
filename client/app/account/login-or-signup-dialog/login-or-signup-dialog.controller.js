@@ -1,24 +1,13 @@
 myApp.controller('LoginOrSignupDialogController', function($mdToast,
-                                                     FormControl,
-                                                     Auth,
-                                                     $auth,
-                                                     $state,
+                                                           FormControl,
+                                                           Auth,
+                                                           $auth,
+                                                           $state,
                                                            $timeout,
-                                                     $http,
-                                                     $scope){
-
+                                                           $mdDialog,
+                                                           $http,
+                                                           $scope){
 	$scope.type = 'trainee';
-
-	// $scope.getSelectedTab = function() {
-	// 	if($scope.type == 'trainer') {
-	// 		$scope.loginSelectedIndex = 1;
-	// 		$scope.signupSelectedIndex = 1;
-	// 	}
-	// 	else {
-	// 		$scope.loginSelectedIndex = 0;
-	// 		$scope.signupSelectedIndex = 0;
-	// 	}
-	// };
 
 	$scope.loginSelectedIndex = 0;
 	$scope.signupSelectedIndex = 0;
@@ -28,11 +17,10 @@ myApp.controller('LoginOrSignupDialogController', function($mdToast,
 
 	$scope.loginOrSignup = 'login';
 
-
 	$scope.selectLoginOrSignup = function(loginOrSignup) {
 		$scope.loginOrSignup = loginOrSignup;
 	};
-	$scope.user = {};
+	$scope.trainerLoginLocal = {};
 	$scope.errors = {};
 	$scope.tabs = {
 		User : {
@@ -45,22 +33,18 @@ myApp.controller('LoginOrSignupDialogController', function($mdToast,
 
 	$scope.loginFromDialog = function(form) {
 		$scope.submitted = true;
-		console.log("FORM:",form);
 		if(form.$valid) {
 			$http({
 				method : "POST",
 				url : 'auth/local',
 				data : {
 					type : 'trainer',
-					email : $scope.user.email,
-					password : $scope.user.password
+					email : $scope.trainerLoginLocal.email,
+					password : $scope.trainerLoginLocal.password
 				}
 			}).success(function(response) {
-				console.log("Response:", response);
 				Auth.setCurrentUser(response.trainer);
-				if($scope.afterLogin) {
-					$scope.afterLogin();
-				}
+				$mdDialog.hide();
 			}).error(function(err){
 				console.log("Err:", err);
 				FormControl.parseValidationErrors(form, err);
@@ -74,9 +58,7 @@ myApp.controller('LoginOrSignupDialogController', function($mdToast,
 		$auth.authenticate(provider, {type : type + '-login'}).then(function(response){
 			$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));
 			Auth.setCurrentUser(response.data[type]);
-			if($scope.afterLogin) {
-				$scope.afterLogin();
-			}
+			$mdDialog.hide(response);
 		}).catch(function(err){
 			$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
 			console.log("err", err);
@@ -86,16 +68,10 @@ myApp.controller('LoginOrSignupDialogController', function($mdToast,
 		$auth.authenticate(provider, {type : 'trainer-login'}).then(function(response){
 			$mdToast.show($mdToast.simple().position('top right').textContent('Successfully logged in!'));
 			Auth.setCurrentUser(response.data.trainer);
-			if($scope.afterLogin) {
-				$scope.afterLogin();
-			}
+			$mdDialog.hide(response);
 		}).catch(function(err){
 			$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
 			console.log("err", err);
 		});
 	};
-
-	$timeout(function(){
-		$scope.test = 1;
-	}, 1300);
 });

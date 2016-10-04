@@ -1,6 +1,6 @@
 <!--<div ng-cloak>-->
-<div class="loading-block-lg" ng-if="!trainerFactory.trainer.name"></div>
-<md-card class="section-animate-in" ng-if="trainerFactory.trainer.name">
+<div class="loading-block-lg" ng-if="!userFactory.user.name"></div>
+<md-card class="section-animate-in" ng-if="userFactory.user.name">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -8,7 +8,7 @@
             </h2>
             <span flex></span>
             <md-button class="md-icon-button"
-                       ng-if="editable"
+                       ng-if="userFactory.isMe()"
                        ng-click="locationDialog($event)">
                 <md-icon>
                     <i class="material-icons">add</i>
@@ -17,9 +17,11 @@
         </div>
     </md-toolbar>
     <md-card-content class="map">
-        <trainer-map></trainer-map>
+        <trainer-map>
+        </trainer-map>
     </md-card-content>
     <!--<trainer-map-add-location editable="{{editable}}"></trainer-map-add-location>-->
-    <trainer-map-locations editable="{{editable}}"></trainer-map-locations>
+    <trainer-map-locations editable="userFactory.isMe()">
+    </trainer-map-locations>
 </md-card>
 <!--</div>-->

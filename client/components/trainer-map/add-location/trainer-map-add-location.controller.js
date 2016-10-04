@@ -20,7 +20,6 @@ lungeApp.controller("TrainerMapAddLocationController", function(TrainerFactory, 
 
 	$scope.errors = FormControl.errors;
 	$scope.removeMongooseError = FormControl.removeMongooseError;
-	$scope.trainerFactory = TrainerFactory;
 
 
 	// Clicking "Add a location" button
@@ -29,7 +28,7 @@ lungeApp.controller("TrainerMapAddLocationController", function(TrainerFactory, 
 		if(!$scope.boundGeocoder) {
 			$scope.boundGeocoder = true;
 			Geocoder.bindPlaces("#geocoder-location", function(updatedLocation){
-				TrainerFactory.newLocation = updatedLocation;
+				$scope.userFactory.newLocation = updatedLocation;
 				$scope.$apply();
 			});
 		}

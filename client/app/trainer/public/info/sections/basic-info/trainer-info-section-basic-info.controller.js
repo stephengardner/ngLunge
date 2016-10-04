@@ -4,17 +4,16 @@ myApp.controller("TrainerInfoSectionBasicInfoController", function(lodash,
                                                                    FormControl, 
                                                                    $scope){
 	$scope.editing = false;
-	$scope.trainerFactory = TrainerFactory;
 	$scope.ajax = {};
 
 	$scope.reset = function(form) {
 		FormControl.removeAllMongooseErrors(form);
-		TrainerFactory.resetEditing('basicInfo');
+		$scope.userFactory.resetEditing('basicInfo');
 	};
 
 	$scope.submit = function(form) {
 		$scope.ajax.busy = true;
-		$scope.cgBusy = TrainerFactory.save('basicInfo').then(function(response){
+		$scope.cgBusy = $scope.userFactory.save('basicInfo').then(function(response){
 				$scope.ajax.busy = false;
 				AlertMessage.success("Basic info updated");
 		}).catch(function(err){

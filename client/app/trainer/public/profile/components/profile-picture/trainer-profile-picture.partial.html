@@ -4,10 +4,10 @@
     <form name="profilePictureForm">
         <!-- profile picture -->
         <div id="profile-picture" class="profile-picture"
-             ng-if="trainerFactory.trainer"
-             bg-image="{{trainerFactory.trainer.profile_picture.thumbnail.url}}">
+             ng-if="userFactory.user"
+             bg-image="{{userFactory.user.profile_picture.thumbnail.url}}">
         </div>
-        <a ng-if="isMe() && trainerFactory.trainer.profile_picture.thumbnail.url"
+        <a ng-if="userFactory.isMe() && userFactory.user.profile_picture.thumbnail.url"
            id="profilePictureUploadButton"
            class="upload-button"
            ng-click="saveClickEventForModal($event)"

@@ -1,10 +1,12 @@
 <div id="profile" ng-cloak> <!-- ng-cloak WORKS here, even when loading -->
-    <ag-trainer-masthead></ag-trainer-masthead>
+    <ag-trainer-masthead user-factory="userFactory"
+                         ng-if="userFactory.user">
+    </ag-trainer-masthead>
     <div id="profile-body"
          layout="row"
          layout-align="center center">
-        <div class="ag-flex-column" ng-if="trainerFactory.trainer">
-            <div ng-if="!trainerFactory.trainer">
+        <div class="ag-flex-column" ng-if="userFactory.user">
+            <div ng-if="!userFactory.user">
                 <div class="loading-block-md">
                     <div class="header"></div>
                     <div class="body"></div>
@@ -18,27 +20,32 @@
                     <div class="body"></div>
                 </div>
             </div>
-            <trainer-map-card editable="{{isMe()}}"
+            <reviews-card ng-if="userFactory.user"
+                          user-factory="userFactory"
+                          editable="{{isMe()}}"
+                          class="section-animate-in">
+            </reviews-card>
+            <trainer-map-card user-factory="userFactory"
                               class="section-animate-in">
             </trainer-map-card>
-            <trainer-work editable="{{isMe()}}"
-                          class="section-animate-in">
+            <trainer-work class="section-animate-in">
             </trainer-work>
-            <specialties ng-if="trainerFactory.trainer"
-                         editable="{{isMe()}}"
+            <specialties user-factory="userFactory"
                          class="section-animate-in">
             </specialties>
-            <rates ng-if="trainerFactory.trainer"
-                   editable="{{isMe()}}"
-                   class="section-animate-in">
+            <rates class="section-animate-in">
             </rates>
-            <certifications-card ng-if="trainerFactory.trainer"
-                                 editable="{{isMe()}}"
+            <certifications-card user-factory="userFactory"
                                  class="section-animate-in">
             </certifications-card>
         </div>
     </div>
 </div>
 <div class="404 text-center" ng-if="noTrainer">
-    <h1>Sorry, but the page you are looking for does not exist.  <a ui-sref="{{previousState ? previousState : 'main.home'}}">go {{previousState ? 'back' : 'home'}}</a></h1>
+    <h1>
+        Sorry, but the page you are looking for does not exist.
+        <a ui-sref="{{previousState ? previousState : 'main.home'}}">
+            go {{previousState ? 'back' : 'home'}}
+        </a>
+    </h1>
 </div>

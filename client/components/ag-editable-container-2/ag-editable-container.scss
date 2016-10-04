@@ -1,0 +1,41 @@
+[ag-editable-container], [ag-editable-container-2] {
+	md-card-content {
+		overflow: hidden;
+		md-card-actions {
+			margin: 0;
+		}
+	}
+}
+
+
+.ag-editable-container-2 {
+	position: relative;
+	.ag-editable-editing-2, .ag-editable-default-2 {
+		&.ag-editable-showing {
+			transition: all 0s;
+			position: absolute;
+			right: 0;
+			left: 0;
+			top: 0;
+		}
+		&.ag-editable-closing {
+			transition: all 0s;
+			position: absolute!important;
+			right: 0;
+			left: 0;
+			top: 0;
+		}
+		&.ag-set-absolute-to-get-height {
+			position: absolute!important;
+		}
+		&.ag-editable-preparing {
+			transition: all 0s;
+			position: absolute!important;
+			right: 9000px;
+			width: 100%; // this is important, otherwise it may flex and take up a smaller space
+		}
+	}
+	.ag-editable-default-2 {
+		position: relative;
+	}
+}

@@ -5,7 +5,7 @@
         <div ng-if="!trainer.urlNameChanged">
             <div class="url">
                 Your URL is:
-                <em>http://localhost:9000/<!--
+                <em>https://localhost:9000/<!--
             --><strong><!--
                 --><a class="urlName" href="#" e-form="urlName" editable-text="trainer.urlName" onbeforesave="updateProfileUrlName($data)" e-style="width : {{width}}" ng-click="resetErrors('urlName'); showEObject($event, urlName);">{{trainer.urlName}}
                 </a>
@@ -27,7 +27,7 @@
         </div>
         <div ng-if="trainer.urlNameChanged">
             <div class="url">
-                Congratulations! Your new Lunge URL is: <em>http://localhost:9000/{{trainer.urlName}}</em>
+                Congratulations! Your new Lunge URL is: <em>https://localhost:9000/{{trainer.urlName}}</em>
             </div>
         </div>
     </div>

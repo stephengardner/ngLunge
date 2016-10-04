@@ -1,6 +1,6 @@
-<div ng-if="!trainerFactory.trainer.name" class="loading-block-xs"></div>
+<div ng-if="!userFactory.user.name" class="loading-block-xs"></div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer.name">
+         ng-if="userFactory.user.name">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
@@ -9,14 +9,14 @@
             <span flex></span>
             <md-button class="md-icon-button"
                        ng-if="editable"
-                       ng-click="showDialog($event)">
+                       ng-click="SpecialtiesCtrl.showDialog($event)">
                 <i class="material-icons">add</i>
             </md-button>
         </div>
     </md-toolbar>
-    <md-card-content cg-busy="{promise : cgBusy}">
+    <md-card-content cg-busy="{promise : SpecialtiesCtrl.cgBusy}">
         <md-list class="specialty-list">
-            <md-list-item ng-repeat="specialty in trainerFactory.trainerEditing.specialties">
+            <md-list-item ng-repeat="specialty in userFactory.userEditing.specialties">
                 <div class="md-list-item-animation-container">
                     <div flex
                          class="list-item-default"
@@ -28,7 +28,7 @@
                         </p>
                         <md-button class="md-icon-button"
                                    ng-if="editable">
-                            <md-icon ng-click="toggleRemoveSpecialty(specialty)">
+                            <md-icon ng-click="SpecialtiesCtrl.toggleRemoveSpecialty(specialty)">
                                 <i class="material-icons">
                                     delete
                                 </i>
@@ -43,32 +43,42 @@
                         <p flex>
                             Are you sure you want to remove the <strong>{{specialty.name}}</strong> specialty?
                         </p>
-                        <div flex="nogrow" hide-xs>
-                            <md-button ng-click="removeSpecialty(specialty)">
+                        <div flex="initial" hide-xs>
+                            <md-button ng-click="SpecialtiesCtrl.removeSpecialty(specialty)">
                                 Yes
                             </md-button>
-                            <md-button ng-click="toggleRemoveSpecialty(specialty)">
+                            <md-button ng-click="SpecialtiesCtrl.toggleRemoveSpecialty(specialty)">
                                 Cancel
                             </md-button>
                         </div>
-                        <div flex hide-gt-xs layout="row" layout-align="center right">
-                            <md-button class="md-icon-button" ng-click="removeSpecialty(specialty)">
-                                <i class="material-icons">check</i>
+                        <div flex="initial" hide-gt-xs
+                             layout="row"
+                             layout-align="center right">
+                            <md-button class="md-icon-button"
+                                       ng-click="SpecialtiesCtrl.removeSpecialty(specialty)">
+                                <i class="material-icons">
+                                    check
+                                </i>
                             </md-button>
-                            <md-button class="md-icon-button" ng-click="toggleRemoveSpecialty(specialty)">
-                                <i class="material-icons">cancel</i>
+                            <md-button class="md-icon-button"
+                                       ng-click="SpecialtiesCtrl.toggleRemoveSpecialty(specialty)">
+                                <i class="material-icons">
+                                    cancel
+                                </i>
                             </md-button>
                         </div>
                     </div>
                 </div>
             </md-list-item>
-            <div ng-if="!trainerFactory.trainer" layout="row" layout-align="center center">
-                <md-progress-circular md-diameter="50"></md-progress-circular>
+            <div ng-if="!userFactory.user"
+                 layout="row"
+                 layout-align="center center">
+                <md-progress-circular md-diameter="50">
+                </md-progress-circular>
             </div>
-            <div ng-if="trainerFactory.trainer &&
-                           !trainerFactory.trainerEditing.specialties.length"
+            <div ng-if="userFactory.user &&!userFactory.userEditing.specialties.length"
                  class="empty">
-                {{trainerFactory.trainer.name.first}} doesn't have any specialties listed yet.
+                {{userFactory.user.name.first}} doesn't have any specialties listed yet.
             </div>
         </md-list>
     </md-card-content>

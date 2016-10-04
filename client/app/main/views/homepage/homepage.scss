@@ -1,3 +1,15 @@
+#description-2 {
+
+	color: white;
+	position: relative;
+	background-image: url('/assets/images/lunge-shoe-closeup-lace.jpg');
+	background-repeat: no-repeat;
+
+	background-position: center center;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
 #home {
 	#sign-up {
 		&:hover {
@@ -53,14 +65,16 @@
 	#description-2 {
 		color: white;
 		position: relative;
+		background-image: url('/assets/images/lunge-shoe-closeup-lace.jpg');
+		background-repeat: no-repeat;
+
+		background-position: center center;
+		background-size: cover;
+		background-attachment: fixed;
 		.container {
 			position: relative;
 			z-index: 1;
 		}
-		-webkit-backface-visibility: hidden;
-		-webkit-perspective: 1000;
-		-webkit-transform: translate3d(0,0,0);
-		-webkit-transform: translateZ(0);
 		&:before {
 			content: "";
 			position: absolute;
@@ -79,11 +93,6 @@
 			filter: blur(3px);
 			-webkit-filter: blur(3px);
 		}
-		//.container {
-		//	> div {
-		//		position: relative;
-		//	}
-		//}
 		.shade {
 			position: absolute;
 			left: 0;

@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
-var authTypes = ['github', 'twitter', 'facebook', 'google', 'linkedin'],
+var authTypes = ['local', 'github', 'twitter', 'facebook', 'google', 'linkedin'],
 	autoIncrement = require('mongoose-auto-increment'),
 	validator = require('validator')
 	;
@@ -32,6 +32,9 @@ var UserSchema = new Schema({
 			value : { type : String, default : '-' },
 			privacy : { type : String, default : 'private' }
 		},
+		color : String,
+		rating_average_stars : Number,
+		rating_average_count : Number,
 		work : {
 			places : [
 				{
@@ -50,6 +53,9 @@ var UserSchema = new Schema({
 			type: String,
 			default: 'user'
 		},
+		favorite_trainers : [{
+			type : Schema.Types.ObjectId, ref : 'User'
+		}],
 		location: {
 			title : { type : String, default : "Main Location", required : false },
 			google : {
@@ -71,22 +77,26 @@ var UserSchema = new Schema({
 			smarty_streets_response : {}
 		},
 		reviews : {
+			// this is a abbreviated way to find if a user has given a review to a trainer just check the _id in here
+			// so that we don't have to populate the reviews
+			list_users_given : [{
+				type : Schema.Types.ObjectId, ref : 'User'
+			}],
+			// given reviews
 			given : [
 				{
-					to : {
-						type : Schema.Types.ObjectId, ref : 'User'
-					}
+					type : Schema.Types.ObjectId, ref : 'Review'
 				}
 			],
+			// received reviews
 			received : [
 				{
-					from :
-					{
-						type : Schema.Types.ObjectId, ref : 'User'
-					}
+					type : Schema.Types.ObjectId, ref : 'Review'
 				}
 			]
 		},
+		// wil be updated when reviews are updated, so we don't have to populate on the fly
+		average_rating : Number,
 		urlName : String,
 		hashedPassword: String,
 		provider: String,
@@ -155,21 +165,17 @@ var UserSchema = new Schema({
 // or, append a -# (where # is the next number in the sequence), if there are more than two (highly unlikely).
 UserSchema
 	.pre('save', function(next) {
-		console.log("!!!!!!!!!!!!HEEEEEEEEEEEEEEEYYYYYYYYYYYYYYYYYY\n\n\n");
 		if (this.urlName || !this.email) return next();
 		var newUrlName = this.email.split("@");
 		newUrlName = newUrlName[0];
 		var self = this;
 		var emailSplit = self.email.split("@");
 		emailSplit = emailSplit[0];
-		console.log("Attempting to find urlname:", emailSplit);
 		this.constructor.find({}).exec(function(err, found){
-			console.log("ALLLLLLLLLLLLLLLL?", found.length);
 			this.constructor
 				.find({
 					urlName: new RegExp(emailSplit, "i")
 				}).sort({urlName : -1 }).exec(function(err, trainer) {
-				console.log("Did we find any?!?!?!?!?!", trainer);
 				if(err) throw err;
 				if(trainer.length) {
 					var maxUrlName = trainer[0].urlName,
@@ -266,7 +272,6 @@ UserSchema
 UserSchema
 	.path('work.places')
 	.validate(function(workplaces) {
-		console.log("Workplaces:", workplaces);
 		if(!workplaces || !workplaces.length) {
 			return;
 		}
@@ -291,8 +296,6 @@ UserSchema
 	.path('hashedPassword')
 	.validate(function(hashedPassword, respond) {
 		if (authTypes.indexOf(this.provider) !== -1) return true;
-		console.log("Validating hashed pass:", hashedPassword);
-		console.log("THIS PASS:", this._password);
 		if(!hashedPassword) {
 			this.invalidate('password', 'Password cannot be blank');
 			return respond(false);
@@ -314,17 +317,18 @@ UserSchema
 	.path('email')
 	.validate(function(value, respond) {
 		var self = this;
-		this.constructor.findOne({email: value}, function(err, user) {
+		this.constructor.findOne({email: value, provider : 'local'}, function(err, user) {
 			if(err) throw err;
 			if(user) {
 				if(self.id === user.id) return respond(true);
 				// dynamically show the user that this email is in the error message
+				console.log("The user found is: ", user._id, " and the self.id is: ", self._id);
 				self.invalidate('email', value + ' is already signed up!');
 				return respond(false);
 			}
 			respond(true);
 		});
-	}, 'The specified email address is already in use.');
+	}, 'The specified email address is already in use');
 
 var validatePresenceOf = function(value) {
 	return value && value.length;
@@ -341,6 +345,7 @@ UserSchema
 				return next();
 			}
 		}
+		console.log("The provider type is:", this.provider);
 		if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1)
 			next(new Error('Invalid password'));
 		else
@@ -387,14 +392,18 @@ UserSchema.methods = {
 };
 
 module.exports = function setup(options, imports, register) {
-	var connectionDatabase = imports.connectionDatabase;
-	var Model = connectionDatabase.model('User', UserSchema);
-	// Model.collection.dropIndex("email_1", function(err, dropped){
-	// 	console.log("Dropped?", dropped)
-	// });
-	// Model.collection.dropIndex("email", function(err, dropped){
-	// 	console.log("Dropped?", dropped)
-	// });
+	var connectionDatabase = imports.connectionDatabase,
+		colorGenerator = imports.colorGenerator,
+		Model = connectionDatabase.model('User', UserSchema)
+	;
+
+	UserSchema.pre('save', function(next){
+		if(!this.color) {
+			this.color = colorGenerator.generate();
+		}
+		next();
+	});
+
 	UserSchema.plugin(autoIncrement.plugin, { model: 'User', field: 'id' });
 	register(null, {
 		userModel : Model

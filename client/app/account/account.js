@@ -1,5 +1,5 @@
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.config(function ($stateProvider) {
 		$stateProvider
 			.state('main.login', {
@@ -23,7 +23,6 @@ angular.module('ngLungeFullStack2App')
 			.state('profile', {
 				parent: 'main',
 				controller : ['$state', 'Auth', '$location', function($state, Auth, $location) {
-					console.log("Attempting to GO to state.profile from account.js");
 					if(!Auth.getCurrentUser() || !Auth.getCurrentUser().urlName) {
 						console.log("There is no Auth.currentUser, instead it is:", Auth.getCurrentUser());
 						$state.go('main.home');
@@ -52,14 +51,11 @@ angular.module('ngLungeFullStack2App')
 				parent: 'main',
 				controller : ['$state', 'Auth', '$location', '$stateParams',
 					function($state, Auth, $location, $stateParams) {
-					console.log("Attempting to GO to state.profile from account.js");
 					if(!Auth.getCurrentUser() || !Auth.getCurrentUser().urlName) {
-						console.log("There is no Auth.currentUser, instead it is:", Auth.getCurrentUser());
 						$state.go('main.home');
 					}
 					else {
 						var user = Auth.getCurrentUser();
-						console.log(" --> Going to account page with urlName:", user.urlName);
 						$stateParams.urlName = user.urlName;
 						if(user && user.kind == 'trainee') {
 							$location.path('/user/account')

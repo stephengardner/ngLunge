@@ -6,6 +6,7 @@
             </md-button>
             <md-button ng-if="isLoggedIn()"
                        class="md-icon-button"
+                       ng-class="{'ng-hide' : messagesMenuIsLockedOpen()}"
                        ng-click="toggleMessagesMenu(); readChatNotifications()">
                 <i class="material-icons">message</i>
                 <span class="count-bubble"
@@ -63,19 +64,23 @@
                 <ag-profile-share-button></ag-profile-share-button>
             </md-button>
             <!-- trainer picture -->
-            <md-button class="md-icon-button nopadding profile-picture-nav-button"
-                       ng-if="isLoggedIn() && getCurrentType() == 'trainer'"
-                       ui-sref="profilePage({urlName : getCurrentUser().urlName})"
-                       ui-sref-active="active">
-                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
-            </md-button>
-            <!-- user picture -->
-            <md-button class="md-icon-button nopadding profile-picture-nav-button"
-                       ng-if="isLoggedIn() && getCurrentType() != 'trainer'"
-                       ui-sref="main.trainee.profilePage({urlName : getCurrentUser().urlName})"
-                       ui-sref-active="active">
-                <i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>
-            </md-button>
+            <profile-picture-thumbnail ng-if="isLoggedIn()"
+                                       width="40"
+                                       user="getCurrentUser()">
+            </profile-picture-thumbnail>
+            <!--<md-button class="md-icon-button nopadding profile-picture-nav-button"-->
+                       <!--ng-if="isLoggedIn() && getCurrentType() == 'trainer'"-->
+                       <!--ui-sref="profilePage({urlName : getCurrentUser().urlName})"-->
+                       <!--ui-sref-active="active">-->
+                <!--<i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>-->
+            <!--</md-button>-->
+            <!--&lt;!&ndash; user picture &ndash;&gt;-->
+            <!--<md-button class="md-icon-button nopadding profile-picture-nav-button"-->
+                       <!--ng-if="isLoggedIn() && getCurrentType() != 'trainer'"-->
+                       <!--ui-sref="main.trainee.profilePage({urlName : getCurrentUser().urlName})"-->
+                       <!--ui-sref-active="active">-->
+                <!--<i class="profile-picture-nav" bg-image="{{getCurrentUser().profile_picture.thumbnail.url}}"></i>-->
+            <!--</md-button>-->
             <!-- admin -->
             <md-button ng-if="isAdmin()" >
                 <a ui-sref="main.admin"

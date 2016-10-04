@@ -9,7 +9,7 @@ myApp.controller('TraineeMapController', function(traineeMap, $scope, $mdDialog)
 				scope : $scope,
 				preserveScope : true,
 				targetEvent: ev,
-				clickOutsideToClose:true
+				clickOutsideToClose: true
 			}
 		).then(function(location) {
 

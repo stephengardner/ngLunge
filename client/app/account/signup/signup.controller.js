@@ -66,7 +66,7 @@ lungeApp.controller("SignupController", function($timeout, $rootScope, TrainerFa
 			Auth.setCurrentType(response.data[type].kind);
 			$state.go('profile');
 		}).catch(function(err){
-			$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+			$mdToast.show($mdToast.simple().position('bottom right').textContent(err.data.message));
 			console.log("err", err);
 		});
 	};

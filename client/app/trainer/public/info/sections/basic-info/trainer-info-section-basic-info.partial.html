@@ -1,24 +1,28 @@
-<div ng-if="!trainerFactory.trainer.name"
+<div ng-if="!userFactory.user.name"
      class="loading-block-sm">
 </div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer.name"
+         ng-if="userFactory.user.name"
          ag-editable-container
-         trainer-factory-section="'basicInfo'">
+         user-factory="userFactory"
+         section="'basicInfo'">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>
                 <span>Basic Info</span>
             </h2>
             <span flex></span>
-            <md-button md-ink-ripple class="md-icon-button" ng-click="toggleEditing(basicInfo)">
+            <md-button md-ink-ripple
+                       ng-if="userFactory.isMe()"
+                       class="md-icon-button"
+                       ng-click="userFactory.toggleEditing('basicInfo')">
                 <i  class="material-icons">mode_edit</i>
             </md-button>
         </div>
     </md-toolbar>
     <form id="basicInfo"
           name="basicInfo"
-          ng-submit="submit(basicInfo); toggleEditing()">
+          ng-submit="submit(basicInfo)">
         <md-card-content cg-busy="{promise : cgBusy}">
             <div class="ag-editable-container">
                 <div class="ag-editable-default">
@@ -27,7 +31,7 @@
                             Name:
                         </div>
                         <div class="value">
-                            {{trainerFactory.trainer.name.full}}
+                            {{userFactory.user.name.full}}
                         </div>
                     </div>
                     <div class="info-row">
@@ -35,7 +39,7 @@
                             Gender:
                         </div>
                         <div class="value">
-                            {{trainerFactory.trainer.gender.value || '-'}}
+                            {{userFactory.user.gender.value || '-'}}
                         </div>
                     </div>
                     <div class="info-row">
@@ -43,7 +47,7 @@
                             Age:
                         </div>
                         <div class="value">
-                            {{trainerFactory.trainer.age.value || '-'}}
+                            {{userFactory.user.age.value || '-'}}
                         </div>
                     </div>
                     <div class="info-row">
@@ -51,7 +55,7 @@
                             Years of Experience:
                         </div>
                         <div class="value">
-                            {{trainerFactory.trainer.years_of_experience.value || '-'}}
+                            {{userFactory.user.years_of_experience.value || '-'}}
                         </div>
                     </div>
                     <div class="info-row">
@@ -59,7 +63,7 @@
                             Headline
                         </div>
                         <div class="value">
-                            {{trainerFactory.trainer.headline.value || '-'}}
+                            {{userFactory.user.headline.value || '-'}}
                         </div>
                     </div>
                 </div>
@@ -71,7 +75,7 @@
                             </label>
                             <input name="name"
                                    ng-change="removeMongooseError(basicInfo, 'name')"
-                                   ng-model="trainerFactory.trainerEditing.name.full"
+                                   ng-model="userFactory.userEditing.name.full"
                                    required>
                             <div ng-messages="basicInfo.name.$error" class="md-auto-hide">
                                 <div ng-message="required">Your name cannot be empty</div>
@@ -82,7 +86,7 @@
                         <div layout="row">
                             <ag-floating-label class="md-block" flex>
                                 <label>Gender</label>
-                                <select ng-model="trainerFactory.trainerEditing.gender.value">
+                                <select ng-model="userFactory.userEditing.gender.value">
                                     <option value="none">None specified</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -96,7 +100,7 @@
                             <input type="hidden" name="age"/>
                             <ag-floating-label class="md-block" flex>
                                 <label>Age</label>
-                                <select ng-model="trainerFactory.trainerEditing.age.value">
+                                <select ng-model="userFactory.userEditing.age.value">
                                     <option value="-">-</option>
                                     <option ng-repeat="age in ageRange" value="{{age}}">
                                         {{age}}
@@ -111,7 +115,7 @@
                             <input type="hidden" name="yearsOfExperience"/>
                             <ag-floating-label class="md-block" flex>
                                 <label>Years of experience</label>
-                                <select ng-model="trainerFactory.trainerEditing.years_of_experience.value">
+                                <select ng-model="userFactory.userEditing.years_of_experience.value">
                                     <option value="-">-</option>
                                     <option ng-repeat="value in yearsOfExperienceRange" value="{{value}}">
                                         {{value}}
@@ -128,7 +132,7 @@
                             </label>
                             <input name="headline"
                                    ng-change="removeMongooseError(basicInfo, 'headline')"
-                                   ng-model="trainerFactory.trainerEditing.headline.value">
+                                   ng-model="userFactory.userEditing.headline.value">
                             <ag-hints>
                                 <ag-hint>
                                     Write a quick bio about yourself.  Your headline helps other people quickly
@@ -140,12 +144,15 @@
                             </div>
                         </ag-floating-label>
                     </fieldset>
+                    <md-card-actions layout="row"
+                                     layout-align="end center">
+                        <md-button type="submit">Save</md-button>
+                        <md-button ng-click="userFactory.toggleEditing('basicInfo')">
+                            Cancel
+                        </md-button>
+                    </md-card-actions>
                 </div>
             </div>
         </md-card-content>
-        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-            <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing(basicInfo)">Cancel</md-button>
-        </md-card-actions>
     </form>
 </md-card>

@@ -1,0 +1,12 @@
+{
+  "name": "colorGenerator",
+  "version": "0.0.1",
+  "main": "color-generator.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+
+    ],
+    "provides": ["colorGenerator"]
+  }
+}

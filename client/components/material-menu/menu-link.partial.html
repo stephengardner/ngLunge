@@ -4,9 +4,10 @@
            layout="row"
            layout-align="space-between center">
     <md-button class="md-icon-button" ng-if="section.profile">
-        <i class="profile-picture-thumb"
-                bg-image="{{auth.getCurrentUser().profile_picture.thumbnail.url}}">
-        </i>
+        <!--<i class="profile-picture-thumb"-->
+                <!--bg-image="{{auth.getCurrentUser().profile_picture.thumbnail.url}}">-->
+        <!--</i>-->
+        <profile-picture-thumbnail width="35" user="auth.getCurrentUser()"></profile-picture-thumbnail>
     </md-button>
     <span></span>
         <md-icon ng-if="!section.profile">

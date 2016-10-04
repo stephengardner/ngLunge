@@ -309,7 +309,6 @@ TrainerSchema.pre('save', function(next){
 // Before saving, make sure the speacialties that are passed in are just an array of objectIDs.
 // - Since they will likely be coming in as full objects, strip everything from them except the _id.
 TrainerSchema.pre('save', function(next){
-	console.log("-___________________________\n_____________________\n_____________________\n");
 	// remove empty specialties
 	this.specialties = this.specialties.filter(function(specialty) {
 			if(typeof specialty != 'object') {
@@ -336,7 +335,6 @@ TrainerSchema.pre('save', function(next){
 // or, append a -# (where # is the next number in the sequence), if there are more than two (highly unlikely).
 TrainerSchema
 	.pre('save', function(next) {
-		console.log("PRESAVE!\n\n\n\n");
 		if (!this.isNew || !this.email) return next();
 		var newUrlName = this.email.split("@");
 		newUrlName = newUrlName[0];
@@ -654,16 +652,24 @@ TrainerSchema
 	.path('email')
 	.validate(function(value, respond) {
 		var self = this;
-		this.constructor.findOne({email: value, kind : 'trainer'}, function(err, trainer) {
-			if(err) throw err;
-			if(trainer) {
-				if(self.id === trainer.id) return respond(true);
-				console.log("whats going on? ::: " + trainer.id);
-				console.log("\n\n", self);
-				return respond(false);
-			}
-			respond(true);
-		});
+		if(this.isNew) {
+			this.constructor.findOne({
+				email: value,
+				kind : 'trainer',
+				'registration.email_verified' : true,
+				provider : 'local'
+			}, function(err, trainer) {
+				if(err) throw err;
+				if(trainer) {
+					if(self.id === trainer.id) return respond(true);
+					console.log("whats going on? ::: " + trainer.id);
+					console.log("\n\n", self);
+					return respond(false);
+				}
+				respond(true);
+			});
+		}
+		respond(true);
 	}, 'The specified email address ' +
 		'is already in use.');
 
@@ -677,7 +683,7 @@ TrainerSchema
 		if(!validator.isEmail(value)) {
 			return this.invalidate('email', 'Please use a valid email address');
 		}
-	}, 'The specified email address is already in use.');
+	});
 
 // Force uniqueifying the specialties
 TrainerSchema.pre('save', function(next){
@@ -837,27 +843,23 @@ module.exports = function setup(options, imports, register) {
 	;
 
 	TrainerSchema.post('save', function(){
-		if(!this.wasNew) {
-			console.log(" ++ not wasNew ++");
-		}
-		else {
-			console.log(" ++ wasNew ++");
+		if(this.wasNew) {
 			newUserSignupMessageSender.send(this).then(function(response){
-				
 			}).catch(function(err) {
 				logger.error(err);
 			});
 		}
 	});
+
 	TrainerSchema.pre('save', function(next){
 		if(this.isNew) {
 			this.wasNew = true;
 		}
 		next();
 	});
+	
 	TrainerSchema.pre('save', function(next){
 		imports.certificationsMetaUpdater.update(this).then(function(){
-			console.log("this.certifications_meta ===== ", this.certifications_meta.types_by_organization);
 			this.markModified('certifications_meta');
 			this.markModified('certifications_meta.types_by_organization');
 			next();

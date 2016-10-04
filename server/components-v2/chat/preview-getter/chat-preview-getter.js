@@ -1,6 +1,7 @@
 var async = require('async'),
 	mongoose = require('mongoose'),
-	moment = require('moment')
+	moment = require('moment'),
+	_ = require('lodash')
 	;
 module.exports = function setup(options, imports, register) {
 	var chatModel = imports.chatModel,
@@ -10,11 +11,16 @@ module.exports = function setup(options, imports, register) {
 		loggerType = 'chat-preview-getter'
 		;
 	var chatPreviewGetter = {
-		get : function(user) {
+		getSingle : function(user, chatId) {
+			return this.get(user, { singleChatId : chatId });
+		},
+		get : function(user, options) {
 			return new Promise(function(resolve, reject){
 				var populatedUser,
-					aggregatedChats
+					aggregatedChats,
+					DEFAULTS = {}
 					;
+				options = _.merge({}, options, DEFAULTS);
 				async.waterfall([
 					function populate(callback){
 						userPopulator.populate(user).then(function(response){
@@ -27,12 +33,23 @@ module.exports = function setup(options, imports, register) {
 						}).catch(callback);
 					},
 					function aggregate(callback) {
-						chatModel.aggregate([
-							{
+						var firstMatch;
+						if(options.singleChatId) {
+							firstMatch = {
+								$match : {
+									'_id' : options.singleChatId
+								}
+							}
+						}
+						else {
+							firstMatch = {
 								$match : {
 									'participants.user' : populatedUserId
 								}
-							},
+							};
+						}
+						chatModel.aggregate([
+							firstMatch,
 							{
 								$unwind : '$participants'
 							},
@@ -64,6 +81,7 @@ module.exports = function setup(options, imports, register) {
 								$group : {
 									'_id': '$_id',
 									'participants': {$push: '$participants'},
+									'to_self' : { $last : '$to_self' },
 									'messages': {$last: '$messages'},
 									'is_group_message' : {$last : '$is_group_message'},
 									'chat_type' : {$last : '$chat_type'},
@@ -98,6 +116,7 @@ module.exports = function setup(options, imports, register) {
 								$group : {
 									'_id': '$messages._id',
 									'parent_id' : {$first : '$_id'},
+									'to_self' : { $first : '$to_self' },
 									'sent_at' : { $first : '$messages.sent_at' },
 									'message' : {$first : '$messages.message'},
 									'sender' : {$first : '$messages.sender'},
@@ -108,6 +127,9 @@ module.exports = function setup(options, imports, register) {
 											$cond: [
 												{
 													$and : [
+														{
+															$ne : [ '$to_self', true ],
+														},
 														{
 															$eq: [
 																'$messages.meta.read',
@@ -143,6 +165,7 @@ module.exports = function setup(options, imports, register) {
 							{
 								$project : {
 									'_id' : '$parent_id',
+									'to_self' : '$to_self',
 									'message' : {
 										sent_at : '$sent_at',
 										meta : '$meta',
@@ -159,6 +182,7 @@ module.exports = function setup(options, imports, register) {
 							{
 								$group : {
 									'_id': '$_id',
+									'to_self' : { $first : '$to_self' },
 									'messages' : {$push : '$message'},
 									'unread_count': {
 										$sum: '$unread'
@@ -178,6 +202,7 @@ module.exports = function setup(options, imports, register) {
 							{
 								$project: {
 									'participants' : '$participants',
+									'to_self' : '$to_self',
 									'unread_count' : '$unread_count',
 									'last_message' : {
 										$slice : ['$messages', -1]
@@ -194,27 +219,32 @@ module.exports = function setup(options, imports, register) {
 								}
 							},
 							// removing myself from the array of participants so that we can construct
-							// the propert image by just grabbing the first participant from the array
-							{
-								$redact : {
-									$cond : {
-										if : {
-											$and : [
-												{
-													$eq : [
-														'$user', populatedUserId
-													]
-												},
-												{
-													$ne : [ 'kind' , null ]
-												}
-											]
-										},
-										then : "$$PRUNE",
-										else : "$$DESCEND"
-									}
-								}
-							},
+							// the proper image by just grabbing the first participant from the array
+							// {
+							// 	$redact : {
+							// 		$cond : {
+							// 			if : {
+							// 				$and : [
+							// 					{
+							// 						$eq : [
+							// 							'$to_self', null
+							// 						]
+							// 					},
+							// 					{
+							// 						$eq : [
+							// 							'$user', populatedUserId
+							// 						]
+							// 					},
+							// 					{
+							// 						$ne : [ 'kind' , null ]
+							// 					}
+							// 				]
+							// 			},
+							// 			then : "$$PRUNE",
+							// 			else : "$$DESCEND"
+							// 		}
+							// 	}
+							// },
 							{
 								$sort : {
 									'last_message_sent_at' : -1
@@ -222,7 +252,6 @@ module.exports = function setup(options, imports, register) {
 							}
 						], function(err, response){
 							if(err) return callback(err);
-							console.log("response:", response);
 							userModel.populate(response,
 								{'path' : 'last_message_sender', 'select' : '_id name profile_picture'},
 								function(err, populated){
@@ -260,6 +289,25 @@ module.exports = function setup(options, imports, register) {
 								})
 						});
 					},
+					function removeMyselfFromParticipants(callback) {
+						aggregatedChats.forEach(function(chat, index, arr) {
+							if(chat.participants && chat.participants.length) {
+								if (chat.participants.length == 1) {
+									// do nothing
+								}
+								else {
+									chat.participants.forEach(function(participant, participantIndex, arr) {
+										if(populatedUser._id.equals(participant.user)){
+											arr.splice(participantIndex, 1);
+										}
+									})
+								}
+
+							}
+							arr[index] = chat;
+						});
+						callback();
+					},
 					function setTitle(callback) {
 						userModel.populate(aggregatedChats, {
 							'path' : 'participants.user', 'select' : 'name profile_picture'
@@ -268,14 +316,14 @@ module.exports = function setup(options, imports, register) {
 							if(!populated) {
 								return callback();
 							}
-							var createdTitle = '';
 							populated.forEach(function(item, index, arr) {
+								var createdTitle = '';
 								if(item.participants && item.participants.length) {
-									if(item.participants[0].user) {
-										item.picture = item.participants[0].user.profile_picture;
-									}
 									item.participants.forEach(function(participant, participantIndex, participantArr){
 										try {
+											if(participant.user != populatedUserId){
+												item.seen_by_recipient = participant.seen;
+											}
 											if(participant.user) {
 												createdTitle += participant.user.name.first;
 												if(participantArr.length > participantIndex + 1) {
@@ -287,10 +335,14 @@ module.exports = function setup(options, imports, register) {
 											}
 										}
 										catch(err) {
-											console.log("erron on participant: ", participant, ' and item : ', item);
 											return callback(err);
 										}
 									})
+									if(item.participants[0].user) {
+										// item.picture = item.participants[0].user.profile_picture;
+										item.profile_picture = item.participants[0].user.profile_picture;
+										item.user = item.participants[0].user;
+									}
 								}
 								item.title = createdTitle;
 								arr[index] = item;
@@ -302,7 +354,6 @@ module.exports = function setup(options, imports, register) {
 						var today = new Date();
 						var isToday = false;
 						aggregatedChats.forEach(function(item, index, arr) {
-							console.log("it is:", item.last_message_sent_at);
 							if(moment().diff(item.last_message_sent_at, 'days') >= 1) {
 								item.time = moment(new Date(item.last_message_sent_at)).format("MMM MM");
 							}

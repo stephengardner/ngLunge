@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.controller('MainCtrl', [
 		'TrainerFactory',
 		'Auth',

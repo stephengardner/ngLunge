@@ -13,7 +13,16 @@ module.exports = function setup(options, imports, register) {
 	router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 	router.get('/:id', auth.isAuthenticated(), controller.show);
 	router.put('/:id', auth.isAuthenticated(), controller.update);
+	router.put('/:id/overwrite', auth.isAuthenticated(), controller.updateOverwrite);
 	router.post('/:id', auth.isAuthenticated(), controller.update);
+	// SUBMIT a review
+	router.post('/:id/review', auth.isAuthenticated(), controller.submitReview);
+	router.post('/:id/review/:reviewId/thank', auth.isAuthenticated(), controller.thankReview);
+	router.post('/:id/review/:reviewId/unthank', auth.isAuthenticated(), controller.unthankReview);
+	// get PAGES of reviews
+	router.get('/:id/reviews', /*auth.isAuthenticated(),*/ controller.getReviewPage);
+	// get review to another user
+	router.get('/:id/review/:to', /*auth.isAuthenticated(),*/ controller.reviewByUserForUserGetter);
 	router.get('/:id/chat/send', /*auth.isAuthenticated(),*/ controller.sendMessage);
 	router.get('/:id/chat/to/:recipientId', /*auth.isAuthenticated(),*/ controller.getOrCreateChatToRecipient);
 	router.get('/:id/chat/notifications/read', /*auth.isAuthenticated(),*/ controller.readChatNotifications);

@@ -1,0 +1,14 @@
+{
+  "name": "reviewPopulator",
+  "version": "0.0.1",
+  "main": "review-populator.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "reviewModel"
+    ],
+    "provides": [
+      "reviewPopulator"
+    ]
+  }
+}

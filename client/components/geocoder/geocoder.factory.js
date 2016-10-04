@@ -34,7 +34,6 @@ lungeApp.factory("Geocoder", ['$q', 'uiGmapGoogleMapApi', function($q, GoogleMap
 					formatted_address : result.formatted_address
 				}
 			};
-			console.log("\n\nTHIS is out complete location:\n\n", updatedLocation);
 			return updatedLocation;
 		},
 

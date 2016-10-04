@@ -11,14 +11,18 @@ module.exports = function setup(options, imports, register) {
 		loggerType = 'chat-sender',
 		io = imports.socket,
 		chatNotificationCounter = imports.chatNotificationCounter,
-		chatPopulator = imports.chatPopulator
+		chatPopulator = imports.chatPopulator,
+		chatPreviewGetter = imports.chatPreviewGetter
 		;
 	var chatSender = {
 		sendToChatId : function(from, toChatId, message) {
 			return new Promise(function(resolve, reject){
-				var gotFrom, gotChat, chatMessage, mongooseRetrievedSpecificChatItem,
-				toUsers = []
-				;
+				var gotFrom,
+					gotChat,
+					chatMessage,
+					mongooseRetrievedSpecificChatItem,
+					toUsers = []
+					;
 				logger.info({
 					type : loggerType,
 					msg : 'sendToChatId()'
@@ -26,7 +30,6 @@ module.exports = function setup(options, imports, register) {
 				async.waterfall([
 					function getFrom(callback) {
 						populate(from).then(function(response){
-							console.log("from:", response.name);
 							gotFrom = response;
 							callback();
 						}).catch(callback);
@@ -37,12 +40,6 @@ module.exports = function setup(options, imports, register) {
 							callback();
 						}).catch(callback);
 					},
-					// function get(callback) {
-					// 	getChat(gotFrom, gotTo).then(function(response){
-					// 		gotChat = response;
-					// 		callback();
-					// 	}).catch(callback);
-					// },
 					function modifyChat(callback) {
 						chatMessage = {
 							message : message,
@@ -51,30 +48,53 @@ module.exports = function setup(options, imports, register) {
 							meta : []
 						};
 						gotChat.last_message_sent_at = new Date();
-						gotChat.participants.forEach(function(item, index, arr) {
-							// console.log("item.user is:", item.user._id, " and gotFrom._id is:", gotFrom._id);
-							// send notification to user if the participant is NOT the sender
-							if(!gotFrom) {
-								console.log("GotFrom doesn't exist");
-							}
-							if(!item.user) {
-								console.log("item.user doesn't exist, this means that the user was deleted from this" +
-									" chat", item);
-							}
-							if(!(gotFrom._id.equals(item.user._id))) {
-								toUsers.push(item.user); // this is a populated user
+						gotChat.last_message_sent_by = gotFrom._id;
+						var isSentToSelf = gotChat.participants.length == 1
+							&& gotFrom._id.equals(gotChat.participants[0].user._id);
+						if(isSentToSelf) {
+							createMetaFromParticipant(gotChat.participants[0]);
+						}
+						else {
+							gotChat.participants.forEach(function(item, index, arr) {
+								if(!gotFrom) {
+									logger.info({ type : loggerType, msg : "GotFrom doesn't exist" });
+								}
+								if(!item.user) {
+									logger.info({
+										type : loggerType,
+										msg : "item.user doesn't exist, this means that the user was deleted " +
+										"from this chat",
+										item : item
+									});
+								}
+								if(!(gotFrom._id.equals(item.user._id))) {
+									arr[index] = createMetaFromParticipant(item);
+								}
+							});
+						}
+						function createMetaFromParticipant(item) {
+							toUsers.push(item.user); // this is a populated user
+							if(!isSentToSelf) {
 								item.notification = true;
-								item.read = false;
-								arr[index] = item;
-								var toMeta = {
-									user : item.user._id,
-									delivered : false,
-									read : false
-								};
-								chatMessage.meta.push(toMeta);
-								console.log("")
 							}
-						});
+							item.read = false;
+							item.last_message_sent_at = new Date();
+							item.final_message = {
+								seen : false,
+								seen_at : undefined
+							};
+							item.seen = false;
+							item.seen_at = undefined;
+							// arr[index] = item;
+							var toMeta = {
+								user : item.user._id,
+								delivered : false,
+								read : false,
+								seen_at : undefined
+							};
+							chatMessage.meta.push(toMeta);
+							return item;
+						}
 						gotChat.messages.push(chatMessage);
 						logger.info({
 							type : loggerType,
@@ -134,6 +154,26 @@ module.exports = function setup(options, imports, register) {
 							return callback();
 						});
 					},
+					function pushPreviewUpdaterSocketEvent(callback) {
+						async.each(gotChat.participants, function(item, icallback) {
+							var user = item.user;
+							chatPreviewGetter.getSingle(user, gotChat._id)
+								.then(function(response){
+									io.sockets
+										.in('user:auth:' + user._id)
+										.emit('chat:message-preview-update', response[0]);
+
+									logger.info({
+										type : loggerType,
+										msg : 'pushing a chat preview update to user'
+									});
+									icallback(null);
+								}).catch(icallback);
+						}, function(err, response){
+							if(err) return callback(err);
+							return callback();
+						});
+					},
 					function pushSocketEvent(callback){
 						// for(var i = 0; i < toUsers.length; i++) {
 						// 	var user = toUsers[i];
@@ -142,17 +182,19 @@ module.exports = function setup(options, imports, register) {
 						logger.info({
 							type : loggerType,
 							msg : 'emitting message to: ' + 'chat:' + gotChat._id + ':message for all sockets IN ' +
-								' chat:' + gotChat._id});
-						
+							' chat:' + gotChat._id});
+
 						var gotFromToObject = gotFrom.toObject();
 						var chatMessageToSendThroughSocket = {
 							_id : mongooseRetrievedSpecificChatItem._id,
 							sent_at_time_formatted : new moment(new Date()).format('h:mma'),
 							message : mongooseRetrievedSpecificChatItem.message,
 							sender : {
+								kind : gotFromToObject.kind,
+								urlName : gotFromToObject.urlName,
 								_id : gotFrom._id,
 								name : gotFromToObject.name,
-								profile_picture : gotFrom.profile_picture,
+								profile_picture : gotFrom.profile_picture
 							}
 						};
 						var senderProfileUrl = config.DOMAIN + '/';
@@ -166,7 +208,7 @@ module.exports = function setup(options, imports, register) {
 							.in('chat:' + gotChat._id)
 							.emit('chat:' + gotChat._id + ':message', chatMessageToSendThroughSocket);
 						callback();
-					}
+					},
 				], function(err, response){
 					if(err) return reject(err);
 					return resolve();
@@ -180,14 +222,12 @@ module.exports = function setup(options, imports, register) {
 				async.waterfall([
 					function getFrom(callback) {
 						populate(from).then(function(response){
-							console.log("from:", response.name);
 							gotFrom = response;
 							callback();
 						}).catch(callback);
 					},
 					function getTo(callback){
 						populate(to).then(function(response){
-							console.log("to:", response.name);
 							gotTo = response;
 							callback();
 						}).catch(callback);
@@ -254,7 +294,11 @@ module.exports = function setup(options, imports, register) {
 					// 	callback();
 					// }
 					function get(callback) {
-						console.log("Sending message from: " + gotFrom._id + " to: " + gotTo._id);
+						logger.info({type : loggerType,
+							msg: 'sending message from user to user',
+							from : gotFrom._id,
+							to : gotTo._id
+						});
 						getChat(gotFrom, gotTo).then(function(response) {
 							gotChat = response;
 							callback();
@@ -277,7 +321,6 @@ module.exports = function setup(options, imports, register) {
 	};
 	function getChat(gotFrom, gotTo) {
 		return new Promise(function(resolve, reject) {
-			// console.log("Getting chat from:", gotFrom, " to : ", gotTo);
 			var gotChat
 				;
 			async.waterfall([
@@ -309,10 +352,7 @@ module.exports = function setup(options, imports, register) {
 					})
 				},
 				function createChatIfNecessary(code, callback) {
-					// console.log("Code:", code);
-					// console.log("GotChat:", gotChat);
 					if(code == 404) {
-						console.log("Creating new chat");
 						var chatObj = {
 							started_by : gotFrom._id,
 							participants : []

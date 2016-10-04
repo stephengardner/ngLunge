@@ -27,6 +27,10 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 		// So we'll have to show something specific to the modal window, or alter the AlertMessage to display
 		// FIXED at the top of the screen, for instances when the modal is open.
 		// Actually, an option for a fixed alertMessage sounds great!
+
+
+		$scope.activeFiles = [];
+		
 		$scope.fileChanged = function(form, files, file) {
 			console.log("FILES:", files, " FILE: ", file);
 			console.log("ERR?:", $scope.errorFiles);
@@ -47,26 +51,7 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 		};
 
 		$scope.numActiveFiles = function() {
-			return $scope.getActiveFiles().length;	
-		};
-		
-		$scope.getActiveFiles = function() {
-			console.log("----- getActiveFiles -----", $scope.certificationV2);
-			var certificationV2 = $scope.certificationV2, 
-				i, 
-				returnArray = [],
-				certificationV2AtIndex, 
-				isActive
-				;
-			for(i = 0; i < certificationV2.verification.files.length; i++) {
-				certificationV2AtIndex = certificationV2.verification.files[i];
-				isActive = certificationV2AtIndex.active;
-				if(isActive) {
-					returnArray.push(certificationV2AtIndex);
-				}
-			}
-			console.log("activefiles:", returnArray);
-			return returnArray;
+			return $scope.activeFiles.length;	
 		};
 		
 		$scope.deleteFile = function(form, file) {
@@ -79,11 +64,13 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 				AlertMessage.success("\"" + file.user_desired_name + "\" removed successfully.");
 				console.log("THE RESPONSE:", response);
 				$scope.certificationV2 = response.data;
+				getActiveFiles();
 				$scope.toggleDeleteFile(file);
 			}).catch(function(err){
 				AlertMessage.error('Woops, something went wrong.  Please try again later.');
 				FormControl.removeMongooseError(form, 'file');
 				console.log("Got error:", err);
+				getActiveFiles();
 				$scope.toggleDeleteFile(file);
 			});
 		};
@@ -114,8 +101,10 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 					console.log("THE RESPONSE:", response);
 					$scope.certificationV2 = response.data;
 					$scope.toggleChooseFile(form);
+					getActiveFiles();
 				});
 			}, function (response) {
+				getActiveFiles();
 				console.log("The response:", response);
 				FormControl.parseValidationErrors(form, response);
 				if (response.status > 0)
@@ -127,6 +116,7 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 				file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
 			});
 		};
+
 		$scope.toggleChooseFile = function(form){
 			if($scope.fileModel.file && $scope.fileModel.file.name) {
 				$scope.fileModel.file = undefined;
@@ -135,5 +125,26 @@ lungeApp.controller("TrainerAccountVerifyCertificationsModalController",
 			else {
 				$("#file").trigger('click');
 			}
+		};
+
+		function getActiveFiles() {
+			console.log("[Trainer Account Vertifications Verify Modal Controller] get active files");
+			var certificationV2 = $scope.certificationV2,
+				i,
+				returnArray = [],
+				certificationV2AtIndex,
+				isActive
+				;
+			for(i = 0; i < certificationV2.verification.files.length; i++) {
+				certificationV2AtIndex = certificationV2.verification.files[i];
+				isActive = certificationV2AtIndex.active;
+				if(isActive) {
+					returnArray.push(certificationV2AtIndex);
+				}
+			}
+			$scope.activeFiles = returnArray;
+			return returnArray;
 		}
+
+		getActiveFiles();
 	});

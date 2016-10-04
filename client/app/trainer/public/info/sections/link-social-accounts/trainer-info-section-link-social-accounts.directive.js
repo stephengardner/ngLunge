@@ -4,7 +4,9 @@ lungeApp.directive("trainerInfoSectionLinkSocialAccounts", function(){
 		templateUrl : 'app/trainer/public/info/sections/' +
 		'link-social-accounts/' +
 		'trainer-info-section-link-social-accounts.partial.html',
-		scope : {},
+		scope : {
+			userFactory : '<'
+		},
 		controller : 'TrainerInfoSectionLinkSocialAccountsController'
 	}
 })

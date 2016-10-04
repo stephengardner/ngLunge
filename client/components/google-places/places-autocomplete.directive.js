@@ -10,15 +10,6 @@ myApp
 				'removeMongooseError' : '=?',
 				'ngChange' : '&?'
 			},
-			link : function(scope, element, attrs){
-				var input = element[0].querySelector('input');
-				console.log("INPUT IS:" ,input);
-				// scope.$watch(function(){
-				// 	return input;
-				// }, function(newVal, old){
-				// 	alert("new val:"+ newVal);
-				// });
-			},
 			controller: ['$scope', '$q', function($scope, $q) {
 				if (!google || !google.maps) {
 					throw new Error('Google Maps JS library is not loaded!');
@@ -77,8 +68,8 @@ myApp
 				};
 
 				$scope.search = function(input) {
-					console.log("Scope form is:", $scope.form);
-					$scope.form['autocomplete'].$setValidity('mongoose', true);
+					// console.log("Scope form is:", $scope.form);
+					$scope.form['location'].$setValidity('mongoose', true);
 					if($scope.ngChange) {
 						$scope.ngChange();
 					}

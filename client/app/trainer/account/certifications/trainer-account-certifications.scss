@@ -52,6 +52,14 @@
 }
 
 #trainer-certifications, #trainer-certifications-list {
+	ag-collapse-container {
+		.md-list-item-inner {
+			padding: 0;
+		}
+		button {
+			margin: 0;
+		}
+	}
 	#empty {
 		padding: 20px;
 		text-align: center;

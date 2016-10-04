@@ -1,0 +1,12 @@
+{
+  "name": "apiErrorHandler",
+  "version": "0.0.1",
+  "main": "api-error-handler.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "logger"
+    ],
+    "provides": ["apiErrorHandler"]
+  }
+}

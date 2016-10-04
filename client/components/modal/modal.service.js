@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
   .factory('Modal', function ($rootScope, $modal) {
     /**
      * Opens a modal

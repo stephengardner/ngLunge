@@ -39,7 +39,6 @@ module.exports = function setup(options, imports, register) {
 	 * Get a single user
 	 */
 	exports.show = function (req, res, next) {
-		console.log("chatModel show");
 		chatGetter.get(req.params.id).then(function(response){
 			res.setHeader('X-Next-Max-Date', response.nextMaxDate);
 			return res.json(response.data);
@@ -54,8 +53,6 @@ module.exports = function setup(options, imports, register) {
 	};
 
 	exports.getInfo = function(req, res, next) {
-		console.log("chatModel show... params:", req.params);
-		console.log("nextMaxDate?:", req.query.nextMaxDate);
 		var chatId = req.params.id ? req.params.id.toString() : false;
 		chatGetter.getInfo(chatId, req.params.userId.toString()).then(function(response){
 			return res.status(200).json(response);
@@ -65,8 +62,6 @@ module.exports = function setup(options, imports, register) {
 	};
 	
 	exports.showForUser = function (req, res, next) {
-		console.log("chatModel show... params:", req.params);
-		console.log("nextMaxDate?:", req.query.nextMaxDate);
 		var chatId = req.params.chatId ? req.params.chatId.toString() : false;
 		chatGetter.get(chatId, req.params.userId.toString(), req.query.nextMaxDate).then(function(response){
 			if(response.nextMaxDate)

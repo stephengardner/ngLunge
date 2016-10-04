@@ -5,7 +5,8 @@
   "private": true,
   "plugin": {
     "consumes": [
-      "connectionDatabase"
+      "connectionDatabase",
+      "colorGenerator"
     ],
     "provides": ["userModel"]
   }

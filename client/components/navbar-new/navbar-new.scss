@@ -4,7 +4,7 @@
 	}
 }
 .navbar-new {
-	position: fixed;
+	//position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -39,6 +39,7 @@
 			//transition: all .4s;
 			&.active {
 				@extend .md-raised;
+				background: desaturate(lighten($brand-primary, 6%), 28%);
 				//color: black;
 			}
 		}

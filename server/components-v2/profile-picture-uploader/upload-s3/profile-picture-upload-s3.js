@@ -22,6 +22,8 @@ module.exports = function setup(options, imports, register) {
 				var filepath = req.body.filepath;
 				var buf = req.imageBuffer;
 
+				console.log("Buffer:", buf);
+				console.log("Buffer length: ", buf.length);
 				var headers = {
 						'Content-Length': buf.length,
 						'Content-Type': mime.lookup(filepath),
@@ -64,7 +66,7 @@ module.exports = function setup(options, imports, register) {
 							console.log('Amazon response statusCode: ', response.statusCode);
 							return resolve({
 								url :
-								"http://lungeapp.s3.amazonaws.com/profile-pictures/trainers/"
+								"https://lungeapp.s3.amazonaws.com/profile-pictures/trainers/"
 								+ newS3FileName
 								+ path.extname(filepath)
 							});
@@ -79,4 +81,4 @@ module.exports = function setup(options, imports, register) {
 	register(null, {
 		profilePictureUploadS3 : profilePictureUploadS3
 	})
-}
+};

@@ -4,9 +4,8 @@ angular.module("socialMeta", [])
 
 		$rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
 			SocialMeta.add("url", $location.absUrl());
-			console.log("*************", toState);
 			if(toState.tags) {
-				console.log("setting social meta with: ", toState.tags);
+				// console.log("setting social meta with: ", toState.tags);
 				SocialMeta.set(toState.tags);
 			}
 		});
@@ -15,7 +14,7 @@ angular.module("socialMeta", [])
 
 		// Scan through the socialMeta factory and put the tag at the root of the page
 		angular.forEach(SocialMeta.tags, function(tag, key){
-			console.log("tag is:", tag, " key is : ", key);
+			// console.log("tag is:", tag, " key is : ", key);
 			if(tag.types && tag.types.length) {
 				for(var i = 0; i < tag.types.length; i++) {
 					generateMetaTag(tag, key, tag.types[i]);

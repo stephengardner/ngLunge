@@ -1,10 +1,10 @@
 <md-button class="md-fab"
-           disabled="{{!trainerFactory.trainer}}"
-           ng-disabled="!trainerFactory.trainer"
-           ng-attr-title="contact {{trainerFactory.trainer.name.first}}"
+           disabled="{{!userFactory.user}}"
+           ng-disabled="!userFactory.user"
+           ng-attr-title="contact {{userFactory.user.name.first}}"
            ng-click="showDialog($event)">
-    <md-tooltip md-direction="top">
-        Send {{trainerFactory.trainer.name.first}} a message
+    <md-tooltip md-delay="500" md-direction="top">
+        Send {{userFactory.user.name.first}} a message
     </md-tooltip>
     <md-icon>
         <i class="material-icons">message</i>

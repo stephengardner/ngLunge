@@ -6,7 +6,9 @@
   "plugin": {
     "consumes": [
       "chatModel",
-      "logger"
+      "logger",
+      "socket",
+      "chatPreviewGetter"
     ],
     "provides": ["chatMessageReadSetter"]
   }

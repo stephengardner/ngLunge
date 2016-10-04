@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.controller('LoginController', function ($scope,
 	                                         Auth,
 	                                         $location,
@@ -76,7 +76,9 @@ angular.module('ngLungeFullStack2App')
 				Auth.setCurrentUser(response.data[type]);
 				$state.go('profile');
 			}).catch(function(err){
-				$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+				if(err.data) {
+					$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+				}
 				console.log("err", err);
 			});
 		};
@@ -86,7 +88,9 @@ angular.module('ngLungeFullStack2App')
 				Auth.setCurrentUser(response.data.trainer);
 				$state.go('profile');
 			}).catch(function(err){
-				$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+				if(err.data) {
+					$mdToast.show($mdToast.simple().position('top right').textContent(err.data.message));
+				}
 				console.log("err", err);
 			});
 		};

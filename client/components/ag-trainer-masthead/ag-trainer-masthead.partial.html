@@ -1,18 +1,117 @@
-<div class="top-masthead clearfix">
-    <div class="main-push trainer-profile">
+<div id="trainer-masthead" class="top-masthead clearfix">
+    <div class="trainer-profile">
         <!-- Begin Trainer Masthead Loaded -->
         <div flex layout="row"
              layout-wrap
              layout-align="center start"
              class="trainer-card wide clearfix">
-            <trainer-profile-contact-button></trainer-profile-contact-button>
+            <trainer-profile-contact-button user-factory="userFactory"
+                                            ng-if="userFactory.user">
+            </trainer-profile-contact-button>
+            <div class="actions" flex="100" layout="row" layout-align="end center">
+                <div hide-xs layout="row" layout-align="end center">
+                    <md-button layout="row"
+                               ng-click="reviewDialog($event)"
+                               class="md-primary"
+                               ng-class="{'md-raised' : loggedInUserHasReviewedTrainer()}"
+                               layout-align="center center">
+                        <div ng-if="!loggedInUserHasReviewedTrainer()">
+                            <i class="material-icons">
+                                star_outline
+                            </i>
+                            Write a review
+                        </div>
+                        <div ng-if="loggedInUserHasReviewedTrainer()">
+                            <i class="material-icons">
+                                star
+                            </i>
+                            Reviewed
+                        </div>
+                        <md-tooltip md-delay="500" md-direction="top">
+                            {{
+                            loggedInUserHasReviewedTrainer()
+                            ? 'You reviewed ' + userFactory.user.name.first
+                            : 'Review ' + userFactory.user.name.first
+                            }}
+                        </md-tooltip>
+                    </md-button>
+                    <md-button class="md-icon-button md-primary"
+                               ng-class="{'md-raised' : loggedInUserHasFavoriteTrainer()}"
+                               ng-click="toggleFavorites($event)"
+                               ng-disabled="favoriteBusy"
+                               id="favorite-icon">
+                        <md-tooltip md-delay="500" md-direction="top">
+                            {{
+                            loggedInUserHasFavoriteTrainer()
+                            ? 'Added to favorites'
+                            : 'Add to favorites'
+                            }}
+                        </md-tooltip>
+                        <i class="material-icons">
+                            {{
+                            loggedInUserHasFavoriteTrainer()
+                            ? 'favorite'
+                            : 'favorite_border'
+                            }}
+                        </i>
+                    </md-button>
+                </div>
+                <div hide-gt-xs id="trainer-menu-button">
+                    <md-menu md-offset="0 20"
+                             md-position-mode="target-right target">
+                        <md-button class="md-icon-button"
+                                   ng-click="openMenu($mdOpenMenu, $event)"
+                                   md-menu-origin>
+                            <i class="material-icons">more_vert</i>
+                        </md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item>
+                                <md-button ng-click="reviewDialog()"
+                                           md-menu-align-target
+                                           ng-class="{'md-primary' : loggedInUserHasReviewedTrainer()}">
+                                    <div ng-if="!loggedInUserHasReviewedTrainer()">
+                                        <i class="material-icons" md-menu-align-target>
+                                            star_outline
+                                        </i>
+                                        Write a review
+                                    </div>
+                                    <div ng-if="loggedInUserHasReviewedTrainer()">
+                                        <i class="material-icons" md-menu-align-target>
+                                            star
+                                        </i>
+                                        Reviewed
+                                    </div>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-class="{'md-primary' : loggedInUserHasFavoriteTrainer()}"
+                                           ng-click="toggleFavorites($event)">
+                                    <i class="material-icons">
+                                        {{
+                                        loggedInUserHasFavoriteTrainer()
+                                        ? 'favorite'
+                                        : 'favorite_border'
+                                        }}
+                                    </i>
+                                    {{
+                                    loggedInUserHasFavoriteTrainer()
+                                    ? 'Added to favorites'
+                                    : 'Add to favorites'
+                                    }}
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+            </div>
             <!-- Profile Picture -->
-            <trainer-profile-picture></trainer-profile-picture>
+            <trainer-profile-picture>
+            </trainer-profile-picture>
             <!-- Basic Info -->
             <div flex="66"
-                    flex-xs="80"
-                    class="flex-xxs-100"
-                    trainer="trainer">
+                 flex-xs="80"
+                 class="flex-xxs-100"
+                 trainer="trainer">
                 <trainer-basic-info editable="{{isMe()}}">
                 </trainer-basic-info>
             </div>
@@ -23,7 +122,7 @@
              layout-wrap
              layout-align="center center"
              class="trainer-card wide clearfix"
-             ng-if="!trainerFactory.trainer">
+             ng-if="!userFactory.user">
             <div flex="33"
                  flex-xs="80"
                  class="flex-xxs-100 profile-picture-container">

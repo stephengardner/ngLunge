@@ -1,0 +1,142 @@
+<md-dialog id="trainer-review-dialog" ng-class="{'is-loading' : !vm.reviewExistenceChecked}">
+    <div ng-if="!vm.reviewExistenceChecked"
+         class="loading-check-review-exists"
+         layout="column"
+         layout-align="center center">
+        <md-dialog-content layout="column"
+                           class="md-dialog-content"
+                           layout-align="center stretch">
+            <md-progress-circular md-diameter="50">
+            </md-progress-circular>
+        </md-dialog-content>
+    </div>
+    <form name="reviewForm"
+          cg-busy="{promise : vm.cgBusy}"
+          ng-submit="vm.submit(reviewForm)" ng-if="vm.reviewExistenceChecked">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!vm.reviewExists">
+                    Write a new review for {{userFactory.user.name.first}}
+                </h2>
+                <h2 ng-if="vm.reviewExists">
+                    Edit your review for {{userFactory.user.name.first}}
+                </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="vm.close()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-align="start stretch">
+                <div layout="column"
+                     layout-align="start start"
+                     layout-align-gt-xs="space-between start"
+                     layout-gt-xs="row">
+                    <div class="leaving-review-as"
+                         layout="row"
+                         layout-gt-md="row"
+                         flex="initial"
+                         flex-order-gt-xs="1"
+                         layout-align="end center"
+                         layout-align-gt-xs="end center">
+                        <div>
+                            Leaving public review as:
+                        </div>
+                        <div layout="column" layout-align="center center">
+                            <div class="profile-picture">
+                                <img ng-src="{{vm.loggedInUserProfilePictureUrl}}"/>
+                            </div>
+                            <span class="name">
+                                {{vm.loggedInUserDisplayName}}
+                            </span>
+                            <md-button ng-click="delete()" ng-if="0">
+                                Delete Review
+                            </md-button>
+                        </div>
+                    </div>
+                    <ag-floating-label
+                            flex-order-gt-xs="0">
+                        <div class="rating"
+                             ng-class="{'invalid' : reviewForm.rating_overall.$invalid }"
+                             layout="row"
+                             layout-align="start center">
+                            <ag-rating-stars ng-model="vm.review.rating_overall"
+                                             on-hover-changed="vm.onStarHover($star, $starsWhole)">
+                            </ag-rating-stars>
+                            <div class="star-description"
+                                 ng-if="vm.starDescription">
+                                {{vm.starDescription}}
+                            </div>
+                        </div>
+                        <input type="text"
+                               ng-show="0"
+                               server-error
+                               ng-model="vm.review.rating_overall"
+                               name="rating_overall"/>
+                        <div ng-messages="reviewForm.rating_overall.$error">
+                            <div ng-message="mongoose">
+                                {{reviewForm.errors.rating_overall}}
+                            </div>
+                        </div>
+                    </ag-floating-label>
+                </div>
+                <ag-floating-label>
+                    <label>Write about your experience</label>
+                    <textarea md-no-autogrow
+                              ag-no-autogrow
+                              rows="5" ng-model="vm.review.text_overall"></textarea>
+                    <ag-hints>
+                        <ag-hint>
+                            Describe things like overall service, punctuality, and any other relevant details.
+                        </ag-hint>
+                    </ag-hints>
+                </ag-floating-label>
+                <div class="recommend" layout="row" layout-align="start center" layout-wrap>
+                    <div flex-order-xxs="1"
+                         flex="none">
+                        <md-button ng-class="{'active' : vm.review.recommended == true}"
+                                   class="yes md-icon-button"
+                                   ng-click="vm.toggleRecommended(true)">
+                            <ng-md-icon icon="thumb_up">
+                            </ng-md-icon>
+                        </md-button>
+                    </div>
+                    <div flex-order-xxs="0">
+                        Recommended?
+                    </div>
+                    <div lex-order-xxs="2"
+                         flex="none">
+                        <md-button class="no md-icon-button"
+                                   ng-class="{'active' : vm.review.recommended == false}"
+                                   ng-click="vm.toggleRecommended(false)">
+                            <ng-md-icon icon="thumb_down">
+                            </ng-md-icon>
+                        </md-button>
+                    </div>
+                </div>
+                <div class="are-you-sure" ng-if="vm.submitting">
+                    <h3>
+                        Are you sure you want to leave this review?
+                    </h3>
+                    <div layout="row" layout-align="center center">
+                        <md-button type="submit">
+                            Submit
+                        </md-button>
+                        <md-button ng-click="vm.toggleSubmitting(reviewForm, false)">
+                            Cancel
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="vm.toggleSubmitting(reviewForm, true)">
+                Submit Review
+            </md-button>
+            <md-button ng-click="vm.close()">
+                Cancel
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

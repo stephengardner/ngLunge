@@ -60,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr ng-repeat-start="file in getActiveFiles()"></tr>
+                            <tr ng-repeat-start="file in activeFiles"></tr>
                             <tr md-row ng-if="!file.deleting">
                                 <td md-cell ng-if="!file.deleting">
                                     {{file.user_desired_name || 'No name'}}

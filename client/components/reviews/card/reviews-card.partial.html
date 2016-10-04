@@ -1,0 +1,107 @@
+ <div class="loading-block-sm" ng-if="!userFactory.user.name"></div>
+<md-card class="section-animate-in reviews-card"
+         ng-if="userFactory.user.name">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Reviews</span>
+            </h2>
+        </div>
+    </md-toolbar>
+    <form name="ratingsForm" ng-submit="submit(ratingsForm)">
+        <md-card-content cg-busy="{promise : cgBusy}">
+            <div ng-if="!reviews.data.length && reviews.complete">
+                No reviews have been left yet
+            </div>
+            <md-list ng-if="reviews.data.length">
+                <md-list-item class="md-3-line md-long-text"
+                              ng-repeat="review in reviews.data"
+                              layout="row"
+                              layout-align="start start">
+                    <div layout="column"
+                         class="from-details"
+                         layout-align="center center">
+                        <div class="profile-picture">
+                            <img ng-src="{{review.from.profile_picture.thumbnail.url}}"/>
+                        </div>
+                        <div class="name">
+                            {{review.from.name.first}} {{review.from.name.last | limitTo : 1 : 0}}.
+                        </div>
+                    </div>
+                    <div class="md-list-item-text">
+                        <h3 class="stars" layout="row" layout-align="start center">
+                            <ag-rating-stars static="true" ng-model="review.rating_overall"></ag-rating-stars>
+                            <div class="date">
+                                {{review.created_at | date:'M/d/yy'}}
+                            </div>
+                        </h3>
+                        <div class="recommendation"
+                             layout="row" layout-align="start center"
+                             ng-if="review.recommended === true || review.recommended === false">
+                            <div class="is-recommended"
+                                 ng-if="review.recommended" layout="row" layout-align="start
+                            center">
+                                <md-icon>
+                                    <i class="material-icons">
+                                        check_circle
+                                    </i>
+                                </md-icon>
+                                <span>
+                                    Recommended
+                                </span>
+                            </div>
+                            <div class="is-not-recommended"
+                                 ng-if="!review.recommended" layout="row" layout-align="start center">
+                                <md-icon>
+                                    <i class="material-icons">
+                                        close
+                                    </i>
+                                </md-icon>
+                                <span>
+                                    Not recommended
+                                </span>
+                            </div>
+                        </div>
+                        <p><!--
+                            -->{{review.text_overall}}<!--
+                        --></p>
+                        <div layout="row" layout-align="end center">
+                            <md-button class="thank"
+                                       ng-class="{thanked : review.thankedByLoggedInUser }"
+                                       ng-click="reviews.toggleThanks(review, $event)">
+                                <i class="material-icons" ng-if="!review.thanking">
+                                    thumb_up
+                                </i>
+                                    <span ng-if="!review.thanking">
+                                        {{ review.thankedByLoggedInUser ? 'Thanked' : 'Thank' }}
+                                    </span>
+                                    <span class="thanked-count"
+                                          ng-if="!review.thanking && review.thanked_by.length">
+                                        ({{review.thanked_by.length}})
+                                    </span>
+                                <md-progress-circular ng-if="review.thanking"
+                                                      md-mode="indeterminate"
+                                                      md-diameter="15">
+                                </md-progress-circular>
+                            </md-button>
+                        </div>
+                    </div>
+                    <!--<pre>{{rating | json}}</pre>-->
+                </md-list-item>
+            </md-list>
+            <div ng-if="!reviews.complete">
+                <md-button class="load-more"
+                           layout="row" layout-align="center center"
+                           ng-click="get()">
+                    <md-progress-circular ng-if="reviews.busy"
+                                          md-mode="indeterminate"
+                                          md-diameter="15">
+                    </md-progress-circular>
+                    <span>
+                        {{reviews.busy ? 'Loading...' : 'Load more...'}}
+                    </span>
+                </md-button>
+            </div>
+        </md-card-content>
+    </form>
+</md-card>

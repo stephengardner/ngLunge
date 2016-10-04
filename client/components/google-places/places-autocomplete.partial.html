@@ -8,22 +8,17 @@
                          md-items="item in search(searchText)"
                          md-item-text="item.description"
                          md-min-length="2"
-                         md-max-length="50"
-                         server-error
                          placeholder="Type your location"
-                         md-input-name="autocomplete"
+                         md-input-name="location"
                          md-floating-label="Enter your location"
-                         required
                          ng-model="location">
             <md-item-template>
-            <span md-highlight-text="searchText" md-highlight-flags="^i">
-                {{item.description}}
-            </span>
+                <span md-highlight-text="searchText" md-highlight-flags="^i">
+                    {{item.description}}
+                </span>
             </md-item-template>
-            <div ng-messages="form.autocomplete.$error">
-                <div ng-message="local">Hey there locally</div>
-                <div ng-message="mongoose">{{form.errors.autocomplete}}</div>
-                <div ng-message="required">Select a location</div>
+            <div ng-messages="form.location.$error">
+                <div ng-message="mongoose">{{form.errors.location}}</div>
             </div>
             <md-not-found>
                 No matches found for "{{searchText}}"

@@ -14,8 +14,14 @@
       "traineeModel",
       "chatMessageReadSetter",
       "logger",
+      "reviewModel",
+      "reviewSubmitter",
       "chatGetter",
-      "trainerPopulatorCertificationsAggregated"
+      "trainerPopulatorCertificationsAggregated",
+      "reviewByUserForUserGetter",
+      "locationTrainerParser",
+      "locationTrainerSaver",
+      "locationSetter"
     ],
     "provides": ["apiUserController"]
   }

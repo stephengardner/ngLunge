@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.config(function ($stateProvider) {
 		$stateProvider
 		// abstract certifications route.  actually helps when we check where the state is during menu when we

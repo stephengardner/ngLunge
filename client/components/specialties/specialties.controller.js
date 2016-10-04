@@ -1,19 +1,10 @@
-myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory, $q, $http, $scope, $mdDialog){
-	$scope.ajax = {
-		busy : false,
-		promise : false
-	};
-	$scope.specialty = {
-		selected : ''
-	};
-	$scope.trainerFactory = TrainerFactory;
+myApp.controller("SpecialtiesController", function(AlertMessage, $q, $http, $scope, $mdDialog){
 
-	$scope.resetSpecialty = function(){
+	this.resetSpecialty = function(){
 		$scope.ajax.busy = false;
-		$scope.specialty = { selected : null };
 	};
 
-	$scope.showDialog = function(ev) {
+	this.showDialog = function(ev) {
 		// Appending dialog to document.body to cover sidenav in docs app
 		// Modal dialogs should fully cover application
 		// to prevent interaction outside of dialog
@@ -21,6 +12,9 @@ myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory,
 			{
 				focusOnOpen : false,
 				controller: 'SpecialtiesDialogController',
+				controllerAs : 'SpecialtiesDialogCtrl',
+				scope : $scope,
+				preserveScope : true,
 				templateUrl: 'components/specialties/dialog/specialties-dialog.partial.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
@@ -33,23 +27,22 @@ myApp.controller("SpecialtiesController", function(AlertMessage, TrainerFactory,
 		});
 	};
 
-	$scope.toggleRemoveSpecialty = function(specialty){
+	this.toggleRemoveSpecialty = function(specialty){
 		specialty.removing = !specialty.removing;
 	};
 
-	$scope.removeSpecialty = function(specialty) {
-		$scope.ajax.busy = true;
-		$scope.cgBusy = TrainerFactory.removeSpecialty(specialty)
-			.save()
+	this.removeSpecialty = function(specialty) {
+		this.cgBusy = $scope.userFactory.removeSpecialty(specialty)
+			.save('specialties')
 			.then(function(){
-				$scope.toggleRemoveSpecialty(specialty);
-				$scope.resetSpecialty();
+				this.toggleRemoveSpecialty(specialty);
+				this.resetSpecialty();
 				AlertMessage.success(specialty.name + ' specialty removed');
-			}).catch(function(err){
-				$scope.resetSpecialty();
-				TrainerFactory.resetEditing('specialties');
+			}.bind(this)).catch(function(err){
+				this.resetSpecialty();
+				this.userFactory.resetEditing('specialties');
 				AlertMessage.error("Please enter a valid specialty");
 				console.log("Caught error:", err);
-			})
-	}
+			}.bind(this))
+	}.bind(this);
 });

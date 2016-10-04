@@ -1,0 +1,16 @@
+{
+  "name": "reviewEditor",
+  "version": "0.0.1",
+  "main": "review-editor.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userPopulator",
+      "apiErrorHandler",
+      "reviewModel"
+    ],
+    "provides": [
+      "reviewEditor"
+    ]
+  }
+}

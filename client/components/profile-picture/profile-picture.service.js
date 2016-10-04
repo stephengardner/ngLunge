@@ -204,7 +204,7 @@ lungeApp.factory("ProfilePicture", function($timeout, Auth, $timeout, $http, $q,
 				url : '/api/trainers/' + Auth.getCurrentUser()._id + '/profile-picture/local',
 				method : 'POST',
 				data : dataToPost
-			})
+			});
 			// define the upload scope variable
 			//var upload = $upload.upload({
 			//	url : '/api/aws/upload',

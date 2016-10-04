@@ -8,80 +8,81 @@ myApp.controller('SpecialtiesDialogController', function($scope,
                                                          Auth,
                                                          $timeout
 ) {
+	var self = this;
 
-	$scope.close = function() {
+	this.close = function() {
 		$mdDialog.cancel();
 	};
+	
+	var specialtiesToChooseFrom = [];
 
-	$scope.userHasSpecialty = function(specialty) {
-		console.log(TrainerFactory.trainerEditing.specialties);
-		for(var i = 0; i < TrainerFactory.trainerEditing.specialties.length; i++) {
-			var specialtyAtIndex = TrainerFactory.trainerEditing.specialties[i];
-			console.log("Checking ", specialtyAtIndex, " vs " + specialty);
-			if(specialtyAtIndex._id == specialty._id) return true;
-		}
-		return false;
-	};
-
-	$scope.toastSuccess = function($event) {
+	this.toastSuccess = function($event) {
 		var element = angular.element('#specialtiesForm');
 		$scope.toast = $mdToast.show({
 			parent : angular.element('.md-dialog-container'),
+			position: 'top right',
 			template : '<md-toast>\
 			<span flex>Specialty added!</span>\
 			</md-toast>'
 		});
-		// $timeout(function(){
-		// 	alert();
-		// }, 500);
-		// AlertMessage.success('Specialty added!');
 	};
-	// $scope.toast.updateTextContent('OK');
-	$scope.setSpecialtyFromTypeahead = function($item, $model, $label){
+
+	this.setSpecialtyFromTypeahead = function($item, $model, $label){
 		console.log("Setting specialty from typeahead");
-		$scope.specialty = $item;
-		$scope.addSpecialty();
+		self.specialty = $item;
+		self.addSpecialty();
 	};
-	$scope.submit = function(item){
-		if(!$scope.selectedItem) {
+
+	this.submit = function(item){
+		if(!self.selectedItem) {
 			return;
 		}
-		console.log("the specialty is:", $scope.selectedItem);
-		$scope.cgBusy = TrainerFactory.addSpecialty($scope.selectedItem)
-			.save()
+		console.log("the specialty is:", self.selectedItem);
+		self.cgBusy = $scope.userFactory.addSpecialty(self.selectedItem)
+			.save('specialties')
 			.then(function(response){
-				$scope.toastSuccess();
-				$scope.selectedItem = '';
-				$scope.searchText = '';
-				$scope.$$childTail.selectedItem = '';
-				$scope.$$childTail.searchText = '';
+				self.toastSuccess();
+				spliceSpecialtyToChooseFrom(self.selectedItem);
+				self.selectedItem = '';
+				self.searchText = '';
+				// self.$$childTail.selectedItem = '';
+				// self.$$childTail.searchText = '';
 			}).catch(function(err){
-				// $scope.resetSpecialty();
-				TrainerFactory.resetEditing('specialties');
+				$scope.userFactory.resetEditing('specialties');
 				AlertMessage.error("Please enter a valid specialty");
 				console.log("Caught error:", err);
 			})
 	};
-	$scope.test = function(){
-		$scope.getSpecialties('');
-	}
-	$scope.getSpecialties = function(query){
+
+	self.getSpecialties = function(query){
 		if(!query) {
 			return [];
 		}
-		var deferred = $q.defer();
-		$http({
-			url : '/api/specialties/query/' + query,
-			params : {
-				userId: Auth.getCurrentUser()._id
-			}
-		}).success(function(res){
-			console.log("The result is:", res);
-			res = res.length ? res : [];
-			deferred.resolve(res);
-		}).error(function(res){
-
-		});
-		return deferred.promise;
+		return new $q(function(resolve, reject) {
+			$http({
+				url : '/api/specialties/query/' + query,
+				params : {
+					userId: Auth.getCurrentUser()._id
+				}
+			}).success(function(res){
+				console.log("The result is:", res);
+				res = res.length ? res : [];
+				specialtiesToChooseFrom = res;
+				return resolve(specialtiesToChooseFrom);
+			}).error(function(res){
+				return resolve([]);
+			});
+		})
 	};
+
+	function spliceSpecialtyToChooseFrom(specialty) {
+		for(var i = 0; i < specialtiesToChooseFrom.length; i++) {
+			var specialtyAtIndex = specialtiesToChooseFrom[i];
+			if(specialtyAtIndex &&
+				specialtyAtIndex._id == specialty._id){
+				specialtiesToChooseFrom.splice(i, 1);
+				return;
+			}
+		}
+	}
 });

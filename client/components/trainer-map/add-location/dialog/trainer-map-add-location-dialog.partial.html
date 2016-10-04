@@ -18,9 +18,14 @@
                 <h3>Search using the Google Places API</h3>
                 <div cg-busy="{promise : cgBusy}">
                     <places-autocomplete ng-model="location"
-                                         form="googlePlacesForm"
-                                         ng-change="removeMongooseError(googlePlacesForm, 'location')">
+                                         form="googlePlacesForm">
                     </places-autocomplete>
+                    <div ng-messages="googlePlacesForm.location.$error" class="md-auto-hide" ng-messages-multiple>
+                        <div ng-message="required">Title is required</div>
+                        <div ng-message="mongoose">{{googlePlacesForm.errors.title}}</div>
+                        <div ng-message="maxlength">Please limit the title to 30 characters</div>
+                        <div ng-message="minlength">This location is too short</div>
+                    </div>
                     <ag-floating-label>
                         <label>
                             Name this location

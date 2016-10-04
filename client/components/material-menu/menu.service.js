@@ -75,6 +75,12 @@ myApp.factory('Menu', [
 			}
 			sections.push(certificationSection);
 
+			var aboutLungeLink = {
+				name : 'About Lunge',
+				type : 'link',
+				state : 'main.what-is-lunge',
+				icon : 'info_outline'
+			};
 			var logoutLink = {
 				name : 'Logout',
 				type : 'link',
@@ -83,6 +89,7 @@ myApp.factory('Menu', [
 				action : 'logout()' // from the rootscope
 			};
 
+			sections.push(aboutLungeLink);
 			sections.push(logoutLink);
 		} 
 
@@ -128,7 +135,6 @@ myApp.factory('Menu', [
 				else {
 					setLoggedOutLinks();
 				}
-				console.log("Set sections as:", sections);
 				Menu.sections = sections;
 			});
 		}
@@ -178,7 +184,7 @@ myApp.factory('Menu', [
 					.then(function () {
 						var isOpen = $mdSidenav('left').isOpen() ? true : false;
 						Menu.isOpenLeft = isOpen;
-						$log.debug("toggle " + navID + " is done");
+						$log.debug("toggle " + navID + " is done, isopen is now: ", Menu.isOpenLeft);
 					});
 			}, 10);
 		}

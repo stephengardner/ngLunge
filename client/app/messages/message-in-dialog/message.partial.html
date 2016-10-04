@@ -1,9 +1,9 @@
 <md-dialog id="message-in-dialog" flex="100" flex-gt-md="40" flex-gt-xs="90" flex-gt-sm="50">
-    <!--<md-dialog-content>-->
-    <!--<div class="md-dialog-content">-->
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Send a message to {{trainerFactory.trainer.name.first}}</h2>
+            <h2>Send a message to
+                {{vm.userFactory.isMe() ? 'yourself' : vm.userFactory.user.name.first}}
+            </h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="close()">
                 <i class="material-icons">
@@ -12,19 +12,18 @@
             </md-button>
         </div>
     </md-toolbar>
-    <!--<div class="container">-->
-
     <md-content id="message"
                 message-container
                 layout="column"
                 layout-align="end stretch">
-        <div ng-if="chat.initialLoadError" layout="row" layout-align="center center" class="main-push">
+        <div ng-if="vm.chat.initialLoadError" layout="row" layout-align="center center" class="main-push">
             <h2>Woops, that chat does not exist anymore!</h2>
         </div>
         <!--<md-dialog-content>-->
-        <div ng-if="!chat.complete && chat.busy"
+        <div ng-if="vm.initialLoadStatus == 0"
              class="loading text-center">
-            <md-progress-circular md-diameter="50"></md-progress-circular>
+            <md-progress-circular md-diameter="50">
+            </md-progress-circular>
             <div class="text" flex="100">
                 Loading...
             </div>
@@ -36,15 +35,27 @@
             <div flex
                  id="message-md-content"
                  style="height: auto;">
-                <div ng-if="!chat.dates.length"
+                <div ng-if="vm.initialLoadStatus == 1 && !vm.chat.complete"
+                     layout="column"
+                     layout-align="center center"
+                     class="loading">
+                    <md-progress-linear ng-if="chat.busy"
+                                        md-mode="indeterminate"></md-progress-linear>
+                    <md-button ng-click="vm.get()" ng-disabled="chat.busy">
+                        {{ chat.busy ? 'Loading...' : 'Load previous messages' }}
+                    </md-button>
+                </div>
+                <div ng-if="!vm.chat.dates.length && vm.initialLoadStatus == 1"
                      id="empty-chat"
                      layout="row"
                      layout-align="center center">
                     <h3>
-                        Starting a new chat with {{trainerFactory.trainer.name.first}}
+                        Starting a new chat with {{
+                        vm.userFactory.isMe() ? 'yourself' : vm.userFactory.user.name.first
+                        }}
                     </h3>
                 </div>
-                <div ng-repeat="date in chat.dates | orderBy:localComparator">
+                <div ng-repeat="date in vm.chat.dates | orderBy:vm.localComparator">
                     <md-subheader class="displayDate"
                                   layout="row"
                                   md-subheader
@@ -54,17 +65,15 @@
                         </div>
                     </md-subheader>
                     <div ng-repeat="messageObject in
-                                chat.formatted[date.formatted_display]
-                                track by messageObject._id"
+                                    vm.chat.formatted[date.formatted_display] track by
+                                    messageObject._id"
                          layout="row"
                          chat-message="messageObject"
                          ng-class="{'unseen' : messageObject.sendEventWhenSeen,
                                      'seen' : !messageObject.sendEventWhenSeen}"
                          layout-align="start start"
                          class="message-row chat-message">
-                        <div flex="nogrow" class="profile-picture">
-                            <img ng-src="{{messageObject.sender.profile_picture.thumbnail.url}}"/>
-                        </div>
+                        <profile-picture-thumbnail user="messageObject.sender"></profile-picture-thumbnail>
                         <div flex>
                             <div layout="column" layout-align="start stretch">
                                 <div class="message-row-1">
@@ -80,49 +89,65 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="message-content">{{messageObject.message}}</div>
+                                <div layout="row" layout-align="space-between center">
+                                    <div class="message-content">{{messageObject.message}}</div>
+                                </div>
+                                <div class="seen-at"
+                                     layout="row" layout-align="start center"
+                                     ng-if="messageObject.showSeenAtUnderneath">
+                                    <i class="material-icons">check</i>
+                                    <span>
+                                    Seen {{messageObject.seen_at_time_formatted}}
+                                </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--</div>-->
         </div>
-        <!--</md-dialog-content>-->
     </md-content>
-    <!--</div>-->
     <div flex="nogrow"
-         id="textbox-container"
          class="md-whiteframe-z2"
-         ng-if="chat.initialLoadSuccess">
-        <div id="new-message-count" ng-if="chat.newMessageCount()" ng-click="scrollMessageWindowToBottom()">
+         id="textbox-container"
+         ng-if="vm.initialLoadStatus == 1">
+        <div id="new-message-count" ng-if="vm.shouldShowNewMessagesNotification()"
+             ng-click="vm.scrollMessageWindowToBottom()">
             <md-button>
-                {{chat.newMessageCount()}} new {{ chat.newMessageCount() == 1 ? 'message' : 'messages' }}
+                {{vm.getNewMessageText()}}
             </md-button>
         </div>
-        <form ng-submit="sendMessage()">
-            <ag-floating-label>
+        <form ng-submit="vm.sendMessage()">
+            <div id="sent-notification" ng-if="vm.sent"
+                 layout="row" layout-align="start center">
+                <i class="material-icons">check</i>
+                Sent
+            </div>
+            <ag-floating-label >
                 <label>Write a message...</label>
                 <textarea id="textArea"
-                          ag-on-enter="onEnter(e)"
+                          ag-on-enter="vm.textareaPressedEnter(e)"
                           ng-blur="textAreaSetFocus(false)"
                           ng-focus="textAreaSetFocus(true)"
-                          ng-class="{'has-padding' : showButton()}"
                           rows="3"
-                          ng-model="message.text"></textarea>
+                          ng-class="{'has-padding' : vm.isSendButtonShown()}"
+                          ng-model="vm.message"></textarea>
             </ag-floating-label>
             <md-button type="submit"
-                       ng-if="showButton()"
-                       ng-disabled="sendMessageBusy"
+                       ng-if="vm.shouldShowSendButton()"
+                       ng-disabled="vm.sending"
                        class="md-raised md-icon-button md-primary">
                 <i class="material-icons">send</i>
             </md-button>
         </form>
-        <div class="press-enter-to-send" layout="row" layout-align="end center">
-            <md-checkbox ng-model="pressEnterToSend.bool" ng-click="updatePressEnterToSend()"></md-checkbox> Press
-            enter to send
+        <div ng-if="vm.shouldShowPressEnterToSend()"
+             class="press-enter-to-send"
+             layout="row"
+             layout-align="end center">
+            <md-checkbox ng-model="vm.pressEnterToSend"
+                         ng-click="vm.togglePressEnterToSend()">
+            </md-checkbox>
+            Press enter to send
         </div>
     </div>
-    <!--</div>-->
-    <!--</md-dialog-content>-->
 </md-dialog>

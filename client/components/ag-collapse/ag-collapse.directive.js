@@ -63,13 +63,13 @@ myApp.directive('agCollapseContainer', function($animateCss){
 					animating = false;
 					// alert("HEIGHT:");
 					if(!scope.collapsed) {
+						body.css('height', 'auto');
 					}
 				});
 			}
 			scope.$watch(function(){
 				return scope.collapsed
 			}, function(oldValue, newValue){
-				console.log("oldValue:", oldValue, "newValue:", newValue);
 				if(oldValue !== newValue)
 				doAnimation();
 			});

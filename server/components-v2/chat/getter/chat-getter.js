@@ -72,7 +72,7 @@ module.exports = function setup(options, imports, register) {
 				var foundChat,
 					parsedChatAfterFound,
 					savedNewChat
-				;
+					;
 				if(!user1) {
 					return reject(new Error('include a first user for this endpoint'));
 				}
@@ -148,7 +148,9 @@ module.exports = function setup(options, imports, register) {
 							callback();
 						}
 						else{
-							var participants;
+							var participants,
+								to_self
+							;
 							if(user1 != user2) {
 								participants = [
 									{
@@ -164,12 +166,15 @@ module.exports = function setup(options, imports, register) {
 									{
 										user : user1
 									}
-								]
+								];
+								to_self = true;
 							}
 							var newChat = {
+								to_self : to_self,
 								participants : participants,
 								started_by : user1
 							};
+							console.log("newchat:", newChat);
 							var createdChat = new chatModel(newChat);
 							createdChat.save(function(err, saved){
 								if(err) return callback(err);
@@ -195,9 +200,12 @@ module.exports = function setup(options, imports, register) {
 			})
 		},
 		get : function(chatId, userId, maxDate) {
-			console.log("Getting for chatID:", chatId, " and userID:", userId);
 			return new Promise(function(resolve, reject) {
 				var gotMessages,
+					gotObject, // alias for gotMessages
+					idOfMessageToShowSeenAt,
+					timeToShowSeenAt,
+					foundChat,
 					returnObject = {
 						nextMaxDate : new Date('2030-01-01'),
 						data : []
@@ -206,17 +214,47 @@ module.exports = function setup(options, imports, register) {
 				maxDate = maxDate || new Date('2030-01-01');
 				//maxDate = new Date("07/27/2016");
 				var secondMatch;
-				var parsedMaxDate = new moment(new Date(maxDate)).toDate();
+				var parsedMaxDate = new Date(maxDate);//new moment(new Date(maxDate)).toDate();
 				// if(maxDate) {
 				secondMatch = {
 					$match : {
 						'messages.sent_at' : {
-							$lt : parsedMaxDate,
+							$lte : parsedMaxDate,
 							$exists : true
 						}
 					}
 				};
 				async.waterfall([
+					function validate(callback) {
+						if(!mongoose.Types.ObjectId.isValid(chatId)){
+							logger.info({type : loggerType, msg : 'chatId is not valid: ' + chatId});
+							return callback(404);
+						}
+						if(!mongoose.Types.ObjectId.isValid(userId)){
+							logger.info({type : loggerType, msg : 'userId is not valid: ' + userId});
+							return callback(404);
+						}
+						callback();
+					},
+					function getTheChatIDWhichWillHaveTheSeenAtStringBeneathIt(callback) {
+						chatModel.findById(chatId, function(err, chat) {
+							if(err) return callback(err);
+							foundChat = chat;
+							if(!chat || !chat.participants || !chat.participants.length) {
+								logger.info({type : loggerType, msg : 'chat does not exist or has no participants'});
+								return callback(404);
+							}
+							if(chat.last_message_sent_by == userId) {
+								chat.participants.forEach(function(participant, participantIndex, participantArr){
+									if(participant.user != userId) {
+										idOfMessageToShowSeenAt = participant.id_of_most_recent_message_seen;
+										timeToShowSeenAt = participant.seen_at;
+									}
+								});
+							}
+							callback();
+						})
+					},
 					function getChat(callback) {
 						var matchObject = {
 							$match : {
@@ -289,14 +327,24 @@ module.exports = function setup(options, imports, register) {
 							pipeline,
 							function(err, response) {
 								if(err) return callback(err);
-								if(!response) {
+								if(!response /*|| !response[0] || !response[0].participants*/) {
+									logger.info({type : loggerType, msg : 'response is empty ', response: response});
 									return callback(404);
 								}
+								gotObject = response[0];
 								gotMessages = response;
 								// console.log("GOTMESSAGES:", gotMessages[0].messages);
 								callback();
 							})
 					},
+					// function markTheLastMessageSeen(callback) {
+					// 	if (gotMessages && gotMessages.length) {
+					// 		gotMessages.forEach(function (aggregatedByDate, index, arr) {
+					// 			console.log(aggregatedByDate);
+					// 		})
+					// 	}
+					// 	callback();
+					// },
 					function setTrueIfSeenByUser(callback) {
 						if (gotMessages && gotMessages.length) {
 							gotMessages.forEach(function (aggregatedByDate, index, arr) {
@@ -304,6 +352,11 @@ module.exports = function setup(options, imports, register) {
 									aggregatedByDate.messages.forEach(function (message, messageIndex, messagesArr) {
 										if (message.meta && message.meta.length >= 1) {
 											message.meta.forEach(function (metaItem, metaIndex, metaArr) {
+												if(metaItem.user != message.sender && metaItem.seen_at) {
+													message.seen_at = metaItem.seen_at;
+													message.seen_at_time_formatted =
+														moment(metaItem.seen_at).format('h:mma');
+												}
 												if (metaItem.user == userId && !metaItem.read) {
 													logger.info({
 														type : loggerType,
@@ -311,7 +364,10 @@ module.exports = function setup(options, imports, register) {
 														' when it\'s seen',
 														message : message.message
 													});
-													message.sendEventWhenSeen = true;
+													// check if this message was to themselves
+													if(!foundChat.to_self) {
+														message.sendEventWhenSeen = true;
+													}
 												}
 											});
 										}
@@ -342,9 +398,10 @@ module.exports = function setup(options, imports, register) {
 								else {
 									item.date_formatted = 'Today';
 								}
+								// set sent at and seen at if necessary
 								if(item.messages && item.messages.length) {
-									item.messages.forEach(function(i, x, a) {
-										i.sent_at_time_formatted = moment(i.sent_at).format('h:mma');
+									item.messages.forEach(function(message, index, arr) {
+										message.sent_at_time_formatted = moment(message.sent_at).format('h:mma');
 									})
 								}
 								item.internal_client_key = item.day + '-' + item.month + '-' + item.year;
@@ -353,7 +410,7 @@ module.exports = function setup(options, imports, register) {
 							userModel.populate(gotMessages,
 								{
 									path : 'messages.sender participants.user',
-									select : '_id name profile_picture urlName'
+									select : '_id name profile_picture urlName color'
 								},
 								function(err, populated) {
 									if(err) return callback(err);

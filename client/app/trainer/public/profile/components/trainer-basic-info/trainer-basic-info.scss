@@ -78,7 +78,7 @@
 	}
 	#trainer-rating {
 		display: inline-block;
-		&.unrated {
+		.stars-background {
 			i {
 				color: #aaa;
 			}

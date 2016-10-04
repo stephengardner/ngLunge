@@ -1,0 +1,59 @@
+.ag-rating-stars {
+	display: inline-block;
+	position: relative;
+	.stars-background, .stars-foreground {
+		flex-direction: row;
+		display: flex;
+		align-items: center;
+		align-content: center;
+	}
+	i {
+		font-size: 28px!important;
+		@include respond-to(xs) {
+			font-size: 24px!important;
+		}
+		@include respond-to(xxs) {
+			font-size: 22px!important;
+		}
+	}
+	.star-container {
+		cursor: pointer;
+		margin-left: 5px;
+		margin-right: 5px;
+		position: relative;
+		display: inline-block;
+		[ag-rating-star-half-left] {
+			width: 55%;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+			//background: blue;
+			height: 100%;
+			z-index: 1;
+		}
+		[ag-rating-star-half-right] {
+			width: 45%;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+			right: 0;
+			height: 100%;
+			z-index: 1;
+		}
+	}
+	.stars-foreground {
+		position: absolute;
+		top: 0;
+		color: $brand-primary;
+		//width: 50%;
+		width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+	.stars-background {
+		position: relative;
+		i {
+			color: #ccc;
+		}
+	}
+}

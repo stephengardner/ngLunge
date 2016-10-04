@@ -4,7 +4,8 @@ var passport = require('passport'),
 	config = require('../../../../config/environment'),
 	jwt = require('jsonwebtoken'),
 	async = require('async'),
-	_ = require('lodash')
+	_ = require('lodash'),
+	moment = require('moment')
 	;
 
 var validationError = function(res, err) {
@@ -18,24 +19,31 @@ module.exports = function setup(options, imports, register) {
 		chatModel = imports.chatModel,
 		chatPreviewGetter = imports.chatPreviewGetter,
 		chatSender = imports.chatSender,
+		reviewModel = imports.reviewModel,
 		logger = imports.logger.info,
+		reviewSubmitter = imports.reviewSubmitter,
 		chatMessageReadSetter = imports.chatMessageReadSetter,
 		traineeModel = imports.traineeModel,
 		chatGetter = imports.chatGetter,
-		trainerPopulatorCertificationsAggregated = imports.trainerPopulatorCertificationsAggregated
+		trainerPopulatorCertificationsAggregated = imports.trainerPopulatorCertificationsAggregated,
+		reviewByUserForUserGetter = imports.reviewByUserForUserGetter,
+		locationTrainerParser = imports.locationTrainerParser,
+		locationTrainerSaver = imports.locationTrainerSaver,
+		locationSetter = imports.locationSetter
 		;
 	var exports = {};
 	function handleError(res, err) {
 		console.log("There was an error and logger should be outputting it...");
 		logger.error(err);
+		logger.info(err.errors);
 		return res.status(500).json(err);
 	}
 
 	function getUser(req, res) {
 		return new Promise(function(resolve, reject) {
 			User.findById(req.params.id, function(err, user) {
-				if(err) return reject(err);
-				if(!user) return reject(401);
+				if(err) return handleError(res, err);
+				if(!user) return handleError(res, 401);
 				return resolve(user);
 			});
 		})
@@ -50,39 +58,117 @@ module.exports = function setup(options, imports, register) {
 			res.json(200, users);
 		});
 	};
-	
+
+	exports.getReviewPage = function(req, res) {
+		var DEFAULTS = {
+			nextMaxId : Infinity,
+			itemsPerPage : 5
+		};
+		var nextMaxId = parseInt(req.query.nextMaxId) !== 0 ?
+			(parseInt(req.query.nextMaxId) ?
+				parseInt(req.query.nextMaxId) :
+				DEFAULTS.nextMaxId)
+			: 0;
+		var itemsPerPage = parseInt(req.query.itemsPerPage) || DEFAULTS.itemsPerPage;
+		if(itemsPerPage > 20)
+			itemsPerPage = 20;
+		var searchQuery = {};
+		searchQuery._id = {
+			$nin : req.query._ids || []
+		};
+		searchQuery.deleted = {
+			$ne : true
+		};
+		searchQuery.to = req.params.id;
+
+		var sortQuery = {
+			created_at : -1
+		};
+		reviewModel.find(searchQuery)
+			.limit(itemsPerPage)
+			.populate({path : 'from', select : 'profile_picture name'})
+			.sort(sortQuery).exec(function(err, reviews){
+			if(err) { return handleError(res, err); }
+			if(!reviews.length) { return res.json([]); }
+			res.setHeader('X-Next-Max-Id', reviews[reviews.length-1].id -1);
+			return res.json(200, reviews);
+		})
+	};
+
+	exports.thankReview = function(req, res) {
+		thankOrUnthankReview(req, res, true);
+	};
+
+	exports.unthankReview = function(req, res) {
+		thankOrUnthankReview(req, res, false);
+	};
+
+	function thankOrUnthankReview(req, res, shouldThank) {
+		var reviewId = req.params.reviewId,
+			userId = req.params.id
+		;
+		if(!reviewId) return handleError(res, new Error('please include a reviewId'));
+		if(!userId) return handleError(res, new Error('please include a userId'));
+		reviewModel.findById(reviewId, function(err, review) {
+			if(err) return handleError(res, err);
+			var found = false,
+				foundAtIndex
+			;
+			for(var i = 0; i < review.thanked_by.length; i++) {
+				var thankedByAtIndex = review.thanked_by[i];
+				if(thankedByAtIndex == userId) {
+					found = true;
+					foundAtIndex = i;
+				}
+			}
+			if(shouldThank) {
+				if(!found) {
+					review.thanked_by.push(userId)
+				}
+			}
+			else if(!shouldThank) {
+				if(found) {
+					review.thanked_by.splice(foundAtIndex, 1);
+				}
+			}
+			review.save(function(err, saved) {
+				saved.populate({path : 'from', select : 'profile_picture name ulrName kind'}, function(err, populated){
+					if(err) return handleError(res, err);
+					return res.status(200).json(populated);
+				});
+			})
+		})
+	}
+
+	exports.submitReview = reviewSubmitter.submitAPI;
+
+	exports.reviewByUserForUserGetter = reviewByUserForUserGetter.getAPI;
+
 	exports.getOrCreateChatToRecipient = function(req, res) {
 		getUser(req, res).then(function(gotUser){
 			chatGetter.getByParticipantsOrCreate(gotUser._id, req.params.recipientId)
 				.then(function(response){
-				return res.json(response);
-			}).catch(function(err){
+					return res.json(response);
+				}).catch(function(err){
 				return handleError(res, err);
 			})
 		});
 	};
-	exports.sendMessage = function(req, res) {
+
+	exports.sendMessage = (req, res) => {
 		getUser(req, res).then(function(gotUser){
 			var toChatId, message;
 			toChatId = req.query.toChatId ? req.query.toChatId.toString() : false;
 			message = req.query.message ? req.query.message.toString() : false;
-			console.log("Sending to toChatId: ", toChatId, " message: ", message);
 			if(!toChatId || !message) {
 				return res.send(401);
 			}
-			chatSender.sendToChatId(gotUser, toChatId, message).then(function(response){
-				console.log("response:", response);
-				return res.json({message : 'message sent'});
+			chatSender.sendToChatId(gotUser, toChatId, message).then(() => {
+				console.log(moment(new Date()));
+				return res.status(200).json({message : 'message sent'});
 			}).catch(function(err){
 				handleError(res, err);
 			});
-			
-			// chatSender.send(gotUser, to, message).then(function(response){
-			// 	console.log("response:", response);
-			// 	return res.json({message : 'message sent'});
-			// }).catch(function(err){
-			// 	handleError(res, err);
-			// })
 		})
 	};
 
@@ -122,7 +208,49 @@ module.exports = function setup(options, imports, register) {
 			if(err) return handleError(res, err);
 			return res.json(gotChatPreview);
 		})
-		
+
+	};
+
+	// Honestly, I'm not sure this is necessary.  It worked on plain update for locations array
+	// even before i added the locationSetter.
+	// IDK, maybe it's necessary.  Fuck
+	exports.updateOverwrite = function(req, res, next) {
+		console.log("----------\nUPDATEOVERWRITE");
+		if(req.body._id) { delete req.body._id; }
+		if(req.body.id) { delete req.body.id; } // um... sometimes this is "undefined"??? that's BAD
+		if(req.body._v) { delete req.body._v; }
+		if(req.body.__v) { delete req.body.__v; }
+		var user = req.user;
+		delete user.__v;
+		if(!user) { return res.send(404); }
+
+		if(req.body.name && req.body.name.full) {
+			var nameFullParts = req.body.name.full.split(" ");
+			req.body.name.first = nameFullParts[0];
+			req.body.name.last = nameFullParts[1];
+		}
+		delete user.password;
+		console.log("The req body:", req.body);
+		userModel.findById(user._id, function(err, found) {
+			if(err) return handleError(res, err);
+			for (var attrname in req.body) {
+				console.log("updating " + attrname + " to: ", req.body[attrname]);
+				found[attrname] = req.body[attrname];
+				if(_.isEmpty(req.body[attrname])) {
+					console.log(attrname + " is being DELETED");
+					found[attrname] = undefined; // this WORKED for deleting a location
+					found.markModified[attrname];
+				}
+			}
+			console.log("Found.locations after all is:", found.locations);
+			var setter = new locationSetter();
+			setter.set(found);
+			console.log('founds new main location: ', found.location);
+			found.save(function(err, saved){
+				if(err) return handleError(res, err);
+				return res.json(saved);
+			})
+		});
 	};
 
 	exports.update = function(req, res, next) {
@@ -150,7 +278,9 @@ module.exports = function setup(options, imports, register) {
 					found.markModified[attrname];
 				}
 			}
-			console.log("found:", found);
+			var setter = new locationSetter();
+			setter.set(found);
+			console.log('founds new main location: ', found.location);
 			found.save(function(err, saved){
 				console.log("Saved");
 				if(err) return handleError(res, err);
@@ -158,12 +288,11 @@ module.exports = function setup(options, imports, register) {
 			})
 		});
 	};
-		
+
 	exports.readChatNotifications = function(req, res, next) {
 		var user,
 			readNotifications
-		;
-		console.log("ReadChatnotifications req.query", req.query);
+			;
 		async.waterfall([
 			function findUser(callback) {
 				getUser(req, res).then(function(response){
@@ -214,7 +343,7 @@ module.exports = function setup(options, imports, register) {
 		if(req.params.urlName) {query.urlName = req.params.urlName}
 		else {query.id = req.query.id;}
 		if(req.query.kind) {query.kind = req.query.kind}
-		
+
 		User.findOne(query, function(err, user) {
 			if(err) return next(err);
 			if(!user) return res.send(401);

@@ -292,6 +292,11 @@ md-icon {
 #sync-social-accounts {
 	button {
 		&.active {
+			&.website {
+				i {
+					color: $brand-primary;
+				}
+			}
 			&.facebook {
 				ng-md-icon {
 					color: $facebook;

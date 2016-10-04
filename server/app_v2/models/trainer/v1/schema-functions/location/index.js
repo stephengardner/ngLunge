@@ -182,10 +182,6 @@ module.exports = function(TrainerSchema) {
 					}
 				}
 			}
-			else {
-				console.log("\n++++\nWarning: we're deleting the primary and only location\n");
-				//return this.invalidate("location", "Cannot delete primary location");
-			}
 		});
 
 	// Validate title
@@ -255,17 +251,17 @@ module.exports = function(TrainerSchema) {
 	}
 
 	// Validate state
-	TrainerSchema
-		.path('location.state')
-		.validate(function(value) {
-			if(!isEmpty(value)) {
-				if (value && (value != "MD" && value != "DC" && value != "VA")) {
-					console.log("INVALID USER STATE (not dc,md,va)");
-					return this.invalidate('state', 'Lunge is not active in that state');
-				}
-			}
-			return true;
-		}, 'Invalid state');
+	// TrainerSchema
+	// 	.path('location.state')
+	// 	.validate(function(value) {
+	// 		if(!isEmpty(value)) {
+	// 			if (value && (value != "MD" && value != "DC" && value != "VA")) {
+	// 				console.log("INVALID USER STATE (not dc,md,va)");
+	// 				return this.invalidate('state', 'Lunge is not active in that state');
+	// 			}
+	// 		}
+	// 		return true;
+	// 	}, 'Invalid state');
 
 	// Validate coords
 	TrainerSchema

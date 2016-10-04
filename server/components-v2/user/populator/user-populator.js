@@ -23,6 +23,16 @@ module.exports = function setup(options, imports, register) {
 					return resolve(user);
 				});
 			});
+		},
+		populateReviews : function(userOrId) {
+			return new Promise(function (resolve, reject) {
+				userPopulator.populate(userOrId).then(function (response) {
+					response.populate('reviews.given', function (err, populated) {
+						if (err) return reject(err);
+						return resolve(populated);
+					}).catch(reject);
+				});
+			})
 		}
 	};
 	register(null, {

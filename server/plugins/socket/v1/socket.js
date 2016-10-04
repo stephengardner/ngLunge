@@ -5,18 +5,22 @@ var redis = require("redis");
 var ioredis = require('socket.io-redis');
 
 module.exports = function setup(options, imports, register){
-	var server = imports.server;
-	var config = options.config;
+	var server = imports.server,
+		config = options.config,
+		logger = imports.logger,
+		loggerType = 'plugins-v1-socket'
+	;
 
 	// url parses this specific url, creates many params, including "auth" which is the built-in password on this url
-	var	redisParams   = require("url").parse(config.redis.redisToGoURL);
-	var port = redisParams.port;
-	var hostname = redisParams.hostname;
-	var pass = redisParams.auth.split(":")[1];
+	var	redisParams   = require("url").parse(config.redis.redisToGoURL),
+		port = redisParams.port,
+		hostname = redisParams.hostname,
+		pass = redisParams.auth.split(":")[1]
+	;
 
 	// create the pub/sub using redis clients.  This works.  return_buffers must be set to true according to the docs
-	var pub = redis.createClient(port, hostname, {auth_pass : pass, return_buffers : true});
-	var sub = redis.createClient(port, hostname, {auth_pass : pass, return_buffers : true});
+	var pub = redis.createClient(port, hostname, {auth_pass : pass, return_buffers : true}),
+		sub = redis.createClient(port, hostname, {auth_pass : pass, return_buffers : true});
 
 	var io = require('socket.io')(server, {
 		serveClient: (config.env === 'production') ? false : true
@@ -36,20 +40,7 @@ module.exports = function setup(options, imports, register){
 		}
 	));
 
-	// This works. An ioemitter from an "outside" source.  It will emit to the CLIENT, not to other server processes.
-	//var ioemitterRedis = require("redis").createClient(port, hostname, {return_buffers : true});
-	//ioemitterRedis.auth(pass);
-	//var ioemitter = require("socket.io-emitter")(ioemitterRedis);
-	//var ioemitterNamespace = ioemitter.of('/');
-	//setInterval(function(){
-	//	console.log("Emitting ioemitter time event");
-	//	ioemitterNamespace.broadcast.emit('time', new Date());
-	//}, 2000);
-
 	var defaultNamespace = io.of('/');
-	defaultNamespace.on('connection', function(socket){
-		console.log("-> A new socket has connected");
-	});
 
 	// todo maybe test this works by publishing a logout message when it's not authenticated?
 	io.use(socketioJwt.authorize({
@@ -67,6 +58,7 @@ module.exports = function setup(options, imports, register){
 			}
 		}
 	}));
+
 	io.get_clients_by_room = function(roomId, namespace) {
 		io.of(namespace || "/").in(roomId).clients(function (error, clients) {
 			if (error) { throw error; }
@@ -80,4 +72,16 @@ module.exports = function setup(options, imports, register){
 			socket : io
 		}
 	);
-}
+
+
+	// Don't Delete
+	// This works. An ioemitter from an "outside" source.  It will emit to the CLIENT, not to other server processes.
+	//var ioemitterRedis = require("redis").createClient(port, hostname, {return_buffers : true});
+	//ioemitterRedis.auth(pass);
+	//var ioemitter = require("socket.io-emitter")(ioemitterRedis);
+	//var ioemitterNamespace = ioemitter.of('/');
+	//setInterval(function(){
+	//	console.log("Emitting ioemitter time event");
+	//	ioemitterNamespace.broadcast.emit('time', new Date());
+	//}, 2000);
+};

@@ -1,0 +1,15 @@
+{
+  "name": "reviewSocket",
+  "version": "0.0.1",
+  "main": "review.socket.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userPopulator",
+      "reviewModel",
+      "socket",
+      "logger"
+    ],
+    "provides": ["reviewSocket"]
+  }
+}

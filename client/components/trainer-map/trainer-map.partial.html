@@ -1,21 +1,22 @@
 <div class="google-map"
      ng-class="{'empty-loading' : !googleMapLoaded, 'empty' : googleMapLoaded
-&& !trainerFactory.trainer.location.state, 'loaded' : googleMapLoaded
-&& trainerFactory.trainer.location.state}" ag-map-size-container>
+&& !userFactory.user.location.state, 'loaded' : googleMapLoaded
+&& userFactory.user.location.state}" ag-map-size-container>
     <div layout="row"
          layout-align="center center"
          style="height:100%"
-         ng-if="!trainerFactory.trainer || !trainerFactory.trainer.location.state">
-        <h1 ng-if="!trainerFactory.trainer">
-            <md-progress-circular md-diameter="100"></md-progress-circular>
+         ng-if="!userFactory.user || !userFactory.user.location.state">
+        <h1 ng-if="!userFactory.user">
+            <md-progress-circular md-diameter="100">
+            </md-progress-circular>
         </h1>
-        <h1 ng-if="trainerFactory.trainer &&
-                    !trainerFactory.trainer.location.state"
+        <h1 ng-if="userFactory.user &&
+                    !userFactory.user.location.state"
             class="no-main-location">
             No locations have been added yet.
         </h1>
     </div>
-    <div ng-if="trainerFactory.trainer.location.state"
+    <div ng-if="userFactory.user.location.state"
          id="google-map"
          class="google-map">
         <div ng-if="map.center.latitude && map.bounds">

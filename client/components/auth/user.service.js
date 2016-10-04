@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.factory('User', function ($resource) {
 		return $resource('/api/users/:id/:controller', {
 				id: '@_id'
@@ -55,7 +55,7 @@ angular.module('ngLungeFullStack2App')
 			});
 	});
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.factory('Trainer', function ($resource) {
 		return $resource('/api/trainers/:id/:controller/:object_id', {
 				id: '@_id'

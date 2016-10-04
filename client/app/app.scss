@@ -18,6 +18,7 @@ footer {
 }
 .container {
 	@include responsive-padding();
+	width: auto!important;
 }
 
 .fa-spin {
@@ -128,6 +129,8 @@ body, html {
 
 // Component styles are injected through grunt
 // injector
+@import 'main/main.scss';
+@import 'styles/angular-material-custom/main.scss';
 @import 'account/login-or-signup-dialog/login-or-signup-dialog.scss';
 @import 'account/login/login.scss';
 @import 'admin/admin.scss';
@@ -137,7 +140,6 @@ body, html {
 @import 'certifications/certifications.scss';
 @import 'certifications/faq/certifications-faq.scss';
 @import 'certifications/list/list-certifications.scss';
-@import 'main/main.scss';
 @import 'main/partials/find-section/find-section.scss';
 @import 'main/partials/jumbotron/jumbotron.scss';
 @import 'main/partials/trainers-home/category-home.scss';
@@ -154,13 +156,14 @@ body, html {
 @import 'styles/_variables.scss';
 @import 'styles/ag-floating-label-overrides.scss';
 @import 'styles/alerts.scss';
+@import 'styles/angular-material-custom/angular-material-overrides.scss';
 @import 'styles/angular-material-custom/buttons.scss';
 @import 'styles/angular-material-custom/layouts.scss';
-@import 'styles/angular-material-custom/main.scss';
 @import 'styles/angular-material-custom/menu.scss';
 @import 'styles/angular-material-custom/navbar.scss';
 @import 'styles/angular-material-custom/trainer-info.scss';
 @import 'styles/angular-material-custom/transformations.scss';
+@import 'styles/angular-material-custom/variables.scss';
 @import 'styles/angular-material-input.scss';
 @import 'styles/angular-material.scss';
 @import 'styles/bootstrap-overrides.scss';
@@ -169,6 +172,7 @@ body, html {
 @import 'styles/certifications.scss';
 @import 'styles/font-icons/linea-basic-elaboration.scss';
 @import 'styles/font-icons/linea-basic.scss';
+@import 'styles/footer.scss';
 @import 'styles/forms.scss';
 @import 'styles/google-map.scss';
 @import 'styles/infinite-scroll.scss';
@@ -202,15 +206,21 @@ body, html {
 @import 'trainer/public/profile/profile-picture.scss';
 @import 'trainer/public/profile/profile.scss';
 @import 'trainer/register/register.scss';
+@import 'ag-editable-container-2/ag-editable-container.scss';
 @import 'ag-editable-container/ag-editable-container.scss';
 @import 'ag-profile-share-button/bottom-sheet/ag-profile-share-bottom-sheet.scss';
+@import 'ag-rating-stars/ag-rating-stars.scss';
+@import 'ag-trainer-masthead/ag-trainer-masthead.scss';
 @import 'alert-message/alert-message.scss';
 @import 'angular-busy/templates/fullscreen-loader-partial.scss';
 @import 'certifications/certifications.scss';
+@import 'google-places/places-autocomplete.scss';
 @import 'material-menu/menu.scss';
 @import 'material-messages-menu/material-messages-menu.scss';
 @import 'modal/modal.scss';
 @import 'navbar-new/navbar-new.scss';
+@import 'profile-picture-thumbnail/profile-picture-thumbnail.scss';
+@import 'reviews/card/reviews-card.scss';
 @import 'screen-size/screen-size.scss';
 @import 'specialties/dialog/specialties-dialog.scss';
 @import 'specialties/specialties.scss';
@@ -220,5 +230,6 @@ body, html {
 @import 'trainer-map/locations.scss';
 @import 'trainer-map/manual-location/trainer-manual-location.scss';
 @import 'trainer-map/trainer-map.scss';
+@import 'trainer-review/trainer-review.scss';
 @import 'trainer-work/trainer-work.scss';
 // endinjector

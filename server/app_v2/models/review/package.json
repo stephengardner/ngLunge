@@ -1,0 +1,12 @@
+{
+  "name": "reviewModel",
+  "version": "0.0.1",
+  "main": "review.model.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "connectionDatabase"
+    ],
+    "provides": ["reviewModel"]
+  }
+}

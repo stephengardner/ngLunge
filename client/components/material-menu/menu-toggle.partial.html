@@ -3,16 +3,17 @@
                ng-class="{'active' : isStateInsideToggledSection(section)}"
                ng-click="toggle()"
                aria-controls="side-menu-"
-               flex
-               layout="row"
-               layout-align="space-between center"
                aria-expanded="">
-        <i class="material-icons expand_more" ng-class="{'rotate-up' : isOpen()}">
-            keyboard_arrow_down
-        </i>
-        <span>
-            {{section.name}}
-        </span>
+        <div flex
+             layout="row"
+             layout-align="space-between center">
+            <i class="material-icons expand_more" ng-class="{'rotate-up' : isOpen()}">
+                keyboard_arrow_down
+            </i>
+            <div>
+                {{section.name}}
+            </div>
+        </div>
     </md-button>
     <ul ng-if="isOpen()"
         id="side-menu"

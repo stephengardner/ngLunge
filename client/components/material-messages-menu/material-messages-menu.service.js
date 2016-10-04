@@ -55,11 +55,15 @@ myApp.factory('MessagesMenu', [
 		 * report completion in console
 		 */
 		function buildDelayedToggler(navID) {
-			console.log("MessagesMenutoggleLeft");
 			return debounce(function() {
+				// if they re-hit the chat button, just re-fetch notifications using Chat.get
+				if($mdSidenav(navID).isLockedOpen() && !MessagesMenu.isOpenLeft) {
+					Chat.get();
+					return;
+				}
+				// read notifications and GET messages on regular click.
 				if(!$mdSidenav('messages').isOpen()) {
 					Chat.readNotifications().then(function(response){
-						console.log('done:',response);
 					}).catch(function(err){
 						console.log('err:',err);
 					});
@@ -70,7 +74,7 @@ myApp.factory('MessagesMenu', [
 					.then(function () {
 						var isOpen = $mdSidenav('messages').isOpen() ? true : false;
 						MessagesMenu.isOpenLeft = isOpen;
-						$log.debug("toggle " + navID + " is done");
+						$log.debug("[Material Messages Menu] toggle " + navID + " is done");
 					});
 			}, 10);
 		}
@@ -79,7 +83,7 @@ myApp.factory('MessagesMenu', [
 				$mdSidenav(navID)
 					.toggle()
 					.then(function () {
-						$log.debug("toggle " + navID + " is done");
+						$log.debug("[Material Messages Menu] toggle " + navID + " is done");
 					});
 			}
 		}

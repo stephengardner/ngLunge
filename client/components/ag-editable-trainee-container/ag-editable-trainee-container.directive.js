@@ -443,7 +443,7 @@ lungeApp.directive("agEditableTraineeContainer", ['$animate', '$q', '$animateCss
 
 
 			scope.$watch(function(){
-				return scope.userFactory.isEditing[section]
+				return scope.userFactory && scope.userFactory.isEditing[section]
 			}, function(newValue, oldValue) {
 				// necessary to check if oldValue is undefined, it gets changed a little bit and this could cause
 				// too many animations firing

@@ -1,5 +1,5 @@
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.config(function ($stateProvider) {
 		$stateProvider
 			.state('main.messages', {
@@ -8,9 +8,12 @@ angular.module('ngLungeFullStack2App')
 			})
 			.state('main.messages.message', {
 				url: '/:id',
+				authenticate: true,
+				footer : false,
 				views : {
 					'@main' : {
 						controller : "MessageController",
+						controllerAs : 'vm',
 						templateUrl : "app/messages/message/message.partial.html"
 					}
 				}

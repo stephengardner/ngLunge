@@ -24,7 +24,8 @@
                                     <span flex></span>
                                     <div id="or">
                                         or,
-                                        <md-button ng-click="selectLoginOrSignup('signup')">
+                                        <md-button aria-label="Signup"
+                                                   ng-click="selectLoginOrSignup('signup')">
                                             Signup
                                         </md-button>
                                     </div>
@@ -35,13 +36,14 @@
                                      md-dynamic-height
                                      md-autoselect>
                                 <!-- User Tab -->
-                                <md-tab label="User"
+                                <md-tab label="Client"
                                         ng-click="selectTab('trainee')">
                                     <md-card-content layout="column" layout-align="center center" id="user-login-social">
                                         <h1>
-                                            User Social Login
+                                            Client Social Login
                                         </h1>
-                                        <md-button class="facebook social-button"
+                                        <md-button aria-label="Login with Facebook"
+                                                   class="facebook social-button"
                                                    href=""
                                                    ng-click="loginOAuthFromDialog('facebook')">
                                             <md-icon>
@@ -49,7 +51,8 @@
                                             </md-icon>
                                             Login with Facebook
                                         </md-button>
-                                        <md-button class="linkedin social-button"
+                                        <md-button aria-label="Login with LinkedIn"
+                                                   class="linkedin social-button"
                                                    href=""
                                                    ng-click="loginOAuthFromDialog('linkedin')">
                                             <md-icon>
@@ -69,7 +72,8 @@
                                         <h1>
                                             Trainer Social Login
                                         </h1>
-                                        <md-button class="facebook social-button"
+                                        <md-button aria-label="Login with Facebook"
+                                                   class="facebook social-button"
                                                    href=""
                                                    ng-click="trainerLoginOAuthFromDialog('facebook')">
                                             <md-icon>
@@ -77,7 +81,8 @@
                                             </md-icon>
                                             Login with Facebook
                                         </md-button>
-                                        <md-button class="linkedin social-button"
+                                        <md-button aria-label="Login with LinkedIn"
+                                                   class="linkedin social-button"
                                                    href=""
                                                    ng-click="trainerLoginOAuthFromDialog('linkedin')">
                                             <md-icon>
@@ -100,7 +105,7 @@
                                             <input type="email"
                                                    name="email"
                                                    server-error
-                                                   ng-model="user.email"/>
+                                                   ng-model="trainerLoginLocal.email"/>
                                             <div ng-messages="loginForm.email.$error">
                                                 <div ng-message="mongoose">
                                                     {{loginForm.errors.email}}
@@ -114,7 +119,7 @@
                                             <input type="password"
                                                    name="password"
                                                    server-error
-                                                   ng-model="user.password"/>
+                                                   ng-model="trainerLoginLocal.password"/>
                                             <div ng-messages="loginForm.password.$error">
                                                 <div ng-message="mongoose">
                                                     {{loginForm.errors.password}}
@@ -126,10 +131,12 @@
                                         </div>
                                     </md-card-content>
                                     <md-card-actions>
-                                        <md-button type="submit">
+                                        <md-button aria-label="Login"
+                                                   type="submit">
                                             Login
                                         </md-button>
-                                        <md-button ng-click="cancel()">
+                                        <md-button aria-label="Cancel"
+                                                   ng-click="cancel()">
                                             Cancel
                                         </md-button>
                                     </md-card-actions>
@@ -155,7 +162,8 @@
                                     <span flex></span>
                                     <div id="or">
                                         or,
-                                        <md-button ng-click="selectLoginOrSignup('login')">
+                                        <md-button aria-label="Login"
+                                                   ng-click="selectLoginOrSignup('login')">
                                             Login
                                         </md-button>
                                     </div>
@@ -165,14 +173,16 @@
                                      md-border-bottom
                                      md-dynamic-height
                                      md-autoselect>
-                                <md-tab label="User" ng-click="selectTab('trainee')">
+                                <md-tab label="Client" ng-click="selectTab('trainee')">
                                     <div id="signup-user">
                                         <!--<md-card-content layout="column" layout-align="center center">-->
                                         <div id="signup-user-social">
                                             <h1>Ready to start your fitness journey?</h1>
                                             <h2>Signup with Lunge today!</h2>
                                             <div>
-                                                <md-button class="facebook social-button"
+                                                <md-button aria-label="Connect with Facebook"
+                                                           class="facebook
+                                                           social-button"
                                                            href=""
                                                            ng-click="authenticate('facebook')">
                                                     <md-icon>
@@ -182,7 +192,9 @@
                                                 </md-button>
                                             </div>
                                             <div>
-                                                <md-button class="linkedin social-button"
+                                                <md-button aria-label="Connect with LinkedIn"
+                                                           class="linkedin
+                                                           social-button"
                                                            href=""
                                                            ng-click="authenticate('linkedin')">
                                                     <md-icon>
@@ -201,7 +213,9 @@
                                             <h1>Are you a Certified Trainer?</h1>
                                             <h2>Get started with Lunge today!</h2>
                                             <div>
-                                                <md-button class="facebook social-button"
+                                                <md-button aria-label="Connect with Facebook"
+                                                           class="facebook
+                                                           social-button"
                                                            href=""
                                                            ng-click="authenticate('facebook')">
                                                     <md-icon>
@@ -211,7 +225,9 @@
                                                 </md-button>
                                             </div>
                                             <div>
-                                                <md-button class="linkedin social-button"
+                                                <md-button aria-label="Connect with LinkedIn"
+                                                           class="linkedin
+                                                           social-button"
                                                            href=""
                                                            ng-click="authenticate('linkedin')">
                                                     <md-icon>
@@ -243,10 +259,12 @@
                                                 </ag-floating-label>
                                             </md-card-content>
                                             <md-card-actions>
-                                                <md-button type="submit">
+                                                <md-button aria-label="Sign up"
+                                                           type="submit">
                                                     Sign up
                                                 </md-button>
-                                                <md-button ng-click="cancel()">
+                                                <md-button aria-label="Cancel"
+                                                           ng-click="cancel()">
                                                     Cancel
                                                 </md-button>
                                             </md-card-actions>
@@ -270,7 +288,8 @@
                                 We sent you a link to verify your identity and get started using Lunge.
                             </md-card-content>
                             <md-card-actions>
-                                <md-button type="submit">
+                                <md-button aria-label="Resend email"
+                                           type="submit">
                                     Resend email
                                 </md-button>
                             </md-card-actions>
@@ -278,6 +297,11 @@
                     </form>
                 </div>
             </div>
+            <!--<h2 class="footer"-->
+                <!--layout="row"-->
+                <!--layout-align="center center">-->
+                <!--{{ title || 'Login to enjoy all the features of Lunge - it\'s free!' }}-->
+            <!--</h2>-->
         </div>
     </md-dialog-content>
 </md-dialog>

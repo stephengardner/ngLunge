@@ -61,13 +61,13 @@ module.exports = function setup(options, imports, register){
 						try {
 							profile.picture = {
 								small : {
-									url : 'http://graph.facebook.com/' + profile.id + '/picture?type=small'
+									url : '//graph.facebook.com/' + profile.id + '/picture?type=small'
 								},
 								medium : {
-									url : 'http://graph.facebook.com/' + profile.id + '/picture?type=medium'
+									url : '//graph.facebook.com/' + profile.id + '/picture?type=medium'
 								},
 								large : {
-									url : 'http://graph.facebook.com/' + profile.id + '/picture?type=large'
+									url : '//graph.facebook.com/' + profile.id + '/picture?type=large'
 								},
 								graph : {
 									url : res.location
@@ -101,13 +101,13 @@ module.exports = function setup(options, imports, register){
 				try {
 					profile.picture = {
 						small : {
-							url : 'http://graph.facebook.com/' + profile.id + '/picture?type=small'
+							url : '//graph.facebook.com/' + profile.id + '/picture?type=small'
 						},
 						medium : {
-							url : 'http://graph.facebook.com/' + profile.id + '/picture?type=medium'
+							url : '//graph.facebook.com/' + profile.id + '/picture?type=medium'
 						},
 						large : {
-							url : 'http://graph.facebook.com/' + profile.id + '/picture?type=large'
+							url : '//graph.facebook.com/' + profile.id + '/picture?type=large'
 						},
 						graph : {
 							url : res.location

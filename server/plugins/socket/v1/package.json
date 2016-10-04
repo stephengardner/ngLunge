@@ -4,7 +4,11 @@
   "main": "socket.js",
   "private": true,
   "plugin": {
-    "consumes": ["server", "eventbus"],
+    "consumes": [
+      "server",
+      "eventbus",
+      "logger"
+    ],
     "provides": ["socket"]
   }
 }

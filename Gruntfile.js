@@ -19,12 +19,20 @@ module.exports = function (grunt) {
 		injector: 'grunt-asset-injector',
 		buildcontrol: 'grunt-build-control',
 		connect: 'grunt-contrib-connect',
-		gruntSass: 'grunt-sass'
+		gruntSass: 'grunt-sass',
+		ts: 'grunt-ts'
 	});
 
 	// Time how long tasks take. Can help when optimizing build times
 	require('time-grunt')(grunt);
-
+	// ,
+	// watch : '<%= yeoman.client %>/{app,components,modules}/**/*.ts'
+	// compileTS: {
+	// 	files: [
+	// 		'<%= yeoman.client %>/{app,components,modules}/**/*.ts'
+	// 	],
+	// 		tasks: ['ts']
+	// },
 	// Define the configuration for all the tasks
 	grunt.initConfig({
 		connect: {
@@ -32,6 +40,19 @@ module.exports = function (grunt) {
 				options: {
 					// keepalive: true
 					livereload: true
+				}
+			}
+		},
+		ts : {
+			default : {
+				src: ['<%= yeoman.client %>/{app,components,modules}/**/*.ts', "!node_modules/**"]
+			}
+		},
+		typescript : {
+			default : {
+				src: ['<%= yeoman.client %>/{app,components,modules}/**/*.ts', "!node_modules/**"],
+				options : {
+					watch : '<%= yeoman.client %>/{app,components,modules}/**/*.ts'
 				}
 			}
 		},
@@ -64,6 +85,11 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
+			compileTS: {
+				files: [
+					'<%= yeoman.client %>/{app,components,modules}/**/*.ts'
+				]
+			},
 			injectJS: {
 				files: [
 					'<%= yeoman.client %>/{app,components,modules}/**/*.js',
@@ -91,13 +117,15 @@ module.exports = function (grunt) {
 			},
 			injectSass: {
 				files: [
+					'<%= yeoman.client %>/{app,components,modules}/**/*main.{scss,sass}',
 					'<%= yeoman.client %>/{app,components,modules}/**/*.{scss,sass}'],
 				tasks: ['injector:sass']
 			},
 			sass: {
 				files: [
+					'<%= yeoman.client %>/{app,components,modules}/**/*main.{scss,sass}',
 					'<%= yeoman.client %>/{app,components,modules}/**/*.{scss,sass}'],
-				tasks: ['sass'/*, 'autoprefixer'*/]
+				tasks: ['sass', 'autoprefixer']
 			},
 			gruntfile: {
 				files: ['Gruntfile.js']
@@ -335,7 +363,7 @@ module.exports = function (grunt) {
 		ngtemplates: {
 			options: {
 				// This should be the name of your apps angular module
-				module: 'ngLungeFullStack2App',
+				module: 'myApp',
 				htmlmin: {
 					collapseBooleanAttributes: true,
 					collapseWhitespace: true,
@@ -613,6 +641,7 @@ module.exports = function (grunt) {
 				},
 				files: {
 					'<%= yeoman.client %>/app/app.scss': [
+						'<%= yeoman.client %>/{app,components,modules}/**/*main.{scss,sass}',
 						'<%= yeoman.client %>/{app,components,modules}/**/*.{scss,sass}',
 						'!<%= yeoman.client %>/app/app.{scss,sass}'
 					]

@@ -25,7 +25,6 @@ myApp.directive('agMapSizeContainer', function($window){
 				if(isMaxHeightGreaterThanHalfWindowHeight) {
 					newHeight = halfWindowHeight;
 				}
-				console.log("It is:", newHeight);
 				element.height(newHeight);
 
 			}

@@ -23,7 +23,6 @@ App.prototype = Object.create(EventEmitter.prototype);
 config.handleQueues = false;
 config.handleServer = true;
 
-console.log("\n---- WTF IS APP.js DOING?!?!?!?!? ---- \n");
 var tree = require("./app_v2/architect/main-app")(config);
 architect.createApp(tree, function(err, Architect){
 	logger.info("-------------- have created app.js ");
@@ -32,7 +31,6 @@ architect.createApp(tree, function(err, Architect){
 });
 
 function onReady(Architect){
-	logger.info("-------------- onready app.js ");
 	app.emit('ready', Architect);
 }
 var app = new App();

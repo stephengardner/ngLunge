@@ -52,7 +52,7 @@ module.exports = function setup(options, imports, register) {
 					}
 					else if(response && response.statusCode == 200) {
 						var response = {
-							s3_url : "http://lungeapp.s3.amazonaws.com/" + s3filepath
+							s3_url : "//lungeapp.s3.amazonaws.com/" + s3filepath
 						};
 						console.log("AWS response we created and sending back:", response);
 						return resolve(response)

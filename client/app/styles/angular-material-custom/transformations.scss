@@ -196,21 +196,34 @@ md-list-item ._md-list-item-inner ._md-secondary-container .md-button:last-of-ty
 	min-height: $list-item-height;
 	right: 0;
 	top: 0;
+	//&.ng-enter {
+	//	position: absolute;
+	//	right: -120%;
+	//}
+	//&.ng-enter-active {
+	//	position: absolute;
+	//	right: 0;
+	//}
+	//&.ng-leave {
+	//	position: absolute;
+	//	right: 0;
+	//}
+	//&.ng-leave-active {
+	//	position: absolute;
+	//	right: -120%;
+	//}
+	animation-timing-function: linear;
 	&.ng-enter {
-		position: absolute;
-		right: -120%;
-	}
-	&.ng-enter-active {
-		position: absolute;
-		right: 0;
+		animation: list-item-default .375s;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease-in;
 	}
 	&.ng-leave {
 		position: absolute;
-		right: 0;
-	}
-	&.ng-leave-active {
-		position: absolute;
-		right: -120%;
+		animation: list-item-default .375s;
+		animation-fill-mode: forwards;
+		animation-direction: reverse;
+		animation-timing-function: ease-out;
 	}
 }
 .list-item-default-alternate {
@@ -255,27 +268,63 @@ md-list-item ._md-list-item-inner ._md-secondary-container .md-button:last-of-ty
 		opacity: 0;
 	}
 }
+
+@keyframes list-item-removing {
+	0% {
+		opacity: 0;
+		transform: translate3d(-130%,0,0);
+	}
+	100% {
+		opacity: 1;
+		transform: translate3d(0%,0,0);
+	}
+}
+@keyframes list-item-default {
+	0% {
+		opacity: 0;
+		transform: translate3d(130%,0,0);
+	}
+	100% {
+		opacity: 1;
+		transform: translate3d(0%,0,0);
+	}
+}
 .list-item-removing {
 	min-height: $list-item-height;
 	padding: 0; // sometimes md-list-items may have a padding, it messes with transformation
 	transform: translate3d(0%,0,0);
 	top: 0;
 	text-align: center;
+	animation-timing-function: linear;
 	p {
 		text-align: left;
 	}
 	&.ng-enter {
-		transform: translate3d(-100%,0,0);
-	}
-	&.ng-enter-active {
-		transform: translate3d(0%,0,0);
+		animation: list-item-removing .375s;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease-in;
 	}
 	&.ng-leave {
 		position: absolute;
-		transform: translate3d(0%,0,0);
+		animation: list-item-removing .375s;
+		animation-fill-mode: forwards;
+		animation-direction: reverse;
+		animation-timing-function: ease-out;
 	}
-	&.ng-leave-active {
-		position: absolute;
-		transform: translate3d(-100%,0,0);
-	}
+	//&.ng-enter {
+	//	transition: all 0s!important;
+	//	transform: translate3d(-100%,0,0);
+	//}
+	//&.ng-enter-active {
+	//	transition: all .375s!important;
+	//	transform: translate3d(0%,0,0);
+	//}
+	//&.ng-leave {
+	//	position: absolute;
+	//	transform: translate3d(0%,0,0);
+	//}
+	//&.ng-leave-active {
+	//	position: absolute;
+	//	transform: translate3d(-100%,0,0);
+	//}
 }

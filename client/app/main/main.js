@@ -9,7 +9,7 @@ lungeApp.controller("MainController", function(FullMetalSocket, $scope, $locatio
 		$location.path('/login');
 	};
 });
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.config(function ($stateProvider) {
 		$stateProvider
 			.state('main', {
@@ -20,10 +20,16 @@ angular.module('ngLungeFullStack2App')
 			})
 			.state('main.home', {
 				url: '^/',
-				templateUrl : "app/main/views/homepage/homepage.html"
+				templateUrl : "app/main/views/homepage/homepage.html",
+				tags : {
+					title : 'Lunge - Your fitness journey starts here'
+				}
 			})
 			.state('main.what-is-lunge', {
 				url: '^/what-is-lunge',
-				templateUrl : "app/main/what-is-lunge/what-is-lunge.partial.html"
+				templateUrl : "app/main/what-is-lunge/what-is-lunge.partial.html",
+				tags : {
+					title : 'Lunge - What is Lunge?'
+				}
 			})
 	});

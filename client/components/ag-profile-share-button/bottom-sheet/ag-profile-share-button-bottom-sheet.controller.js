@@ -2,8 +2,9 @@ myApp.controller('AgProfileShareButtonBottomSheetController', function(Socialsha
                                                                        $mdBottomSheet,
                                                                        $location,
                                                                        TrainerFactory,
-                                                                       TrainerMeta,
                                                                        Auth,
+                                                                       UserMeta,
+                                                                       $mdToast,
                                                                        $scope){
 	$scope.items = [
 		{ name : 'Facebook', icon : 'facebook' },
@@ -22,10 +23,24 @@ myApp.controller('AgProfileShareButtonBottomSheetController', function(Socialsha
 	}
 	$scope.trainerUrl += Auth.getCurrentUser().urlName;
 
+	$scope.afterCopiedUrl = function(){
+		var element = angular.element('#share-bottom-sheet md-list');
+		$scope.toast = $mdToast.show({
+			parent : element,
+			position: 'bottom left',
+			template : '<md-toast>\
+				<span flex layout="row" layout-align="start center">\
+					<i class="material-icons" style="margin-right: 10px">check</i> \
+					Copied to clipboard!\
+				</span>\
+			</md-toast>'
+		});
+	};
+
 	$scope.listItemClick = function(item) {
 		Socialshare.share({
 			provider : item.icon,
-			'attrs': TrainerMeta.createSocialshareAttributes(item.icon)
+			'attrs': new UserMeta(Auth.getCurrentUserFactory()).createSocialShareAttributes(item.icon)
 		});
 	};
-})
+});

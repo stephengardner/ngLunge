@@ -1,5 +1,11 @@
 #material-menu {
+	width: $material-menu-width;
 	#menu-items {
+		.md-button-toggle {
+			position: relative;
+			text-transform: uppercase;
+			font-weight: 500;
+		}
 		a.md-button, .md-button-toggle {
 			transition: all .5s;
 			border-radius:0!important;
@@ -23,7 +29,13 @@
 			}
 		}
 	}
+	menu-toggle {
+		display: block;
+	}
 	.menu-toggle-section {
+		button {
+			width: 100%;
+		}
 		.menu-toggle-list {
 			position: relative;
 			.sideline {
@@ -35,14 +47,21 @@
 				background: #e4e4e4;
 			}
 		}
+		i {
+			transform-origin: center center;
+		}
 		ul {
 			transition: all .4s ease-in-out;
 			transform-origin: 0 0;
+			transform: scale(1, 1);
+			max-height: 250px;
 			&.ng-enter {
+				transition: all 0s!important;
 				max-height: 0;
 				transform: scale(1, 0);
 			}
 			&.ng-enter-active {
+				transition: all .4s!important;
 				max-height: 250px;
 				transform: scale(1, 1);
 			}

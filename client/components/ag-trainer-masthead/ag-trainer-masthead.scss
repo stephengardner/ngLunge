@@ -1,0 +1,24 @@
+#trainer-masthead {
+	.actions {
+		button {
+			text-transform: none;
+			@extend .md-whiteframe-z1;
+			&:not(.md-icon-button) {
+				padding: 0 13px 0 10px;
+			}
+		}
+	}
+	#favorite-icon {
+		@extend .md-whiteframe-z1;
+	}
+	#trainer-menu-button {
+		position: absolute;
+		top: 6px;
+		right: 0;
+		z-index: 1;
+		button {
+			background: rgba(255, 255, 255, .8)!important;
+			color: $brand-primary!important;
+		}
+	}
+}

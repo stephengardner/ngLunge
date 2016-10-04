@@ -14,7 +14,8 @@
                         <span flex></span>
                         <div id="or">
                             or,
-                            <md-button ui-sref="main.login({tab : type})">
+                            <md-button aria-label="Login"
+                                       ui-sref="main.login({tab : type})">
                                 Login
                             </md-button>
                         </div>
@@ -24,14 +25,15 @@
                          md-border-bottom
                          md-dynamic-height
                          md-autoselect>
-                    <md-tab label="User" ng-click="selectTab('trainee')">
+                    <md-tab label="Client" ng-click="selectTab('trainee')">
                         <div id="signup-user">
                             <!--<md-card-content layout="column" layout-align="center center">-->
                                 <div id="signup-user-social">
                                     <h1>Ready to start your fitness journey?</h1>
                                     <h2>Signup with Lunge today!</h2>
                                     <div>
-                                        <md-button class="facebook social-button"
+                                        <md-button aria-label="Connect with Facebook"
+                                                   class="facebook social-button"
                                                    href=""
                                                    ng-click="authenticate('facebook')">
                                             <md-icon>
@@ -41,7 +43,8 @@
                                         </md-button>
                                     </div>
                                     <div>
-                                        <md-button class="linkedin social-button"
+                                        <md-button aria-label="Connect with LinkedIn"
+                                                   class="linkedin social-button"
                                                    href=""
                                                    ng-click="authenticate('linkedin')">
                                             <md-icon>
@@ -60,7 +63,8 @@
                                 <h1>Are you a Certified Trainer?</h1>
                                 <h2>Get started with Lunge today!</h2>
                                 <div>
-                                    <md-button class="facebook social-button"
+                                    <md-button aria-label="Connect with Facebook"
+                                               class="facebook social-button"
                                                href=""
                                                ng-click="authenticate('facebook')">
                                         <md-icon>
@@ -70,7 +74,8 @@
                                     </md-button>
                                 </div>
                                 <div>
-                                    <md-button class="linkedin social-button"
+                                    <md-button aria-label="Connect with LinkedIn"
+                                               class="linkedin social-button"
                                                href=""
                                                ng-click="authenticate('linkedin')">
                                         <md-icon>
@@ -102,7 +107,8 @@
                                     </ag-floating-label>
                                 </md-card-content>
                                 <md-card-actions>
-                                    <md-button type="submit">
+                                    <md-button aria-label="Sign up"
+                                               type="submit">
                                         Sign up
                                     </md-button>
                                 </md-card-actions>
@@ -115,18 +121,15 @@
         <form name="resendEmailForm"
               ng-submit="resendEmail()">
             <md-card ng-if="success">
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">
-                            Check your email!
-                        </span>
-                    </md-card-title-text>
-                </md-card-title>
                 <md-card-content>
-                    We sent you a link to verify your identity and get started using Lunge.
+                    <h3>Check your email!</h3>
+                    <h5>
+                        We sent you a link to verify your identity and get started using Lunge.
+                    </h5>
                 </md-card-content>
                 <md-card-actions>
-                    <md-button type="submit">
+                    <md-button aria-label="Resend email"
+                               type="submit">
                         Resend email
                     </md-button>
                 </md-card-actions>

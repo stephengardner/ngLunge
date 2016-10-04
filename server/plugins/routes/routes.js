@@ -16,6 +16,7 @@ module.exports = function setup(options, imports, register) {
 			//express.use('/api/aws', imports.apiAWSRouter);
 			web.use('/auth', imports.authRoutes);
 			web.use('/api/registrations', imports.apiRegistrationRouter);
+			web.use('/api/reviews', imports.apiReviewRouter);
 			console.log("App Path in Routes.js is:", web.get('appPath'));
 			web.route('/:url(api|auth|components|app|bower_components|assets)/*')
 				.get(errors[404]);

@@ -247,6 +247,9 @@ module.exports = function setup(options, imports, register) {
 	};
 	
 	exports.uploadProfilePictureS3 = function(req, res) {
+		var uploadResponse,
+			savedTrainer
+		;
 		async.waterfall([
 			function crop(callback) {
 				pictureCropper.crop(req).then(function(response){
@@ -255,24 +258,29 @@ module.exports = function setup(options, imports, register) {
 			},
 			function upload(callback){
 				profilePictureUploadS3.upload(req).then(function(response){
-					callback(null, response);
+					uploadResponse = response;
+					callback(null);
 				}).catch(callback)
 			},
-			function save(response, callback) {
+			function save(callback) {
+				if(!uploadResponse) {
+					return callback(new Error('No upload response from S3'));
+				}
 				var profile_picture = {
 					profile_picture : {
 						thumbnail : {
-							url : response.url
+							url : uploadResponse.url
 						}
 					}
 				};
 				var updated = _.merge(req.trainer, profile_picture);
-				updated.save(function (err, savedTrainer) {
+				updated.save(function (err, response) {
 					if (err) { return callback(err); }
-					return callback(null, savedTrainer);
+					savedTrainer = response;
+					return callback(null);
 				});
 			}
-		], function(err, savedTrainer){
+		], function(err){
 			if(err) return handleError(res, err);
 			console.log("Done...");
 			return res.json(savedTrainer);
@@ -349,27 +357,41 @@ module.exports = function setup(options, imports, register) {
 		var query = {};
 		if(req.params.urlName) {query.urlName = req.params.urlName}
 		else {query.id = req.params.id;}
-		Trainer.findOne(query, '-salt -hashedPassword')
-			// populate the certifications which are really the certification-types, subclasses of a parent certification
-			.populate('certifications_v2.certification_type')
-			.populate('specialties')
-			.exec(function (err, trainer) {
-				if(err) { return handleError(res, err); }
-				if(!trainer) { return res.send(404); }
-				trainerPopulatorCertificationsAggregated.get(trainer).then(function(response){
-					// logger.info(response);
-					return res.status(200).json(response);
-				}).catch(function(err){
-					return handleError(res, err);
-				});
-				// certificationOrganizationModel
-				// 	.populate(trainer,
-				// 		{path : 'certifications_v2.certification_type.organization', model : 'CertificationOrganization'},
-				// 		function(err, populatedTrainer){
-				// 			if(err) { return handleError(res, err); }
-				// 			return res.json(populatedTrainer);
-				// 		});
-			});
+
+		var foundTrainer,
+			aggregatedTrainer,
+			trainerToReturn,
+			viewAs = req.query.viewAs
+		;
+		async.waterfall([
+			function findTrainer(callback) {
+				Trainer.findOne(query, '-salt -hashedPassword')
+					.populate('reviews.received', null, {from: viewAs})
+					.exec(function (err, trainer) {
+						if (err) { return callback(err); }
+						foundTrainer = trainer;
+						return callback();
+					});
+			},
+			function aggregateTrainer(callback) {
+				trainerPopulatorCertificationsAggregated.get(foundTrainer).then(function(response){
+					aggregatedTrainer = response;
+					callback();
+				}).catch(callback);
+			},
+			function doTheRest(callback) {
+				trainerToReturn = aggregatedTrainer.toObject(); // necessary since we alter this with the "viewAs" obj
+				if(foundTrainer.reviews.received && foundTrainer.reviews.received[0]) {
+					trainerToReturn.viewAs = {
+						review : foundTrainer.reviews.received[0]
+					}
+				}
+				callback();
+			}
+		], function(err){
+			if(err) return handleError(res, err);
+			return res.status(200).json(trainerToReturn);
+		});
 	};
 
 
@@ -494,9 +516,7 @@ module.exports = function setup(options, imports, register) {
 					found.markModified[attrname];
 				}
 			}
-			console.log("found:", found);
 			found.save(function(err, saved){
-				console.log("Saved");
 				if(err) return handleError(res, err);
 				return res.json(saved);
 			})

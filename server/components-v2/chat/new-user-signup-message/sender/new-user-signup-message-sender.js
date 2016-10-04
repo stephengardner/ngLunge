@@ -7,9 +7,10 @@ module.exports = function setup(options, imports, register) {
 	var newUserSignupMessageSender = {
 		send : function(user) {
 			var adminUser,
-				messageToTrainer = 'Welcome to Apartminty!  My name is Stephen and I\'m here to help with any' +
-					' questions you might have.  Feel free to send me a message, or click the Help icon on the menu' +
-					' over there to the left.  Happy Lunging!'
+				messageToTrainer = 'Welcome to Lunge!  My name is Stephen and I\'m here to help with any' +
+					' questions you might have.  Feel free to send me a message, or click the Help icon in the main ' +
+					'menu.' +
+					'  Happy Lunging!'
 			;
 			return new Promise(function(resolve, reject) {
 				async.waterfall([

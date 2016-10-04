@@ -3,27 +3,23 @@ myApp.directive('agEditableAnimation', function($animate) {
 		restrict : 'AE',
 		link : function(scope, element, attrs) {
 			$animate.addClass(element, 'name-of-animation');
-			// element.addClass('ad-editable-animation-add');
-			console.log("LINKED");
 		}
 	}
 });
 myApp.animation('.name-of-animation', function() {
 	return {
 		addClass: function(elem, done){
-			//logic of animation
-			alert();
 			done();
 		}
 	};
 });
 myApp.animation('.ag-editable-animation-add', agEditableAnimationAdd);
 function agEditableAnimationAdd($q, $animateCss) {
-alert("?");
+	alert("?");
 	return {
 		addClass: function(element, className, done) {
 			var height = element[0].offsetHeight;
-alert("addclass");
+			alert("addclass");
 			return $animateCss(element, {
 				event: 'enter',
 				structural: true,

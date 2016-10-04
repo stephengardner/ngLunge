@@ -2,7 +2,7 @@
 <!-- Adding a location -->
 <!-- End Adding a location -->
 <!-- Locations table -->
-<div class="locations"  ng-if="trainerFactory.trainer.locations.length">
+<div class="locations"  ng-if="userFactory.user.locations.length">
     <!-- Locations table headers -->
     <!--<div class="header">-->
     <!--<div layout="row" layout-padding-->
@@ -43,14 +43,14 @@
                         </thead>
                         <tbody md-body>
                             <tr md-row
-                                ng-repeat="location in trainerFactory.trainer.locations | orderObjectBy:'primary'"
+                                ng-repeat="location in userFactory.user.locations | orderObjectBy:'primary'"
                                 ng-if="location._id"
                                 ng-click="triggerMarkerClick(location)">
                                 <td md-cell>
                                     <div class="primary-location-badge"
                                          ng-if="location.primary">
-                                        <md-tooltip md-direction="top">
-                                            {{trainerFactory.trainer.name.first}}'s primary location
+                                        <md-tooltip md-delay="500" md-direction="top">
+                                            {{userFactory.user.name.first}}'s primary location
                                         </md-tooltip>
                                         <i class="material-icons">star</i>
                                     </div>
@@ -61,7 +61,7 @@
                                     <div class='city-state'>{{ location.city + ', ' + location.state }}</div>
                                     <div class='zipcode'>{{ location.zipcode }}</div>
                                 </td>
-                                <td ng-if="editable">
+                                <td ng-if="userFactory.isMe()">
                                     <md-menu md-position-mode="target-right target">
                                         <md-button class="md-icon-button"
                                                    ng-click="openMenu($mdOpenMenu, $event)">
@@ -129,7 +129,7 @@
         <div class="expand"
              layout="row"
              layout-align="center center"
-             ng-if="trainerFactory.trainer.locations.length > 1"
+             ng-if="userFactory.user.locations.length > 1"
              ng-click="toggleLimitLocations()">
             <md-button flex>
                 <md-icon>

@@ -1,5 +1,5 @@
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.factory('Certification', function ($resource) {
 		return $resource('/api/certifications/:id/:controller', {
 				id: '@_id'

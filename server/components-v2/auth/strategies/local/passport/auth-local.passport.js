@@ -16,7 +16,8 @@ module.exports = function setup(options, imports, register) {
 			console.log("passport.js req.body.type = (should be user or trainer)", req.body.type);
 			if(req.body.type == "trainer") {
 				Trainer.findOne({
-					email: email.toLowerCase()
+					email: email.toLowerCase(),
+					provider : 'local'
 				}, function(err, trainer) {
 					if (err) return done(err);
 					if (!trainer) {

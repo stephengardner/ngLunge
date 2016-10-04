@@ -1,28 +1,80 @@
 #material-messages-menu {
+	@include styleMenuWidth();
+
+	// This is necessary to override the material message animation that's currently happening, it's ugly. It doesn't work...
+	// It doesn't shrink the container, it just dissapears after .5 s. Leaving a white space
+	&._md-locked-open-remove {
+		transition: all .5s;
+		position: absolute!important;
+		left: 0!important;
+		transform: translate3d(0,0,0);
+		@include styleMenuWidth();
+	}
+
+	&._md-locked-open-remove-active {
+		transition: all .5s;
+		position: absolute!important;
+		left: -$material-menu-width!important;
+		transform: translate3d(0,0,0);
+		@include styleMenuWidth();
+
+	}
 	#menu-items {
 		position: relative;
 		md-progress-linear {
 			position: absolute;
 			z-index: 2;
 			top: -5px;
+			left: 0;
 			width: 100%;
 		}
 	}
+	.unread {
+		color: $brand-primary;
+		font-weight: 300;
+		font-size: 13px;
+	}
 	.chat-row {
+		&:hover {
+			text-decoration: none;
+		}
+		&.unread {
+			background: lighten($brand-primary, 65%);
+		}
 		padding: $list-item-padding-vertical $list-item-padding-horizontal;
 		min-height: $list-item-height;
 		padding-top: 5px;
 		padding-bottom: 5px;
 		cursor: pointer;
 		position: relative;
+		&.active {
+			background: $brand-primary;
+			color: white;
+			.chat-text {
+				.name {
+					color: white;
+				}
+				.last-message {
+					color: white;
+				}
+				.time {
+					color: white;
+				}
+				.unread {
+					color: white;
+				}
+			}
+		}
 	}
 	md-progress-circular {
 		margin-top: 20px;
 	}
 	.chat-text {
+		margin-left: 10px;
 		.name {
 			font-size: 14px;
 			font-weight: 500;
+			color: #333;
 			.unread {
 				//margin-left: 4px;
 			}
@@ -32,7 +84,7 @@
 			color: #555;
 		}
 		.last-message {
-			color: #999;
+			color: #90949c;
 			font-size: 15px;
 			white-space: nowrap;
 			span {

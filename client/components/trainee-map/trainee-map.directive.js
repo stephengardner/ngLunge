@@ -7,15 +7,11 @@ lungeApp.directive("traineeMap", function(traineeMap){
 		},
 		templateUrl: 'components/trainee-map/trainee-map.partial.html',
 		link: function (scope, element, attrs) {
-			// scope.editable = attrs.editable == "false" ? false : scope.$eval(attrs.editable);
-			// attrs.$observe('editable', function(val){
-			// 	scope.editable = val;
-			// });
-			scope.$watch('userFactory', function(val){
-				if(val && val.user && val.user._id) {
-					console.log("trainee map directive got user factory : ", val);
-					scope.map = traineeMap.init(scope.userFactory.user).map;
-					scope.editable = val.isMe();
+			scope.$watch('userFactory', function(userFactory){
+				if(userFactory && userFactory.user && userFactory.user._id) {
+					console.log("[Trainee Map Directive] watched, waited, and now has a userFactory of: ", userFactory);
+					scope.map = traineeMap.init(userFactory.user).map;
+					scope.editable = userFactory.isMe();
 				}
 			});
 		}

@@ -1,9 +1,7 @@
-<div class="loading-block-sm" ng-if="!trainerFactory.trainer.name"></div>
+<div class="loading-block-sm" ng-if="!userFactory.user._id"></div>
 <md-card class="section-animate-in"
-         ng-if="trainerFactory.trainer.name">
-    <div
-            ag-editable-container
-            trainer-factory-section="'rate'">
+         ng-if="userFactory.user._id">
+    <div ag-editable-container-2 editing="RatesCtrl.editing">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>
@@ -12,26 +10,28 @@
                 <span flex></span>
                 <md-button ng-if="editable"
                            md-ink-ripple class="md-icon-button"
-                           ng-click="toggleEditing()">
-                    <i class="material-icons">mode_edit</i>
+                           ng-click="RatesCtrl.editing = !RatesCtrl.editing">
+                    <i class="material-icons">
+                        mode_edit
+                    </i>
                 </md-button>
             </div>
         </md-toolbar>
-        <form name="rateForm" ng-submit="submit(rateForm); toggleEditing()">
-            <md-card-content cg-busy="{promise : cgBusy}">
-                <div class="ag-editable-container">
-                    <div class="ag-editable-default">
+        <form name="rateForm" ng-submit="RatesCtrl.submit(rateForm)">
+            <md-card-content cg-busy="{promise : RatesCtrl.cgBusy}">
+                <div class="ag-editable-container-2" editing="RatesCtrl.editing">
+                    <div class="ag-editable-default-2">
                         <div class="info-row">
                             <div class="name">
                                 Hourly rate
                             </div>
                             <div class="value">
-                        <span ng-if="trainerFactory.trainer.rate.general.price">
-                            ${{trainerFactory.trainer.rate.general.price}} / hr
-                        </span>
-                        <span ng-if="!trainerFactory.trainer.rate.general.price">
-                            None set
-                        </span>
+                                <span ng-if="userFactory.userEditing.rate.general.price">
+                                    ${{userFactory.userEditing.rate.general.price}} / hr
+                                </span>
+                                <span ng-if="!userFactory.userEditing.rate.general.price">
+                                    None set
+                                </span>
                             </div>
                         </div>
                         <div class="info-row">
@@ -39,23 +39,25 @@
                                 Comments:
                             </div>
                             <div class="value">
-                                {{trainerFactory.trainer.rate.general.comments}}
+                                {{userFactory.userEditing.rate.general.comments}}
                             </div>
                         </div>
                     </div>
-                    <div class="ag-editable-editing">
+                    <div class="ag-editable-editing-2">
                         <ag-floating-label>
                             <label>
                                 Rate / Hour:
                             </label>
                             <ag-icon>
-                                <i class="material-icons">attach_money</i>
+                                <i class="material-icons">
+                                    attach_money
+                                </i>
                             </ag-icon>
                             <input  server-error
                                     type="text"
                                     name="rateGeneralPrice"
                                     id="rateGeneralPrice"
-                                    ng-model="trainerFactory.trainerEditing.rate.general.price"/>
+                                    ng-model="userFactory.userEditing.rate.general.price"/>
                             <ag-hints>
                                 <ag-hint>
                                     Enter dollar amount
@@ -71,12 +73,13 @@
                             <label for="rateGeneralComments">
                                 Comments:
                             </label>
-                <textarea ng-change="removeMongooseError(rateForm, 'rateGeneralComments')"
-                          name="rateGeneralComments"
-                          id="rateGeneralComments"
-                          rows="4"
-                          ag-no-autogrow
-                          ng-model="trainerFactory.trainerEditing.rate.general.comments"></textarea>
+                            <textarea ng-change="removeMongooseError(rateForm, 'rateGeneralComments')"
+                                      name="rateGeneralComments"
+                                      id="rateGeneralComments"
+                                      rows="4"
+                                      ag-no-autogrow
+                                      ng-model="userFactory.userEditing.rate.general.comments"><!--
+                                      --></textarea>
                             <div ng-messages="rateForm.rateGeneralComments.$error">
                                 <div ng-message="mongoose">
                                     {{rateForm.rateGeneralComments.$error.mongoose}}
@@ -88,13 +91,17 @@
                                 </ag-hint>
                             </ag-hints>
                         </ag-floating-label>
+                        <md-card-actions layout="row" layout-align="end center">
+                            <md-button type="submit">
+                                Save
+                            </md-button>
+                            <md-button ng-click="RatesCtrl.editing = !RatesCtrl.editing">
+                                Cancel
+                            </md-button>
+                        </md-card-actions>
                     </div>
                 </div>
             </md-card-content>
-            <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-                <md-button type="submit">Save</md-button>
-                <md-button ng-click="toggleEditing()">Cancel</md-button>
-            </md-card-actions>
         </form>
     </div>
 </md-card>

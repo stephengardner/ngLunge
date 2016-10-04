@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ngLungeFullStack2App'));
+  beforeEach(module('myApp'));
   beforeEach(module('socketMock'));
 
   var MainCtrl,

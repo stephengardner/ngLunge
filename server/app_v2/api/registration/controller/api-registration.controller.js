@@ -141,6 +141,7 @@ module.exports = function setup(options, imports, register) {
 				var createTrainerFrom = _.merge(
 					req.body,
 					{
+						provider : 'local',
 						registration: {
 							authenticationHash: crypto.randomBytes(20).toString('hex')
 						}

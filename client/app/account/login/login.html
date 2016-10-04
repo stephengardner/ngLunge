@@ -14,7 +14,8 @@
                         <span flex></span>
                         <div id="or">
                             or,
-                            <md-button ui-sref="main.signup({tab : type})">
+                            <md-button aria-label="signup"
+                                       ui-sref="main.signup({tab : type})">
                                 Signup
                             </md-button>
                         </div>
@@ -25,12 +26,13 @@
                          md-dynamic-height
                          md-autoselect>
                     <!-- User Tab -->
-                    <md-tab label="User" ng-click="selectTab('trainee')">
+                    <md-tab label="Client" ng-click="selectTab('trainee')">
                         <md-card-content layout="column" layout-align="center center" id="user-login-social">
                             <h1>
-                                User Social Login
+                                Client Social Login
                             </h1>
-                            <md-button class="facebook social-button"
+                            <md-button are-label="Login with Facebook"
+                                       class="facebook social-button"
                                        href=""
                                        ng-click="loginOAuth('facebook')">
                                 <md-icon>
@@ -38,7 +40,8 @@
                                 </md-icon>
                                 Login with Facebook
                             </md-button>
-                            <md-button class="linkedin social-button"
+                            <md-button aria-label="Login with LinkedIn"
+                                       class="linkedin social-button"
                                        href=""
                                        ng-click="loginOAuth('linkedin')">
                                 <md-icon>
@@ -57,7 +60,8 @@
                             <h1>
                                 Trainer Social Login
                             </h1>
-                            <md-button class="facebook social-button"
+                            <md-button aria-label="Login with Facebook"
+                                       class="facebook social-button"
                                        href=""
                                        ng-click="trainerLoginOAuth('facebook')">
                                 <md-icon>
@@ -65,7 +69,8 @@
                                 </md-icon>
                                 Login with Facebook
                             </md-button>
-                            <md-button class="linkedin social-button"
+                            <md-button are-label="Login with LinkedIn"
+                                       class="linkedin social-button"
                                        href=""
                                        ng-click="trainerLoginOAuth('linkedin')">
                                 <md-icon>
@@ -114,7 +119,8 @@
                             </div>
                         </md-card-content>
                         <md-card-actions>
-                            <md-button type="submit">
+                            <md-button aria-label="Login"
+                                       type="submit">
                                 Login
                             </md-button>
                         </md-card-actions>

@@ -5,7 +5,6 @@ lungeApp.controller("TrainerMapController", function(TrainerFactory, Sync, $docu
                                                      $log,
                                                      $window){
 	$scope.removeMongooseError = FormControl.removeMongooseError;
-	$scope.trainerFactory = TrainerFactory;
 	$scope.ajax = {
 		busy : false,
 		promise : false
@@ -30,13 +29,13 @@ lungeApp.controller("TrainerMapController", function(TrainerFactory, Sync, $docu
 		trainerMap.setGoogleMapCenter();
 	});
 
-	// $timeout(function() {
-	// 	trainerMap.map.window.show = true;
-	// 	console.log("WindowControl:", $scope.windowControl);
-	// 	$scope.windowControl.showWindow();
-	// }, 5000);
-	$scope.$on('trainerUpdated', function() {
-		$scope.map = trainerMap.init(TrainerFactory.trainer).map;
+	$scope.$watch(function(){
+		return $scope.userFactory.user.locations;
+	}, function(oldValue, newValue) {
+		if(oldValue !== newValue) {
+			console.log("LOCATIONS CHANGED, INITING TRAINER MAP");
+			$scope.map = trainerMap.init($scope.userFactory.user).map;
+		}
 	});
 
 	uiGmapIsReady.promise().then(function(maps) {
@@ -56,8 +55,7 @@ lungeApp.controller("TrainerMapController", function(TrainerFactory, Sync, $docu
 	});
 
 	Auth.isLoggedInAsync(function(trainer) {
-		$scope.trainerFactory = TrainerFactory;
-		$scope.map = trainerMap.init(TrainerFactory.trainer).map;
+		$scope.map = trainerMap.init($scope.userFactory.user).map;
 
 		// This IS necessary.  When changing routes, the size of the container alters somehow,
 		// leaving a grey spot on the map, we need to trigger the resize WITHIN this timeout

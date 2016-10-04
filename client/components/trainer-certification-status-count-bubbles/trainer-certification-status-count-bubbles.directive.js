@@ -1,4 +1,4 @@
-myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function($mdDialog){
+myApp.directive('trainerCertificationStatusCountBubbles', ['lodash', '$mdDialog', function(lodash, $mdDialog){
 	return {
 		restrict : 'AE',
 		replace : true,
@@ -26,16 +26,9 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 						vm.trainer = scope.trainer;
 					}],
 					controllerAs : 'vm'
-				})
+				});
 			};
 
-			function getCount(type) {
-				if(scope.trainer.certifications_meta.organization_map &&
-					scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id])
-					return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
-						.types[type];
-				return 0;
-			}
 			scope.setCounts = function() {
 				if(!scope.trainer || !scope.trainer.certifications_meta) return;
 				scope.countAdded = getCount('count_all');
@@ -52,13 +45,35 @@ myApp.directive('trainerCertificationStatusCountBubbles', ['$mdDialog', function
 			scope.$watch(function(){
 				if(scope.trainer
 					&& scope.trainer.certifications_meta
-					&& scope.trainer.certifications_meta.organization_map)
-					return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
+					&& scope.trainer.certifications_meta.organization_map
+					&& scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
+					&& scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id].types
+				)
+				return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id].types;
 			}, function(newValue, oldValue) {
-				if(newValue != oldValue)
-					console.log("trainer-certification-status-count-bubbles watch triggered");
-				scope.setCounts();
-			})
+				if(newValue && !isEqualCounts(newValue, oldValue)) {
+					console.log("[Trainer Certification Status Count Bubbles] watch triggered.  New value did not" +
+						" equal Old Value.  They are: new: ", newValue, " old: ", oldValue);
+					scope.setCounts();
+				}
+			});
+
+			function getCount(type) {
+				if(scope.trainer.certifications_meta.organization_map &&
+					scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id])
+					return scope.trainer.certifications_meta.organization_map[scope.certificationOrganization._id]
+						.types[type];
+				return 0;
+			}
+			function isEqualCounts(a, b) {
+				return a && b &&
+					a.count_all == b.count_all &&
+					a.count_pending == b.count_pending &&
+					a.count_verified == b.count_verified &&
+					a.count_unverified == b.count_unverified &&
+					a.count_rejected == b.count_rejected
+					;
+			}
 		}
 	}
 }]);

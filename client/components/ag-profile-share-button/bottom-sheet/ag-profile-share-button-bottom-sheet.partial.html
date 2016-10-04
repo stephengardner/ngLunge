@@ -1,5 +1,6 @@
 <md-bottom-sheet id="share-bottom-sheet"
-        class="md-list md-has-header" ng-cloak ng-controller="AgProfileShareButtonBottomSheetController">
+                 class="md-list md-has-header"
+                 ng-controller="AgProfileShareButtonBottomSheetController">
     <md-subheader>Share your profile</md-subheader>
     <md-list>
         <md-list-item ng-repeat="item in items">
@@ -18,7 +19,12 @@
                 <md-button class="md-icon-button">
                     <i class="material-icons">link</i>
                 </md-button>
-                <span class="md-inline-list-icon-label" md-select-all>{{trainerUrl}}</span>
+                <span ng-click-copy="{{trainerUrl}}"
+                      on-success="afterCopiedUrl()"
+                      class="md-inline-list-icon-label"
+                      md-select-all>
+                    {{trainerUrl}}
+                </span>
             </div>
         </md-list-item>
     </md-list>

@@ -1,0 +1,26 @@
+@media (max-width: $layout-breakpoint-sm - 1) {
+	md-toast {
+		&._md-bottom {
+			&:not(._md-right):not(._md-left) {
+				position: fixed;
+			}
+		}
+	}
+
+	md-dialog {
+		min-width: 50%;
+	}
+}
+body {
+	> md-toast {
+		position: fixed;
+	}
+	&.md-dialog-is-showing {
+		md-tooltip {
+			display: none;
+		}
+	}
+}
+html, body {
+	height: auto;
+}

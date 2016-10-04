@@ -1,8 +1,18 @@
 'use strict';
 
-angular.module('ngLungeFullStack2App')
-	.factory('Auth', function Auth($state, $rootScope, $http, Trainer, Registration, User, $cookieStore, $q) {
+angular.module('myApp')
+	.factory('Auth', function Auth($state,
+	                               $rootScope,
+	                               UserFactory,
+	                               $http, Trainer,
+	                               Registration,
+	                               User,
+	                               $cookieStore,
+	                               $q,
+	                               SocketV2) {
 		var currentUser = {};
+		var onSocketUpdatedCallbacks = [];
+		var currentUserFactory = UserFactory.init();
 		var currentType = "";
 		//console.log("COOKIESTORE: ", $cookieStore.get('token'));
 		var Auth = {
@@ -13,25 +23,6 @@ angular.module('ngLungeFullStack2App')
 			 * @param  {Function} callback - optional
 			 * @return {Promise}
 			 */
-			setSocket : function(socket) {
-				console.log("Set socket to:",socket);
-				this.socket = socket;
-			},
-			// setSocketFactory : function(socketFactory) {
-			// 	this.socketFactory = socketFactory;
-			// },
-			setFullMetalSocket : function(fullMetalSocket){
-				this.fullMetalSocket = fullMetalSocket;
-			},
-			// syncAfterLogin : function () {
-			// 	if(Auth.socketFactory && Auth.isLoggedIn() ) {
-			// 		console.log("\n-\n-\n-\n-", currentUser);
-			// 		Auth.socketFactory.sync.user('trainer', currentUser, function(event, user){
-			// 			console.log("FROM THE AUTH FACTORY WERE SETTING THIS TRAINER: Setting...", user);
-			// 			Auth.setCurrentUser(user);
-			// 		});
-			// 	}
-			// },
 			login: function(lunger, callback) {
 				var cb = callback || angular.noop;
 				var deferred = $q.defer();
@@ -45,33 +36,14 @@ angular.module('ngLungeFullStack2App')
 					// put the token and user type in our cookie store.  Authenticate the user on every ping request
 					$cookieStore.put('token', data.token);
 					$cookieStore.put('type', data.type);
-					// authenticate the socket.  We could potentially wait and authenticate the socket whenever it
-					// next sendsa socket event.  But we're going to authenticate it anyways.  There is an almost
-					// infinitely small difference here...
-					//Auth.socket.emit('custom-authenticate', {token : Auth.getToken()});
 					currentType = data.type;
 					Auth.type = data.type;
-					// If I watch for this in app.js, this doesn't need to be here.
-					//FullMetalSocket.init(Auth.getToken());
 					console.log("client side auth service checking the return json 'type' param og the login() " +
 						"response and then GETting whichever it should be");
-					// if(lunger.type == "user") {
-					// 	User.get(function(response){
-					// 		currentUser = response;
-					// 		deferred.resolve(data);
-					// 	});
-					// }
-					// else {
-					// 	Trainer.get(function(response){
-					// 		currentUser = response;
-					// 		$rootScope.$emit('trainerLogin');
-					// 		deferred.resolve(data);
-					// 	});
-					// }
 
 					User.get(function(response){
-						currentUser = response;
-						// $rootScope.$emit('login');
+						Auth.setCurrentUser(response);
+						Auth._authenticateSocket();
 						deferred.resolve(data);
 					});
 				}).
@@ -82,11 +54,41 @@ angular.module('ngLungeFullStack2App')
 				return deferred.promise;
 			},
 
+			_authenticateSocket : function() {
+				SocketV2.authenticate(this.getToken()).then(this._onSocketAuthenticated.bind(this));
+			},
+			_onSocketAuthenticated: function() {
+				var onAuthUpdatedMessage = 'user:auth:updated';
+				console.log('[Auth Service] socket has been authenticated, registering onUpdate events');
+				SocketV2._socket.on(onAuthUpdatedMessage, this.onSocketUpdatedMessage);
+			},
 			setCurrentType : function(type) {
 				currentType = type;
 			},
 			getCurrentType : function() {
 				return currentType;
+			},
+
+			onSocketUpdatedMessage : function(modelObj) {
+				Auth.setCurrentUser(modelObj);
+				for(var i = 0; i < onSocketUpdatedCallbacks.length; i++) {
+					var callbackAtIndex = onSocketUpdatedCallbacks[i];
+					if(callbackAtIndex)
+						callbackAtIndex(modelObj);
+				}
+			},
+
+			addOnSocketUpdatedCallback : function(functionToAdd) {
+				console.log('[Auth Service] adding an onSocketUpdated callback function');
+				onSocketUpdatedCallbacks.push(functionToAdd);
+				return onSocketUpdatedCallbacks.length - 1; // the index is returned
+			},
+
+			removeOnSocketUpdatedCallback : function(index) {
+				console.log('[Auth Service] removing an onSocketUpdated callback function at index: ' + index);
+				delete onSocketUpdatedCallbacks[index];
+				// onSocketUpdatedCallbacks = onSocketUpdatedCallbacks.slice(index, 1);// the index i returned from the
+				// other method
 			},
 
 			submitPassword : function(authenticationHash, password1, password2) {
@@ -100,6 +102,7 @@ angular.module('ngLungeFullStack2App')
 						}, function(response){
 							// token and type set on cookies by the server
 							currentUser = User.get(function(response){
+								Auth.setCurrentUser(response);
 								console.log("Auth server currentUser = Trainer.get success response: ", response);
 								resolve(response);
 							}, reject);
@@ -120,6 +123,7 @@ angular.module('ngLungeFullStack2App')
 							$cookieStore.put('type', 'trainer');
 
 							currentUser = User.get(function(response){
+								Auth._authenticateSocket();
 								console.log("Auth server currentUser = Trainer.get success response: ", response);
 								deferred.resolve(response);
 							}, function(err){
@@ -130,7 +134,7 @@ angular.module('ngLungeFullStack2App')
 					}, function(err){
 						deferred.reject(err);
 						console.log("ERR:",err);
-					})
+					});
 				return deferred.promise;
 			},
 
@@ -140,22 +144,23 @@ angular.module('ngLungeFullStack2App')
 			 * @param  {Function}
 			 */
 			logout: function() {
-				// if(currentType == "trainer") {
-					Auth.fullMetalSocket.user.logout(Auth.getCurrentUser());
-					Auth.fullMetalSocket.user.unsyncAuth();
-				// }
+				SocketV2.logout();
+
 				$cookieStore.remove('token');
 				$cookieStore.remove('type');
-				currentUser = {};
+				Auth.setCurrentUser({});
 			},
 
 			// When the socket pushes a login event, don't push the socket event multiple times
 			logoutBySocket : function(){
 				console.log("Auth.logoutBySocket(); should only be called once.");
-				Auth.fullMetalSocket.user.unsyncAuth();
+				// Auth.fullMetalSocket.user.unsyncAuth();
+
+				SocketV2.logout();
+
 				$cookieStore.remove('token');
 				$cookieStore.remove('type');
-				currentUser = {};
+				Auth.setCurrentUser({});
 				$state.go("main.login");
 			},
 
@@ -203,12 +208,12 @@ angular.module('ngLungeFullStack2App')
 					return cb(err);
 				}).$promise;
 			},
-			
+
 			contact : function(data) {
 				return $q(function(resolve, reject){
 					Trainer.contact({ id : currentUser._id }, data,
 						resolve, reject);
-				})	
+				})
 			},
 
 			changeEmail : function(email, callback) {
@@ -256,33 +261,33 @@ angular.module('ngLungeFullStack2App')
 			updateProfile : function(dataObject, callback) {
 				var cb = callback || angular.noop,
 					Model = this.type == "user" ? User : Trainer;
-				console.log("updating inside the Auth service for Model type:", this.type);
+				console.log("[Auth] calling updateProfile for userId: " + dataObject._id);
 				//console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
 				return Model.update({ id: dataObject._id }, dataObject, function(user) {
 					// in the event where an admin updates a different user, we don't want to override the admin login
 					if(user._id == currentUser._id) {
-						currentUser = user;
+						Auth.setCurrentUser(user);
 					}
 					return cb(user);
 				}, function(err) {
-					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
+					console.warn("[Auth] err:", err);
 					return cb(err);
 				}).$promise;
 			},
-			
+
 			updateOverwriteProfile : function(dataObject, callback) {
 				var cb = callback || angular.noop,
 					Model = this.type == "user" ? User : Trainer;
-				console.log("updating inside the Auth service for Model type:", this.type);
+				console.log("[Auth] calling updateOVERWRITEprofile for userId:", dataObject._id);
 				//console.log("*Auth.service.js attempting to update current user with data object: ", dataObject);
 				return Model.updateOverwrite({ id: dataObject._id }, dataObject, function(user) {
 					// in the event where an admin updates a different user, we don't want to override the admin login
 					if(user._id == currentUser._id) {
-						currentUser = user;
+						Auth.setCurrentUser(user);
 					}
 					return cb(user);
 				}, function(err) {
-					console.warn("Auth service update profile on the ", Model, " model returned an err: ", err);
+					console.warn("[Auth] err:", err);
 					return cb(err);
 				}).$promise;
 			},
@@ -296,11 +301,16 @@ angular.module('ngLungeFullStack2App')
 				return currentUser;
 			},
 
+			getCurrentUserFactory: function() {
+				return currentUserFactory;
+			},
+
 			// augie added this for socket syncing
 			setCurrentUser : function(user) {
+				currentUserFactory.setModels(user);
 				// I'm using a deep copy.  This protects me against some unwanted behavior.  As the app grows,
 				// there might be potential for a shallow copy, but watches and stuff on each update might get too cumbersome
-				currentUser = angular.copy(user);
+				currentUser = user;//angular.copy(user);
 			},
 
 			/**
@@ -318,17 +328,14 @@ angular.module('ngLungeFullStack2App')
 			isLoggedInAsync: function(cb) {
 				if(currentUser.hasOwnProperty('$promise')) {
 					currentUser.$promise.then(function(response) {
-						//console.log("auth service isLoggedInAsync response:", response);
 						cb(true);
 					}).catch(function(err) {
 						console.log("auth service isLoggedInAsync err:", err);
 						cb(false);
 					});
 				} else if(currentUser.hasOwnProperty('role')) {
-					console.log("auto isLoggedInAsync... potential for error?");
 					cb(true);
 				} else {
-					console.log("auth service isLoggedInAsync does not have own property: role");
 					cb(false);
 				}
 			},
@@ -377,12 +384,13 @@ angular.module('ngLungeFullStack2App')
 					var type = $cookieStore.get('type'),
 						token = $cookieStore.get('token'),
 						Model = User
-					;
+						;
 					currentType = type;
 					currentUser = Model.get(function(response, headers) {
 						console.log("qLoginByToken Successful:", response);
-						currentUser = response;
+						Auth.setCurrentUser(response);
 						// UserSyncer.syncAuth(Auth.getToken());
+						alert("loginByToken");
 						Auth.fullMetalSocket.user.syncAuth(Auth.getToken());
 						return resolve(response);
 					}, function(err) {
@@ -393,8 +401,6 @@ angular.module('ngLungeFullStack2App')
 			},
 
 			asyncLoginByToken : function() {
-				console.log("Auth asyncLoginByToken");
-
 				// the token has been set, so simply just shout out to the API to get the user!
 				var type = currentType;
 				try {
@@ -406,32 +412,12 @@ angular.module('ngLungeFullStack2App')
 				catch(err) {
 					console.log("Cookiestore error: ", err);
 				}
-				// var Model = type == 'trainer' : Trainer : User;
-				console.log("Getting based on token:", $cookieStore.get('token'), " and type: ", $cookieStore.get('type'));
-				// if(type == "trainer"){
-				// 	Trainer.get(function(response, headers) {
-				// 		currentUser = response;
-				// 		console.log("asyncLoginByToken current trainer is :", response);
-				// 		Auth.fullMetalSocket.trainer.syncAuth(Auth.getToken());
-				// 	}, function(err){
-				// 		console.log("Auth service auto login ERRRO: ", err);
-				// 	});
-				// }
-				// else
 				currentUser = User.get(function(response, headers){
-						currentUser = response;
-						Auth.fullMetalSocket.user.syncAuth(Auth.getToken());
-						console.log("asyncLoginByToken current user is :", response);
-						//Auth.syncAfterLogin();
-					});
+					Auth.setCurrentUser(response);
+					Auth._authenticateSocket();
+				});
 			}
 		};
-
-		//this is now happening in app.run. removed so it wouldn't double-call
-		//if($cookieStore.get('token')) {
-		//	Auth.asyncLoginByToken();
-		//}
-
 		return Auth;
 
 	});

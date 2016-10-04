@@ -1,24 +1,36 @@
 <div class="trainer-certifications certification-list">
-    <div class="empty" ng-if="!trainerFactory.trainer.certifications_v2.length">
-        <div ng-if="isMe()">You have no certifications listed.  If you are certified, make sure to
-            <a ui-sref="main.trainer.certifications">add your certifications</a> to your profile
+    <div class="empty" ng-if="!userFactory.user.certifications_v2.length">
+        <div ng-if="userFactory.isMe()">
+            You have no certifications listed.  If you are certified, make sure to
+            <a ui-sref="main.trainer.certifications">
+                add your certifications
+            </a> 
+            to your profile
         </div>
-        <div ng-if="!isMe()">{{trainerFactory.trainer.name.first}} does not have any active certifications</div>
+        <div ng-if="!userFactory.isMe()">
+            {{userFactory.user.name.first}} does not have any active 
+            certifications
+        </div>
     </div>
     <accordion close-others="true">
         <md-list>
             <ag-collapse-container is-open="mappedOrganization.isOpen"
-                               class="certification-organization"
-                               ng-repeat="mappedOrganization in trainerFactory.trainer.certifications_meta.organization_map">
+                                   class="certification-organization"
+                                   ng-repeat="mappedOrganization in
+                                   userFactory.user.certifications_meta.organization_map">
                 <ag-collapse-header>
                     <md-list-item md-ink-ripple>
-                                <span class="name">
-                                    {{mappedOrganization.name}}
-                                </span>
-                        <div class="md-secondary" flex="nogrow" layout="row" layout-align="center center">
-                            <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
-                                                                        certification-organization="mappedOrganization">
-                            </trainer-certification-status-count-bubbles>
+                        <div layout="row"
+                             flex
+                             layout-align="space-between center">
+                            <span class="name">
+                                {{mappedOrganization.name}}
+                            </span>
+                            <div flex="nogrow" layout="row" layout-align="center center">
+                                <trainer-certification-status-count-bubbles trainer="userFactory.user"
+                                                                            certification-organization="mappedOrganization">
+                                </trainer-certification-status-count-bubbles>
+                            </div>
                         </div>
                     </md-list-item>
                 </ag-collapse-header>
@@ -31,7 +43,7 @@
                                  ng-if="!certificationV2.removalConfirmation"
                                  layout="row"
                                  layout-align="space-between center">
-                                <trainer-certification-status trainer="trainerFactory.trainer"
+                                <trainer-certification-status trainer="userFactory.user"
                                                               certification="certificationV2.certification_type">
                                 </trainer-certification-status>
                                 <p class="md-list-item-text" flex>

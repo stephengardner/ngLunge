@@ -10,7 +10,8 @@
       "logger",
       "socket",
       "chatNotificationCounter",
-      "chatPopulator"
+      "chatPopulator",
+      "chatPreviewGetter"
     ],
     "provides": ["chatSender"]
   }

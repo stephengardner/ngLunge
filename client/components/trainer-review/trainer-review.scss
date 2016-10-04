@@ -1,0 +1,134 @@
+.layout-fill-important {
+	min-height: 100%!important;
+	height: 100%!important;
+}
+#trainer-review-dialog {
+	//flex-lg="60" flex-md="90" flex-xs="100" flex-xxs="100"
+	.loading-check-review-exists {
+		background: white;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+	&.is-loading {
+		min-height: 160px;
+	}
+	min-width: 60%;
+	max-height: 100%;
+	//min-height: 160px; this fucks with fullscreen mode
+	@include respond-to(md) {
+		min-width: 90%;
+	}
+	@include respond-to(xxs) {
+		min-width: 100%;
+	}
+	.rating-empty {
+		margin-left: 10px;
+		font-size: 16px;
+	}
+	position: relative;
+	.are-you-sure {
+		padding: 15px;
+		text-align: center;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		background: rgba(255, 255, 255, .8);
+		@extend .layout-column;
+		@extend .layout-align-center-center;
+		z-index: 1;
+		> h3 {
+			margin-bottom: 10px;
+		}
+	}
+	.star-description {
+		color: #999;
+		margin-left: 10px;
+		font-size: 16px;
+		@include respond-to(xs) {
+			font-size: 14px!important;
+		}
+		//@include respond-to(xxs) {
+		//	display: none;
+		//	font-size: 11px!important;
+		//}
+	}
+	.recommend {
+		div {
+			//color: #999;
+			font-size: 16px;
+		}
+		@include respond-to(xxs) {
+			div {
+				width: 100%;
+				margin-bottom: 8px;
+			}
+			&.yes {
+				margin-left: 30px;
+			}
+			&.no {
+				margin-right: 30px;
+			}
+		}
+		button {
+			box-shadow: 0 0 0 2px #ccc;
+			ng-md-icon {
+				transition: all .3s;
+				color: #999;
+			}
+			&.no {
+				margin-left: 20px;
+				margin-right: 0;
+				&.active {
+					&.active {
+						background: $brand-danger;
+						ng-md-icon {
+							color: white;
+						}
+						@extend .md-raised;
+					}
+				}
+			}
+			&.yes {
+				margin-left: 0;
+				margin-right: 20px;
+				&.active {
+					background: $brand-primary;
+					ng-md-icon {
+						color: white;
+					}
+					@extend .md-raised;
+				}
+			}
+		}
+	}
+	.leaving-review-as {
+		@include respond-to(xxs) {
+			margin-bottom: 8px;
+		}
+		margin-left: auto; // push to the right
+		padding: 4px 12px;
+		border-radius: 5px;
+		background: #f7f7f7;
+		color: #333;
+		font-size: 12px;
+		.profile-picture {
+			width: 30px;
+			height: 30px;
+			border-radius: 100px;
+			img {
+				width: 100%;
+			}
+		}
+		> div[layout="column"] {
+			margin-left: 10px;
+			.name {
+				color: #666;
+			}
+		}
+	}
+}

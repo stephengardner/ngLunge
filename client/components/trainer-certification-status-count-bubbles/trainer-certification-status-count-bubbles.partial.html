@@ -1,7 +1,7 @@
-<div class="md-secondary" layout="row"  ng-click="openDialog(certificationOrganization, $event)">
+<div class="md-secondary" layout="row"  ng-click="openDialog(certificationOrganization, $event)" stop-event>
     <span class="added count-bubble"
           ng-if="countAdded && showAdded">
-        <md-tooltip md-autohide md-direction="top">
+        <md-tooltip md-delay="500" md-autohide md-direction="top">
             {{countAdded}}
             {{countAdded > 1 ? 'certifications' : 'certification'}}
             added
@@ -10,7 +10,7 @@
     </span>
     <span class="verified count-bubble"
           ng-if="countVerified">
-        <md-tooltip md-autohide md-direction="top">
+        <md-tooltip md-delay="500" md-autohide md-direction="top">
             {{countVerified}}
             {{countAll > 1 ? 'certifications' : 'certification'}}
             verified by Lunge
@@ -19,7 +19,7 @@
     </span>
     <span class="pending count-bubble"
           ng-if="countPending">
-        <md-tooltip md-autohide md-direction="top">
+        <md-tooltip md-delay="500" md-autohide md-direction="top">
             {{countPending}}
             {{countPending > 1 ? 'certifications' : 'certification'}}
             pending approval
@@ -28,7 +28,7 @@
     </span>
     <span class="unverified count-bubble"
           ng-if="countUnverified">
-        <md-tooltip md-autohide md-direction="top">
+        <md-tooltip md-delay="500" md-autohide md-direction="top">
             {{countUnverified}}
             {{countUnverified > 1 ? 'certifications require' : 'certification requires'}}
             more verification
@@ -37,7 +37,7 @@
     </span>
     <span class="rejected count-bubble"
           ng-if="countRejected">
-        <md-tooltip md-autohide md-direction="top">
+        <md-tooltip md-delay="500" md-autohide md-direction="top">
             {{countRejected}}
             {{countUnverified > 1 ? 'certifications' : 'certification'}}
             rejected
@@ -45,7 +45,7 @@
         {{countRejected}}
     </span>
     <span class="count-bubble total-certifications" ng-if="showTotal">
-        <md-tooltip md-autohide md-direction="top">
+        <md-tooltip md-delay="500" md-autohide md-direction="top">
             {{certificationOrganization.certifications.length}}
             {{certificationOrganization.certifications.length > 1
             ? 'certifications'

@@ -1,6 +1,6 @@
 myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, $state){
 	return {
-		restrict : 'E',
+		restrict : 'AE',
 		replace : true, // necessary
 		templateUrl : 'components/material-menu/menu.partial.html',
 		controller : ['$scope', function($scope) {
@@ -14,13 +14,14 @@ myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, 
 					$state.go("profilePage", {urlName : $scope.user.urlName});
 				}
 			};
-			$scope.onAction = this.onAction = function(action) {
-				// console.log("onAction()...");
+			$scope.onAction = this.onAction = function(action, options, event) {
 				Menu.toggleLeft();
+				if(options && options.href) {
+					$window.open(options.href, "_self");
+				}
 				$scope.$eval(action);
 			};
 			$scope.getHref = this.getHref = function(state, options){
-				// console.log("getHref()...");
 				if(state) {
 					return $state.href(state, options);
 				}
@@ -29,22 +30,14 @@ myApp.directive('materialMenu', ['Menu', 'Auth', '$state', function(Menu, Auth, 
 			$scope.$watch(function(){
 				return Auth.isLoggedIn();
 			}, function(newValue, oldValue) {
-				console.log("newValueL:", newValue);
-				console.log("oldvbaluie:", oldValue);
-				// if(changedFromLoggedInToLoggedOut || changedFromLoggedOutToLoggedIn) {
-					// alert('logout');
+				if(newValue !== oldValue)
 					Menu.refreshLinks();
-				// }
 			});
 			$scope.getSref = this.getSref = function(state, options){
-				// console.log("getSref()...");
 				if(!state) return $state.current.name || '-';
-				if(options) {
+				if(options)
 					return '' + state + '(' + JSON.stringify(options) + ')';
-				}
-				else {
-					return state;
-				}
+				return state;
 			};
 		}]
 	}

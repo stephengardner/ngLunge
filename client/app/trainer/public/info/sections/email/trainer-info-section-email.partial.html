@@ -15,7 +15,7 @@
         </div>
     </md-toolbar>
     <form id="form"
-          ng-submit="changeEmail(form); toggleEditing()"
+          ng-submit="changeEmail(form)"
           name="form">
         <md-card-content cg-busy="{promise : cgBusy}">
             <div class="ag-editable-container">
@@ -41,12 +41,12 @@
                             <div ng-message="mongoose">{{form.email.$error.mongoose}}</div>
                         </div>
                     </ag-floating-label>
+                    <md-card-actions ng-if="editing" layout="row" layout-align="end center">
+                        <md-button type="submit">Save</md-button>
+                        <md-button ng-click="toggleEditing()">Cancel</md-button>
+                    </md-card-actions>
                 </div>
             </div>
         </md-card-content>
-        <md-card-actions ng-if="editing" layout="row" layout-align="end center">
-            <md-button type="submit">Save</md-button>
-            <md-button ng-click="toggleEditing()">Cancel</md-button>
-        </md-card-actions>
     </form>
 </md-card>

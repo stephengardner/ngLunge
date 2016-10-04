@@ -1,4 +1,7 @@
-<md-sidenav id="material-messages-menu" class="md-sidenav-left md-whiteframe-z1"
+<md-sidenav md-is-locked-open="isLockedOpen()"
+            md-whiteframe="4"
+            id="material-messages-menu"
+            class="md-sidenav-left"
             md-component-id="messages"
             flex>
     <md-toolbar md-scroll-shrink>
@@ -12,27 +15,31 @@
         <div layout="row" layout-align="center center" ng-if="chatService.busy">
             <md-progress-linear ng-mode="indeterminate"></md-progress-linear>
         </div>
+        <div class="chat-row" ng-if="chatService.error">
+            <h4>Couldn't load chats</h4>
+        </div>
+        <div class="chat-row" ng-if="chatService.initialLoadSuccess && !chatService.chats.length">
+            <h4>You don't have any conversations yet</h4>
+        </div>
         <!--<md-list>-->
             <!--<md-list-item ui-sref="main.messages.message({id : chat._id})"-->
                           <!--class="md-3-line"-->
                           <!--ng-repeat="chat in chatService.chats">-->
-                <div class="chat-row"
+                <a class="chat-row"
                      md-ink-ripple
+                     ng-class="{'unread' : chat.unread_count}"
                      ng-repeat="chat in chatService.chats"
                      layout="row"
+                     ui-sref-active="active"
                      ui-sref="main.messages.message({id : chat._id})"
                      ng-click="toggleLeft()"
-                     layout-align="start start">
-                    <div class="profile-picture" layout="row" layout-align="center center">
-                        <img ng-src="{{chat.picture.thumbnail.url}}"/>
-                    </div>
+                     layout-align="start start" stop-event>
+                    <profile-picture-thumbnail user="chat.user">
+                    </profile-picture-thumbnail>
                     <div class="chat-text md-list-item-text" layout="column" flex>
                         <div layout="row" layout-align="space-between center">
                             <div class="name">
-                                {{chat.last_message_sender.name.first}}
-                                <span class="unread" ng-if="chat.unread_count">
-                                    ({{chat.unread_count}})
-                                </span>
+                                {{chat.title}}
                             </div>
                             <div class="time">
                                 {{chat.time}}
@@ -41,15 +48,27 @@
                         <div class="last-message"
                              layout="row"
                              layout-align="start center">
-                            <span ng-if="chat.is_reply">
+                            <span ng-if="chat.is_reply && !chat.seen_by_recipient">
                                 <i class="material-icons">reply</i>
                             </span>
-                            <span>
-                                {{chat.last_message_text}}
+                            <span ng-if="chat.is_reply && chat.seen_by_recipient">
+                                <i class="material-icons">check</i>
+                            </span>
+                            <span layout="row"
+                                  flex="100"
+                                  layout-align="space-between center">
+                                <span flex>
+                                    {{chat.last_message_text}}
+                                </span>
+                                <span class="unread"
+                                      flex="initial"
+                                      ng-if="chat.unread_count">
+                                    {{chat.unread_count}} New
+                                </span>
                             </span>
                         </div>
                     </div>
-                </div>
+                </a>
             <!--</md-list-item>-->
         <!--</md-list>-->
     </div>

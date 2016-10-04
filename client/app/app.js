@@ -1,36 +1,36 @@
-var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
-		'ui.router',
-		'ngCookies',
-		'ngResource',
-		'focus-if',
-		'ngSanitize',
-		'ngMessages',
-		'btford.socket-io',
-		'ngAnimate',
-		'ui.utils',
-		//'xeditable',
-		'geolocation',
-		'uiGmapgoogle-maps',
-		//'angularFileUpload',
-		'duScroll',
-		'abcBirthdayPicker',
-		'ngLodash',
-		'infinite-scroll',
-		'ngFileUpload', // using this as new upload service
-		'cgBusy',
-		'angularValidator',
-		'cgBusy',
-		'ngMaterial',
-		'focus-if',
-		'agFloatingLabel',
-		'ngMaterial',
-		'ngMdIcons',
-		'satellizer',
-		'md.data.table',
-		'socialMeta',
-		'720kb.socialshare',
-		'angular-momentjs'
-	])
+var lungeApp = myApp = angular.module('myApp', [
+	'ui.router',
+	'ngCookies',
+	'ngResource',
+	'focus-if',
+	'ngSanitize',
+	'ngMessages',
+	'btford.socket-io',
+	'ngAnimate',
+	'ui.utils',
+	//'xeditable',
+	'geolocation',
+	'uiGmapgoogle-maps',
+	//'angularFileUpload',
+	'duScroll',
+	'abcBirthdayPicker',
+	'ngLodash',
+	'infinite-scroll',
+	'ngFileUpload', // using this as new upload service
+	'cgBusy',
+	'angularValidator',
+	'cgBusy',
+	'ngMaterial',
+	'focus-if',
+	'agFloatingLabel',
+	'ngMaterial',
+	'ngMdIcons',
+	'satellizer',
+	'md.data.table',
+	'socialMeta',
+	'720kb.socialshare',
+	'angular-momentjs'
+])
 	.config(function($mdThemingProvider) {
 		// $mdThemingProvider.definePalette('lunge', {
 		// 	'400' : '3d069e'
@@ -144,9 +144,13 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 
 		_.mixin({ 'deepExtend': deepExtend });
 	})
-	.factory('authInterceptor', function (AlertMessage, $rootScope, $q, $cookieStore, $location) {
+	.factory('authInterceptor', function (AlertMessage, $q, $cookieStore, $location) {
 		//console.log("cookiestore:", $cookieStore.get("token"));
+		var LoginCheck;
 		return {
+			setLoginCheck : function(loginCheckFactory) {
+				LoginCheck = loginCheckFactory;
+			},
 			// Add authorization token to headers
 			request: function (config) {
 				config.headers = config.headers || {};
@@ -162,7 +166,7 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 					AlertMessage.error('You\'ve submitted this request too many times.  Please wait 10 minutes and' +
 						' then try again');
 				}
-				if(response.status === 401) {
+				if(response.status === 401 && !LoginCheck.dialogActive) {
 					$location.path('/login');
 					// remove any stale tokens
 					$cookieStore.remove('token');
@@ -180,8 +184,23 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 			//v: '3.13',
 			libraries: 'places'
 		});
+	}]).config(['$mdAriaProvider', function ($mdAriaProvider) {
+		$mdAriaProvider.disableWarnings();
 	}])
-	.run(function (SocialMeta, $timeout, $state, FullMetalSocket, TrainerFactory, $rootScope, $templateCache, $location, Auth/*, editableOptions*/) {
+	.run(function (authInterceptor,
+	               LoginCheck,
+	               SocialMeta,
+	               $timeout,
+	               $state,
+	               FullMetalSocket,
+	               TrainerFactory,
+	               $rootScope,
+	               $templateCache,
+	               $location,
+	               Auth) {
+
+		authInterceptor.setLoginCheck(LoginCheck);
+
 		angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 2000);
 
 		$rootScope.$on('$stateChangeSuccess', function() {
@@ -212,10 +231,12 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		$rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
 			$rootScope.previousState = from.name;
 			$rootScope.currentState = to.name;
+			$rootScope.routerState = {
+				current : to.name
+			}
 		});
 
 		//editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-
 		$rootScope.logout = function() {
 			console.log("Calling $rootScope.logout");
 			Auth.logout();
@@ -226,9 +247,10 @@ var lungeApp = myApp = angular.module('ngLungeFullStack2App', [
 		// Redirect to login if route requires auth and you're not logged in
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			Auth.isLoggedInAsync(function(loggedIn) {
-				if(next.requiredType == 'trainee') {
-					// impelement
-				}
+				// if(next.requiredType == 'trainee') {
+				// 	// impelement
+				// }
+				$rootScope.footer.hide = next.footer === false;
 				if (next.authenticate && !loggedIn) {
 					$location.path('/login');
 				}

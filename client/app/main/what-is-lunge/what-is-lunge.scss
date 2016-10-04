@@ -21,6 +21,7 @@
 		background-image: radial-gradient(50% top, circle, rgba(84,90,182,0.6) 0%, rgba(84,90,182,0) 75%),radial-gradient(right top, circle, #794aa2 0%, rgba(121,74,162,0) 57%);
 		background-repeat: no-repeat;
 		background-size: 100% 1000px;
+		background: radial-gradient(ellipse at 70% 80%, #545ab6 55%,#794aa2 91%,#794aa2 0%);
 		padding: 90px;
 		color: #f1e8fb;
 		h1 {
@@ -36,6 +37,8 @@
 		}
 	}
 	#description-2 {
+
+		color: #333;
 		background: #f7f4fb;
 		.item {
 			~ .item {
@@ -44,6 +47,7 @@
 		}
 		h2 {
 			margin-bottom: 15px;
+			font-weight: 400;
 		}
 		.text {
 			line-height: 1.7em;

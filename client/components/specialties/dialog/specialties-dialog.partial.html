@@ -1,14 +1,22 @@
 <md-dialog id="specialties-dialog"
-           flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
+           flex-lg="30"
+           flex-md="50"
+           flex-xs="90"
+           flex-xxs="100">
     <form name="specialtiesForm" id="specialtiesForm"
-          ng-submit="submit(specialtiesForm)"
-          cg-busy="{promise : cgBusy}">
+          ng-submit="SpecialtiesDialogCtrl.submit(specialtiesForm)"
+          cg-busy="{promise : SpecialtiesDialogCtrl.cgBusy}">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Add a Specialty</h2>
+                <h2>
+                    Add a Specialty
+                </h2>
                 <span flex></span>
-                <md-button class="md-icon-button" ng-click="close()">
-                    <md-icon aria-label="Close dialog">close</md-icon>
+                <md-button class="md-icon-button"
+                           ng-click="SpecialtiesDialogCtrl.close()">
+                    <md-icon aria-label="Close dialog">
+                        close
+                    </md-icon>
                 </md-button>
             </div>
         </md-toolbar>
@@ -16,16 +24,18 @@
             <div class="md-dialog-content">
                 <md-autocomplete
                         id="specialtyAutocomplete"
-                        md-selected-item="selectedItem"
+                        md-selected-item="SpecialtiesDialogCtrl.selectedItem"
                         md-search-text="searchText"
-                        md-items="specialtyModel in getSpecialties(searchText)"
+                        md-items="specialtyModel in SpecialtiesDialogCtrl.getSpecialties(searchText)"
                         md-item-text="specialtyModel.name"
                         md-min-length="1"
                         placeholder="What is your specialty?"
-                        md-selected-item-change="submit()">
+                        md-selected-item-change="SpecialtiesDialogCtrl.submit()">
                     <md-item-template>
                         <div ng-class="{'disabled' : userHasSpecialty(specialtyModel)}">
-                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{specialtyModel.name}}</span>
+                            <span md-highlight-text="searchText" md-highlight-flags="^i">
+                                {{specialtyModel.name}}
+                            </span>
                         </div>
                     </md-item-template>
                     <md-not-found>
@@ -35,7 +45,7 @@
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row" layout-align="end center">
-            <md-button ng-click="close()">
+            <md-button ng-click="SpecialtiesDialogCtrl.close()">
                 Finsihed
             </md-button>
         </md-dialog-actions>

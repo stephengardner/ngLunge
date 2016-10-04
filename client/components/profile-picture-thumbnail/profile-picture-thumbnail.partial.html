@@ -1,0 +1,12 @@
+<a class="profile-picture-thumbnail"
+   ng-style="{'width' : width, 'height' : height}"
+   ng-switch="vm.shouldShowInitials()"
+   ui-sref="{{vm.getProfileSref() || '-'}}">
+    <div ng-switch-when="false"
+         class="letter"
+         ng-class="{'anonymous' : vm.isAnonymous()}"
+         ng-style="{'background-color' : vm.getColor()}">
+        {{vm.getInitials()}}
+    </div>
+    <img ng-switch-when="true" ng-src="{{vm.profilePictureUrl()}}"/>
+</a>

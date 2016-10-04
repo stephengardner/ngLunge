@@ -1,6 +1,5 @@
 <md-dialog flex-lg="30" flex-md="50" flex-xs="90" flex-xxs="100">
-    <form name="googlePlacesForm"
-          ng-submit="submit(googlePlacesForm)">
+    <div cg-busy="{promise : vm.cgBusy}">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Remove location</h2>
@@ -23,5 +22,5 @@
                 Cancel
             </md-button>
         </md-dialog-actions>
-    </form>
+    </div>
 </md-dialog>

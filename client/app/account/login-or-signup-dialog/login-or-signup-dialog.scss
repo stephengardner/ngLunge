@@ -8,17 +8,33 @@
 	}
 	md-card {
 		margin: 0;
+		box-shadow: none;
 	}
 	.md-dialog-content {
 		padding: 0;
 	}
 	.woops {
 		font-size: 20px;
-		border: 2px solid;
+		//border: 2px solid;
 		padding: 20px;
 		border-top-right-radius: 5px;
 		border-top-left-radius: 5px;
 		border-color: #3d069e;
 		text-align: center;
+		background: lighten($brand-primary, 65%);
+	}
+	md-card-content {
+		padding: 40px 15px;
+		@include respond-to(xs) {
+			padding: 15px;
+		}
+	}
+	.footer {
+		margin: 0;
+		border: 0;
+		box-shadow: none;
+		font-size: 16px;
+		text-align: center;
+		padding: 20px;
 	}
 }

@@ -1,49 +1,47 @@
 lungeApp.controller("TrainerProfileController", function($timeout,
-                                                         TrainerFactory,
                                                          $state,
                                                          Auth,
                                                          $scope,
                                                          $http,
                                                          Menu,
                                                          SocialMeta,
-                                                         TrainerMeta,
+                                                         $mdSidenav,
+                                                         Reviews,
+                                                         UserFactory,
+                                                         UserMeta,
+                                                         SocketV2,
+                                                         UserSyncer,
                                                          $stateParams){
-	function doWeNeedToReloadTrainerFactory() {
-		var urlName = $stateParams.urlName ? $stateParams.urlName : false;
-		if(urlName && TrainerFactory.trainer && TrainerFactory.trainer.urlName == urlName) {
-			return false;
-		}
-		return true;
-	}
-	if(doWeNeedToReloadTrainerFactory()) {
-		console.log("Trainer Profile Controller RELOADING TRAINERFACTORY");
+	
+	Auth.isLoggedInAsync(function(){
 		doGetTrainerWithPing();
-	}
-	else {
-		console.log("Trainer Profile Controller NOT reloading trainerfactory");
-		doGetTrainerWithoutPing();
-	}
-	// $scope.$on('$destroy', function(){
-	// 	TrainerFactory.unset();
-	// })
-	$scope.$on('$stateChangeStart', function(){
-		// This is inside stateChangeStart because when going from the profile to the edit info, the syncing happens
-		// after the info page has synced, thereby unsyncing...
-		// This is because this state is higher than that one.  We may be able to get by with just syncing once
-		// for all main.trainer.... Look into that!
-		TrainerFactory.unsyncModel();
+	});
+	$scope.$on('$destroy', function() {
+		if($scope.userFactory) {
+			UserSyncer.unsyncUnauthUserFactory($scope.userFactory);
+		}
+		else {
+			console.warn('[Trainer Profile Controller] there was no userFactory when exiting this state, must\'ve' +
+				' logged out');
+		}
 	});
 
-	var url = $stateParams.urlName ? '/api/trainers/byUrlName/' + $stateParams.urlName
-			: '/api/trainers/' + $stateParams.id,
+
+	var url = $stateParams.urlName ?
+		'/api/trainers/byUrlName/' + $stateParams.urlName :
+		'/api/trainers/' + $stateParams.id,
 		httpGetTrainer = {
 			url : url,
+			params : {
+				viewAs : Auth.getCurrentUser()._id
+			},
 			method : 'GET'
 		},
 		onGetTrainerSuccess = function(trainer) {
-			console.log("onGetTrainerSuccess trainer:", trainer);
-			TrainerFactory.init(trainer);
-			$scope.trainerFactory = TrainerFactory;
+			$scope.userFactory = new UserFactory.init(trainer);
+			console.log("[Trainer Profile Controller] got user factory.", $scope.userFactory);
+			$scope.editable = $scope.userFactory.isMe();
+			UserSyncer.syncUnauthUserFactory($scope.userFactory);
 			setSocialMeta();
 		},
 		onGetTrainerError = function(error){
@@ -58,7 +56,7 @@ lungeApp.controller("TrainerProfileController", function($timeout,
 	$scope.$state = $state;
 
 	$scope.getSocialDescription = function() {
-		var trainer = $scope.trainerFactory.trainer;
+		var trainer = $scope.userFactory.trainer;
 		var description;
 		if(trainer.bio) {
 			description = trainer.bio;
@@ -94,39 +92,15 @@ lungeApp.controller("TrainerProfileController", function($timeout,
 		return description;
 	};
 	function setSocialMeta() {
-		var trainer = $scope.trainerFactory.trainer;
-
-		SocialMeta.set({
-			title : TrainerMeta.title(),
-			image : trainer.profile_picture.thumbnail.url,
-			description : TrainerMeta.description()
-		});
-	}
-	function doGetTrainerWithoutPing() {
-		if(Menu.isOpenLeft) {
-			TrainerFactory.unset();
-			var unbindWatch = $scope.$watch(function(){
-				return Menu.isOpenLeft
-			}, function(newValue, oldValue){
-				if(newValue === false) {
-					TrainerFactory.init(Auth.getCurrentUser(), {
-						sync: true
-					});
-					$scope.trainerFactory = TrainerFactory;
-					setSocialMeta();
-					unbindWatch();
-				}
-			});
-		}
-		else {
-			$scope.trainerFactory = TrainerFactory;
-		}
+		var newSocialAttributes = UserMeta.generalMeta($scope.userFactory);
+		console.log('[Profile Controller] new social attributes: ', newSocialAttributes);
+		SocialMeta.set(newSocialAttributes);
 	}
 
 	function doGetTrainerWithPing() {
-		TrainerFactory.unset();
-		// Check if the trainer is logged in, get their info, populate the page
-		if(Menu.isOpenLeft) {
+		// need to add the $mdSidenav check, because our custom service "Menu" doesn't log if it's closed when
+		// clicking on the backdrop
+		if(Menu.isOpenLeft && $mdSidenav('left').isOpen()) {
 			var unbindWatch = $scope.$watch(function(){
 				return Menu.isOpenLeft
 			}, function(newValue, oldValue){
@@ -151,19 +125,13 @@ lungeApp.controller("TrainerProfileController", function($timeout,
 					{value: 2, text: 'MD'},
 					{value: 3, text: 'VA'}
 				];
-
 				$http(httpGetTrainer).success(onGetTrainerSuccess).error(onGetTrainerError);
 
 				// ajax is an object that tells us if something is running (show ajax spinner, or disable a button, etc)
 				$scope.ajax = {};
 
 				$scope.updateProfile = trainerUpdate;
-
 			});
 		}
 	}
-	$scope.isMe = function(){
-		return TrainerFactory.isMe() || ($scope.trainer && $scope.trainer._id == Auth.getCurrentUser()._id);
-	}
-
 });

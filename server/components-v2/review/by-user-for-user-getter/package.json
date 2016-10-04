@@ -1,0 +1,16 @@
+{
+  "name": "reviewByUserForUserGetter",
+  "version": "0.0.1",
+  "main": "review-by-user-for-user-getter.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "userPopulator",
+      "apiErrorHandler",
+      "reviewModel"
+    ],
+    "provides": [
+      "reviewByUserForUserGetter"
+    ]
+  }
+}

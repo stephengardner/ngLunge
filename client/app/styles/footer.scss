@@ -1,0 +1,7 @@
+.new-footer {
+	@extend .md-whiteframe-z2;
+	.container {
+		padding: 20px;
+	}
+	border-bottom: 3px $brand-primary;
+}

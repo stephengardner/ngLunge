@@ -1,5 +1,5 @@
 
-angular.module('ngLungeFullStack2App')
+angular.module('myApp')
 	.factory('TrainerCertifications', ['$http', '$q', function($http, $q){
 		var ajax = {
 			busy : false, // for when someone is adding or removing a cert

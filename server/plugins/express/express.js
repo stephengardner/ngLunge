@@ -23,6 +23,17 @@ module.exports = function setup(options, imports, register) {
 
 	console.log("env!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", env);
 
+	var forceSsl = function (req, res, next) {
+		if (req.headers['x-forwarded-proto'] !== 'https') {
+			return res.redirect(['https://', req.get('Host'), req.url].join(''));
+		}
+		return next();
+	};
+
+	if ('production' === env) {
+		web.use(forceSsl);
+	}
+
 	if ('production' === env) {
 		web.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
 		web.use(express.static(path.join(config.root, 'public')));
@@ -31,6 +42,7 @@ module.exports = function setup(options, imports, register) {
 	}
 
 	if ('development' === env || 'test' === env) {
+		console.log("-------------------TESTING------------------");
 		web.use(require('connect-livereload')());
 		web.use(express.static(path.join(config.root, '.tmp')));
 		web.use(express.static(path.join(config.root, 'client')));

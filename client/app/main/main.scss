@@ -2,9 +2,10 @@
 	margin: 20px 0;
 }
 
-md-content {
-	height: calc(100vh);
-}
+//md-content {
+//	height: calc(100vh);
+//}
+
 footer {
 	@extend .md-whiteframe-z3;
 	.container {
@@ -15,6 +16,18 @@ footer {
 .ready {
 	.fa-spinner {
 		display:none;
+	}
+}
+
+[ui-view] {
+	position: relative;
+}
+
+.main-view {
+	> .container {
+		@include respond-to(xs) {
+			width: 100%;
+		}
 	}
 }
 

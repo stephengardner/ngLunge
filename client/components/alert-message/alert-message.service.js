@@ -14,7 +14,7 @@ lungeApp.factory("AlertMessage", function($timeout){
 			// alert(message);
 			this.active = true;
 			var opts = angular.extend({}, this.defaults, opts);
-			console.log("Showing alert message with options:", opts);
+			// console.log("Showing alert message with options:", opts);
 			angular.forEach(opts, function(val, key){
 				//console.log("iterating through option val:", val, " key: ", key);
 				AlertMessage[key] = val;

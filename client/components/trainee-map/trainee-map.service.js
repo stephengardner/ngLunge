@@ -26,7 +26,7 @@ myApp.factory('traineeMap', function(){
 						longitude: trainee.location && trainee.location.coords ? trainee.location.coords.lon : 10
 					}
 				});
-			console.log("Trainee map setting this.map = ", this.map);
+			console.log('[Trainee Map Service] setting this.map to be: ', this.map);
 			this.setMarkers();
 			return this;
 		},

@@ -31,6 +31,7 @@ module.exports = function setup(options, imports, register) {
 						return reject(response);
 					}
 					console.log("Successfully sent message.  Response is:", response);
+					console.log("Request body sending was:", request.body);
 					return resolve(response);
 				});
 			})

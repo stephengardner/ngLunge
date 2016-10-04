@@ -1,0 +1,15 @@
+{
+  "name": "api-review.controller.js",
+  "version": "0.0.1",
+  "main": "api-review.controller.js",
+  "private": true,
+  "plugin": {
+    "consumes": [
+      "logger",
+      "reviewModel",
+      "reviewDeleter",
+      "apiErrorHandler"
+    ],
+    "provides": ["apiReviewController"]
+  }
+}

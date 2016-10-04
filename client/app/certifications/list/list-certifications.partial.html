@@ -22,7 +22,8 @@
         </div>
     </header>
     <div id="view-my-certifications-wrapper">
-        <md-button ng-if="isLoggedInTrainer()"
+        <md-button aria-label="View my Certifications"
+                   ng-if="isLoggedInTrainer()"
                    class="ag-padded"
                    ui-sref="main.trainer.account.certifications">
             <md-icon>
@@ -31,9 +32,14 @@
             View My Certifications
         </md-button>
     </div>
+    <div class="page-loading" ng-if="!initialLoadSuccess">
+        <md-progress-circular md-diameter="50">
+        </md-progress-circular>
+    </div>
     <div id="empty" ng-if="ajax.complete && !trainerCertifications.certificationOrganizations.length">
         <h2>No certifications match that query</h2>
-        <md-button ng-click="trainerCertifications.reset(); trainerCertifications.getPage()">
+        <md-button aria-label="Clear"
+                   ng-click="trainerCertifications.reset(); trainerCertifications.getPage()">
             Clear
         </md-button>
     </div>
@@ -42,10 +48,12 @@
             <ag-collapse-container class="certification-organization">
                 <ag-collapse-header>
                     <md-list-item md-ink-ripple>
-                            <span layout="row" layout-align="start center"
-                                  class="name">
+                        <div layout="row"
+                             flex
+                             layout-align="start center"
+                             class="name">
                                 <span class="count-unbubble total-certifications">
-                                    <md-tooltip md-autohide md-direction="top">
+                                    <md-tooltip md-delay="500" md-autohide md-direction="top">
                                         {{certificationOrganization.certifications.length}}
                                         {{certificationOrganization.certifications.length > 1
                                         ? 'certifications'
@@ -54,8 +62,8 @@
                                     </md-tooltip>
                                     {{certificationOrganization.certifications.length}}
                                 </span>
-                                {{certificationOrganization.name}}
-                            </span>
+                            {{certificationOrganization.name}}
+                        </div>
                         <div class="md-secondary" layout="row">
                             <trainer-certification-status-count-bubbles trainer="trainerFactory.trainer"
                                                                         certification-organization="certificationOrganization">
@@ -71,6 +79,7 @@
                     </div>
                     <md-list>
                         <md-list-item
+                                cg-busy="{promise : certification.cgBusy}"
                                 ng-repeat="certification in certificationOrganization.certifications">
                             <div flex class="md-list-item-animation-container">
                                 <div flex class="list-item-default" ng-if="!certification.removing"
@@ -85,7 +94,8 @@
                                         <!--<trainer-certification-status trainer="trainerFactory.trainer"-->
                                         <!--certification="certification.certification_type">-->
                                         <!--</trainer-certification-status>-->
-                                        <md-button ng-click="
+                                        <md-button aria-label="Info"
+                                                   ng-click="
                                                     certificationTypeInfoModal(certification, $event)
                                                     "
                                                    class="md-icon-button"
@@ -96,7 +106,8 @@
                                         </md-button>
                                         <md-menu md-position-mode="target-right target"
                                                  ng-if="isLoggedInTrainer()">
-                                            <md-button class="md-icon-button"
+                                            <md-button aria-label="More"
+                                                       class="md-icon-button"
                                                        ng-click="openMenu($mdOpenMenu, $event)">
                                                 <i md-menu-origin
                                                    class="material-icons">
@@ -106,14 +117,16 @@
                                             <md-menu-content width="3">
                                                 <md-menu-item
                                                         ng-if="!trainerHasCertification(certification)">
-                                                    <md-button ng-click="
+                                                    <md-button aria-label="Add certification"
+                                                               ng-click="
                                                         addOrRemoveCertification('add', certification)
                                                         ">
                                                         <div layout="row" flex>
                                                             <p flex>
                                                                 Add certification
                                                             </p>
-                                                            <md-button class="md-icon-button">
+                                                            <md-button aria-label="Add"
+                                                                       class="md-icon-button">
                                                                 <i md-menu-align-target class="material-icons">
                                                                     add
                                                                 </i>
@@ -130,7 +143,8 @@
                                                             <p flex>
                                                                 Verify this certification
                                                             </p>
-                                                            <md-button class="md-icon-button">
+                                                            <md-button aria-label="Upload"
+                                                                       class="md-icon-button">
                                                                 <i md-menu-align-target class="material-icons">
                                                                     file_upload
                                                                 </i>
@@ -139,14 +153,16 @@
                                                     </md-button>
                                                 </md-menu-item>
                                                 <md-menu-item ng-if="trainerHasCertification(certification)">
-                                                    <md-button ng-click="
+                                                    <md-button aria-label="Remove certification"
+                                                               ng-click="
                                                     addOrRemoveCertification('remove', certification)
                                                     ">
                                                         <div layout="row" flex>
                                                             <p flex>
                                                                 Remove certification
                                                             </p>
-                                                            <md-button class="md-icon-button">
+                                                            <md-button aria-label="Delete"
+                                                                       class="md-icon-button">
                                                                 <i md-menu-align-target class="material-icons">
                                                                     delete
                                                                 </i>
@@ -155,14 +171,16 @@
                                                     </md-button>
                                                 </md-menu-item>
                                                 <md-menu-item>
-                                                    <md-button ng-click="
+                                                    <md-button aria-label="Details"
+                                                               ng-click="
                                                     certificationTypeInfoModal(certification, $event)
                                                     ">
                                                         <div layout="row" flex>
                                                             <p flex>
                                                                 Details
                                                             </p>
-                                                            <md-button class="md-icon-button">
+                                                            <md-button aria-label="Info"
+                                                                       class="md-icon-button">
                                                                 <i md-menu-align-target class="material-icons">
                                                                     info_outline
                                                                 </i>
@@ -181,12 +199,9 @@
             </ag-collapse-container>
         </md-list>
     </md-card>
-    <md-progress-circular ng-if="ajax.loading"
-                          md-diameter="60"
-                          md-mode='indeterminate'>
-    </md-progress-circular>
     <div class="load-more" ng-if="!ajax.complete">
-        <md-button ng-click="trainerCertifications.getPage()"
+        <md-button aria-label="Load"
+                   ng-click="trainerCertifications.getPage()"
                    ng-disabled="ajax.busy">
             {{ ajax.loading ? 'Loading...' : 'Load More' }}
         </md-button>

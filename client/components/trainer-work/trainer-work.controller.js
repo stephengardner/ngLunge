@@ -1,23 +1,15 @@
 lungeApp.controller("TrainerWorkController", function($scope,
-                                                      UserFactory,
                                                       AlertMessage,
                                                       $mdDialog,
-                                                      FormControl,
-                                                      TrainerFactory){
-	$scope.trainerFactory = TrainerFactory;
-	$scope.modelFactory = $scope.trainerFactory;
+                                                      FormControl){
 
 	var section = 'work',
 		string = 'Work updated',
-		modelFactory = $scope.modelFactory
+		self = this
 	;
-	
-	$scope.modelFactoryDefault = modelFactory.getDefaultModel();
-	$scope.modelFactoryEditing = modelFactory.getEditingModel();
-	
-	$scope.textareaRows = 5;
-	$scope.submit = function() {
-		$scope.cgBusy = modelFactory.save(section).then(function(response){
+
+	this.submit = function() {
+		self.cgBusy = $scope.userFactory.save(section).then(function(response){
 			AlertMessage.success(string);
 		}).catch(function(err){
 			AlertMessage.error('Woops, something went wrong');
@@ -25,64 +17,70 @@ lungeApp.controller("TrainerWorkController", function($scope,
 		})
 	};
 
-	$scope.toggleRemoveWorkplace = function(workplace) {
+	self.toggleRemoveWorkplace = function(workplace) {
 		workplace.removing = !workplace.removing;
 	};
-	
-	$scope.removeWorkplace = function(workplace) {
-		$scope.cgBusy = modelFactory.removeWorkplace(workplace).then(function(){
+
+	self.removeWorkplace = function(workplace) {
+		self.cgBusy = $scope.userFactory.removeWorkplace(workplace).then(function(){
 			AlertMessage.success('Removed ' + workplace.company_name + ' from your workplaces');
 		}).catch(function(err){
 			AlertMessage.error('Woops, something went wrong');
 		});
 	};
 
-	$scope.addWorkDialog = function(ev) {
+	this.testing = 'wtf';
+	self.addWorkDialog = function(ev) {
 		$mdDialog.show({
 			targetEvent : ev,
 			templateUrl : 'components/trainer-work/add-work-dialog/trainer-add-work-dialog.partial.html',
 			clickOutsideToClose : true,
+			scope : $scope,
+			preserveScope : true,
+			controllerAs : 'vm',
 			controller : ['$scope', function($scope){
-				$scope.cancel = $mdDialog.hide;
-				$scope.workplace = {};
-				$scope.submit = function(form) {
-					$scope.cgBusy = modelFactory.addWorkplace($scope.workplace).then(function(){
+				this.cancel = $mdDialog.hide;
+				this.workplace = {};
+				this.submit = function(form) {
+					this.cgBusy = $scope.userFactory.addWorkplace(this.workplace).then(function(){
 						AlertMessage.success('Workplace added to your profile');
 						$mdDialog.hide();
 					}).catch(function(err){
+						$scope.userFactory.resetEditing('work');
 						FormControl.parseValidationErrors(form, err);
 						AlertMessage.error('Woops, something went wrong');
 					});
-				}
+				}.bind(this)
 			}]
 		})
 	};
-	$scope.editWorkDialog = function(workplace, ev) {		
+	self.editWorkDialog = function(workplace, ev) {
 		$mdDialog.show({
 			targetEvent : ev,
 			templateUrl : 'components/trainer-work/edit-work-dialog/trainer-edit-work-dialog.partial.html',
 			clickOutsideToClose : true,
+			scope : $scope,
+			preserveScope : true,
+			controllerAs : 'vm',
 			controller : ['$scope', function($scope){
-				$scope.modelFactory = modelFactory;
-				$scope.cancel = $mdDialog.hide;
-				for(var i = 0; i < TrainerFactory.trainerEditing.work.places.length; i++) {
-					var place = TrainerFactory.trainerEditing.work.places[i];
-					if(place._id == workplace._id){
+				this.cancel = $mdDialog.hide;
+				for(var i = 0; i < $scope.userFactory.userEditing.work.places.length; i++) {
+					var placeAtIndex = $scope.userFactory.userEditing.work.places[i];
+					if(placeAtIndex._id == workplace._id){
 						foundPlace = true;
-						$scope.workplace = place;
-						console.log("scope workplace is:", $scope.workplace);
+						this.workplace = placeAtIndex;
 						break;
 					}
 				}
-				$scope.submit = function(form) {
-					$scope.cgBusy = modelFactory.editWorkplace($scope.workplace).then(function(){
+				this.submit = function(form) {
+					this.cgBusy = $scope.userFactory.editWorkplace(this.workplace).then(function(){
 						AlertMessage.success('Workplace edited');
 						$mdDialog.hide();
 					}).catch(function(err){
 						FormControl.parseValidationErrors(form, err);
 						AlertMessage.error('Woops, something went wrong');
 					});
-				}
+				}.bind(this)
 			}]
 		})
 	}
